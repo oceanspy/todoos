@@ -42,8 +42,13 @@ int main(int argc, const char *argv[])
 
     Init init = Init(ioService);
     Installation installation = Installation(ioService, jsonService, csvService, confService, init);
-    if (commandValidation.getCommandName() != "commands" && installation.isNew())
+    if (installation.isNew())
     {
+        if (commandValidation.getCommandName() != "commands")
+        {
+            return 1;
+        }
+        
         installation.make();
         ioService.br();
     }
