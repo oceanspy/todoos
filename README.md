@@ -1,5 +1,11 @@
 # ToDoOs
 
+## Warning 
+
+This project is still in development. It is not recommended to use it in a production environment.
+
+## Description
+
 Small CLI tool to manage your todo load or general lists.
 
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot0.png?raw=true)
@@ -18,6 +24,8 @@ For now, the tool was only tested with ZSH and `Oh my ZSH`. We recommend you to 
 Autocompletion is available for ZSH. Autocompletion for Bash is not available yet.
 
 We also recommend you to use a terminal with a Monospace font. Meslo or Ubuntu Mono are good choices.
+
+Don't hesitate to open an issue if you have any problem or suggestion. :-)
 
 ## Installation
 
