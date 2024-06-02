@@ -44,11 +44,11 @@ int main(int argc, const char *argv[])
     Installation installation = Installation(ioService, jsonService, csvService, confService, init);
     if (installation.isNew())
     {
-        if (commandValidation.getCommandName() != "commands")
+        if (commandValidation.getCommandName() == "commands")
         {
             return 1;
         }
-        
+
         installation.make();
         ioService.br();
     }
