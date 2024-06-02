@@ -23,20 +23,21 @@ int main(int argc, const char *argv[])
 {
     IOService ioService = IOService();
     Help help = Help(ioService);
-
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     CSVService csvService = CSVService(ioService);
+
+    CommandOption commandOption = CommandOption();
+    CommandValidation commandValidation(commandOption, argc, argv);
+
     Init init = Init(ioService);
     Installation installation = Installation(ioService, jsonService, csvService, confService, init);
-    if (installation.isNew())
+    if (commandValidation.getCommandName() != "commands" && installation.isNew())
     {
         installation.make();
         ioService.br();
     }
 
-    CommandOption commandOption = CommandOption();
-    CommandValidation commandValidation(commandOption, argc, argv);
     try {
         commandValidation.make();
     } catch (const std::exception& e) {

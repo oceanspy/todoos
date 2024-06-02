@@ -11,7 +11,7 @@ Init::Init(IOService& ioService)
       defaultSystemFileDataStorage("json"),
       defaultConfigFileDataStorage("conf"),
       mainDirPath(homeDir / ".oceanspy"),
-      appDirPath(homeDir / "todoos"),
+      appDirPath(homeDir / ".todoos"),
       configDirPath(homeDir / ".oceanspy/todoos"),
       configFileName("config"),
       listOfListFileName("list"),
