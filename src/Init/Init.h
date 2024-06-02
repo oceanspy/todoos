@@ -17,7 +17,6 @@ public:
     std::filesystem::path getListOfListFilePath() override;
     std::string getListOfListFileName() override;
     std::filesystem::path getAppDirPath() override;
-    std::string getDefaultListFileName() override;
     std::filesystem::path getDefaultListFilePath() override;
     const std::string getDefaultListName() override;
     const std::string getDefaultExtension() override;

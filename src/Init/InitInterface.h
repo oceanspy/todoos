@@ -10,7 +10,6 @@ public:
     virtual std::filesystem::path getConfigFilePath() = 0;
     virtual std::filesystem::path getListOfListFilePath() = 0;
     virtual std::filesystem::path getAppDirPath() = 0;
-    virtual std::string getDefaultListFileName() = 0;
     virtual std::filesystem::path getDefaultListFilePath() = 0;
     virtual std::string getListOfListFileName() = 0;
     virtual std::filesystem::path getHomeDir() = 0;

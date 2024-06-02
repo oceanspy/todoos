@@ -27,7 +27,7 @@ void Installation::make()
     this->createDirectories();
     this->createConfigFile();
     this->createListOfListFile();
-    this->createListFile(init.getDefaultListFileName());
+    this->createListFile(init.getDefaultListName());
     this->populate();
     ioService.success("Program initialized.");
     ioService.message("You can adapt your settings in " + init.getConfigFilePath().string());

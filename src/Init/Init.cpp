@@ -40,11 +40,6 @@ std::filesystem::path Init::getListOfListFilePath()
     return path;
 }
 
-std::string Init::getDefaultListFileName()
-{
-    return defaultListFileName;
-}
-
 std::filesystem::path Init::getDefaultListFilePath()
 {
     std::filesystem::path path = appDirPath / defaultListFileName;
