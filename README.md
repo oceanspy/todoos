@@ -2,6 +2,7 @@
 
 Small CLI tool to manage your todo load or general lists.
 
+![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot0.png?raw=true)
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot1.png?raw=true)
 
 ## Pre-requisites
