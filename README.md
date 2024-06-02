@@ -1,9 +1,5 @@
 # ToDoOs
 
-## Warning 
-
-This project is still in development. It is not recommended to use it in a production environment.
-
 ## Description
 
 Smart CLI Application for Tasks management.
@@ -19,7 +15,7 @@ Smart CLI Application for Tasks management.
 
 ## Information
 
-For now, the tool was only tested with ZSH and `Oh my ZSH`. We recommend you to use it to have the best experience.
+For now, the tool was only tested on Linux with ZSH and `Oh my ZSH`. We recommend you to use it to have the best experience.
 
 Autocompletion is available for ZSH. Autocompletion for Bash is not available yet.
 
@@ -29,8 +25,12 @@ Don't hesitate to open an issue if you have any problem or suggestion. :-)
 
 ## Installation
 
+### Binary
+
 You can download the latest release from the releases page:
 https://github.com/oceanspy/todoos/releases/
+
+### Build
 
 ```bash
 git clone https://github.com/oceanspy/todoos.git
