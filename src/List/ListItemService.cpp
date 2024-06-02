@@ -32,33 +32,47 @@ std::vector <ListItemEntity> ListItemService::get()
 
 std::vector <ListItemEntity> ListItemService::sort(std::vector <ListItemEntity> listItems)
 {
-    // We sort by priority: Archived are pushed at the end
+    // We sort by priority
     // Otherwise we sort by status (cancelled at the end)
     // If status is the same, we sort by creaton date
     std::sort(listItems.begin(), listItems.end(), [](const ListItemEntity &a, const ListItemEntity &b) {
+        // if a is cancelled and b is not, b is first
         if (a.status().isCancelled() && !b.status().isCancelled())
+        {
             return false;
+        }
+        // if b is cancelled and a is not, a is first
         else if (!a.status().isCancelled() && b.status().isCancelled())
         {
             return true;
         }
+        // if both are cancelled, sort by creation date
         else if (a.status().isCancelled() && b.status().isCancelled())
         {
             return a.getCreatedAt() < b.getCreatedAt();
         }
+        // if priority is different, sort by priority
         else if (a.priority().getPosition() != b.priority().getPosition())
         {
             return a.priority().getPosition() > b.priority().getPosition();
         }
+        // if status is different and both are not closed, sort by status
         else if (a.status().getCommandName() != b.status().getCommandName() &&
-                !a.status().isClosed() && !b.status().isClosed()
+                !a.status().isClosed() &&
+                !b.status().isClosed()
         ) {
             if (a.status().getCommandName() == "started") {
                 return true;
             } else if (b.status().getCommandName() == "started") {
                 return false;
             } else {
-                return a.status().getPosition() < b.status().getPosition();
+                if (a.status().getPosition() != b.status().getPosition()) {
+                    return a.status().getPosition() < b.status().getPosition();
+                }
+                else
+                {
+                    return a.getCreatedAt() > b.getCreatedAt();
+                }
             }
         }
         else if (a.getDueAt() != b.getDueAt())
