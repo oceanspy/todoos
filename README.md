@@ -29,6 +29,9 @@ Don't hesitate to open an issue if you have any problem or suggestion. :-)
 
 ## Installation
 
+You can download the latest release from the releases page:
+https://github.com/oceanspy/todoos/releases/
+
 ```bash
 git clone https://github.com/oceanspy/todoos.git
 cd todoos

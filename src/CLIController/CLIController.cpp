@@ -210,7 +210,7 @@ void CLIController::show()
     }
     else if (command.hasOption("version"))
     {
-        ioService.message("Version: development");
+        ioService.message(Help::getVersion());
         return;
     }
     else if (command.hasOption("archive"))

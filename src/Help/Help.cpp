@@ -87,3 +87,8 @@ std::vector<std::string> Help::helpListForCli()
         "\033[0mempty\033[0m                                                           Empty the list",
     };
 }
+
+std::string Help::getVersion()
+{
+    return "pre-release v0.99.01";
+}
