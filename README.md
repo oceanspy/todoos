@@ -6,7 +6,7 @@ This project is still in development. It is not recommended to use it in a produ
 
 ## Description
 
-Small CLI tool to manage your todo load or general lists.
+Smart CLI Application for Tasks management.
 
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot0.png?raw=true)
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot1.png?raw=true)
