@@ -1,0 +1,8 @@
+To install autocompletion with ZSH and `oh-my-zsh`, you can use the following file: `_todoos`
+and put it in ~/.oh-my-zsh/completions
+
+(folder might need to be created manually)
+
+Then, reload `oh-my-zsh` with:
+ `source ~/.zshrc`
+ `omz reload`

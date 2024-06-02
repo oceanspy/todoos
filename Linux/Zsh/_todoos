@@ -1,0 +1,46 @@
+#compdef todoos
+
+# Define the completion function
+_todoos_completion() {
+    # Get the current word being completed
+    local current_word
+    current_word="${words[CURRENT]}"
+
+    # Check if the last word on the command line is quoted
+    if [[ $current_word == *"'"* || $current_word == *'"'* ]]; then
+        return
+    fi
+
+
+    # If this is the first argument, provide completion suggestions based on 'todoos commands'
+    if [[ CURRENT -eq 2 ]]; then
+        local completion_output
+        completion_output=($(todoos commands))
+        _describe 'completion_output' completion_output
+        return
+    fi
+
+    # Determine the number of arguments provided
+    local num_args
+    num_args=$(($CURRENT - 2))
+
+    # Generate the appropriate completion command based on the number of arguments
+    local completion_command="todoos commands"
+    for ((i=2; i<=CURRENT; i++)); do
+        completion_command+=" ${words[i]}"
+    done
+
+    # Execute the completion command and capture the output
+    local completion_output
+    completion_output=($(eval $completion_command))
+
+    # Provide completion suggestions based on the completion output
+    _describe 'completion_output' completion_output -o nosort
+}
+
+# Call the completion function
+# avoid sorting:
+compdef _todoos_completion todoos
+# _todoos_completion "$@"
+# Sorted by app:
+# compdef _todoos_completion todoos

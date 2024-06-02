@@ -1,0 +1,119 @@
+cmake_minimum_required(VERSION 3.28)
+project(todoos)
+
+include(FetchContent)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+set(CMAKE_CXX_STANDARD 23)
+
+add_executable(todoos main.cpp
+        src/FileDataStorage/FileDataServiceInterface.h
+        src/Command/CommandValidation.cpp
+        src/Command/CommandValidation.h
+        src/Help/Help.cpp
+        src/Help/Help.h
+        src/Command/Command.cpp
+        src/Command/Command.h
+        src/Command/CommandList.cpp
+        src/Command/CommandList.h
+        src/Command/CommandService.cpp
+        src/Command/CommandService.h
+        src/IOService/IOService.cpp
+        src/IOService/IOService.h
+        src/IOService/IOCliService/IOCliService.cpp
+        src/IOService/IOCliService/IOCliService.h
+        src/List/ListItems/PriorityService.cpp
+        src/List/ListItems/PriorityService.h
+        src/List/ListItems/StatusService.cpp
+        src/List/ListItems/StatusService.h
+        src/List/ListService.cpp
+        src/List/ListService.h
+        src/Init/Init.cpp
+        src/Init/Init.h
+        src/Init/Installation.cpp
+        src/Init/Installation.h
+        src/Entities/ConfigEntity.cpp
+        src/Entities/ConfigEntity.h
+        src/Entities/ListEntity.cpp
+        src/Entities/ListEntity.h
+        src/Entities/ListItemEntity.cpp
+        src/Entities/ListItemEntity.h
+        src/Config/ConfigService.cpp
+        src/Config/ConfigService.h
+        src/FileStorage/FileStorageService.cpp
+        src/FileStorage/FileStorageService.h
+        src/FileDataStorageRepositories/ConfigRepository.cpp
+        src/FileDataStorageRepositories/ConfigRepository.h
+        src/CLIController/ListItemActions/ListItemActions.cpp
+        src/CLIController/ListItemActions/ListItemActions.h
+        src/List/ListItemService.cpp
+        src/List/ListItemService.h
+        src/FileDataStorageRepositories/ListItemRepository.cpp
+        src/FileDataStorageRepositories/ListItemRepository.h
+        src/FileDataStorage/CSVService.cpp
+        src/FileDataStorage/CSVService.h
+        src/CLIController/Show/Show.cpp
+        src/CLIController/Show/Show.h
+        src/CLIController/CLIController.cpp
+        src/CLIController/CLIController.h
+        src/CLIController/Remove/Remove.cpp
+        src/CLIController/Remove/Remove.h
+        src/CLIController/Status/Status.cpp
+        src/CLIController/Status/Status.h
+        src/CLIController/Priority/Priority.cpp
+        src/CLIController/Priority/Priority.h
+        src/FileDataStorage/JSONService.cpp
+        src/FileDataStorage/JSONService.h
+        src/CLIController/Config/Config.cpp
+        src/CLIController/Config/Config.h
+        src/CLIController/ListActions/ListActions.cpp
+        src/CLIController/ListActions/ListActions.h
+        src/Command/SmartCommand.cpp
+        src/Command/SmartCommand.h
+        src/FileDataStorageRepositories/ListRepository.cpp
+        src/FileDataStorageRepositories/ListRepository.h
+        src/Command/CommandShortcut.cpp
+        src/Command/CommandShortcut.h
+        src/Helpers/BashStyle.h
+        src/CLIAutocomplete/CLIAutocompleteService.cpp
+        src/CLIAutocomplete/CLIAutocompleteService.h
+        src/CLIThemes/MobileTheme.cpp
+        src/CLIThemes/MobileTheme.h
+        src/CLIThemes/ThemeAbstract.h
+        src/CLIThemes/ThemeAbstract.cpp
+        src/CLIController/Move/Move.cpp
+        src/CLIController/Move/Move.h
+        src/Events/Event.cpp
+        src/Events/Event.h
+        src/Events/EventBus.cpp
+        src/Events/EventBus.h
+        src/Init/InitInterface.h
+        src/Init/InstallationInterface.h
+        src/Command/CommandOption.cpp
+        src/Command/CommandOption.h
+        src/Helpers/DateHelpers.cpp
+        src/Helpers/DateHelpers.h
+        src/Helpers/StringHelpers.cpp
+        src/Helpers/StringHelpers.h
+        src/FileDataStorage/ConfService.cpp
+        src/FileDataStorage/ConfService.h
+        src/CLIThemes/DefaultTheme.cpp
+        src/CLIThemes/DefaultTheme.h
+        src/CLIController/Stats/Stats.cpp
+        src/CLIController/Stats/Stats.h
+        src/CLIThemes/CLIThemeService.cpp
+        src/CLIThemes/CLIThemeService.h
+        src/Entities/PriorityEntity.cpp
+        src/Entities/PriorityEntity.h
+        src/Entities/StatusEntity.cpp
+        src/Entities/StatusEntity.h
+        src/Helpers/BashStyle.cpp
+)
+
+target_link_libraries(todoos PRIVATE nlohmann_json::nlohmann_json)
+
+option(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    add_subdirectory(src/Tests)
+endif()
