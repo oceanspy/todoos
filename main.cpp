@@ -29,15 +29,6 @@ int main(int argc, const char *argv[])
 
     CommandOption commandOption = CommandOption();
     CommandValidation commandValidation(commandOption, argc, argv);
-
-    Init init = Init(ioService);
-    Installation installation = Installation(ioService, jsonService, csvService, confService, init);
-    if (commandValidation.getCommandName() != "commands" && installation.isNew())
-    {
-        installation.make();
-        ioService.br();
-    }
-
     try {
         commandValidation.make();
     } catch (const std::exception& e) {
@@ -48,6 +39,15 @@ int main(int argc, const char *argv[])
         help.commandNotFound();
         return 1;
     }
+
+    Init init = Init(ioService);
+    Installation installation = Installation(ioService, jsonService, csvService, confService, init);
+    if (commandValidation.getCommandName() != "commands" && installation.isNew())
+    {
+        installation.make();
+        ioService.br();
+    }
+
     Command command(commandValidation.getCommandName(),
                     commandValidation.getCommandArguments(),
                     commandValidation.getCommandOptions(),
