@@ -7,12 +7,6 @@ Smart CLI Application for Tasks management.
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot0.png?raw=true)
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot1.png?raw=true)
 
-## Pre-requisites
-
-- CMake (>3.28)
-- Ninja or gcc (& build-essential)
-- ZSH (recommended)
-
 ## Information
 
 For now, the tool was only tested on Linux with ZSH and `Oh my ZSH`. We recommend you to use it to have the best experience.
@@ -32,11 +26,21 @@ https://github.com/oceanspy/todoos/releases/
 
 ### Build
 
+#### Pre-requisites
+
+- CMake (>3.28)
+- Ninja or gcc (& build-essential)
+- ZSH (recommended)
+
+#### Build
+
 ```bash
 git clone https://github.com/oceanspy/todoos.git
 cd todoos
 ./build.sh
 ```
+
+### Installation
 
 Create a symlink to the binary in your path.
 
@@ -47,7 +51,8 @@ ln -s {path_to_git_folder}/Build/todoos /usr/local/bin/todoos
 First launch will create the required folders and files. 
 You can edit the storage path and different options in `~/.oceanspy/todoos/cacheItems.conf`.
 
-By default, lists files are stored in `~/Documents/todoos/`.
+By default, lists files are stored in `~/.todoos/`.  
+Configuration is stored in `~/.oceanspy/todoos/`.
 
 ## Autocompletion
 
