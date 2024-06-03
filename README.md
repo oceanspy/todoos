@@ -97,7 +97,7 @@ todoos use "My_new_list"
 
 You can change the statusEntity of an item
 ```bash
-todoos start {id} # put the item in statusEntity "started"
+todoos start {id} # put the item in status "started"
 ```
 
 By default, completed/cancelled items stay in the list. If you want to clean them, you can use the clean command
