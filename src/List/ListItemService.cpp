@@ -57,10 +57,8 @@ std::vector <ListItemEntity> ListItemService::sort(std::vector <ListItemEntity> 
             return a.priority().getPosition() > b.priority().getPosition();
         }
         // if status is different and both are not closed, sort by status
-        else if (a.status().getCommandName() != b.status().getCommandName() &&
-                !a.status().isClosed() &&
-                !b.status().isClosed()
-        ) {
+        else if (a.status().getCommandName() != b.status().getCommandName())
+        {
             if (a.status().getCommandName() == "started") {
                 return true;
             } else if (b.status().getCommandName() == "started") {
