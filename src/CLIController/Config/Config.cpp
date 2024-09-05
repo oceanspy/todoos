@@ -95,7 +95,7 @@ void Config::showAll() {
     ioService.print("# Current configuration               #");
     ioService.print("#######################################");
     std::vector <ConfigEntity> configItems = configService.get();
-    for (ConfigEntity configItem : configItems)
+    for (const ConfigEntity& configItem : configItems)
     {
         std::string line;
         line = *configItem.getKey() + ": " + *configItem.getValue();

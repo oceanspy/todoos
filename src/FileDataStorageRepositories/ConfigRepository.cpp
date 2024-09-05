@@ -10,6 +10,11 @@ ConfigRepository::ConfigRepository(FileDataServiceInterface* fileDataService, co
 
 std::vector <ConfigEntity> ConfigRepository::get()
 {
+    if (!cacheItems.empty())
+    {
+        return cacheItems;
+    }
+
     fileDataService->load(filePath);
     std::vector<std::vector<std::string>> data = fileDataService->read(0);
 
