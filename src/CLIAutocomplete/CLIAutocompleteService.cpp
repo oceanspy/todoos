@@ -385,7 +385,7 @@ void CLIAutocompleteService::showListItemId(const std::vector <std::string>& var
         int i = 0;
         for (const ListItemEntity& list : listItems)
         {
-            listItemIds += list.getId();
+            listItemIds += *list.getId();
             if (i < listItems.size() - 1)
             {
                 listItemIds += " ";
@@ -404,7 +404,7 @@ void CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, cons
         Command subSubCommand = commandService.getSubCommand(firstSubCommand);
         try {
             ListItemEntity listItemEntity = listItemService.find(subSubCommand.getName());
-            if (!listItemEntity.getId().empty())
+            if (!(*listItemEntity.getId()).empty())
             {
                 return;
             }

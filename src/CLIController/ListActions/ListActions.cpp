@@ -280,7 +280,7 @@ void ListActions::copy()
         std::vector <ListItemEntity> listItems = listItemService.load(listName).get();
         for (ListItemEntity& listItem : listItems)
         {
-            listItemService.copy(listItem.getId(), listName, newListName);
+            listItemService.copy(*listItem.getId(), listName, newListName);
         }
     } catch (std::invalid_argument& e) {
         ioService.error("Error while creating the file -- is list name correct?");

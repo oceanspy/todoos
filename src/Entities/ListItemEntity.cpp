@@ -2,59 +2,59 @@
 #include <utility>
 #include <stdexcept>
 
-std::string ListItemEntity::getId() const
+const std::string * ListItemEntity::getId() const
 {
-    return id;
+    return &id;
 }
 
-int ListItemEntity::getPosition() const
+const int * ListItemEntity::getPosition() const
 {
-    return position;
+    return &position;
 }
 
-std::string ListItemEntity::getListName() const
+const std::string * ListItemEntity::getListName() const
 {
-    return listName;
+    return &listName;
 }
 
-std::string ListItemEntity::getListVariant() const
+const std::string * ListItemEntity::getListVariant() const
 {
-    return listVariant;
+    return &listVariant;
 }
 
-std::string ListItemEntity::getValue() const
+const std::string * ListItemEntity::getValue() const
 {
-    return value;
+    return &value;
 }
 
-PriorityEntity ListItemEntity::priority() const
+const PriorityEntity * ListItemEntity::priority() const
 {
-    return priorityEntity;
+    return &priorityEntity;
 }
 
-StatusEntity ListItemEntity::status() const
+const StatusEntity * ListItemEntity::status() const
 {
-    return statusEntity;
+    return &statusEntity;
 }
 
-time_t ListItemEntity::getDueAt() const
+const time_t * ListItemEntity::getDueAt() const
 {
-    return dueAt;
+    return &dueAt;
 }
 
-time_t ListItemEntity::getClosedAt() const
+const time_t * ListItemEntity::getClosedAt() const
 {
-    return closedAt;
+    return &closedAt;
 }
 
-time_t ListItemEntity::getCreatedAt() const
+const time_t * ListItemEntity::getCreatedAt() const
 {
-    return createdAt;
+    return &createdAt;
 }
 
-time_t ListItemEntity::getUpdatedAt() const
+const time_t * ListItemEntity::getUpdatedAt() const
 {
-    return updatedAt;
+    return &updatedAt;
 }
 
 void ListItemEntity::setId(std::string idStr)
@@ -196,13 +196,13 @@ ListItemEntity ListItemEntity::setFromVector(PriorityService& priorityService, S
 std::vector<std::string> ListItemEntity::makeVector(const ListItemEntity &listItemEntity)
 {
     return {
-        listItemEntity.getId(),
-        listItemEntity.getValue(),
-        *listItemEntity.priority().getName(),
-        *listItemEntity.status().getCommandName(),
-        std::to_string(listItemEntity.getDueAt()),
-        std::to_string(listItemEntity.getClosedAt()),
-        std::to_string(listItemEntity.getCreatedAt()),
-        std::to_string(listItemEntity.getUpdatedAt())
+        *listItemEntity.getId(),
+        *listItemEntity.getValue(),
+        *(*listItemEntity.priority()).getName(),
+        *(*listItemEntity.status()).getCommandName(),
+        std::to_string(*listItemEntity.getDueAt()),
+        std::to_string(*listItemEntity.getClosedAt()),
+        std::to_string(*listItemEntity.getCreatedAt()),
+        std::to_string(*listItemEntity.getUpdatedAt())
     };
 }

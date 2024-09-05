@@ -7,17 +7,17 @@
 
 class ListItemEntity {
 public:
-    [[nodiscard]] std::string getId() const;
-    [[nodiscard]] int getPosition() const;
-    [[nodiscard]] std::string getListName() const;
-    [[nodiscard]] std::string getListVariant() const;
-    [[nodiscard]] std::string getValue() const;
-    [[nodiscard]] PriorityEntity priority() const;
-    [[nodiscard]] StatusEntity status() const;
-    [[nodiscard]] time_t getDueAt() const;
-    [[nodiscard]] time_t getClosedAt() const;
-    [[nodiscard]] time_t getCreatedAt() const;
-    [[nodiscard]] time_t getUpdatedAt() const;
+    [[nodiscard]] const std::string * getId() const;
+    [[nodiscard]] const int * getPosition() const;
+    [[nodiscard]] const std::string * getListName() const;
+    [[nodiscard]] const std::string * getListVariant() const;
+    [[nodiscard]] const std::string * getValue() const;
+    [[nodiscard]] const PriorityEntity * priority() const;
+    [[nodiscard]] const StatusEntity * status() const;
+    [[nodiscard]] const time_t * getDueAt() const;
+    [[nodiscard]] const time_t * getClosedAt() const;
+    [[nodiscard]] const time_t * getCreatedAt() const;
+    [[nodiscard]] const time_t * getUpdatedAt() const;
     void setId(std::string idStr);
     void setPosition(int positionInt);
     void setListName(std::string listNameStr);
@@ -42,7 +42,7 @@ public:
     static std::vector <std::string> makeVector(const ListItemEntity& listItemEntity);
 private:
     std::string id;
-    int position;
+    int position = 0;
     std::string listName;
     std::string listVariant;
     std::string value;

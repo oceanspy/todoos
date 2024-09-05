@@ -68,7 +68,7 @@ std::string Move::make()
                     //
                 }
                 
-                if (!listItemEntity.getId().empty() && !command.hasOption("force")) {
+                if (!(*listItemEntity.getId()).empty() && !command.hasOption("force")) {
                     std::string answer = ioService.ask("Item " + id + " already exists in list " + newList + ". Do you want to overwrite it? (y/n) ");
                     if (answer != "y" && answer != "yes")
                     {
@@ -104,7 +104,7 @@ std::string Move::make()
                     //
                 }
 
-                if (!listItemEntity.getId().empty() && !command.hasOption("force")) {
+                if (!(*listItemEntity.getId()).empty() && !command.hasOption("force")) {
                     std::string answer = ioService.ask("Item " + id + " already exists in list " + newList + ". Do you want to overwrite it? (y/n) ");
                     if (answer != "y" && answer != "yes")
                     {

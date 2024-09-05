@@ -71,7 +71,7 @@ std::string DefaultTheme::buildLine(const ListItemEntity& listItemEntity, bool h
     // Value
     if (!hideListNameInLine)
     {
-        line += StringHelpers::adjustStringLength(listItemEntity.getListName() + " ", LISTNAME_LENGTH);
+        line += StringHelpers::adjustStringLength(*listItemEntity.getListName() + " ", LISTNAME_LENGTH);
     }
     line += buildValue(listItemEntity);
     // Status
@@ -83,90 +83,90 @@ std::string DefaultTheme::buildLine(const ListItemEntity& listItemEntity, bool h
 
 std::string DefaultTheme::buildId(const ListItemEntity& listItemEntity)
 {
-    if (*listItemEntity.status().isClosed())
+    if (*(*listItemEntity.status()).isClosed())
     {
-        return StringHelpers::colorize(" " + listItemEntity.getId() + " ", GRAY);
+        return StringHelpers::colorize(" " + *listItemEntity.getId() + " ", GRAY);
     }
-    return " " + listItemEntity.getId() + " ";
+    return " " + *listItemEntity.getId() + " ";
 }
 
 std::string DefaultTheme::buildStatus(const ListItemEntity& listItemEntity)
 {
     std::string render;
-    std::string icon = *listItemEntity.status().getIcon() + " ";
-    render = !listItemEntity.status().getStyle().empty()
-                ? StringHelpers::colorize( *listItemEntity.status().getName(), listItemEntity.status().getStyle())
-                : *listItemEntity.status().getName();
-    int length = STATUS_LENGTH + 1 - listItemEntity.status().getIconLength();
+    std::string icon = *(*listItemEntity.status()).getIcon() + " ";
+    render = !(*listItemEntity.status()).getStyle().empty()
+                ? StringHelpers::colorize( *(*listItemEntity.status()).getName(), (*listItemEntity.status()).getStyle())
+                : *(*listItemEntity.status()).getName();
+    int length = STATUS_LENGTH + 1 - (*listItemEntity.status()).getIconLength();
     render = StringHelpers::adjustStringLength(icon + render, length);
-    std::string final_render = StringHelpers::colorize(render, listItemEntity.status().getColor());
+    std::string final_render = StringHelpers::colorize(render, (*listItemEntity.status()).getColor());
     return final_render;
 }
 
 std::string DefaultTheme::buildPriority(const ListItemEntity& listItemEntity)
 {
-    if (*listItemEntity.status().isClosed())
+    if (*(*listItemEntity.status()).isClosed())
     {
-        return StringHelpers::colorize(" " + *listItemEntity.priority().getIcon() + "  ", GRAY);
+        return StringHelpers::colorize(" " + *(*listItemEntity.priority()).getIcon() + "  ", GRAY);
     }
     else
     {
-        return StringHelpers::colorize(" " + *listItemEntity.priority().getIcon() + "  ", listItemEntity.priority().getColor());
+        return StringHelpers::colorize(" " + *(*listItemEntity.priority()).getIcon() + "  ", (*listItemEntity.priority()).getColor());
     }
 }
 
 std::string DefaultTheme::buildValue(const ListItemEntity& listItemEntity)
 {
-    std::string value = listItemEntity.getValue();
+    std::string value = *listItemEntity.getValue();
     value = autoLineBreak(value, consoleRowLength, ID_LENGTH + PRIORITY_LENGTH);
-    value = StringHelpers::colorize(value, listItemEntity.status().getColor());
-    value = StringHelpers::colorize(value, listItemEntity.status().getStyle());
+    value = StringHelpers::colorize(value, (*listItemEntity.status()).getColor());
+    value = StringHelpers::colorize(value, (*listItemEntity.status()).getStyle());
     return value;
 }
 
 std::string DefaultTheme::buildDate(const ListItemEntity& listItemEntity)
 {
-    if (!*listItemEntity.status().isClosed() && listItemEntity.getDueAt() > 0)
+    if (!*(*listItemEntity.status()).isClosed() && *listItemEntity.getDueAt() > 0)
     {
-        if (*listItemEntity.status().isPassive())
+        if (*(*listItemEntity.status()).isPassive())
         {
-            return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(listItemEntity.getDueAt(), "date"), DATE_LENGTH), listItemEntity.status().getColor());
+            return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(*listItemEntity.getDueAt(), "date"), DATE_LENGTH), (*listItemEntity.status()).getColor());
         }
 
         // if due date > now + 10 days
-        if (listItemEntity.getDueAt() > time(nullptr) + 864000)
+        if (*listItemEntity.getDueAt() > time(nullptr) + 864000)
         {
-            return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(listItemEntity.getDueAt(), "date"), DATE_LENGTH), GREEN);
+            return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(*listItemEntity.getDueAt(), "date"), DATE_LENGTH), GREEN);
         }
         // if due date > now + 4 days
-        else if (listItemEntity.getDueAt() > time(nullptr) + 345600)
+        else if (*listItemEntity.getDueAt() > time(nullptr) + 345600)
         {
-            return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(listItemEntity.getDueAt(), "date"), DATE_LENGTH), LIGHT_YELLOW);
+            return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(*listItemEntity.getDueAt(), "date"), DATE_LENGTH), LIGHT_YELLOW);
         }
         // if date < now
-        else if (listItemEntity.getDueAt() < time(nullptr) + 86400)
+        else if (*listItemEntity.getDueAt() < time(nullptr) + 86400)
         {
-            return StringHelpers::colorize("Deadl.: " + DateHelpers::formatTimestampToHumanDate(listItemEntity.getDueAt(), "date"), BG_RED);
+            return StringHelpers::colorize("Deadl.: " + DateHelpers::formatTimestampToHumanDate(*listItemEntity.getDueAt(), "date"), BG_RED);
         }
 
-        return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(listItemEntity.getDueAt(), "date"), DATE_LENGTH), LIGHT_RED);
+        return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(*listItemEntity.getDueAt(), "date"), DATE_LENGTH), LIGHT_RED);
     }
 
-    if (!*listItemEntity.status().isClosed())
+    if (!*(*listItemEntity.status()).isClosed())
     {
-        if (DateHelpers::isTimestampToday(listItemEntity.getCreatedAt()))
+        if (DateHelpers::isTimestampToday(*listItemEntity.getCreatedAt()))
         {
-            return StringHelpers::colorize(StringHelpers::adjustStringLength("Today at " + DateHelpers::formatTimestamp(listItemEntity.getCreatedAt(), "shortTime"), DATE_LENGTH), LIGHT_GREEN);
+            return StringHelpers::colorize(StringHelpers::adjustStringLength("Today at " + DateHelpers::formatTimestamp(*listItemEntity.getCreatedAt(), "shortTime"), DATE_LENGTH), LIGHT_GREEN);
         }
-        else if (DateHelpers::isTimestampNDaysFromToday(listItemEntity.getCreatedAt(), -1))
+        else if (DateHelpers::isTimestampNDaysFromToday(*listItemEntity.getCreatedAt(), -1))
         {
-            return StringHelpers::colorize(StringHelpers::adjustStringLength("Yesterday at " + DateHelpers::formatTimestamp(listItemEntity.getCreatedAt(), "shortTime"), DATE_LENGTH), GREEN);
+            return StringHelpers::colorize(StringHelpers::adjustStringLength("Yesterday at " + DateHelpers::formatTimestamp(*listItemEntity.getCreatedAt(), "shortTime"), DATE_LENGTH), GREEN);
         }
-        return StringHelpers::adjustStringLength(DateHelpers::formatTimestampToHumanDate(listItemEntity.getCreatedAt()), DATE_LENGTH);
+        return StringHelpers::adjustStringLength(DateHelpers::formatTimestampToHumanDate(*listItemEntity.getCreatedAt()), DATE_LENGTH);
     }
     else
     {
-        return StringHelpers::colorize(StringHelpers::adjustStringLength("Elaps.: " + DateHelpers::timestampToDuration(listItemEntity.getCreatedAt(), listItemEntity.getUpdatedAt()), DATE_LENGTH), GRAY);
+        return StringHelpers::colorize(StringHelpers::adjustStringLength("Elaps.: " + DateHelpers::timestampToDuration(*listItemEntity.getCreatedAt(), *listItemEntity.getUpdatedAt()), DATE_LENGTH), GRAY);
     }
 }
 

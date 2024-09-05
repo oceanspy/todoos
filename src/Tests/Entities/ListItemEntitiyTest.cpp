@@ -37,14 +37,14 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         listItemEntity.setUpdatedAt(updatedAt);
 
         // Verify that the values are set correctly
-        REQUIRE(listItemEntity.getId() == id);
-        REQUIRE(listItemEntity.getPosition() == position);
-        REQUIRE(listItemEntity.getListName() == listName);
-        REQUIRE(listItemEntity.getValue() == value);
-        REQUIRE(*listItemEntity.priority().getName() == priority);
-        REQUIRE(*listItemEntity.status().getName() == status);
-        REQUIRE(listItemEntity.getCreatedAt() == createdAt);
-        REQUIRE(listItemEntity.getUpdatedAt() == updatedAt);
+        REQUIRE(*listItemEntity.getId() == id);
+        REQUIRE(*listItemEntity.getPosition() == position);
+        REQUIRE(*listItemEntity.getListName() == listName);
+        REQUIRE(*listItemEntity.getValue() == value);
+        REQUIRE(*(*listItemEntity.priority()).getName() == priority);
+        REQUIRE(*(*listItemEntity.status()).getName() == status);
+        REQUIRE(*listItemEntity.getCreatedAt() == createdAt);
+        REQUIRE(*listItemEntity.getUpdatedAt() == updatedAt);
     }
 
     SECTION("Test setting properties with set method") {
@@ -64,13 +64,13 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         ListItemEntity listItemEntity = ListItemEntity::set(id, listName, value, priorityEntity, statusEntity, 0, 0, createdAt, updatedAt);
 
         // Verify that the values are set correctly
-        REQUIRE(listItemEntity.getId() == id);
-        REQUIRE(listItemEntity.getListName() == listName);
-        REQUIRE(listItemEntity.getValue() == value);
-        REQUIRE(*listItemEntity.priority().getName() == priority);
-        REQUIRE(*listItemEntity.status().getName() == status);
-        REQUIRE(listItemEntity.getCreatedAt() == createdAt);
-        REQUIRE(listItemEntity.getUpdatedAt() == updatedAt);
+        REQUIRE(*listItemEntity.getId() == id);
+        REQUIRE(*listItemEntity.getListName() == listName);
+        REQUIRE(*listItemEntity.getValue() == value);
+        REQUIRE(*(*listItemEntity.priority()).getName() == priority);
+        REQUIRE(*(*listItemEntity.status()).getName() == status);
+        REQUIRE(*listItemEntity.getCreatedAt() == createdAt);
+        REQUIRE(*listItemEntity.getUpdatedAt() == updatedAt);
     }
 
 
@@ -108,11 +108,11 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         listItemEntity.setUpdatedAt(validUpdatedAt);
 
         // Verify that the values remain unchanged (default values)
-        REQUIRE(listItemEntity.getId() == validId);
-        REQUIRE(listItemEntity.getPosition() == validPosition);
-        REQUIRE(listItemEntity.getListName() == listName);
-        REQUIRE(listItemEntity.getValue() == validValue);
-        REQUIRE(listItemEntity.getCreatedAt() == validCreatedAt);
-        REQUIRE(listItemEntity.getUpdatedAt() == validUpdatedAt);
+        REQUIRE(*listItemEntity.getId() == validId);
+        REQUIRE(*listItemEntity.getPosition() == validPosition);
+        REQUIRE(*listItemEntity.getListName() == listName);
+        REQUIRE(*listItemEntity.getValue() == validValue);
+        REQUIRE(*listItemEntity.getCreatedAt() == validCreatedAt);
+        REQUIRE(*listItemEntity.getUpdatedAt() == validUpdatedAt);
     }
 }
