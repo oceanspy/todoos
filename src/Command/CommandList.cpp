@@ -146,6 +146,7 @@ void CommandList::make()
                 break;
             case RESET:
                 commands[commandId].name = "reset";
+                break;
             case COMMANDS:
                 commands[commandId].name = "commands";
                 commands[commandId].showInAutocomplete = false;
