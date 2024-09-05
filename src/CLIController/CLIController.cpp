@@ -109,6 +109,7 @@ void CLIController::actions()
             return;
         case CommandList::MOVE:
         case CommandList::COPY:
+        case CommandList::DUPLICATE:
             move();
             return;
         case CommandList::EMPTY:

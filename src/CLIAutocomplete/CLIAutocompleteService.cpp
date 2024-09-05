@@ -208,7 +208,8 @@ bool CLIAutocompleteService::getCompletion()
             return true;
         }
         else if (CommandService::isCommand(firstSubCommand, "move-to") ||
-                 CommandService::isCommand(firstSubCommand, "copy-to")
+                 CommandService::isCommand(firstSubCommand, "copy-to") ||
+                 CommandService::isCommand(firstSubCommand, "duplicate")
         ) {
             try {
                 autocompleteMoveList(firstSubCommand);

@@ -127,23 +127,7 @@ std::string ListItemService::add(const std::string& itemValue, const std::string
         throw std::invalid_argument("Item value must not exceed 255 characters.");
     }
 
-    bool validId = false;
-    std::string id;
-    while (!validId)
-    {
-        try {
-            if (configService.getValue("useOnlyLettersForIds") == "true") {
-                id = StringHelpers::randomString();
-            } else {
-                id = StringHelpers::randomAlNumString();
-            }
-            ListItemEntity listItemEntity = find(id);
-            loadVariant("archive").find(id);
-            loadVariant("delete").find(id);
-        } catch (std::exception &e) {
-            validId = true;
-        }
-    }
+    std::string id = makeId();
 
     ListItemEntity listItemEntity;
     listItemEntity.setId(id);
@@ -174,6 +158,63 @@ std::string ListItemService::add(const std::string& itemValue, const std::string
     listItemRepository.load(listName, listVariant).create(listItemEntity);
 
     return id;
+}
+
+std::string ListItemService::makeId()
+{
+    bool validId = false;
+    std::string id;
+    while (!validId)
+    {
+        if (configService.getValue("useOnlyLettersForIds") == "true") {
+            id = StringHelpers::randomString();
+        } else {
+            id = StringHelpers::randomAlNumString();
+        }
+        
+        if(isIdAvailable(id)) {
+            validId = true;
+        }
+    }
+
+    return id;
+}
+
+bool ListItemService::isIdAvailable(const std::string& id)
+{
+    // TO DO: Optimize this
+    try
+    {
+        find(id);
+        return false;
+    }
+    catch (std::exception &e)
+    {
+        // id is not in default list
+    }
+
+    try
+    {
+        loadVariant("archive").find(id);
+        return false;
+    }
+    catch (std::exception &e)
+    {
+        // id is not in archive list
+    }
+
+    try
+    {
+        loadVariant("delete").find(id);
+        return false;
+    }
+    catch (std::exception &e)
+    {
+        // id is not in delete list
+    }
+
+    loadVariant();
+    return true;
 }
 
 void ListItemService::edit(const std::string& id, const std::string& itemValue, const std::string* priority, const std::string* status)
@@ -503,6 +544,13 @@ void ListItemService::copy(const std::string& id, const std::string& oldListName
     listItemRepository.load(newListName).create(listItemToUpdate);
 }
 
+void ListItemService::duplicate(const std::string& id, const std::string& listName)
+{
+    ListItemEntity listItemToDuplicate = listItemRepository.load(listName).find(id);
+    std::string newId = makeId();
+    listItemToDuplicate.setId(newId);
+    listItemRepository.load(listName).create(listItemToDuplicate);
+}
 void ListItemService::restore(const std::string& id)
 {
     ListItemEntity listItem;

@@ -63,6 +63,7 @@ std::vector<std::string> Help::helpListForCli()
         "\033[0mremove (rm) \033[96m[-f] \033[93m{ids}\033[0m                                          Remove an item from the list",
         "\033[0mmove-to (mv) \033[93m{newList} {ids}\033[0m                                    Move an item to another list",
         "\033[0mcopy-to (cp) \033[93m{newList} {ids}\033[0m                                    Copy an item to another list",
+        "\033[0mduplicate \033[93m{ids}\033[0m                                                 Duplicate an item on the list",
         "\033[0marchive \033[93m{ids}\033[0m                                                   Move the item(s) to the archive list",
         "\033[0mrestore \033[93m{ids}\033[0m                                                   Restore archived/deleted item(s)",
         "",

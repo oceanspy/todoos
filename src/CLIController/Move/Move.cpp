@@ -21,17 +21,35 @@ std::string Move::make()
         return "";
     }
 
-    if (arguments.size() < 2)
-    {
-        ioService.br();
-        ioService.error("Please provide the list name where to move the element and its ID.");
-        ioService.br();
-        return "";
-    }
-
     std::string oldList = configService.getCurrentList();
-    std::string newList = command.getArguments().at(0);
-    adaptedArguments.erase(adaptedArguments.begin());
+    std::string newList;
+
+    if (CommandService::isCommand(command, "duplicate"))
+    {
+        if (arguments.size() < 1)
+        {
+            ioService.br();
+            ioService.error("Please provide the ID(s) of the element(s) to duplicate.");
+            ioService.br();
+            return "";
+        }
+
+        newList = oldList;
+    }
+    else if (CommandService::isCommand(command, "move-to") || CommandService::isCommand(command, "copy-to"))
+    {
+        if (arguments.size() < 2)
+        {
+            ioService.br();
+            ioService.error("Please provide the list name where to move the element and its ID.");
+            ioService.br();
+            return "";
+        }
+
+        newList = command.getArguments().at(0);
+        adaptedArguments.erase(adaptedArguments.begin());
+
+    }
 
     std::vector <std::string> ids = adaptedArguments;
 
@@ -106,6 +124,17 @@ std::string Move::make()
                 }
 
                 ioService.success("Item " + id + " moved from " + oldList + " to list " + newList + ".");
+            } else if (CommandService::isCommand(command, "duplicate"))
+            {
+                try {
+                    listItemService.duplicate(id, configService.getCurrentList());
+                } catch (std::exception &e) {
+                    ioService.error("Item " + id + " could not be copied from list " + oldList + " to list " + newList + ".");
+                    ioService.info(e.what());
+                    return "";
+                }
+
+                ioService.success("Item " + id + " copied from " + oldList + " to list " + newList + ".");
             }
         } catch (std::exception &e) {
             ioService.error("Item " + id + " could not be moved or copied from list " + oldList + " to " + newList + ".");

@@ -44,6 +44,7 @@ void CommandList::make()
             COPY,
             EMPTY,
             CLEAN,
+            DUPLICATE,
             DEADLINE,
             LIST,
             USE,
@@ -131,6 +132,9 @@ void CommandList::make()
                 break;
             case CLEAN:
                 commands[commandId].name = "clean";
+                break;
+            case DUPLICATE:
+                commands[commandId].name = "duplicate";
                 break;
             case DEADLINE:
                 commands[commandId].name = "deadline";
