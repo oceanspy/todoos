@@ -230,7 +230,7 @@ void CLIAutocompleteService::getAllLists(std::string& listString)
     int i = 0;
     for (const ListEntity& list : lists)
     {
-        listString += list.getName();
+        listString += *list.getName();
         if (i < lists.size())
         {
             listString += " ";

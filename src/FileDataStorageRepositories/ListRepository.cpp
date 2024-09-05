@@ -30,9 +30,7 @@ ListEntity ListRepository::find(const std::string& key)
 
     std::vector < std::vector <std::string>> data = fileDataService->read(0);
 
-    std::vector <ListEntity> items;
-
-    for (std::vector item : data)
+    for (const std::vector<std::string>& item : data)
     {
         if (item[0] == key)
         {

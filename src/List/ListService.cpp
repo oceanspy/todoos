@@ -15,7 +15,7 @@ std::vector <ListEntity> ListService::get(bool keepHidden)
     if (!keepHidden)
     {
         lists.erase(std::remove_if(lists.begin(), lists.end(), [](const ListEntity& listEntity) {
-            return listEntity.isHidden();
+            return *listEntity.isHidden();
         }), lists.end());
     }
 
@@ -38,7 +38,7 @@ void ListService::add(const std::string& listName, const std::string& type, cons
         // Continue
     }
 
-    if (foundList.getName() == listName)
+    if (foundList.getName() != nullptr)
     {
         throw std::invalid_argument("List with name: " + listName + " already exists.");
     }
@@ -69,7 +69,7 @@ bool ListService::use(const std::string& listName)
     std::vector <ListEntity> listItems = get(true);
 
     auto listFound = std::any_of(listItems.begin(), listItems.end(), [&](const ListEntity& listItem) {
-        return listItem.getName() == listName;
+        return *listItem.getName() == listName;
     });
 
     if (listFound) {
@@ -91,7 +91,7 @@ void ListService::subscribeToEvents(EventBus& eventBus)
 
 std::string ListService::getType(const std::string& listName) {
     ListEntity listEntity = find(listName);
-    return listEntity.getType();
+    return *listEntity.getType();
 }
 
 bool ListService::isListExist(const std::string &listName)
@@ -119,7 +119,7 @@ void ListService::validateListName(const std::string &newListName)
 std::vector <ListEntity> ListService::sort(std::vector <ListEntity> listItems)
 {
     std::sort(listItems.begin(), listItems.end(), [](ListEntity &a, ListEntity &b) {
-        return a.getName() < b.getName();
+        return *a.getName() < *b.getName();
     });
 
     return listItems;

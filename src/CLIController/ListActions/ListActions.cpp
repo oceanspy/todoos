@@ -217,19 +217,19 @@ void ListActions::renameList(Command subCommand)
 
 std::string ListActions::buildName(const ListEntity& listEntity)
 {
-    std::string name = addSpaceToListName(listEntity.getName());
+    std::string name = addSpaceToListName(*listEntity.getName());
 
-    if (configService.getDefaultList() == listEntity.getName())
+    if (configService.getDefaultList() == *listEntity.getName())
     {
         name += " (default)";
     }
 
-    if (configService.getCurrentList() == listEntity.getName())
+    if (configService.getCurrentList() == *listEntity.getName())
     {
         name += " (in use)";
         name = StringHelpers::colorize(name, BG_GREEN);
     }
-    else if (configService.getDefaultList() == listEntity.getName())
+    else if (configService.getDefaultList() == *listEntity.getName())
     {
         name = StringHelpers::colorize(name, BG_BLUE);
     }
