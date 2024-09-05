@@ -26,7 +26,6 @@ ConfigEntity ConfigRepository::find(const std::string& key)
     fileDataService->load(filePath);
 
     std::vector < std::vector <std::string>> data = fileDataService->read(0);
-    std::vector <ConfigEntity> items;
 
     for (std::vector item : data)
     {

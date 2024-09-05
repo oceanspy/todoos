@@ -14,17 +14,17 @@ TEST_CASE("ConfigEntity tests", "[ConfigEntity]") {
         configEntity.set(key, value);
 
         // Verify that the values are set correctly
-        REQUIRE(configEntity.getKey() == key);
-        REQUIRE(configEntity.getValue() == value);
+        REQUIRE(*configEntity.getKey() == key);
+        REQUIRE(*configEntity.getValue() == value);
 
         // Set key and verify
         std::string newKey = "new_key";
         configEntity.setKey(newKey);
-        REQUIRE(configEntity.getKey() == newKey);
+        REQUIRE(*configEntity.getKey() == newKey);
 
         // Set value and verify
         std::string newValue = "new_value";
         configEntity.setValue(newValue);
-        REQUIRE(configEntity.getValue() == newValue);
+        REQUIRE(*configEntity.getValue() == newValue);
     }
 }

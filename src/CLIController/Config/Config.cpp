@@ -98,7 +98,7 @@ void Config::showAll() {
     for (ConfigEntity configItem : configItems)
     {
         std::string line;
-        line = configItem.getKey() + ": " + configItem.getValue();
+        line = *configItem.getKey() + ": " + *configItem.getValue();
         ioService.print(line);
     }
 }

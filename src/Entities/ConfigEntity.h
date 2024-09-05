@@ -7,12 +7,12 @@
 
 class ConfigEntity {
 public:
-    std::string getKey() const;
-    std::string getValue() const;
-    void setKey(std::string key);
-    void setValue(std::string value);
-    void set(std::string key, std::string value);
-    static ConfigEntity setFromVector(std::vector<std::string> item);
+    [[nodiscard]] const std::string * getKey() const;
+    [[nodiscard]] const std::string * getValue() const;
+    void setKey(const std::string& key);
+    void setValue(const std::string& value);
+    void set(const std::string& key, const std::string& value);
+    static ConfigEntity setFromVector(const std::vector<std::string>& item);
     static std::vector <std::string> makeVector(const ConfigEntity& configEntity);
 
 private:

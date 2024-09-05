@@ -32,22 +32,22 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 8);
-        REQUIRE(configRepository.find("fileDataStorageType").getValue() == "json");
-        REQUIRE(configRepository.find("appDirStorage").getValue() == init.getMainDirPath());
-        REQUIRE(configRepository.find("currentList").getValue() == tempListName);
-        REQUIRE(configRepository.find("defaultList").getValue() == "default");
-        REQUIRE(configRepository.find("theme").getValue() == "default");
-        REQUIRE(configRepository.find("consoleRowMaxLength").getValue() == "96");
-        REQUIRE(configRepository.find("archiveWhenCompleted").getValue() == "false");
-        REQUIRE(configRepository.find("useOnlyLettersForIds").getValue() == "true");
+        REQUIRE(*configRepository.find("fileDataStorageType").getValue() == "json");
+        REQUIRE(*configRepository.find("appDirStorage").getValue() == init.getMainDirPath());
+        REQUIRE(*configRepository.find("currentList").getValue() == tempListName);
+        REQUIRE(*configRepository.find("defaultList").getValue() == "default");
+        REQUIRE(*configRepository.find("theme").getValue() == "default");
+        REQUIRE(*configRepository.find("consoleRowMaxLength").getValue() == "96");
+        REQUIRE(*configRepository.find("archiveWhenCompleted").getValue() == "false");
+        REQUIRE(*configRepository.find("useOnlyLettersForIds").getValue() == "true");
     }
 
     SECTION("Test find method") {
         // Call the get method
         ConfigEntity result = configRepository.find("currentList");
 
-        REQUIRE(result.getKey() == "currentList");
-        REQUIRE(result.getValue() == "tempListName");
+        REQUIRE(*result.getKey() == "currentList");
+        REQUIRE(*result.getValue() == "tempListName");
     }
 
     SECTION("Test update method") {
@@ -63,8 +63,8 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
 
         ConfigEntity result = configRepository.find(key);
 
-        REQUIRE(result.getKey() == "currentList");
-        REQUIRE(result.getValue() == "newValue");
+        REQUIRE(*result.getKey() == "currentList");
+        REQUIRE(*result.getValue() == "newValue");
 
         configRepository.update("currentList", oldConfig);
     }
@@ -80,8 +80,8 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
 
         ConfigEntity result = configRepository.find(key);
 
-        REQUIRE(result.getKey() == key);
-        REQUIRE(result.getValue() == value);
+        REQUIRE(*result.getKey() == key);
+        REQUIRE(*result.getValue() == value);
 
         configRepository.remove(const_cast<std::string &>(key));
 
