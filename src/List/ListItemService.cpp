@@ -37,35 +37,35 @@ std::vector <ListItemEntity> ListItemService::sort(std::vector <ListItemEntity> 
     // If status is the same, we sort by creaton date
     std::sort(listItems.begin(), listItems.end(), [](const ListItemEntity &a, const ListItemEntity &b) {
         // if a is cancelled and b is not, b is first
-        if (a.status().isCancelled() && !b.status().isCancelled())
+        if (*a.status().isCancelled() && !*b.status().isCancelled())
         {
             return false;
         }
         // if b is cancelled and a is not, a is first
-        else if (!a.status().isCancelled() && b.status().isCancelled())
+        else if (!*a.status().isCancelled() && *b.status().isCancelled())
         {
             return true;
         }
         // if both are cancelled, sort by creation date
-        else if (a.status().isCancelled() && b.status().isCancelled())
+        else if (*a.status().isCancelled() && *b.status().isCancelled())
         {
             return a.getCreatedAt() < b.getCreatedAt();
         }
         // if priority is different, sort by priority
-        else if (a.priority().getPosition() != b.priority().getPosition())
+        else if (*a.priority().getPosition() != *b.priority().getPosition())
         {
-            return a.priority().getPosition() > b.priority().getPosition();
+            return *a.priority().getPosition() > *b.priority().getPosition();
         }
         // if status is different and both are not closed, sort by status
-        else if (a.status().getCommandName() != b.status().getCommandName())
+        else if (*a.status().getCommandName() != *b.status().getCommandName())
         {
-            if (a.status().getCommandName() == "started") {
+            if (*a.status().getCommandName() == "started") {
                 return true;
-            } else if (b.status().getCommandName() == "started") {
+            } else if (*b.status().getCommandName() == "started") {
                 return false;
             } else {
-                if (a.status().getPosition() != b.status().getPosition()) {
-                    return a.status().getPosition() < b.status().getPosition();
+                if (*a.status().getPosition() != *b.status().getPosition()) {
+                    return *a.status().getPosition() < *b.status().getPosition();
                 }
                 else
                 {
@@ -87,14 +87,14 @@ std::vector <ListItemEntity> ListItemService::sort(std::vector <ListItemEntity> 
 void ListItemService::filterPriorityAbove(std::vector <ListItemEntity>& listItems, const int priority)
 {
     listItems.erase(std::remove_if(listItems.begin(), listItems.end(), [priority](const ListItemEntity& item) {
-        return item.priority().getPosition() < priority;
+        return *item.priority().getPosition() < priority;
     }), listItems.end());
 }
 
 void ListItemService::filterStatus(std::vector <ListItemEntity>& listItems, const std::vector <int>& statuses)
 {
     listItems.erase(std::remove_if(listItems.begin(), listItems.end(), [statuses, this](const ListItemEntity& item) {
-        return std::find(statuses.begin(), statuses.end(), item.status().getPosition()) == statuses.end();
+        return std::find(statuses.begin(), statuses.end(), *item.status().getPosition()) == statuses.end();
     }), listItems.end());
 }
 
@@ -257,7 +257,7 @@ void ListItemService::editStatus(const std::string& id, const int *status)
     ListItemEntity listItemToUpdate;
     listItemToUpdate = find(id);
     // check if status is not already set
-    if (listItemToUpdate.status().getId() == *status)
+    if (*listItemToUpdate.status().getId() == *status)
     {
         throw std::invalid_argument("Status of: " + id + " already set to: " + std::to_string(*status));
     }
@@ -348,12 +348,12 @@ void ListItemService::increasePriority(const std::string& id)
     ListItemEntity listItemToUpdate;
     listItemToUpdate = find(id);
 
-    if (priorityService.isMax(listItemToUpdate.priority().getName()))
+    if (priorityService.isMax(*listItemToUpdate.priority().getName()))
     {
         throw std::invalid_argument("Priority of: " + id + " already at highest priority.");
     }
 
-    int newPriority = listItemToUpdate.priority().getId() + 1;
+    int newPriority = *listItemToUpdate.priority().getId() + 1;
     listItemToUpdate.setPriority(priorityService.find(newPriority));
     listItemToUpdate.setUpdatedAt(time(nullptr));
 
@@ -365,12 +365,12 @@ void ListItemService::decreasePriority(const std::string& id)
     ListItemEntity listItemToUpdate;
     listItemToUpdate = find(id);
 
-    if (priorityService.isMin(listItemToUpdate.priority().getName()))
+    if (priorityService.isMin(*listItemToUpdate.priority().getName()))
     {
         throw std::invalid_argument("Priority of: " + id + " already at lowest priority.");
     }
 
-    int newPriority = listItemToUpdate.priority().getId() - 1;
+    int newPriority = *listItemToUpdate.priority().getId() - 1;
     listItemToUpdate.setPriority(priorityService.find(newPriority));
     listItemToUpdate.setUpdatedAt(time(nullptr));
 
@@ -391,7 +391,7 @@ void ListItemService::archiveFinishedItems()
     std::vector <ListItemEntity> listItems = get();
     for (ListItemEntity& listItem : listItems)
     {
-        if (listItem.status().isClosed())
+        if (*listItem.status().isClosed())
         {
             archive(listItem);
         }
@@ -421,7 +421,7 @@ void ListItemService::setPriority(const std::string& id, const std::string *prio
         throw std::invalid_argument("Priority: " + *priorityName + " is not valid.");
     }
 
-    if (listItemToUpdate.priority().getName() == *priorityName)
+    if (*listItemToUpdate.priority().getName() == *priorityName)
     {
         throw std::invalid_argument("Priority of: " + id + " already set to " + *priorityName);
     }
@@ -443,7 +443,7 @@ void ListItemService::setStatus(const std::string& id, const std::string *status
         throw std::invalid_argument("Status: " + *statusName + " is not valid.");
     }
 
-    if (listItemToUpdate.status().getName() == *statusName)
+    if (*listItemToUpdate.status().getName() == *statusName)
     {
         throw std::invalid_argument("Status of: " + id + " already set to " + *statusName);
     }
@@ -598,7 +598,7 @@ void ListItemService::editDeadline(std::string& id, time_t dueAt)
         throw std::invalid_argument("Item not found.");
     }
 
-    if (listItemToUpdate.status().isClosed())
+    if (*listItemToUpdate.status().isClosed())
     {
         throw std::invalid_argument("Cannot set deadline for a closed item.");
     }
@@ -643,7 +643,7 @@ long ListItemService::countWithStatus(const std::vector <int>& status)
         std::vector <ListItemEntity> listItems = listItemRepository.load(listName, listVariant).get();
         for (ListItemEntity& listItem : listItems)
         {
-            if (listItem.status().getId() == statusId)
+            if (*listItem.status().getId() == statusId)
             {
                 count++;
             }
@@ -664,7 +664,7 @@ long ListItemService::countWithPriority(const std::vector <int>& priorities)
         // TODO: Optimize this request
         std::vector<ListItemEntity> listItems = listItemRepository.load(listName, listVariant).get();
         for (ListItemEntity &listItem: listItems) {
-            if (listItem.priority().getId() == priorityId) {
+            if (*listItem.priority().getId() == priorityId) {
                 count++;
             }
         }

@@ -7,17 +7,17 @@
 
 class StatusEntity {
 public:
-    [[nodiscard]] int getId() const;
-    [[nodiscard]] int getPosition() const;
-    [[nodiscard]] std::string getName() const;
-    [[nodiscard]] std::string getCommandName() const;
-    [[nodiscard]] std::string getIcon() const;
-    [[nodiscard]] int getIconLength() const;
+    [[nodiscard]] const int * getId() const;
+    [[nodiscard]] const int * getPosition() const;
+    [[nodiscard]] const std::string * getName() const;
+    [[nodiscard]] const std::string * getCommandName() const;
+    [[nodiscard]] const std::string * getIcon() const;
+    [[nodiscard]] const int getIconLength() const;
     [[nodiscard]] std::string getColor() const;
     [[nodiscard]] std::string getStyle() const;
-    [[nodiscard]] bool isClosed() const;
-    [[nodiscard]] bool isCancelled() const;
-    [[nodiscard]] bool isPassive() const;
+    [[nodiscard]] const bool * isClosed() const;
+    [[nodiscard]] const bool * isCancelled() const;
+    [[nodiscard]] const bool * isPassive() const;
     void setId(int id);
     void setPosition(int position);
     void setName(std::string name);
@@ -32,17 +32,17 @@ public:
     static StatusEntity setFromVector(std::vector <std::string> item);
     static std::vector <std::string> makeVector(const StatusEntity& priorityEntity);
 private:
-    int id;
-    int position;
+    int id = 0;
+    int position = 0;
     std::string name;
     std::string command;
     std::string icon;
-    int iconLength;
+    int iconLength = 0;
     std::string color;
     std::string style;
-    bool statusIsClosed;
-    bool statusIsCancelled;
-    bool statusIsPassive;
+    bool statusIsClosed = false;
+    bool statusIsCancelled = false;
+    bool statusIsPassive = false;
 };
 
 

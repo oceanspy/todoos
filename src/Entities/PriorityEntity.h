@@ -7,10 +7,10 @@
 
 class PriorityEntity {
 public:
-    [[nodiscard]] int getId() const;
-    [[nodiscard]] int getPosition() const;
-    [[nodiscard]] std::string getName() const;
-    [[nodiscard]] std::string getIcon() const;
+    [[nodiscard]] const int * getId() const;
+    [[nodiscard]] const int * getPosition() const;
+    [[nodiscard]] const std::string * getName() const;
+    [[nodiscard]] const std::string * getIcon() const;
     [[nodiscard]] std::string getColor() const;
     void setId(int id);
     void setPosition(int position);
@@ -21,8 +21,8 @@ public:
     static PriorityEntity setFromVector(std::vector <std::string> item);
     static std::vector <std::string> makeVector(const PriorityEntity& priorityEntity);
 private:
-    int id;
-    int position;
+    int id = 0;
+    int position = 0;
     std::string name;
     std::string icon;
     std::string color;

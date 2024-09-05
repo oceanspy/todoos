@@ -1,26 +1,26 @@
 #include "StatusEntity.h"
 
-int StatusEntity::getId() const {
-    return id;
+const int * StatusEntity::getId() const {
+    return &id;
 }
 
-int StatusEntity::getPosition() const {
-    return position;
+const int * StatusEntity::getPosition() const {
+    return &position;
 }
 
-std::string StatusEntity::getName() const {
-    return name;
+const std::string * StatusEntity::getName() const {
+    return &name;
 }
 
-std::string StatusEntity::getCommandName() const {
-    return command;
+const std::string * StatusEntity::getCommandName() const {
+    return &command;
 }
 
-std::string StatusEntity::getIcon() const {
-    return icon;
+const std::string * StatusEntity::getIcon() const {
+    return &icon;
 }
 
-int StatusEntity::getIconLength() const
+const int StatusEntity::getIconLength() const
 {
     return iconLength;
 }
@@ -33,17 +33,17 @@ std::string StatusEntity::getStyle() const {
     return BashStyle::getBashCode(style);
 }
 
-bool StatusEntity::isClosed() const {
-    return statusIsClosed;
+const bool * StatusEntity::isClosed() const {
+    return &statusIsClosed;
 }
 
-bool StatusEntity::isCancelled() const {
-    return statusIsCancelled;
+const bool * StatusEntity::isCancelled() const {
+    return &statusIsCancelled;
 }
 
-bool StatusEntity::isPassive() const
+const bool * StatusEntity::isPassive() const
 {
-    return statusIsPassive;
+    return &statusIsPassive;
 }
 
 void StatusEntity::setId(int id) {
@@ -110,16 +110,16 @@ StatusEntity StatusEntity::setFromVector(std::vector<std::string> item) {
 
 std::vector<std::string> StatusEntity::makeVector(const StatusEntity& statusEntity) {
     return std::vector<std::string> {
-        std::to_string(statusEntity.getId()),
-        std::to_string(statusEntity.getPosition()),
-        statusEntity.getName(),
-        statusEntity.getCommandName(),
-        statusEntity.getIcon(),
+        std::to_string(*statusEntity.getId()),
+        std::to_string(*statusEntity.getPosition()),
+        *statusEntity.getName(),
+        *statusEntity.getCommandName(),
+        *statusEntity.getIcon(),
         std::to_string(statusEntity.getIconLength()),
         statusEntity.getColor(),
         statusEntity.getStyle(),
-        statusEntity.isClosed() ? "true" : "false",
-        statusEntity.isCancelled() ? "true" : "false",
-        statusEntity.isPassive() ? "true" : "false"
+        *statusEntity.isClosed() ? "true" : "false",
+        *statusEntity.isCancelled() ? "true" : "false",
+        *statusEntity.isPassive() ? "true" : "false"
     };
 }

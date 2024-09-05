@@ -198,8 +198,8 @@ std::vector<std::string> ListItemEntity::makeVector(const ListItemEntity &listIt
     return {
         listItemEntity.getId(),
         listItemEntity.getValue(),
-        listItemEntity.priority().getName(),
-        listItemEntity.status().getCommandName(),
+        *listItemEntity.priority().getName(),
+        *listItemEntity.status().getCommandName(),
         std::to_string(listItemEntity.getDueAt()),
         std::to_string(listItemEntity.getClosedAt()),
         std::to_string(listItemEntity.getCreatedAt()),

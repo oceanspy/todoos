@@ -26,7 +26,7 @@ StatusEntity StatusService::find(int statusId)
 {
     for (const StatusEntity& statusEntity : statuses)
     {
-        if (statusEntity.getId() == statusId)
+        if (*statusEntity.getId() == statusId)
         {
             return statusEntity;
         }
@@ -40,7 +40,7 @@ StatusEntity StatusService::getStatusFromName(const std::string &name)
 {
     for (const StatusEntity& statusEntity : statuses)
     {
-        if (statusEntity.getCommandName() == name)
+        if (*statusEntity.getCommandName() == name)
         {
             return statusEntity;
         }
@@ -55,7 +55,7 @@ std::vector <std::string> StatusService::getStatusesNames()
     statusNames.reserve(statuses.size());
     for (const StatusEntity& status : statuses)
     {
-        statusNames.push_back(status.getName());
+        statusNames.push_back(*status.getName());
     }
 
     return statusNames;
@@ -66,7 +66,7 @@ std::string StatusService::getCommandNamesAsString()
     std::string statusesStr;
     for (const StatusEntity& status : statuses)
     {
-        statusesStr += status.getCommandName() + " ";
+        statusesStr += *status.getCommandName() + " ";
     }
 
     statusesStr.pop_back(); // remove last space
@@ -77,14 +77,14 @@ std::string StatusService::getCommandNamesAsString()
 bool StatusService::isIdValid(int statusId)
 {
     return std::ranges::any_of(statuses.begin(), statuses.end(), [statusId](const StatusEntity& statusEntity) {
-        return statusEntity.getId() == statusId;
+        return *statusEntity.getId() == statusId;
     });
 }
 
 bool StatusService::isNameValid(const std::string& statusName)
 {
     return std::ranges::any_of(statuses.begin(), statuses.end(), [statusName](const StatusEntity& statusEntity) {
-        return statusEntity.getCommandName() == statusName;
+        return *statusEntity.getCommandName() == statusName;
     });
 }
 
@@ -92,9 +92,9 @@ int StatusService::getIdFromName(const std::string& statusName)
 {
     for (const StatusEntity& statusEntity : statuses)
     {
-        if (statusEntity.getCommandName() == statusName)
+        if (*statusEntity.getCommandName() == statusName)
         {
-            return statusEntity.getId();
+            return *statusEntity.getId();
         }
     }
 
@@ -105,9 +105,9 @@ std::string StatusService::getNameFromId(int statusId)
 {
     for (const StatusEntity& statusEntity : statuses)
     {
-        if (statusEntity.getId() == statusId)
+        if (*statusEntity.getId() == statusId)
         {
-            return statusEntity.getName();
+            return *statusEntity.getName();
         }
     }
 
@@ -118,9 +118,9 @@ bool StatusService::isClosed(std::string statusName)
 {
     for (const StatusEntity& statusEntity : statuses)
     {
-        if (statusEntity.getName() == statusName)
+        if (*statusEntity.getName() == statusName)
         {
-            return statusEntity.isClosed();
+            return *statusEntity.isClosed();
         }
     }
 

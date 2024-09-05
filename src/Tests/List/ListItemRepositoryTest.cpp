@@ -37,14 +37,14 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         REQUIRE(results.size() == 2);
         REQUIRE(results[0].getId() == "aaaa");
         REQUIRE(results[0].getValue() == "test 1");
-        REQUIRE(results[0].priority().getName() == "high");
-        REQUIRE(results[0].status().getCommandName() == "to-do");
+        REQUIRE(*results[0].priority().getName() == "high");
+        REQUIRE(*results[0].status().getCommandName() == "to-do");
         REQUIRE(results[0].getCreatedAt() == 1712487259);
         REQUIRE(results[0].getUpdatedAt() == 1712487259);
         REQUIRE(results[1].getId() == "bbbb");
         REQUIRE(results[1].getValue() == "test 2");
-        REQUIRE(results[1].priority().getName() == "medium");
-        REQUIRE(results[1].status().getCommandName() == "started");
+        REQUIRE(*results[1].priority().getName() == "medium");
+        REQUIRE(*results[1].status().getCommandName() == "started");
         REQUIRE(results[1].getCreatedAt() == 1712487272);
         REQUIRE(results[1].getUpdatedAt() == 1712487272);
     }
@@ -62,8 +62,8 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
 
         REQUIRE(result.getId() == id);
         REQUIRE(result.getValue() == value);
-        REQUIRE(result.priority().getName() == priority);
-        REQUIRE(result.status().getCommandName() == status);
+        REQUIRE(*result.priority().getName() == priority);
+        REQUIRE(*result.status().getCommandName() == status);
         REQUIRE(result.getCreatedAt() == createdAt);
         REQUIRE(result.getUpdatedAt() == updatedAt);
     }
@@ -91,8 +91,8 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         ListItemEntity result = listItemRepository.find(id);
         REQUIRE(result.getId() == id);
         REQUIRE(result.getValue() == newValue);
-        REQUIRE(result.priority().getName() == newPriority);
-        REQUIRE(result.status().getCommandName() == newStatus);
+        REQUIRE(*result.priority().getName() == newPriority);
+        REQUIRE(*result.status().getCommandName() == newStatus);
 
         listItemRepository.update(id, oldItem);
 
@@ -104,8 +104,8 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         ListItemEntity result2 = listItemRepository.find(id);
         REQUIRE(result2.getId() == id);
         REQUIRE(result2.getValue() == "test 1");
-        REQUIRE(result2.priority().getName() == newPriority);
-        REQUIRE(result2.status().getCommandName() == newStatus);
+        REQUIRE(*result2.priority().getName() == newPriority);
+        REQUIRE(*result2.status().getCommandName() == newStatus);
 
         listItemRepository.update(id, oldItem);
     }
@@ -131,8 +131,8 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         ListItemEntity result = listItemRepository.find(id);
         REQUIRE(result.getId() == id);
         REQUIRE(result.getValue() == newValue);
-        REQUIRE(result.priority().getName() == newPriority);
-        REQUIRE(result.status().getCommandName() == newStatus);
+        REQUIRE(*result.priority().getName() == newPriority);
+        REQUIRE(*result.status().getCommandName() == newStatus);
         REQUIRE(result.getCreatedAt() == newCreatedAt);
         REQUIRE(result.getUpdatedAt() == newUpdatedAt);
 
@@ -144,14 +144,14 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         REQUIRE(results.size() == 2);
         REQUIRE(results[0].getId() == "aaaa");
         REQUIRE(results[0].getValue() == "test 1");
-        REQUIRE(results[0].priority().getName() == "high");
-        REQUIRE(results[0].status().getCommandName() == "to-do");
+        REQUIRE(*results[0].priority().getName() == "high");
+        REQUIRE(*results[0].status().getCommandName() == "to-do");
         REQUIRE(results[0].getCreatedAt() == 1712487259);
         REQUIRE(results[0].getUpdatedAt() == 1712487259);
         REQUIRE(results[1].getId() == "bbbb");
         REQUIRE(results[1].getValue() == "test 2");
-        REQUIRE(results[1].priority().getName() == "medium");
-        REQUIRE(results[1].status().getCommandName() == "started");
+        REQUIRE(*results[1].priority().getName() == "medium");
+        REQUIRE(*results[1].status().getCommandName() == "started");
         REQUIRE(results[1].getCreatedAt() == 1712487272);
         REQUIRE(results[1].getUpdatedAt() == 1712487272);
     }

@@ -83,7 +83,7 @@ std::string DefaultTheme::buildLine(const ListItemEntity& listItemEntity, bool h
 
 std::string DefaultTheme::buildId(const ListItemEntity& listItemEntity)
 {
-    if (listItemEntity.status().isClosed())
+    if (*listItemEntity.status().isClosed())
     {
         return StringHelpers::colorize(" " + listItemEntity.getId() + " ", GRAY);
     }
@@ -93,10 +93,10 @@ std::string DefaultTheme::buildId(const ListItemEntity& listItemEntity)
 std::string DefaultTheme::buildStatus(const ListItemEntity& listItemEntity)
 {
     std::string render;
-    std::string icon = listItemEntity.status().getIcon() + " ";
+    std::string icon = *listItemEntity.status().getIcon() + " ";
     render = !listItemEntity.status().getStyle().empty()
-                ? StringHelpers::colorize( listItemEntity.status().getName(), listItemEntity.status().getStyle())
-                : listItemEntity.status().getName();
+                ? StringHelpers::colorize( *listItemEntity.status().getName(), listItemEntity.status().getStyle())
+                : *listItemEntity.status().getName();
     int length = STATUS_LENGTH + 1 - listItemEntity.status().getIconLength();
     render = StringHelpers::adjustStringLength(icon + render, length);
     std::string final_render = StringHelpers::colorize(render, listItemEntity.status().getColor());
@@ -105,13 +105,13 @@ std::string DefaultTheme::buildStatus(const ListItemEntity& listItemEntity)
 
 std::string DefaultTheme::buildPriority(const ListItemEntity& listItemEntity)
 {
-    if (listItemEntity.status().isClosed())
+    if (*listItemEntity.status().isClosed())
     {
-        return StringHelpers::colorize(" " + listItemEntity.priority().getIcon() + "  ", GRAY);
+        return StringHelpers::colorize(" " + *listItemEntity.priority().getIcon() + "  ", GRAY);
     }
     else
     {
-        return StringHelpers::colorize(" " + listItemEntity.priority().getIcon() + "  ", listItemEntity.priority().getColor());
+        return StringHelpers::colorize(" " + *listItemEntity.priority().getIcon() + "  ", listItemEntity.priority().getColor());
     }
 }
 
@@ -126,9 +126,9 @@ std::string DefaultTheme::buildValue(const ListItemEntity& listItemEntity)
 
 std::string DefaultTheme::buildDate(const ListItemEntity& listItemEntity)
 {
-    if (!listItemEntity.status().isClosed() && listItemEntity.getDueAt() > 0)
+    if (!*listItemEntity.status().isClosed() && listItemEntity.getDueAt() > 0)
     {
-        if (listItemEntity.status().isPassive())
+        if (*listItemEntity.status().isPassive())
         {
             return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(listItemEntity.getDueAt(), "date"), DATE_LENGTH), listItemEntity.status().getColor());
         }
@@ -152,7 +152,7 @@ std::string DefaultTheme::buildDate(const ListItemEntity& listItemEntity)
         return StringHelpers::colorize(StringHelpers::adjustStringLength("Deadl.: " + DateHelpers::formatTimestampToHumanDate(listItemEntity.getDueAt(), "date"), DATE_LENGTH), LIGHT_RED);
     }
 
-    if (!listItemEntity.status().isClosed())
+    if (!*listItemEntity.status().isClosed())
     {
         if (DateHelpers::isTimestampToday(listItemEntity.getCreatedAt()))
         {

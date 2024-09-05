@@ -75,9 +75,9 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         ListItemEntity listItemEntity = listItemService.find("aaaa");
         REQUIRE(listItemEntity.getId() == "aaaa");
         REQUIRE(listItemEntity.getValue() == "test 1");
-        REQUIRE(listItemEntity.priority().getName() == "high");
-        REQUIRE(listItemEntity.status().getCommandName() == "to-do");
-        REQUIRE(listItemEntity.priority().getName() == "high");
+        REQUIRE(*listItemEntity.priority().getName() == "high");
+        REQUIRE(*listItemEntity.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity.priority().getName() == "high");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
         REQUIRE(listItemEntity.getUpdatedAt() == 1712487259);
     }
@@ -96,8 +96,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         std::string id2 = listItemService.add(value);
         ListItemEntity listItemEntity2 = listItemService.find(id2);
         REQUIRE(listItemEntity2.getId() == id2);
-        REQUIRE(listItemEntity2.priority().getName() == "medium");
-        REQUIRE(listItemEntity2.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity2.priority().getName() == "medium");
+        REQUIRE(*listItemEntity2.status().getCommandName() == "to-do");
     }
 
     SECTION("add too long") {
@@ -141,8 +141,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         ListItemEntity listItemEntity = listItemService.find(id);
         REQUIRE(listItemEntity.getId() == "aaaa");
         REQUIRE(listItemEntity.getValue() == "test 1 update");
-        REQUIRE(listItemEntity.priority().getName() == "low");
-        REQUIRE(listItemEntity.status().getCommandName() == "started");
+        REQUIRE(*listItemEntity.priority().getName() == "low");
+        REQUIRE(*listItemEntity.status().getCommandName() == "started");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
 
 
@@ -150,16 +150,16 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemEntity = listItemService.find(id);
         REQUIRE(listItemEntity.getId() == "aaaa");
         REQUIRE(listItemEntity.getValue() == "update only value");
-        REQUIRE(listItemEntity.priority().getName() == "low");
-        REQUIRE(listItemEntity.status().getCommandName() == "started");
+        REQUIRE(*listItemEntity.priority().getName() == "low");
+        REQUIRE(*listItemEntity.status().getCommandName() == "started");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
 
         listItemService.edit(id, value, priority, status);
 
         listItemEntity = listItemService.find("aaaa");
         REQUIRE(listItemEntity.getValue() == "test 1");
-        REQUIRE(listItemEntity.priority().getName() == "high");
-        REQUIRE(listItemEntity.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity.priority().getName() == "high");
+        REQUIRE(*listItemEntity.status().getCommandName() == "to-do");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
     }
 
@@ -198,16 +198,16 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         ListItemEntity listItemEntity = listItemService.find("aaaa");
         REQUIRE(listItemEntity.getId() == "aaaa");
         REQUIRE(listItemEntity.getValue() == "test 1");
-        REQUIRE(listItemEntity.priority().getName() == "high");
-        REQUIRE(listItemEntity.status().getCommandName() == "started");
+        REQUIRE(*listItemEntity.priority().getName() == "high");
+        REQUIRE(*listItemEntity.status().getCommandName() == "started");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
 
         listItemService.editStatus(id, status);
 
         listItemEntity = listItemService.find("aaaa");
         REQUIRE(listItemEntity.getValue() == "test 1");
-        REQUIRE(listItemEntity.priority().getName() == "high");
-        REQUIRE(listItemEntity.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity.priority().getName() == "high");
+        REQUIRE(*listItemEntity.status().getCommandName() == "to-do");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
     }
 
@@ -238,8 +238,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         ListItemEntity listItemEntity = listItemService.load(tempListName).find(id);
         REQUIRE(listItemEntity.getId() == id);
         REQUIRE(listItemEntity.getValue() == "test 3");
-        REQUIRE(listItemEntity.priority().getName() == "low");
-        REQUIRE(listItemEntity.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity.priority().getName() == "low");
+        REQUIRE(*listItemEntity.status().getCommandName() == "to-do");
 
         std::vector<ListItemEntity> listItems = listItemService.load(tempListName).get();
         REQUIRE(listItems.size() == 3);
@@ -304,8 +304,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         ListItemEntity listItemEntity = listItemService.find(id);
         REQUIRE(listItemEntity.getId() == id);
         REQUIRE(listItemEntity.getValue() == "test 1 append test");
-        REQUIRE(listItemEntity.priority().getName() == "high");
-        REQUIRE(listItemEntity.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity.priority().getName() == "high");
+        REQUIRE(*listItemEntity.status().getCommandName() == "to-do");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
 
         std::string priorityValue = "high";
@@ -323,8 +323,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         ListItemEntity listItemEntity = listItemService.find(id);
         REQUIRE(listItemEntity.getId() == id);
         REQUIRE(listItemEntity.getValue() == "prepend test 1");
-        REQUIRE(listItemEntity.priority().getName() == "high");
-        REQUIRE(listItemEntity.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity.priority().getName() == "high");
+        REQUIRE(*listItemEntity.status().getCommandName() == "to-do");
         REQUIRE(listItemEntity.getCreatedAt() == 1712487259);
 
         std::string priorityValue = "high";
@@ -339,7 +339,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
         listItemService.increasePriority(id);
         ListItemEntity listItemEntity = listItemService.find(id);
-        REQUIRE(listItemEntity.priority().getName() == "urgent");
+        REQUIRE(*listItemEntity.priority().getName() == "urgent");
 
         REQUIRE_NOTHROW(listItemService.increasePriority(id));
         REQUIRE_THROWS(listItemService.increasePriority(id));
@@ -353,7 +353,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemService.increasePriority(id);
         listItemService.increasePriority(id);
         ListItemEntity listItemEntity3 = listItemService.find(id);
-        REQUIRE(listItemEntity.priority().getName() == "urgent");
+        REQUIRE(*listItemEntity.priority().getName() == "urgent");
     }
 
     SECTION("set priority") {
@@ -363,7 +363,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         const std::string* priority = &priorityValue;
         listItemService.setPriority(id, priority);
         ListItemEntity listItemEntity = listItemService.find(id);
-        REQUIRE(listItemEntity.priority().getName() == "critical");
+        REQUIRE(*listItemEntity.priority().getName() == "critical");
 
         REQUIRE_THROWS(listItemService.setPriority(id, priority));
 
@@ -371,7 +371,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         const std::string* priority2 = &priorityValue2;
         listItemService.setPriority(id, priority2);
         ListItemEntity listItemEntity2 = listItemService.find(id);
-        REQUIRE(listItemEntity2.priority().getName() == "low");
+        REQUIRE(*listItemEntity2.priority().getName() == "low");
     }
 
     SECTION("set status") {
@@ -381,7 +381,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         const std::string* status = &statusValue;
         listItemService.setStatus(id, status);
         ListItemEntity listItemEntity = listItemService.find(id);
-        REQUIRE(listItemEntity.status().getCommandName() == "paused");
+        REQUIRE(*listItemEntity.status().getCommandName() == "paused");
 
         REQUIRE_THROWS(listItemService.setStatus(id, status));
 
@@ -389,7 +389,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         const std::string* status2 = &statusValue2;
         listItemService.setStatus(id, status2);
         ListItemEntity listItemEntity2 = listItemService.find(id);
-        REQUIRE(listItemEntity2.status().getCommandName() == "to-do");
+        REQUIRE(*listItemEntity2.status().getCommandName() == "to-do");
     }
 
     SECTION("min/max priority") {

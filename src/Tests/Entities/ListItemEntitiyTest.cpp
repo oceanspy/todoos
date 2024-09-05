@@ -41,8 +41,8 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         REQUIRE(listItemEntity.getPosition() == position);
         REQUIRE(listItemEntity.getListName() == listName);
         REQUIRE(listItemEntity.getValue() == value);
-        REQUIRE(listItemEntity.priority().getName() == priority);
-        REQUIRE(listItemEntity.status().getName() == status);
+        REQUIRE(*listItemEntity.priority().getName() == priority);
+        REQUIRE(*listItemEntity.status().getName() == status);
         REQUIRE(listItemEntity.getCreatedAt() == createdAt);
         REQUIRE(listItemEntity.getUpdatedAt() == updatedAt);
     }
@@ -67,8 +67,8 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         REQUIRE(listItemEntity.getId() == id);
         REQUIRE(listItemEntity.getListName() == listName);
         REQUIRE(listItemEntity.getValue() == value);
-        REQUIRE(listItemEntity.priority().getName() == priority);
-        REQUIRE(listItemEntity.status().getName() == status);
+        REQUIRE(*listItemEntity.priority().getName() == priority);
+        REQUIRE(*listItemEntity.status().getName() == status);
         REQUIRE(listItemEntity.getCreatedAt() == createdAt);
         REQUIRE(listItemEntity.getUpdatedAt() == updatedAt);
     }
