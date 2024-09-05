@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include "../Helpers/BashStyle.h"
 #include <unistd.h>
 #include <sys/ioctl.h>
 
