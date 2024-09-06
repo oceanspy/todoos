@@ -46,7 +46,7 @@ int main(int argc, const char *argv[])
     {
         if (commandValidation.getCommandName() == "commands")
         {
-            return 1;
+            return 0;
         }
 
         installation.make();
@@ -108,7 +108,7 @@ int main(int argc, const char *argv[])
                                                                                listItemService
                                                                                );
         if (cliAutocompleteService.getCompletion()) {
-            return 1;
+            return 0;
         }
     } catch (const std::exception& e) {
         // Just Quit
@@ -128,5 +128,5 @@ int main(int argc, const char *argv[])
                                              );
     cliService.actions();
 
-    return 1;
+    return 0;
 }
