@@ -5,8 +5,8 @@
 #include "IOCliService/IOCliService.h"
 
 
-IOService::IOService(std::string channel)
-    : channel(std::move(channel))
+IOService::IOService(const std::string& channel)
+    : channel(channel)
 {
 
 }

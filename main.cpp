@@ -21,7 +21,8 @@
 
 int main(int argc, const char *argv[])
 {
-    IOService ioService = IOService();
+    std::string channel = "cli";
+    IOService ioService = IOService(channel);
     Help help = Help(ioService);
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
@@ -100,6 +101,7 @@ int main(int argc, const char *argv[])
         return 1;
     }
 
+    bool autocomplete = false;
     try {
         CLIAutocompleteService cliAutocompleteService = CLIAutocompleteService(ioService,
                                                                                commandService,
@@ -107,12 +109,15 @@ int main(int argc, const char *argv[])
                                                                                listService,
                                                                                listItemService
                                                                                );
-        if (cliAutocompleteService.getCompletion()) {
-            return 0;
-        }
+        autocomplete = cliAutocompleteService.getCompletion();
     } catch (const std::exception& e) {
         // Just Quit
         return 1;
+    }
+
+    if (autocomplete)
+    {
+        return 0;
     }
 
     CLIThemeService cliThemeService = CLIThemeService(ioService, configService, listService, listItemService);

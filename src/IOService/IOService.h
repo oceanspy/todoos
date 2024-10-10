@@ -8,7 +8,7 @@
 
 class IOService {
 public:
-    explicit IOService(std::string channel = "cli");
+    explicit IOService(const std::string& channel);
     void print (const std::string& message);
     void message (const std::string& message);
     void printWithoutLineBreak (const std::string& message);
@@ -20,7 +20,7 @@ public:
     std::string ask(const std::string& message);
     static int getConsoleDisplayWidth();
 protected:
-    std::string channel;
+    const std::string& channel;
 };
 
 

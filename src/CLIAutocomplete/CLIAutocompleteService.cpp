@@ -51,7 +51,7 @@ bool CLIAutocompleteService::getCompletion()
             } else if (command.hasOption("deadline"))
             {
                 try {
-                    ioService.printWithoutLineBreak(getDeadline());
+                    ioService.print(getDeadline());
                 } catch (std::exception &e) {
                     return true;
                 }
@@ -76,11 +76,7 @@ bool CLIAutocompleteService::getCompletion()
             !commandService.hasSubCommand(firstSubCommand) &&
             commandService.isBeginningOfCommand(firstSubCommand)
         ) {
-            try {
-                autocompleteBase();
-            } catch (std::exception &e) {
-                return true;
-            }
+            autocompleteBase();
             return true;
         }
 
@@ -107,7 +103,7 @@ bool CLIAutocompleteService::getCompletion()
             std::string deadline = getDeadline();
             if (!commandService.hasSubCommand(firstSubCommand))
             {
-                ioService.printWithoutLineBreak(deadline);
+                ioService.print(deadline);
                 return true;
             }
 
@@ -118,13 +114,13 @@ bool CLIAutocompleteService::getCompletion()
                     !StringHelpers::containsWord(deadline, secondSubCommand.getName()) &&
                     !DateHelpers::isDateValidFromUser(secondSubCommand.getName())
                 ) {
-                    ioService.printWithoutLineBreak(deadline);
+                    ioService.print(deadline);
                     return true;
                 }
                 autocompleteIdIndefinitely(secondSubCommand);
                 return true;
             }
-            ioService.printWithoutLineBreak(deadline);
+            ioService.print(deadline);
 
             try {
                 autocompleteId(firstSubCommand);
@@ -252,13 +248,13 @@ void CLIAutocompleteService::autocompleteOptionList()
     if (!StringHelpers::containsWord(listString, lastWord) &&
         (!StringHelpers::containsWord(listString, command.getOptions().at("list")))
     ) {
-        ioService.printWithoutLineBreak(listString);
+        ioService.print(listString);
     }
 }
 
 void CLIAutocompleteService::autocompleteBase()
 {
-    ioService.printWithoutLineBreak(commandService.getMainCommandListAsString());
+    ioService.print(commandService.getMainCommandListAsString());
 }
 
 void CLIAutocompleteService::autocompletePriority(const Command& firstSubCommand)
@@ -270,13 +266,13 @@ void CLIAutocompleteService::autocompletePriority(const Command& firstSubCommand
         Command secondSubCommand = commandService.getSubCommand(firstSubCommand);
         if (!StringHelpers::containsWord(priorityList, secondSubCommand.getName()))
         {
-            ioService.printWithoutLineBreak(priorityList);
+            ioService.print(priorityList);
             return;
         }
         autocompleteIdIndefinitely(secondSubCommand);
         return;
     }
-    ioService.printWithoutLineBreak(priorityList);
+    ioService.print(priorityList);
 }
 
 void CLIAutocompleteService::autocompleteStatus(const Command& firstSubCommand)
@@ -288,13 +284,13 @@ void CLIAutocompleteService::autocompleteStatus(const Command& firstSubCommand)
         Command secondSubCommand = commandService.getSubCommand(firstSubCommand);
         if (!StringHelpers::containsWord(statusList, secondSubCommand.getName()))
         {
-            ioService.printWithoutLineBreak(statusList);
+            ioService.print(statusList);
             return;
         }
         autocompleteIdIndefinitely(secondSubCommand);
         return;
     }
-    ioService.printWithoutLineBreak(statusList);
+    ioService.print(statusList);
 }
 
 void CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand)
@@ -303,7 +299,7 @@ void CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand
     getAllLists(listString);
     if (!commandService.hasSubCommand(firstSubCommand))
     {
-        ioService.printWithoutLineBreak(listString);
+        ioService.print(listString);
         return;
     }
 
@@ -312,13 +308,13 @@ void CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand
         Command secondSubCommand = commandService.getSubCommand(firstSubCommand);
         if (!StringHelpers::containsWord(listString, secondSubCommand.getName()))
         {
-            ioService.printWithoutLineBreak(listString);
+            ioService.print(listString);
             return;
         }
         autocompleteIdIndefinitely(secondSubCommand);
         return;
     }
-    ioService.printWithoutLineBreak(listString);
+    ioService.print(listString);
 }
 
 void CLIAutocompleteService::autocompleteList(const Command& firstSubCommand)
@@ -327,7 +323,7 @@ void CLIAutocompleteService::autocompleteList(const Command& firstSubCommand)
 
     if (!commandService.hasSubCommand(firstSubCommand))
     {
-        ioService.printWithoutLineBreak(listActions);
+        ioService.print(listActions);
         return;
     }
 
@@ -336,7 +332,7 @@ void CLIAutocompleteService::autocompleteList(const Command& firstSubCommand)
     if (!StringHelpers::containsWord(listActions, secondSubCommand.getName()) &&
         StringHelpers::isBeginningOfAnyWords(listActions, secondSubCommand.getName())
     ) {
-        ioService.printWithoutLineBreak(listActions);
+        ioService.print(listActions);
         return;
     }
 
@@ -359,10 +355,9 @@ void CLIAutocompleteService::autocompleteList(const Command& firstSubCommand)
         if (!StringHelpers::containsWord(listString, lastWord) &&
             !StringHelpers::containsWord(listString, thirdSubCommand.getName())
         ) {
-            ioService.printWithoutLineBreak(listString);
+            ioService.print(listString);
         }
     }
-    return;
 }
 
 void CLIAutocompleteService::autocompleteUseList(const Command& firstSubCommand)
@@ -372,7 +367,7 @@ void CLIAutocompleteService::autocompleteUseList(const Command& firstSubCommand)
     getAllLists(listString);
     if (!StringHelpers::containsWord(listString, secondSubCommand.getName()))
     {
-        ioService.printWithoutLineBreak(listString);
+        ioService.print(listString);
     }
 }
 
@@ -394,7 +389,7 @@ void CLIAutocompleteService::showListItemId(const std::vector <std::string>& var
         }
     }
 
-    ioService.printWithoutLineBreak(listItemIds);
+    ioService.print(listItemIds);
 }
 
 void CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, const std::vector <std::string>& variants)
