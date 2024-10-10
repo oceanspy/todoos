@@ -109,6 +109,7 @@ void CLIController::actions()
             return;
         case CommandList::MOVE:
         case CommandList::COPY:
+        case CommandList::DUPLICATE:
             move();
             return;
         case CommandList::EMPTY:
@@ -149,11 +150,11 @@ void CLIController::show()
         std::vector <ListEntity> lists = listService.get();
         for (const ListEntity& list : lists)
         {
-            std::string listName = list.getName();
+            std::string listName = *list.getName();
             std::string listVariant = "default";
             Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
-            std::vector <ListItemEntity> listItems = listItemService.load(list.getName()).loadVariant("default").get();
+            std::vector <ListItemEntity> listItems = listItemService.load(*list.getName()).loadVariant("default").get();
             if (command.hasOption("priority"))
             {
                 try {
@@ -585,7 +586,6 @@ void CLIController::move()
     std::string newListName = move.make();
     if (!newListName.empty())
     {
-//            listService.use(newListName);
         std::string listVariant = "default";
         Show show(ioService, configService, listService, listItemService, cliThemeService, newListName, listVariant);
         std::vector <ListItemEntity> listItems = listItemService.load(newListName).get();

@@ -1,13 +1,13 @@
 #include <stdexcept>
 #include "ConfigEntity.h"
 
-void ConfigEntity::set(const std::string key, const std::string value)
+void ConfigEntity::set(const std::string& key, const std::string& value)
 {
     this->key = key;
     this->value = value;
 }
 
-void ConfigEntity::setKey(const std::string key)
+void ConfigEntity::setKey(const std::string& key)
 {
     for (char ch : key) {
         if (!std::isalnum(ch) && ch != '_')
@@ -19,7 +19,7 @@ void ConfigEntity::setKey(const std::string key)
     this->key = key;
 }
 
-void ConfigEntity::setValue(const std::string value)
+void ConfigEntity::setValue(const std::string& value)
 {
     for (char ch : key) {
         if (!std::isalnum(ch) && ch != '_')
@@ -31,17 +31,17 @@ void ConfigEntity::setValue(const std::string value)
     this->value = value;
 }
 
-std::string ConfigEntity::getKey() const
+const std::string * ConfigEntity::getKey() const
 {
-    return key;
+    return &key;
 }
 
-std::string ConfigEntity::getValue() const
+const std::string * ConfigEntity::getValue() const
 {
-    return value;
+    return &value;
 }
 
-ConfigEntity ConfigEntity::setFromVector(std::vector<std::string> item)
+ConfigEntity ConfigEntity::setFromVector(const std::vector<std::string>& item)
 {
     ConfigEntity configEntity;
     configEntity.set(item[0], item[1]);
@@ -50,7 +50,5 @@ ConfigEntity ConfigEntity::setFromVector(std::vector<std::string> item)
 
 std::vector <std::string> ConfigEntity::makeVector(const ConfigEntity& configEntity)
 {
-    std::string key = configEntity.getKey();
-    std::string value = configEntity.getValue();
-    return { configEntity.getKey(), configEntity.getValue() };
+    return { *configEntity.getKey(), *configEntity.getValue() };
 }

@@ -33,14 +33,14 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);
-        REQUIRE(results[0].getName() == "tempListName");
-        REQUIRE(results[0].getType() == "default");
-        REQUIRE(results[0].getSorting() == "default");
-        REQUIRE(results[0].isHidden() == false);
-        REQUIRE(results[1].getName() == "tempList2Name");
-        REQUIRE(results[1].getType() == "default");
-        REQUIRE(results[1].getSorting() == "default");
-        REQUIRE(results[1].isHidden() == false);
+        REQUIRE(*results[0].getName() == "tempListName");
+        REQUIRE(*results[0].getType() == "default");
+        REQUIRE(*results[0].getSorting() == "default");
+        REQUIRE(*results[0].isHidden() == false);
+        REQUIRE(*results[1].getName() == "tempList2Name");
+        REQUIRE(*results[1].getType() == "default");
+        REQUIRE(*results[1].getSorting() == "default");
+        REQUIRE(*results[1].isHidden() == false);
     }
 
     SECTION("Test find method") {
@@ -50,9 +50,9 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
         const std::string sorting = "sorting1";
 
         ListEntity result = listRepository.find(name);
-        REQUIRE(result.getName() == "tempListName");
-        REQUIRE(result.getType() == "default");
-        REQUIRE(result.getSorting() == "default");
+        REQUIRE(*result.getName() == "tempListName");
+        REQUIRE(*result.getType() == "default");
+        REQUIRE(*result.getSorting() == "default");
     }
 
     SECTION("Test update method") {
@@ -75,9 +75,9 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
         listRepository.update(name, newItem);
 
         ListEntity result = listRepository.find(newName);
-        REQUIRE(result.getName() == newName);
-        REQUIRE(result.getType() == newTheme);
-        REQUIRE(result.getSorting() == newSorting);
+        REQUIRE(*result.getName() == newName);
+        REQUIRE(*result.getType() == newTheme);
+        REQUIRE(*result.getSorting() == newSorting);
 
         listRepository.update(name, oldItem);
 
@@ -103,9 +103,9 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
         listRepository.create(newItem);
 
         ListEntity result = listRepository.find(newName);
-        REQUIRE(result.getName() == newName);
-        REQUIRE(result.getType() == newTheme);
-        REQUIRE(result.getSorting() == newSorting);
+        REQUIRE(*result.getName() == newName);
+        REQUIRE(*result.getType() == newTheme);
+        REQUIRE(*result.getSorting() == newSorting);
 
         listRepository.remove(const_cast<std::string &>(newName));
 
@@ -113,12 +113,12 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);
-        REQUIRE(results[0].getName() == "tempListName");
-        REQUIRE(results[0].getType() == "default");
-        REQUIRE(results[0].getSorting() == "default");
-        REQUIRE(results[1].getName() == "tempList2Name");
-        REQUIRE(results[1].getType() == "default");
-        REQUIRE(results[1].getSorting() == "default");
+        REQUIRE(*results[0].getName() == "tempListName");
+        REQUIRE(*results[0].getType() == "default");
+        REQUIRE(*results[0].getSorting() == "default");
+        REQUIRE(*results[1].getName() == "tempList2Name");
+        REQUIRE(*results[1].getType() == "default");
+        REQUIRE(*results[1].getSorting() == "default");
 
         installation.wipe();
         installation.make();

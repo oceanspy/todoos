@@ -36,6 +36,7 @@ std::map <std::string, std::string> CommandShortcut::getShortcutCommands()
     shortCutCommands["rename"] = "move-to";
     shortCutCommands["copy"] = "copy-to";
     shortCutCommands["cp"] = "copy-to";
+    shortCutCommands["duplicate"] = "duplicate";
     shortCutCommands["current"] = "current";
 
     return shortCutCommands;

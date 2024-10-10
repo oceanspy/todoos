@@ -18,7 +18,7 @@ std::string ConfigService::getValue(const std::string &key)
 {
     std::string value;
     try {
-        value = find(key).getValue();
+        value = *find(key).getValue();
     } catch (const std::invalid_argument& e) {
         value = "";
     }
@@ -36,7 +36,7 @@ ConfigEntity ConfigService::find(const std::string& key)
     std::vector <ConfigEntity> configs = get();
     for (ConfigEntity configEntity : configs)
     {
-        if (configEntity.getKey() == key)
+        if (*configEntity.getKey() == key)
         {
             return configEntity;
         }
@@ -64,14 +64,14 @@ void ConfigService::remove(std::string& key)
 
 std::filesystem::path ConfigService::getAppDirPath()
 {
-    ConfigEntity storageType = configRepository.find("appDirStorage");
-    return storageType.getValue();
+    ConfigEntity configEntity = configRepository.find("appDirStorage");
+    return *configEntity.getValue();
 }
 
 std::string ConfigService::getFileDataStorageType()
 {
-    ConfigEntity storageType = configRepository.find("fileDataStorageType");
-    return storageType.getValue();
+    ConfigEntity configEntity = configRepository.find("fileDataStorageType");
+    return *configEntity.getValue();
 }
 
 std::string ConfigService::getDefaultSystemExtension()
@@ -81,7 +81,7 @@ std::string ConfigService::getDefaultSystemExtension()
 
 std::string ConfigService::getDefaultList() {
     ConfigEntity configEntity = configRepository.find("defaultList");
-    return configEntity.getValue();
+    return *configEntity.getValue();
 }
 
 std::string ConfigService::getCurrentList()
@@ -92,7 +92,7 @@ std::string ConfigService::getCurrentList()
     }
 
     ConfigEntity configEntity = configRepository.find("currentList");
-    return configEntity.getValue();
+    return *configEntity.getValue();
 }
 
 std::string ConfigService::getCurrentListVariant()

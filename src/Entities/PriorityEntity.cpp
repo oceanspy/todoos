@@ -1,19 +1,19 @@
 #include "PriorityEntity.h"
 
-int PriorityEntity::getId() const {
-    return id;
+const int * PriorityEntity::getId() const {
+    return &id;
 }
 
-int PriorityEntity::getPosition() const {
-    return position;
+const int * PriorityEntity::getPosition() const {
+    return &position;
 }
 
-std::string PriorityEntity::getName() const {
-    return name;
+const std::string * PriorityEntity::getName() const {
+    return &name;
 }
 
-std::string PriorityEntity::getIcon() const {
-    return icon;
+const std::string * PriorityEntity::getIcon() const {
+    return &icon;
 }
 
 std::string PriorityEntity::getColor() const {
@@ -53,10 +53,10 @@ PriorityEntity PriorityEntity::setFromVector(std::vector<std::string> item) {
 
 std::vector<std::string> PriorityEntity::makeVector(const PriorityEntity& priorityEntity) {
     return std::vector<std::string> {
-        std::to_string(priorityEntity.getId()),
-        std::to_string(priorityEntity.getPosition()),
-        priorityEntity.getName(),
-        priorityEntity.getIcon(),
+        std::to_string(*priorityEntity.getId()),
+        std::to_string(*priorityEntity.getPosition()),
+        *priorityEntity.getName(),
+        *priorityEntity.getIcon(),
         priorityEntity.getColor()
     };
 }

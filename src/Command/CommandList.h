@@ -40,6 +40,7 @@ public:
         COPY = 51,
         EMPTY = 52,
         CLEAN = 53,
+        DUPLICATE = 54,
         DEADLINE = 60,
         LIST = 70,
         USE = 71,

@@ -217,19 +217,19 @@ void ListActions::renameList(Command subCommand)
 
 std::string ListActions::buildName(const ListEntity& listEntity)
 {
-    std::string name = addSpaceToListName(listEntity.getName());
+    std::string name = addSpaceToListName(*listEntity.getName());
 
-    if (configService.getDefaultList() == listEntity.getName())
+    if (configService.getDefaultList() == *listEntity.getName())
     {
         name += " (default)";
     }
 
-    if (configService.getCurrentList() == listEntity.getName())
+    if (configService.getCurrentList() == *listEntity.getName())
     {
         name += " (in use)";
         name = StringHelpers::colorize(name, BG_GREEN);
     }
-    else if (configService.getDefaultList() == listEntity.getName())
+    else if (configService.getDefaultList() == *listEntity.getName())
     {
         name = StringHelpers::colorize(name, BG_BLUE);
     }
@@ -280,7 +280,7 @@ void ListActions::copy()
         std::vector <ListItemEntity> listItems = listItemService.load(listName).get();
         for (ListItemEntity& listItem : listItems)
         {
-            listItemService.copy(listItem.getId(), listName, newListName);
+            listItemService.copy(*listItem.getId(), listName, newListName);
         }
     } catch (std::invalid_argument& e) {
         ioService.error("Error while creating the file -- is list name correct?");

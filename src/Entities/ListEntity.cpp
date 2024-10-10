@@ -1,12 +1,12 @@
 #include <stdexcept>
 #include "ListEntity.h"
 
-void ListEntity::setName(std::string name)
+void ListEntity::setName(const std::string name)
 {
     this->name = name;
 }
 
-void ListEntity::setType(std::string type)
+void ListEntity::setType(const std::string type)
 {
     for (char ch : type) {
         if (!std::isalnum(ch) && ch != '_')
@@ -18,7 +18,7 @@ void ListEntity::setType(std::string type)
     this->theme = type;
 }
 
-void ListEntity::setSorting(std::string sorting)
+void ListEntity::setSorting(const std::string sorting)
 {
     for (char ch : sorting) {
         if (!std::isalnum(ch) && ch != '_')
@@ -35,39 +35,39 @@ void ListEntity::setHidden(bool hidden)
     this->hidden = hidden;
 }
 
-std::string ListEntity::getName() const
+const std::string * ListEntity::getName() const
 {
     if (name.empty()) {
-        return "";
+        return nullptr;
     }
 
-    return name;
+    return &name;
 }
 
-std::string ListEntity::getType() const
+const std::string * ListEntity::getType() const
 {
     if (theme.empty()) {
-        return "";
+        return nullptr;
     }
 
-    return theme;
+    return &theme;
 }
 
-std::string ListEntity::getSorting() const
+const std::string * ListEntity::getSorting() const
 {
     if (sorting.empty()) {
-        return "";
+        return nullptr;
     }
 
-    return sorting;
+    return &sorting;
 }
 
-bool ListEntity::isHidden() const
+const bool * ListEntity::isHidden() const
 {
-    return hidden;
+    return &hidden;
 }
 
-ListEntity ListEntity::setFromVector(std::vector <std::string> item)
+ListEntity ListEntity::setFromVector(const std::vector <std::string>& item)
 {
     bool hidden = item.at(3) == "true";
 
@@ -82,7 +82,7 @@ ListEntity ListEntity::setFromVector(std::vector <std::string> item)
 
 std::vector<std::string> ListEntity::makeVector(const ListEntity &listEntity)
 {
-    std::string hidden = listEntity.isHidden() ? "true" : "false";
-    std::vector <std::string> listItem = {listEntity.getName(), listEntity.getType(), listEntity.getSorting(), hidden};
+    std::string hidden = *listEntity.isHidden() ? "true" : "false";
+    std::vector <std::string> listItem = {*listEntity.getName(), *listEntity.getType(), *listEntity.getSorting(), hidden};
     return listItem;
 }

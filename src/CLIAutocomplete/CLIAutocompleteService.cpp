@@ -208,7 +208,8 @@ bool CLIAutocompleteService::getCompletion()
             return true;
         }
         else if (CommandService::isCommand(firstSubCommand, "move-to") ||
-                 CommandService::isCommand(firstSubCommand, "copy-to")
+                 CommandService::isCommand(firstSubCommand, "copy-to") ||
+                 CommandService::isCommand(firstSubCommand, "duplicate")
         ) {
             try {
                 autocompleteMoveList(firstSubCommand);
@@ -229,7 +230,7 @@ void CLIAutocompleteService::getAllLists(std::string& listString)
     int i = 0;
     for (const ListEntity& list : lists)
     {
-        listString += list.getName();
+        listString += *list.getName();
         if (i < lists.size())
         {
             listString += " ";
@@ -384,7 +385,7 @@ void CLIAutocompleteService::showListItemId(const std::vector <std::string>& var
         int i = 0;
         for (const ListItemEntity& list : listItems)
         {
-            listItemIds += list.getId();
+            listItemIds += *list.getId();
             if (i < listItems.size() - 1)
             {
                 listItemIds += " ";
@@ -403,7 +404,7 @@ void CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, cons
         Command subSubCommand = commandService.getSubCommand(firstSubCommand);
         try {
             ListItemEntity listItemEntity = listItemService.find(subSubCommand.getName());
-            if (!listItemEntity.getId().empty())
+            if (!(*listItemEntity.getId()).empty())
             {
                 return;
             }

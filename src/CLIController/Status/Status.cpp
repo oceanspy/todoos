@@ -59,10 +59,10 @@ void Status::reset() {
             for (const ListItemEntity &listItem : listItems)
             {
                 try {
-                    listItemService.reset(listItem.getId());
-                    ioService.success("Item with id: " + listItem.getId() + " was reset.");
+                    listItemService.reset(*listItem.getId());
+                    ioService.success("Item with id: " + *listItem.getId() + " was reset.");
                 } catch (std::exception &e) {
-                    ioService.error("Item with id: " + listItem.getId() + " was not found.");
+                    ioService.error("Item with id: " + *listItem.getId() + " was not found.");
                     continue;
                 }
             }

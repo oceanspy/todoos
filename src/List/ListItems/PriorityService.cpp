@@ -23,7 +23,7 @@ PriorityEntity PriorityService::find (int priorityId)
 {
     for (const PriorityEntity& priorityEntity : priorities)
     {
-        if (priorityEntity.getId() == priorityId)
+        if (*priorityEntity.getId() == priorityId)
         {
             return priorityEntity;
         }
@@ -36,7 +36,7 @@ PriorityEntity PriorityService::getPriorityFromName(const std::string& name)
 {
     for (const PriorityEntity& priority : priorities)
     {
-        if (priority.getName() == name)
+        if (*priority.getName() == name)
         {
             return priority;
         }
@@ -51,7 +51,7 @@ std::vector <std::string> PriorityService::getPrioritiesNames()
     priorityNames.reserve(priorities.size());
     for (const PriorityEntity& priority : priorities)
     {
-        priorityNames.push_back(priority.getName());
+        priorityNames.push_back(*priority.getName());
     }
 
     return priorityNames;
@@ -62,7 +62,7 @@ std::string PriorityService::getNamesAsString()
     std::string prioritiesStr;
     for (const PriorityEntity& priority : priorities)
     {
-        prioritiesStr += priority.getName() + " ";
+        prioritiesStr += *priority.getName() + " ";
     }
 
     prioritiesStr.pop_back(); // remove last space
@@ -73,14 +73,14 @@ std::string PriorityService::getNamesAsString()
 bool PriorityService::isIdValid(int priorityId)
 {
     return std::any_of(priorities.begin(), priorities.end(), [priorityId](const PriorityEntity& priorityEntity) {
-        return priorityEntity.getId() == priorityId;
+        return *priorityEntity.getId() == priorityId;
     });
 }
 
 bool PriorityService::isNameValid(const std::string& priorityName)
 {
     return std::any_of(priorities.begin(), priorities.end(), [priorityName](const PriorityEntity& priorityEntity) {
-        return priorityEntity.getName() == priorityName;
+        return *priorityEntity.getName() == priorityName;
     });
 }
 
@@ -88,9 +88,9 @@ int PriorityService::getIdFromName(const std::string& priority)
 {
     for (const PriorityEntity& priorityEntity : priorities)
     {
-        if (priorityEntity.getName() == priority)
+        if (*priorityEntity.getName() == priority)
         {
-            return priorityEntity.getId();
+            return *priorityEntity.getId();
         }
     }
 
@@ -101,9 +101,9 @@ std::string PriorityService::getNameFromId(int priorityId)
 {
     for (const PriorityEntity& priorityEntity : priorities)
     {
-        if (priorityEntity.getId() == priorityId)
+        if (*priorityEntity.getId() == priorityId)
         {
-            return priorityEntity.getName();
+            return *priorityEntity.getName();
         }
     }
 

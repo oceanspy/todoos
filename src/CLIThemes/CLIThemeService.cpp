@@ -74,9 +74,9 @@ CLIThemeService CLIThemeService::adaptConsoleRowLengthWithMaxItemValueLength(con
     int titleMaxLength = 0;
     for (const auto& listItem : listItems)
     {
-        if (listItem.getValue().length() > titleMaxLength)
+        if ((*listItem.getValue()).length() > titleMaxLength)
         {
-            titleMaxLength = static_cast<int>(listItem.getValue().length());
+            titleMaxLength = static_cast<int>((*listItem.getValue()).length());
         }
     }
 

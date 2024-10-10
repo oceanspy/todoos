@@ -28,6 +28,8 @@ public:
     bool remove(const std::string& id);
     void softDelete(const std::string& id);
     std::string add(const std::string& itemValue, const std::string* priority = nullptr, const std::string* status = nullptr, time_t dueAt = 0);
+    std::string makeId();
+    bool isIdAvailable(const std::string& id);
     void edit(const std::string& id, const std::string& itemValue, const std::string* priority = nullptr, const std::string* status = nullptr);
     void editStatus(const std::string& id, const int* status);
     void reset (const std::string& id);
@@ -40,6 +42,7 @@ public:
     void setStatus(const std::string& id, const std::string* statusName);
     void move(const std::string& id, const std::string& oldListName, const std::string& newListName);
     void copy(const std::string& id, const std::string& oldListName, const std::string& newListName);
+    void duplicate(const std::string& id, const std::string& listName);
     void archive(const std::string& id);
     void archiveAll();
     void archiveFinishedItems();
