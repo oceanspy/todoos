@@ -33,12 +33,12 @@ echo "Build complete!"
 echo ""
 
 # Ask to create a bin shortcut
-echo "Do you want to create a bin shortcut in /usr/local/bin? (y/n)"
+echo "Do you want to create a bin shortcut in /usr/local/bin (require sudo)? (y/n)"
 read -r response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
 then
     echo "Creating bin shortcut..." &&
-    ln -sf $PWD/todoos /usr/local/bin/todoos &&
+    sudo ln -sf $PWD/todoos /usr/local/bin/todoos &&
     echo "Bin shortcut created!"
 fi
 

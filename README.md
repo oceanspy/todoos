@@ -31,6 +31,7 @@ https://github.com/oceanspy/todoos/releases/
 - CMake (>3.28)
 - Ninja or gcc (& build-essential)
 - ZSH (recommended)
+- noto-fonts-emoji
 
 #### Build
 
