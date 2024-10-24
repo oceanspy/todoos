@@ -86,9 +86,18 @@ bool CLIAutocompleteService::getCompletion()
             return true;
         }
         else if (
-                CommandService::isCommand(firstSubCommand, "edit") ||
                 CommandService::isCommand(firstSubCommand, "append") ||
                 CommandService::isCommand(firstSubCommand, "prepend")
+        ) {
+            try {
+                autocompleteId(firstSubCommand);
+            } catch (std::exception &e) {
+                return true;
+            }
+            return true;
+        }
+        else if (
+                CommandService::isCommand(firstSubCommand, "edit")
         ) {
             try {
                 autocompleteId(firstSubCommand);

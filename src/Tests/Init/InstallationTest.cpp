@@ -9,7 +9,8 @@
 TEST_CASE("isNew returns true when main directory is not present", "[Installation]")
 {
     // Create mock objects
-    IOService ioService;
+    std::string channel = "cli";
+    IOService ioService = IOService(channel);
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     MockInit init(ioService, "_todoos_InstallationTest");
@@ -28,7 +29,8 @@ TEST_CASE("isNew returns true when main directory is not present", "[Installatio
 TEST_CASE("Installation creates directories and files correctly", "[Installation]")
 {
     // Create mock objects
-    IOService ioService;
+    std::string channel = "cli";
+    IOService ioService = IOService(channel);
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     MockInit init(ioService, "_todoos_InstallationTest");
@@ -58,7 +60,8 @@ TEST_CASE("Installation creates directories and files correctly", "[Installation
 TEST_CASE("Populate default list file", "[Installation]")
 {
     // Create mock objects
-    IOService ioService;
+    std::string channel = "cli";
+    IOService ioService = IOService(channel);
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     MockInit init(ioService, "_todoos_InstallationTest");

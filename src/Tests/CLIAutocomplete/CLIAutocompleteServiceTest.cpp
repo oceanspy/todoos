@@ -27,7 +27,8 @@ std::string captureGetCompletionOutput(CLIAutocompleteService& autocompleteServi
 
 TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
     // Create mock objects
-    IOService ioService("cli");
+    std::string channel = "cli";
+    IOService ioService(channel);
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
@@ -63,7 +64,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = commandService.getMainCommandListAsString();
+        std::string expectedString = commandService.getMainCommandListAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -111,7 +112,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = priorityService.getNamesAsString();
+        std::string expectedString = priorityService.getNamesAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -159,7 +160,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = statusService.getCommandNamesAsString();
+        std::string expectedString = statusService.getCommandNamesAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -183,7 +184,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = statusService.getCommandNamesAsString();
+        std::string expectedString = statusService.getCommandNamesAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -303,7 +304,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = commandService.getMainCommandListAsString();
+        std::string expectedString = commandService.getMainCommandListAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -327,7 +328,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -351,7 +352,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -375,7 +376,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -472,7 +473,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -520,7 +521,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "add rename remove show copy";
+        std::string expectedString = "add rename remove show copy\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -568,7 +569,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -640,7 +641,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -664,7 +665,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -712,7 +713,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -760,7 +761,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -784,7 +785,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -808,7 +809,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -832,7 +833,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -856,7 +857,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -880,7 +881,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -904,7 +905,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -928,7 +929,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -952,7 +953,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -976,7 +977,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1000,7 +1001,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1024,7 +1025,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1048,7 +1049,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1072,7 +1073,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1096,7 +1097,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1144,7 +1145,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1192,7 +1193,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1216,7 +1217,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "today tomorrow monday tuesday wednesday thursday friday saturday sunday next-week next-month next-year reset";
+        std::string expectedString = "today tomorrow monday tuesday wednesday thursday friday saturday sunday next-week next-month next-year reset\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1240,7 +1241,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1264,7 +1265,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1288,7 +1289,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1312,7 +1313,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "tempList2Name tempListName";
+        std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -1340,7 +1341,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "aaaa bbbb";
+        std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
 
