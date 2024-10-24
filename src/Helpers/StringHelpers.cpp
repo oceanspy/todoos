@@ -194,3 +194,17 @@ bool StringHelpers::isAlnum(const std::string& str)
 {
        return std::all_of(str.begin(), str.end(), ::isalnum);
 }
+
+std::string StringHelpers::escapeChar(const std::string& str, char charToReplace) 
+{
+    std::string escaped;
+    for (char ch : str) {
+        if (ch == charToReplace) {
+            escaped += "\\";
+            escaped += charToReplace;
+        } else {
+            escaped += ch;
+        }
+    }
+    return escaped;
+}

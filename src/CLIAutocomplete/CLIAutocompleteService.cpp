@@ -86,7 +86,6 @@ bool CLIAutocompleteService::getCompletion()
             return true;
         }
         else if (
-                CommandService::isCommand(firstSubCommand, "edit") ||
                 CommandService::isCommand(firstSubCommand, "append") ||
                 CommandService::isCommand(firstSubCommand, "prepend")
         ) {
@@ -95,6 +94,43 @@ bool CLIAutocompleteService::getCompletion()
             } catch (std::exception &e) {
                 return true;
             }
+            return true;
+        }
+        else if (
+                CommandService::isCommand(firstSubCommand, "edit")
+        ) {
+            if (!commandService.hasSubCommand(firstSubCommand)) {
+                try {
+                    autocompleteId(firstSubCommand);
+                } catch (std::exception &e) {
+                    return true;
+                }
+                return true;
+            }
+
+            Command secondSubCommand = commandService.getSubCommand(firstSubCommand);
+            
+            if (!isValidListItemId(secondSubCommand.getName())) {
+                try {
+                    autocompleteId(firstSubCommand);
+                } catch (std::exception &e) {
+                    return true;
+                }
+                return true;
+            }
+
+            try {
+                ListItemEntity listItemEntity = listItemService.find(secondSubCommand.getName());
+                if (!(*listItemEntity.getId()).empty())
+                {
+                    std::string value = *listItemEntity.getValue();
+                    std::string escapedValue = StringHelpers::escapeChar(value, ' ');
+                    ioService.print("\"" + escapedValue + "\"");
+                    return true;
+                }
+            } catch (std::exception &e) {
+            }
+
             return true;
         }
         else if (
@@ -392,18 +428,27 @@ void CLIAutocompleteService::showListItemId(const std::vector <std::string>& var
     ioService.print(listItemIds);
 }
 
+bool CLIAutocompleteService::isValidListItemId(std::string id)
+{
+    try {
+        ListItemEntity listItemEntity = listItemService.find(id);
+        if (!(*listItemEntity.getId()).empty())
+        {
+            return true;
+        }
+    } catch (std::exception &e) {
+    }
+
+    return false;
+}
+
 void CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, const std::vector <std::string>& variants)
 {
     if (commandService.hasSubCommand(firstSubCommand))
     {
         Command subSubCommand = commandService.getSubCommand(firstSubCommand);
-        try {
-            ListItemEntity listItemEntity = listItemService.find(subSubCommand.getName());
-            if (!(*listItemEntity.getId()).empty())
-            {
-                return;
-            }
-        } catch (std::exception &e) {
+        if (isValidListItemId(subSubCommand.getName())) {
+            return;
         }
     }
     showListItemId(variants);

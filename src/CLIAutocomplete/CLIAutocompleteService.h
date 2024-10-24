@@ -26,6 +26,7 @@ protected:
     void autocompleteList(const Command& firstSubCommand);
     void autocompleteUseList(const Command& firstSubCommand);
     void autocompleteMoveList(const Command& firstSubCommand);
+    bool isValidListItemId(std::string id);
     void getAllLists(std::string& listString);
     void showListItemId(const std::vector <std::string>& variants = {"default"});
     void autocompleteId(const Command& firstSubCommand, const std::vector <std::string>& variants = {"default"});
