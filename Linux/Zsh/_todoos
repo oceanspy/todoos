@@ -14,7 +14,7 @@ _todoos_completion() {
     # If this is the first argument, provide completion suggestions based on 'todoos commands'
     if [[ CURRENT -eq 2 ]]; then
         local completion_output
-        completion_output=($(todoos commands | sed 's/\\ /--TEMP--/g' | tr ' ' '\n'))  # Replace \ with a temporary string, then split
+        completion_output=($(todoos commands | sed 's/\\ /--TEMP_SPACE_AUTOCOMPLETE--/g' | tr ' ' '\n'))  # Replace \ with a temporary string, then split
 
         # Restore the temporary marker back to space before adding completions
         for word in "${completion_output[@]}"; do
@@ -32,11 +32,11 @@ _todoos_completion() {
 
     # Execute the completion command and capture the output
     local completion_output
-    completion_output=($(eval $completion_command | sed 's/\\ /--TEMP--/g' | tr ' ' '\n'))  # Replace \ with a temporary string, then split
+    completion_output=($(eval $completion_command | sed 's/\\ /--TEMP_SPACE_AUTOCOMPLETE--/g' | tr ' ' '\n'))  # Replace \ with a temporary string, then split
 
     # Add the processed output as completions without quotes
     for word in "${completion_output[@]}"; do
-        word="${word//--TEMP--/ }"  # Replace the temporary string back with space
+        word="${word//--TEMP_SPACE_AUTOCOMPLETE--/ }"  # Replace the temporary string back with space
         compadd -Q -- "$word"  # Add without quotes
     done
 }
