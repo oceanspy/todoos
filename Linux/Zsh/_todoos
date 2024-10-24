@@ -14,14 +14,15 @@ _todoos_completion() {
     # If this is the first argument, provide completion suggestions based on 'todoos commands'
     if [[ CURRENT -eq 2 ]]; then
         local completion_output
-        completion_output=($(todoos commands))
-        _describe 'completion_output' completion_output
+        completion_output=($(todoos commands | sed 's/\\ /--TEMP--/g' | tr ' ' '\n'))  # Replace \ with a temporary string, then split
+
+        # Restore the temporary marker back to space before adding completions
+        for word in "${completion_output[@]}"; do
+            word="${word//--TEMP--/ }"  # Replace the temporary string back with space
+            compadd -Q -- "$word"  # Add without quotes
+        done
         return
     fi
-
-    # Determine the number of arguments provided
-    local num_args
-    num_args=$(($CURRENT - 2))
 
     # Generate the appropriate completion command based on the number of arguments
     local completion_command="todoos commands"
@@ -31,12 +32,15 @@ _todoos_completion() {
 
     # Execute the completion command and capture the output
     local completion_output
-    completion_output=($(eval $completion_command))
+    completion_output=($(eval $completion_command | sed 's/\\ /--TEMP--/g' | tr ' ' '\n'))  # Replace \ with a temporary string, then split
 
-    # Provide completion suggestions based on the completion output
-    _describe 'completion_output' completion_output -Q
+    # Add the processed output as completions without quotes
+    for word in "${completion_output[@]}"; do
+        word="${word//--TEMP--/ }"  # Replace the temporary string back with space
+        compadd -Q -- "$word"  # Add without quotes
+    done
 }
 
 # Call the completion function
-# avoid sorting:
 compdef _todoos_completion todoos
+

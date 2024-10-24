@@ -400,7 +400,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "";
+        std::string expectedString = "\"test\\ 1\"\n";
         REQUIRE(printedString == expectedString);
     }
 
@@ -425,7 +425,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService);
-        std::string expectedString = "";
+        std::string expectedString = "\"test\\ 1\"\n";
         REQUIRE(printedString == expectedString);
     }
 

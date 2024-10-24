@@ -331,6 +331,19 @@ TEST_CASE("Helpers::isBeginningOfAnyWords function", "[Helpers]") {
     }
 }
 
+TEST_CASE("escapeChar", "[StringHelpers]") {
+    StringHelpers stringHelpers;
+    std::string test1 = "bonjour tout le monde";
+    std::string expectedTest1 = "bonjour\\ tout\\ le\\ monde";
+    std::string resultTest1 = StringHelpers::escapeChar(test1, ' ');
+    REQUIRE(resultTest1 == expectedTest1);
+    
+    std::string test2 = "bonjour, tout le monde! Ça va ?";
+    std::string expectedTest2 = "bonjour,\\ tout\\ le\\ monde!\\ Ça\\ va\\ ?";
+    std::string resultTest2 = StringHelpers::escapeChar(test2, ' ');
+    REQUIRE(resultTest2 == expectedTest2);
+}
+
 TEST_CASE("DateHelper::relativeDateToTimestamp function", "[Helpers]") {
     SECTION("Test relativeDateToTimestamp method") {
         time_t referenceTime = time(nullptr);
