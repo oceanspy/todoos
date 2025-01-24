@@ -40,7 +40,7 @@ void MockInstallation::populate()
             { "theme", "default" },
             { "consoleRowMaxLength", "96" },
             { "archiveWhenCompleted", "false" },
-            { "useOnlyLettersForIds", "true" }
+            { "idRandomGenerationType", "letters" }
 
     };
 

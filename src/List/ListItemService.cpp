@@ -164,17 +164,22 @@ std::string ListItemService::makeId()
 {
     bool validId = false;
     std::string id;
-    while (!validId)
+    int i = 0;
+    while (!validId && i < 50)
     {
-        if (configService.getValue("useOnlyLettersForIds") == "true") {
-            id = StringHelpers::randomString();
+        if (configService.getValue("idRandomGenerationType") == idLettersLowercase) {
+            id = StringHelpers::randomLettersLowercase(idLength);
+        } else if (configService.getValue("idRandomGenerationType") == idLetters) {
+            id = StringHelpers::randomAlNumString(idLength);
         } else {
-            id = StringHelpers::randomAlNumString();
+            id = StringHelpers::randomString(idLength);
         }
         
         if(isIdAvailable(id)) {
             validId = true;
         }
+        
+        i++;
     }
 
     return id;
@@ -182,7 +187,7 @@ std::string ListItemService::makeId()
 
 bool ListItemService::isIdAvailable(const std::string& id)
 {
-    // TO DO: Optimize this
+    // TODO: Optimize this
     try
     {
         find(id);

@@ -44,7 +44,7 @@ void Installation::populate()
             { "theme", "default" },
             { "consoleRowMaxLength", "0" },
             { "archiveWhenCompleted", "false" },
-            { "useOnlyLettersForIds", "true" }
+            { "idRandomGenerationType", "letters" }
     };
 
     configStorageService.load(init.getConfigFilePath());

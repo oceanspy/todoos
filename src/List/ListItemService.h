@@ -54,6 +54,10 @@ public:
     long countWithPriority(const std::vector <int>& priorities);
     long countCreatedBetween(time_t from, time_t to);
     long countClosedBetween(time_t from, time_t to);
+    const int idLength = 4;
+    const std::string idLetters = "letters";
+    const std::string idLettersLowercase = "letters-lowercase";
+    const std::string idRandom = "random";
 private:
     IOService& ioService;
     ConfigService& configService;

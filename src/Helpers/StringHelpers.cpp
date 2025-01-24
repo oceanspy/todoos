@@ -36,6 +36,22 @@ std::string StringHelpers::randomAlNumString(const int len) {
     return tmp_s;
 }
 
+std::string StringHelpers::randomLettersLowercase(const int len) {
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    seed ^= getpid() + std::clock();
+    srand(seed);
+    static const char alphanum[] =
+        "abcdefghijklmnopqrstuvwxyz";
+    std::string tmp_s;
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    return tmp_s;
+}
+
 std::wstring StringHelpers::stringToWstring(const std::string& str) {
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     return converter.from_bytes(str);

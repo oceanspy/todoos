@@ -39,7 +39,7 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
         REQUIRE(*configRepository.find("theme").getValue() == "default");
         REQUIRE(*configRepository.find("consoleRowMaxLength").getValue() == "96");
         REQUIRE(*configRepository.find("archiveWhenCompleted").getValue() == "false");
-        REQUIRE(*configRepository.find("useOnlyLettersForIds").getValue() == "true");
+        REQUIRE(*configRepository.find("idRandomGenerationType").getValue() == "letters");
     }
 
     SECTION("Test find method") {

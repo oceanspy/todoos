@@ -16,6 +16,7 @@ class StringHelpers {
 public:
     static std::string randomString(int len = 4);
     static std::string randomAlNumString(int len = 4);
+    static std::string randomLettersLowercase(int len = 4);
     static std::wstring stringToWstring(const std::string& str);
     static std::string wstringToString(const std::wstring& str);
     static std::string colorize(const std::string& text, const std::string& color);
