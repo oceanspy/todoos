@@ -120,3 +120,24 @@ To have an overview of all commands, you can use the help command
 ```bash
 todoos --help
 ```
+
+# Configuration
+
+```bash
+# Choose where to store the lists
+appDirStorage: 
+# Choose the storage format: csv/json (recommended: csv)
+fileDataStorageType: csv
+# List used currently
+currentList: ipex
+# default list
+defaultList: default
+# theme
+theme: default
+# If you want to limit the size of the rendering (0 = use terminal width)
+consoleRowMaxLength: 0
+# Choose if you want to automatically archive the completed/cancelled items
+archiveWhenCompleted: false
+# Choose the type of ID: letters-lowercase, letters, random
+idRandomGenerationType: letters-lowercase
+```
