@@ -28,6 +28,10 @@ confirmbigdel = false
 
 ## Add to cron
 
-```crontab -e```
+```
+crontab -e
+```
 
-```* * * * * unison todoos-sync```
+```
+* * * * * unison todoos-sync
+```
