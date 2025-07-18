@@ -94,5 +94,6 @@ endif
 	@rm -rf $(BUILD_DIR)
 	@rm -rf $(BINDIR)/$(BINARY_NAME)
 
+.PHONY: distclean
 distclean: .distclean
 	@true

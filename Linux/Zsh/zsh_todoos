@@ -1,0 +1,141 @@
+# Todoos
+compdef t=todoos
+
+alias tu="todoos use"
+
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *|pacman -S *|gc *"
+ZSH_AUTOSUGGEST_COMPLETION_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *|pacman -S *|gc *"
+
+todoos() {
+    command todoos "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+
+t() {
+    command todoos "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+
+ta() {
+    command todoos add "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion ta
+
+tac() {
+    command todoos add -p critical "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tac
+
+tau() {
+    command todoos add -p urgent "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tau
+
+tah() {
+    command todoos add -p high "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tah
+
+tam() {
+    command todoos add -p medium "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tam
+
+tal() {
+    command todoos add -p low "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tal
+
+td() {
+    command todoos -l default "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion td
+
+tda() {
+    command todoos -l default add "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tda
+
+tdac() {
+    command todoos -l default add -p critical "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tdac
+
+tdau() {
+    command todoos  -l default add -p urgent "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tdau
+
+tdah() {
+    command todoos -l default add -p high "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tdah
+
+tdam() {
+    command todoos -l default add -p medium "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tdam
+
+tdal() {
+    command todoos -l default add -p low "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tdal
+
+ti() {
+    command todoos -l ipex "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion ti
+
+tia() {
+    command todoos -l ipex add "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tia
+
+tiac() {
+    command todoos -l ipex add -p critical "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tiac
+
+tiau() {
+    command todoos  -l ipex add -p urgent "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tiau
+
+tiah() {
+    command todoos -l ipex add -p high "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tiah
+
+tiam() {
+    command todoos -l ipex add -p medium "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tiam
+
+tial() {
+    command todoos -l ipex add -p low "$@"
+    (unison todoos-sync &>/dev/null &) &> /dev/null
+}
+compdef _no_completion tial
+
+_no_completion() {
+  return 1
+}

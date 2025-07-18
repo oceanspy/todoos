@@ -6,3 +6,15 @@ and put it in ~/.oh-my-zsh/completions
 Then, reload `oh-my-zsh` with:
  `source ~/.zshrc`
  `omz reload`
+
+ If you use the `unison` configuration, you can also copy `zsh_todoos` to your home directory and load it in your `.zshrc`
+
+ ```
+ cp zsh_todoos ~/.zsh_todoos
+ ```
+
+ vi ~/.zshrc
+ ```
+# Todoos
+source ~/.zsh_todoos
+```
