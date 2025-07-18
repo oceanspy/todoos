@@ -10,13 +10,20 @@
 
 class ConfigService {
 public:
-    ConfigService(IOService& ioService, InitInterface& init, ConfigRepository& configRepository, Command& command);
+    ConfigService(
+        IOService& ioService, 
+        InitInterface& init, 
+        ConfigRepository& configRepository, 
+        ConfigRepository& cacheRepository, 
+        Command& command
+    );
     std::vector <ConfigEntity> get();
     std::string getValue(const std::string& key);
     bool isTrue(const std::string& key);
     ConfigEntity find(const std::string& key);
     void add(std::string key, std::string value);
     void edit(const std::string& key, std::string value);
+    void editCurrentList(std::string value);
     void remove(std::string& key);
     std::filesystem::path getAppDirPath();
     std::string getFileDataStorageType();
@@ -36,7 +43,9 @@ private:
     IOService& ioService;
     InitInterface& init;
     ConfigRepository& configRepository;
+    ConfigRepository& cacheRepository;
     Command& command;
+    ConfigRepository getRepository(const std::string& key);
 };
 
 #endif //CONFIGSERVICE_H

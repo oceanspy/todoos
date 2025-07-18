@@ -23,6 +23,7 @@ private:
     InitInterface& init;
     void createDirectories();
     void createConfigFile();
+    void createCacheFile();
     void createListOfListFile();
     void createListFile(const std::string& listName);
     void populateNewListFile(std::ofstream& outfile);

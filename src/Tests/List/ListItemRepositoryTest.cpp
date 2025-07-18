@@ -22,9 +22,10 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
     std::string tempListName = "tempListName";
     std::string tempList2Name = "tempList2Name";
     installation.make();
-    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
     Command command = Command("", {}, {}, "");
-    ConfigService configService(ioService, init, configRepository, command);
+    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+    ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+    ConfigService configService(ioService, init, configRepository, cacheRepository, command);
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
     ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);

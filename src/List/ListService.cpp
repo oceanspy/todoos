@@ -73,7 +73,7 @@ bool ListService::use(const std::string& listName)
     });
 
     if (listFound) {
-        configService.edit("currentList", listName);
+        configService.editCurrentList(listName);
         // Publishing an event to the event bus
         bus.publish(Event("currentListUpdated", listName));
         return true;

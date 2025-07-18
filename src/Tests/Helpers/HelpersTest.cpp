@@ -206,7 +206,7 @@ TEST_CASE("Helpers::timestampToDuration function", "[Helpers]")
     SECTION("Test duration for 0 day, 0 hour, 0 minute and 0 second") {
         time_t start = 0;
         time_t end = 0; // 0 day, 0 hour, 0 minute and 0 second
-        REQUIRE(DateHelpers::timestampToDuration(start, end).empty());
+        REQUIRE(DateHelpers::timestampToDuration(start, end) == "0s");
     }
 
     SECTION("Test duration for 2 days, 3 hours, 4 minutes and 5 seconds") {

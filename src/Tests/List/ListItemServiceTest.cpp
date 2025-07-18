@@ -26,9 +26,10 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     installation.wipe();
     installation.make();
     EventBus bus = EventBus();
-    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
     Command command = Command("", {}, {}, "");
-    ConfigService configService(ioService, init, configRepository, command);
+    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+    ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+    ConfigService configService(ioService, init, configRepository, cacheRepository, command);
 
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
@@ -52,7 +53,6 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemService.filterPriorityAbove(listItems, 2);
         REQUIRE(listItems.size() == 1);
         REQUIRE(*listItems[0].getId() == "aaaa");
-        REQUIRE(*listItems[1].getId() == "bbbb");
 
         std::vector<ListItemEntity> listItems2 = listItemService.get();
         listItemService.filterDeadlineBefore(listItems2, 1712487260);

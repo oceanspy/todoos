@@ -91,5 +91,5 @@ std::vector<std::string> Help::helpListForCli()
 
 std::string Help::getVersion()
 {
-    return "pre-release v0.99.01";
+    return "release candidate rc-1.1";
 }

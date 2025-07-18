@@ -10,7 +10,10 @@ MockInit::MockInit(IOService& ioService, const std::filesystem::path& customSubD
           mainDirPath(homeDir / customSubDir),
           appDirPath(homeDir / customSubDir),
           configDirPath(homeDir / customSubDir),
+          cacheDirPath(homeDir / customSubDir),
           configFileName("config"),
+          cacheFileName("cache"),
+          cacheFilePath(cacheDirPath / cacheFileName),
           listOfListFileName("list"),
           configFilePath(configDirPath / configFileName),
           defaultListFileName("default")
@@ -29,6 +32,14 @@ std::filesystem::path MockInit::getConfigFilePath()
     path += "." + getConfigExtension();
     return path;
 }
+
+std::filesystem::path MockInit::getCacheFilePath()
+{
+    std::filesystem::path path = appDirPath / cacheFileName;
+    path += "." + getConfigExtension();
+    return path;
+}
+
 
 std::filesystem::path MockInit::getListOfListFilePath()
 {
@@ -54,6 +65,10 @@ std::filesystem::path MockInit::getHomeDir() {
 
 std::filesystem::path MockInit::getConfigDirPath() {
     return configDirPath;
+}
+
+std::filesystem::path MockInit::getCacheDirPath() {
+    return cacheDirPath;
 }
 
 std::filesystem::path MockInit::getMainDirPath() {

@@ -38,7 +38,9 @@ https://github.com/oceanspy/todoos/releases/
 ```bash
 git clone https://github.com/oceanspy/todoos.git
 cd todoos
-./build.sh
+make
+sudo make install
+make omz-install && omz reload
 ```
 
 ### Installation
@@ -128,8 +130,6 @@ todoos --help
 appDirStorage: 
 # Choose the storage format: csv/json (recommended: csv)
 fileDataStorageType: csv
-# List used currently
-currentList: ipex
 # default list
 defaultList: default
 # theme
