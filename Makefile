@@ -62,6 +62,10 @@ cmake-config:
 
 install: ln-bin
 
+upgrade:
+	@mkdir -p ~/.cache/oceanspy/todoos/cache.conf
+	@echo "currentList: default" > ~/.cache/oceanspy/todoos/cache.conf
+
 ln-bin:
 	@echo "==> Installing symlink $(BINDIR)/$(BINARY_NAME) -> $(abspath $(BUILD_DIR)/$(BINARY_NAME))"
 	@ln -sf $(abspath $(BUILD_DIR)/$(BINARY_NAME)) $(BINDIR)/$(BINARY_NAME)
