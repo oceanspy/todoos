@@ -1,10 +1,20 @@
 #include "ConfigService.h"
 
+#include <stdexcept>
 #include <utility>
-#include "../CLIController/Config/Config.h"
 
-ConfigService::ConfigService(IOService& ioService, InitInterface& init, ConfigRepository& configRepository, Command& command)
-    : ioService(ioService), init(init), configRepository(configRepository), command(command)
+ConfigService::ConfigService(
+    IOService& ioService, 
+    InitInterface& init, 
+    ConfigRepository& configRepository, 
+    ConfigRepository& cacheRepository, 
+    Command& command
+): 
+    ioService(ioService), 
+    init(init), 
+    configRepository(configRepository), 
+    cacheRepository(cacheRepository), 
+    command(command)
 {
 
 }
@@ -13,6 +23,7 @@ std::vector <ConfigEntity> ConfigService::get()
 {
     return configRepository.get();
 }
+
 
 std::string ConfigService::getValue(const std::string &key)
 {
@@ -33,7 +44,8 @@ bool ConfigService::isTrue(const std::string &key)
 
 ConfigEntity ConfigService::find(const std::string& key)
 {
-    std::vector <ConfigEntity> configs = get();
+    ConfigRepository repository = getRepository(key);
+    std::vector <ConfigEntity> configs = repository.get();
     for (ConfigEntity configEntity : configs)
     {
         if (*configEntity.getKey() == key)
@@ -48,18 +60,51 @@ void ConfigService::add(std::string key, std::string value) {
     ConfigEntity configEntity = ConfigEntity();
     configEntity.setKey(std::move(key));
     configEntity.setValue(std::move(value));
-    configRepository.create(configEntity);
+    ConfigRepository repository = getRepository(key);
+    repository.create(configEntity);
 }
 
 void ConfigService::edit(const std::string& key, std::string value) {
     ConfigEntity configEntity = find(key);
     configEntity.setValue(std::move(value));
-    configRepository.update(key, configEntity);
+    ConfigRepository repository = getRepository(key);
+    repository.update(key, configEntity);
+}
+
+void ConfigService::editCurrentList(std::string value) {
+    std::string key = "currentList";
+    ConfigEntity cacheEntity = find(key);
+    cacheEntity.setValue(std::move(value));
+    ConfigRepository repository = getRepository(key);
+    repository.update(key, cacheEntity);
 }
 
 void ConfigService::remove(std::string& key)
 {
-    configRepository.remove(key);
+    ConfigRepository repository = getRepository(key);
+    repository.remove(key);
+}
+
+ConfigRepository ConfigService::getRepository(const std::string& key) {
+    if (key == "currentList") {
+        return cacheRepository;
+    } else if (key == "appDirStorage") {
+        return configRepository;
+    } else if (key == "fileDataStorageType") {
+        return configRepository;
+    } else if (key == "defaultList") {
+        return configRepository;
+    } else if (key == "theme") {
+        return configRepository;
+    } else if (key == "consoleRowMaxLength") {
+        return configRepository;
+    } else if (key == "archiveWhenCompleted") {
+        return configRepository;
+    } else if (key == "idRandomGenerationType") {
+        return configRepository;
+    }
+
+    throw std::invalid_argument("No config were found with the key: " + key);
 }
 
 std::filesystem::path ConfigService::getAppDirPath()
@@ -91,8 +136,8 @@ std::string ConfigService::getCurrentList()
         return command.getOption("list");
     }
 
-    ConfigEntity configEntity = configRepository.find("currentList");
-    return *configEntity.getValue();
+    ConfigEntity cacheEntity = cacheRepository.find("currentList");
+    return *cacheEntity.getValue();
 }
 
 std::string ConfigService::getCurrentListVariant()

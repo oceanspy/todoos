@@ -48,7 +48,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {}, {}, "commands");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -72,7 +73,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {}, "commands add");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -96,7 +98,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"priority", "urg"}}, "commands add -p urg");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -120,7 +123,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"priority", "urgent"}}, "commands add -p urgent");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -144,7 +148,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"status", ""}}, "commands add -s");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -168,7 +173,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"status", "to-"}}, "commands add -s to-");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -192,7 +198,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"status", "to-do"}}, "commands add -s to-do");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -216,7 +223,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add", "ceci", "est", "un", "test"}, {}, "commands add ceci est un test");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -240,7 +248,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"list", "tempListName"}}, "commands -l tempListName add");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -264,7 +273,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"list", "tempListName"}, {"priority", "high"}}, "commands -l tempListName -p high add");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -288,7 +298,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {}, {{"list", "tempListName"}}, "commands -l tempListName");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -312,7 +323,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"list", "test2"}}, "commands add -l test2");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -336,7 +348,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"add"}, {{"list", "wrongList"}}, "commands -l wrongList add");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -360,7 +373,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"edit"}, {}, "commands edit");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -384,7 +398,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"edit", "aaaa"}, {}, "commands edit aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -407,9 +422,9 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
     SECTION("Autocomplete commands: commands edit aaaa test") {
         Command command = Command("commands", {"edit", "aaaa", "test"}, {},"commands edit aaaa test");
 
-
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -433,7 +448,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"wrong"}, {}, "commands wrong");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -457,7 +473,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {}, {{"list", ""}}, "commands -l");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -481,7 +498,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"print"}, {}, "commands print");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -505,7 +523,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list"}, {}, "commands list");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -529,7 +548,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list", "add"}, {}, "commands list add");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -553,7 +573,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list", "rename"}, {}, "commands list rename");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -577,7 +598,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list", "rename", "tempListName"}, {}, "commands list rename tempListName");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -601,7 +623,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list", "rename", "tempListName"}, {{"list", "tempList2Name"}}, "commands list rename tempListName -l tempList2Name");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -625,7 +648,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list", "remove"}, {}, "commands list remove");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -649,7 +673,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list", "copy"}, {}, "commands list copy");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -673,7 +698,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"list", "show"}, {}, "commands list show");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -697,7 +723,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"use"}, {}, "commands use");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -721,7 +748,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"use", "tempListName"}, {}, "commands use tempListName");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -745,7 +773,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"remove"}, {}, "commands remove");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -769,7 +798,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"remove", "aaaa"}, {}, "commands remove aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -793,7 +823,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"reset"}, {}, "commands reset");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -817,7 +848,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"reset", "aaaa"}, {}, "commands reset aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -841,7 +873,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"pause"}, {}, "commands pause");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -865,7 +898,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"pause", "aaaa"}, {}, "commands pause aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -889,7 +923,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"complete"}, {}, "commands complete");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -913,7 +948,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"complete", "aaaa"}, {}, "commands complete aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -937,7 +973,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"cancel"}, {}, "commands cancel");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -961,7 +998,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"cancel", "aaaa"}, {}, "commands cancel aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -985,7 +1023,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"increase"}, {}, "commands increase");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1009,7 +1048,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"increase", "aaaa"}, {}, "commands increase aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1033,7 +1073,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"decrease"}, {}, "commands decrease");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1057,7 +1098,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"decrease", "aaaa"}, {}, "commands decrease aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1081,7 +1123,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"append"}, {}, "commands append");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1105,7 +1148,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"append", "aaaa"}, {}, "commands append aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1129,7 +1173,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"prepend"}, {}, "commands prepend");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1153,7 +1198,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"prepend", "aaaa"}, {}, "commands prepend aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1177,7 +1223,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"deadline", "today"}, {}, "commands deadline today");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1201,7 +1248,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"deadline"}, {}, "commands deadline");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1225,7 +1273,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"move-to"}, {}, "commands move-to");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1249,7 +1298,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"move", "tempListName"}, {}, "commands move tempListName");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1273,7 +1323,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"move", "tempList2Name", "aaaa"}, {}, "commands move tempList2Name aaaa");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1297,7 +1348,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"move", "aaaa", "tempList2"}, {}, "commands move aaaa tempList2");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
@@ -1325,7 +1377,8 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]") {
         Command command = Command("commands", {"archive"}, {}, "commands archive");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigService configService(ioService, init, configRepository, command);
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService = PriorityService();
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);

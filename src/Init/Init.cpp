@@ -1,8 +1,6 @@
 #include "Init.h"
 
-#include <fstream>
 #include <filesystem>
-#include <utility>
 
 Init::Init(IOService& ioService)
     : ioService(ioService),
@@ -13,9 +11,12 @@ Init::Init(IOService& ioService)
       mainDirPath(homeDir / ".oceanspy"),
       appDirPath(homeDir / ".todoos"),
       configDirPath(homeDir / ".oceanspy/todoos"),
-      configFileName("config"),
+      cacheDirPath(homeDir / ".cache/oceanspy/todoos"),
       listOfListFileName("list"),
+      configFileName("config"),
       configFilePath(configDirPath / configFileName),
+      cacheFileName("cache"),
+      cacheFilePath(cacheDirPath / cacheFileName),
       defaultListFileName("default")
 {
 
@@ -28,7 +29,14 @@ std::filesystem::path Init::getAppDirPath()
 
 std::filesystem::path Init::getConfigFilePath()
 {
-    std::filesystem::path path = configDirPath / configFileName;
+    std::filesystem::path path = configFilePath;
+    path += "." + getConfigExtension();
+    return path;
+}
+
+std::filesystem::path Init::getCacheFilePath()
+{
+    std::filesystem::path path = cacheFilePath;
     path += "." + getConfigExtension();
     return path;
 }
@@ -57,6 +65,10 @@ std::filesystem::path Init::getHomeDir() {
 
 std::filesystem::path Init::getConfigDirPath() {
     return configDirPath;
+}
+
+std::filesystem::path Init::getCacheDirPath() {
+    return cacheDirPath;
 }
 
 std::filesystem::path Init::getMainDirPath() {

@@ -65,7 +65,8 @@ int main(int argc, const char *argv[])
     command = smartCommand.apply();
 
     ConfigRepository configRepository = ConfigRepository(&confService, init.getConfigFilePath());
-    ConfigService configService = ConfigService(ioService, init, configRepository, command);
+    ConfigRepository cacheRepository = ConfigRepository(&confService, init.getCacheFilePath());
+    ConfigService configService = ConfigService(ioService, init, configRepository, cacheRepository, command);
 
     FileStorageService fileStorageService = FileStorageService(ioService, configService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr;

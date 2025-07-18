@@ -31,10 +31,9 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
 
 
         REQUIRE(!results.empty());
-        REQUIRE(results.size() == 8);
+        REQUIRE(results.size() == 7);
         REQUIRE(*configRepository.find("fileDataStorageType").getValue() == "json");
         REQUIRE(*configRepository.find("appDirStorage").getValue() == init.getMainDirPath());
-        REQUIRE(*configRepository.find("currentList").getValue() == tempListName);
         REQUIRE(*configRepository.find("defaultList").getValue() == "default");
         REQUIRE(*configRepository.find("theme").getValue() == "default");
         REQUIRE(*configRepository.find("consoleRowMaxLength").getValue() == "96");
@@ -42,31 +41,31 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
         REQUIRE(*configRepository.find("idRandomGenerationType").getValue() == "letters");
     }
 
-    SECTION("Test find method") {
+    SECTION("Test find method: config") {
         // Call the get method
-        ConfigEntity result = configRepository.find("currentList");
+        ConfigEntity result = configRepository.find("theme");
 
-        REQUIRE(*result.getKey() == "currentList");
-        REQUIRE(*result.getValue() == "tempListName");
+        REQUIRE(*result.getKey() == "theme");
+        REQUIRE(*result.getValue() == "default");
     }
 
     SECTION("Test update method") {
-        ConfigEntity oldConfig = configRepository.find("currentList");
+        ConfigEntity oldConfig = configRepository.find("theme");
 
-        const std::string key = "currentList";
+        const std::string key = "theme";
         const std::string value = "newValue";
         // Call the get method
         ConfigEntity newConfig;
         newConfig.setKey(key);
         newConfig.setValue(value);
-        configRepository.update("currentList", newConfig);
+        configRepository.update("theme", newConfig);
 
         ConfigEntity result = configRepository.find(key);
 
-        REQUIRE(*result.getKey() == "currentList");
+        REQUIRE(*result.getKey() == "theme");
         REQUIRE(*result.getValue() == "newValue");
 
-        configRepository.update("currentList", oldConfig);
+        configRepository.update("theme", oldConfig);
     }
 
     SECTION("Test create & delete method") {
@@ -87,6 +86,6 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
 
         std::vector<ConfigEntity> results = configRepository.get();
         REQUIRE(!results.empty());
-        REQUIRE(results.size() == 8);
+        REQUIRE(results.size() == 7);
     }
 }

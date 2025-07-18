@@ -1,5 +1,6 @@
 #include "DateHelpers.h"
 
+#include <iterator>
 #include <utility>
 
 std::string DateHelpers::formatTimestamp(time_t timestamp, std::string format, const std::string& separator)
@@ -103,6 +104,10 @@ bool DateHelpers::isTimestampNDaysFromToday(time_t timestamp, int n) {
 
 std::string DateHelpers::timestampToDuration(time_t startedAt, time_t endedAt)
 {
+    if (startedAt == endedAt) {
+        return "0s";
+    }
+
     time_t timestamp = (int) difftime(endedAt, startedAt);
     std::stringstream ss;
     int years = timestamp / 31536000;

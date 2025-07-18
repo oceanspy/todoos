@@ -8,8 +8,10 @@ class MockInit : public InitInterface {
 public:
     explicit MockInit(IOService& ioService, const std::filesystem::path& customSubDir);
     std::filesystem::path getConfigFilePath() override;
+    std::filesystem::path getCacheFilePath() override;
     std::filesystem::path getHomeDir() override;
     std::filesystem::path getConfigDirPath() override;
+    std::filesystem::path getCacheDirPath() override;
     std::filesystem::path getMainDirPath() override;
     std::filesystem::path getListOfListFilePath() override;
     std::string getListOfListFileName() override;
@@ -31,6 +33,9 @@ private:
     std::filesystem::path configDirPath;
     std::filesystem::path configFileName;
     std::filesystem::path configFilePath;
+    std::filesystem::path cacheDirPath;
+    std::filesystem::path cacheFileName;
+    std::filesystem::path cacheFilePath;
     std::filesystem::path listOfListFileName;
     std::filesystem::path defaultListFileName;
 };

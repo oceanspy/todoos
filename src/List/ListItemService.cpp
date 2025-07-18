@@ -3,8 +3,20 @@
 #include <string>
 #include <utility>
 
-ListItemService::ListItemService(IOService& ioService, ConfigService& configService, ListItemRepository& listItemRepository, PriorityService& priorityService, StatusService& statusService, EventBus& bus)
-    : ioService(ioService), configService(configService), listItemRepository(listItemRepository), priorityService(priorityService), statusService(statusService), bus(bus)
+ListItemService::ListItemService(
+    IOService& ioService, 
+    ConfigService& configService, 
+    ListItemRepository& listItemRepository, 
+    PriorityService& priorityService, 
+    StatusService& statusService, 
+    EventBus& bus
+): 
+    ioService(ioService), 
+    configService(configService), 
+    listItemRepository(listItemRepository), 
+    priorityService(priorityService), 
+    statusService(statusService), 
+    bus(bus)
 {
     subscribeToEvents(bus);
     load();

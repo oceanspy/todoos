@@ -26,6 +26,7 @@ void Installation::make()
     ioService.message("Inializing program...");
     this->createDirectories();
     this->createConfigFile();
+    this->createCacheFile();
     this->createListOfListFile();
     this->createListFile(init.getDefaultListName());
     this->populate();
@@ -39,21 +40,24 @@ void Installation::populate()
     std::vector <std::vector <std::string>> defaultConfigData = {
             { "appDirStorage", init.getAppDirPath().string() },
             { "fileDataStorageType", "csv" },
-            { "currentList", "default" },
             { "defaultList", "default" },
             { "theme", "default" },
             { "consoleRowMaxLength", "0" },
             { "archiveWhenCompleted", "false" },
             { "idRandomGenerationType", "letters" }
     };
-
     configStorageService.load(init.getConfigFilePath());
     configStorageService.write(defaultConfigData);
+
+    std::vector <std::vector <std::string>> defaultCacheData = {
+            { "currentList", "default" },
+    };
+    configStorageService.load(init.getCacheFilePath());
+    configStorageService.write(defaultCacheData);
 
     std::vector <std::vector <std::string>> defaultListOfListData = {
             { "default", "default", "default", "false" }
     };
-
     storageJsonService.load(init.getListOfListFilePath());
     storageJsonService.write(defaultListOfListData);
 
@@ -63,7 +67,6 @@ void Installation::populate()
             {"cccc", "Add your first task by doing: 'todoos add \"My first task\"'", "medium", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr))},
             {"dddd", "Enjoy! :-)", "low", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr))}
     };
-
     storageCsvService.load(init.getDefaultListFilePath());
     storageCsvService.write(defaultListData);
 }
@@ -72,7 +75,14 @@ void Installation::createDirectories()
 {
     if (!std::filesystem::exists(init.getMainDirPath())) {
         if (!std::filesystem::create_directory(init.getMainDirPath())) {
-            ioService.error("Failed to create application directory");
+            ioService.error("Failed to create config main directory");
+            return;
+        }
+    }
+
+    if (!std::filesystem::exists(init.getCacheDirPath())) {
+        if (!std::filesystem::create_directory(init.getCacheDirPath())) {
+            ioService.error("Failed to create cache directory");
             return;
         }
     }
@@ -98,6 +108,17 @@ void Installation::createConfigFile()
     if (!outfile.is_open())
     {
         ioService.error("Failed to create application config file");
+        return;
+    }
+    outfile.close();
+}
+
+void Installation::createCacheFile()
+{
+    std::ofstream outfile(init.getCacheFilePath(), std::ios::out | std::ios::app);
+    if (!outfile.is_open())
+    {
+        ioService.error("Failed to create cache file");
         return;
     }
     outfile.close();

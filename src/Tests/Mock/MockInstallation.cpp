@@ -20,6 +20,7 @@ void MockInstallation::make()
     ioService.print("MockInstallationializing program...");
     this->createDirectories();
     this->createConfigFile();
+    this->createCacheFile();
     this->createListOfListFile();
     this->createListFile(init.getDefaultListName());
     this->createListFile("tempListName");
@@ -35,7 +36,6 @@ void MockInstallation::populate()
     std::vector <std::vector <std::string>> defaultConfigData = {
             { "appDirStorage", init.getAppDirPath().string() },
             { "fileDataStorageType", "json" },
-            { "currentList", "tempListName" },
             { "defaultList", "default" },
             { "theme", "default" },
             { "consoleRowMaxLength", "96" },
@@ -43,15 +43,19 @@ void MockInstallation::populate()
             { "idRandomGenerationType", "letters" }
 
     };
-
     configStorageService.load(init.getConfigFilePath());
     configStorageService.write(defaultConfigData);
+
+    std::vector <std::vector <std::string>> defaultCacheData = {
+            { "currentList", "tempListName" },
+    };
+    configStorageService.load(init.getCacheFilePath());
+    configStorageService.write(defaultCacheData);
 
     std::vector <std::vector <std::string>> defaultListofListData = {
             { "tempListName", "default", "default", "false" },
             { "tempList2Name", "default", "default", "false" }
     };
-
     storageService.load(init.getListOfListFilePath());
     storageService.write(defaultListofListData);
 
@@ -59,7 +63,6 @@ void MockInstallation::populate()
             {"aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259"},
             {"bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272"}
     };
-
     storageService.load(init.getDefaultListFilePath());
     storageService.write(defaultListData);
 
@@ -67,7 +70,6 @@ void MockInstallation::populate()
             {"aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259"},
             {"bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272"}
     };
-
     storageService.load(init.getMainDirPath() / "tempListName.json");
     storageService.write(tempListData);
 
@@ -75,7 +77,6 @@ void MockInstallation::populate()
             {"cccc", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259"},
             {"dddd", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272"}
     };
-
     storageService.load(init.getMainDirPath() / "tempList2Name.json");
     storageService.write(temp2ListData);
 }
@@ -108,6 +109,17 @@ void MockInstallation::createDirectories()
 void MockInstallation::createConfigFile()
 {
     std::ofstream outfile(init.getConfigFilePath(), std::ios::out | std::ios::app);
+    if (!outfile.is_open())
+    {
+        ioService.print("Failed to create application config file");
+        return;
+    }
+    outfile.close();
+}
+
+void MockInstallation::createCacheFile()
+{
+    std::ofstream outfile(init.getCacheFilePath(), std::ios::out | std::ios::app);
     if (!outfile.is_open())
     {
         ioService.print("Failed to create application config file");

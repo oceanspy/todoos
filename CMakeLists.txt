@@ -115,5 +115,6 @@ target_link_libraries(todoos PRIVATE nlohmann_json::nlohmann_json)
 
 option(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
+    enable_testing()
     add_subdirectory(src/Tests)
 endif()

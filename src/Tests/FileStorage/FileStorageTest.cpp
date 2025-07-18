@@ -18,9 +18,10 @@ TEST_CASE("FileStorage", "[moveFileTo]") {
     std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr = std::make_unique<ConfService>(ioService);
     MockInit init(ioService, "_todoos_FileStorageTest");
     MockInstallation installation(ioService, jsonService, confService, init);
-    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
     Command command = Command("commands", {}, {}, "commands");
-    ConfigService configService(ioService, init, configRepository, command);
+    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+    ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+    ConfigService configService(ioService, init, configRepository, cacheRepository, command);
     FileStorageService fileStorageService(ioService, configService);
     EventBus bus = EventBus();
 
