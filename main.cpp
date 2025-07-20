@@ -122,7 +122,12 @@ main(int argc, const char* argv[])
                                              listService,
                                              listItemService,
                                              cliThemeService);
-    cliService.actions();
+    try {
+        cliService.actions();
+    } catch (std::exception& e) {
+        help.commandNotFound();
+        return 1;
+    }
 
-    return 0;
+    return 1;
 }

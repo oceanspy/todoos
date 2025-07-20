@@ -48,11 +48,6 @@ SmartCommand::apply()
             Command adaptatedCommand = Command("list", arguments, command.getOptions());
             return adaptatedCommand;
         }
-    } else if (CommandService::isCommand(command, "list")) {
-        if (command.getArguments().size() == 1 && command.getArguments().at(0) != "show") {
-            return Command("use", command.getArguments(), command.getOptions());
-        }
-        return command;
     } else if (CommandService::isCommand(command, "current")) {
         return Command("list", { "current" }, command.getOptions());
     }

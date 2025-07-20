@@ -42,7 +42,7 @@ ListActions::use()
     }
 
     ioService.br();
-    ioService.error("List not found. Aborting.");
+    ioService.error("List " + addSpaceToListName(command.getArguments().at(0)) + " not found. Aborting.");
     ioService.br();
     return;
 }
@@ -73,7 +73,7 @@ ListActions::make()
         showList();
         return;
     } else if (CommandService::isCommand(subCommand, "current")) {
-        ioService.printWithoutLineBreak(addSpaceToListName(configService.getCurrentList()));
+        ioService.print(addSpaceToListName(configService.getCurrentList()));
         return;
     }
 
