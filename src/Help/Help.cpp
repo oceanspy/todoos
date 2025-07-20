@@ -124,5 +124,5 @@ Help::helpListForCli()
 std::string
 Help::getVersion()
 {
-    return "release candidate rc-1.1";
+    return "release candidate rc-1.2";
 }

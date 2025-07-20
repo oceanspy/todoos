@@ -3,8 +3,8 @@ compdef t=todoos
 
 alias tu="todoos use"
 
-ZSH_AUTOSUGGEST_HISTORY_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *|pacman -S *|gc *"
-ZSH_AUTOSUGGEST_COMPLETION_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *|pacman -S *|gc *"
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *"
+ZSH_AUTOSUGGEST_COMPLETION_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *"
 
 todoos() {
     command todoos "$@"

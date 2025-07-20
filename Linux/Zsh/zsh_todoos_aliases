@@ -1,0 +1,25 @@
+# Todoos
+compdef t=todoos
+
+alias tu="todoos use"
+
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *"
+ZSH_AUTOSUGGEST_COMPLETION_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *"
+
+alias t="todoos"
+alias ta="todoos add"
+alias tac="todoos add -p critical"
+alias tau="todoos add -p urgent"
+alias tah="todoos add -p high"
+alias tam="todoos add -p medium"
+alias tal="todoos add -p low"
+
+alias tu="todoos use"
+
+alias td="todoos -l default"
+alias tdac="todoos -l default add -p critical"
+alias tdau="todoos -l default add -p urgent"
+alias tdah="todoos -l default add -p high"
+alias tdam="todoos -l default add -p medium"
+alias tdal="todoos -l default add -p low"
+

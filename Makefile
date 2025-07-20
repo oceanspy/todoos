@@ -28,8 +28,7 @@ BUILD_DIR      ?= Build
 BINARY_NAME    ?= todoos
 PREFIX         ?= /usr/local
 BINDIR         ?= $(PREFIX)/bin
-OH_MY_ZSH_DIR  ?= $(HOME)/.oh-my-zsh
-ZSH_COMPLETION ?= $(OH_MY_ZSH_DIR)/completions/_todoos
+ZSH_COMPLETION ?= /usr/share/zsh/functions/Completion/Zsh/_todoos
 
 CMAKE_BASE_FLAGS ?= -DCMAKE_CXX_STANDARD=23
 CMAKE_FLAGS      ?= $(CMAKE_BASE_FLAGS)
@@ -45,7 +44,7 @@ else
   MSG_GEN := Ninja found; using Ninja.
 endif
 
-.PHONY: build ln-bin omz-install install show-gen clean distclean cmake-config
+.PHONY: build ln-bin zsh-autocomplete zsh-aliases install show-gen clean distclean cmake-config test
 
 build: show-compiler cmake-config
 	@echo "==> Building $(BINARY_NAME) in $(BUILD_DIR) ..."
@@ -60,10 +59,10 @@ cmake-config:
 	@echo "==> Configuring with CMake..."
 	@cmake $(CMAKE_FLAGS) $(CMAKE_GENERATOR) -S . -B $(BUILD_DIR)
 
-install: ln-bin
+install: ln-bin zsh-autocomplete zsh-aliases
 
 upgrade:
-	@mkdir -p ~/.cache/oceanspy/todoos/cache.conf
+	@mkdir -p ~/.cache/oceanspy/todoos/
 	@echo "currentList: default" > ~/.cache/oceanspy/todoos/cache.conf
 
 ln-bin:
@@ -71,16 +70,21 @@ ln-bin:
 	@ln -sf $(abspath $(BUILD_DIR)/$(BINARY_NAME)) $(BINDIR)/$(BINARY_NAME)
 	@echo "Bin shortcut created!"
 
-omz-install:
-	@if [ ! -d "$(OH_MY_ZSH_DIR)" ]; then \
-	  echo "oh-my-zsh not found at $(OH_MY_ZSH_DIR); skipping."; \
-	  exit 0; \
-	fi
-	@mkdir -p $(dir $(ZSH_COMPLETION))
-	@echo "==> Installing oh-my-zsh autocompletion to $(ZSH_COMPLETION)"
+zsh-autocomplete:
+	@echo "==> Installing zsh autocompletion to $(ZSH_COMPLETION)"
 	@cp Linux/Zsh/_todoos $(ZSH_COMPLETION)
-	@echo "oh-my-zsh autocompletion installed!"
+	@echo "Autocompletion installed!"
 	@echo "Please restart your terminal or run 'omz reload' to apply the changes."
+
+zsh-aliases:
+	@echo "==> Installing zsh aliases"
+	@cp Linux/Zsh/zsh_todoos_aliases ~/.zsh_todoos_aliases
+	@cp Linux/Zsh/zsh_todoos_sync ~/.zsh_todoos_sync
+	@echo ""
+	@echo "=============="
+	@echo ">>> Add this line to your zshrc files to enable shortcuts:"
+	@echo "source ~/.zsh_todoos_aliases"
+	@echo "=============="
 
 test:
 	@./runtests.sh

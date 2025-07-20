@@ -1,13 +1,13 @@
 # ToDoOs
 
-## Description
+# Description
 
 Smart CLI Application for Tasks management.
 
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot0.png?raw=true)
 ![alt text](https://github.com/oceanspy/todoos/blob/main/todoos-screenshot1.png?raw=true)
 
-## Information
+# Information
 
 For now, the tool was only tested on Linux with ZSH and `Oh my ZSH`. We recommend you to use it to have the best experience.
 
@@ -17,59 +17,45 @@ We also recommend you to use a terminal with a Monospace font. Meslo or Ubuntu M
 
 Don't hesitate to open an issue if you have any problem or suggestion. :-)
 
-## Installation
+# Installation
 
-### Binary
+## Build
 
-You can download the latest release from the releases page:
-https://github.com/oceanspy/todoos/releases/
-
-### Build
-
-#### Pre-requisites
+### Pre-requisites
 
 - CMake (>3.28)
 - Ninja or gcc (& build-essential)
 - ZSH (recommended)
 - noto-fonts-emoji
 
-#### Build
+### Build
+
+#### App
 
 ```bash
 git clone https://github.com/oceanspy/todoos.git
 cd todoos
 make
 sudo make install
+```
+
+#### Autocomplete with ZSH
+
+To get ZSH autocompletion with `oh-my-zsh`:
+```
 make omz-install && omz reload
 ```
 
-### Installation
+#### Aliases & shortcuts
 
-Create a symlink to the binary in your path.
 
-```bash
-ln -s {path_to_git_folder}/Build/todoos /usr/local/bin/todoos
-```
+#### First launch & configuration 
 
-First launch will create the required folders and files. 
-You can edit the storage path and different options in `~/.oceanspy/todoos/cacheItems.conf`.
+First launch will create the required directories and files. 
+You can edit the storage path and different options in `~/.oceanspy/todoos/config.conf`.
 
 By default, lists files are stored in `~/.todoos/`.  
 Configuration is stored in `~/.oceanspy/todoos/`.
-
-## Autocompletion
-
-See `{path_to_git_folder}/Linux/todoos_completion.zsh` for more information about the implementation of the autocompletion in ZSH.
-
-```bash
-cp {path_to_git_folder}/Linux/Zsh/_todoos ~/.oh-my-zsh/completions/_todoos
-source ~/.zshrc
-omz reload
-```
-
-## Sync
-
-If you wish to sync the files accross multiple devices using Linux, you can use Unison. A basic configuration is available in the `Linux` folder.
 
 ## Basic usage
 
@@ -141,3 +127,7 @@ archiveWhenCompleted: false
 # Choose the type of ID: letters-lowercase, letters, random
 idRandomGenerationType: letters-lowercase
 ```
+
+## Sync
+
+If you wish to sync the files accross multiple devices using Linux, you can use Unison. A basic configuration is available in the `Linux` directory.
