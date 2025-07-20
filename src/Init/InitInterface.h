@@ -3,8 +3,9 @@
 
 #include <filesystem>
 
-class InitInterface {
-public:
+class InitInterface
+{
+  public:
     virtual ~InitInterface() = default;
 
     virtual std::filesystem::path getConfigFilePath() = 0;
@@ -23,4 +24,4 @@ public:
     virtual const std::string getConfigExtension() = 0;
 };
 
-#endif //TODOOS_INITINTERFACE_H
+#endif // TODOOS_INITINTERFACE_H

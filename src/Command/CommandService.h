@@ -3,13 +3,14 @@
 
 #include "Command.h"
 #include "CommandList.h"
-#include "CommandShortcut.h"
 #include "CommandOption.h"
+#include "CommandShortcut.h"
 
-class CommandService {
-public:
+class CommandService
+{
+  public:
     explicit CommandService(CommandList& commandList, CommandOption& commandOption);
-    std::vector <std::string> getBaseCommandList();
+    std::vector<std::string> getBaseCommandList();
     std::string getMainCommandListAsString();
     bool isValid(std::string& commandName);
     static bool isCommand(Command& command, const std::string& commandName);
@@ -21,11 +22,9 @@ public:
     CommandOption& options();
     static bool isCommandValidWithOption(std::string commandName, std::map<std::string, std::string> options);
 
-private:
+  private:
     CommandList& commandList;
     CommandOption& commandOption;
 };
 
-
-
-#endif //COMMANDSERVICE_H
+#endif // COMMANDSERVICE_H

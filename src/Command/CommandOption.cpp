@@ -1,11 +1,13 @@
-#include <stdexcept>
 #include "CommandOption.h"
+#include <stdexcept>
 
-CommandOption::CommandOption() {
+CommandOption::CommandOption()
+{
     populateOptions();
 }
 
-void CommandOption::populateOptions()
+void
+CommandOption::populateOptions()
 {
     options["l"] = "list";
     options["p"] = "priority";
@@ -19,7 +21,8 @@ void CommandOption::populateOptions()
     options["i"] = "deadline";
 }
 
-bool CommandOption::isValidOption(const std::string &arg)
+bool
+CommandOption::isValidOption(const std::string& arg)
 {
     // Check if myString is a key
     if (options.find(arg) != options.end()) {
@@ -35,29 +38,24 @@ bool CommandOption::isValidOption(const std::string &arg)
     return false;
 }
 
-bool CommandOption::isOptionWithValue(const std::string &arg)
+bool
+CommandOption::isOptionWithValue(const std::string& arg)
 {
-    if (shortToLongOption(arg) == "list")
-    {
+    if (shortToLongOption(arg) == "list") {
         return true;
-    }
-    else if (shortToLongOption(arg) == "priority")
-    {
+    } else if (shortToLongOption(arg) == "priority") {
         return true;
-    }
-    else if (shortToLongOption(arg) == "status")
-    {
+    } else if (shortToLongOption(arg) == "status") {
         return true;
-    }
-    else if (shortToLongOption(arg) == "deadline")
-    {
+    } else if (shortToLongOption(arg) == "deadline") {
         return true;
     }
 
     return false;
 }
 
-std::string CommandOption::shortToLongOption(const std::string &shortOption)
+std::string
+CommandOption::shortToLongOption(const std::string& shortOption)
 {
     for (const auto& pair : options) {
         if (pair.first == shortOption) {
@@ -68,11 +66,11 @@ std::string CommandOption::shortToLongOption(const std::string &shortOption)
     return shortOption;
 }
 
-std::string CommandOption::getLongOptionName(const std::string &arg) {
-    if (isValidOption(arg))
-    {
-        if (isShortOption(arg))
-        {
+std::string
+CommandOption::getLongOptionName(const std::string& arg)
+{
+    if (isValidOption(arg)) {
+        if (isShortOption(arg)) {
             return shortToLongOption(arg);
         }
         return arg;
@@ -81,7 +79,9 @@ std::string CommandOption::getLongOptionName(const std::string &arg) {
     throw std::invalid_argument("Option " + arg + " is not valid");
 }
 
-bool CommandOption::isShortOption(const std::string &arg) {
+bool
+CommandOption::isShortOption(const std::string& arg)
+{
     if (options.find(arg) != options.end()) {
         return true;
     }

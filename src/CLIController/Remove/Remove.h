@@ -1,22 +1,22 @@
 #ifndef REMOVE_H
 #define REMOVE_H
 
-#include "../../List/ListItemService.h"
-#include "../../IOService/IOService.h"
 #include "../../Command/Command.h"
+#include "../../IOService/IOService.h"
+#include "../../List/ListItemService.h"
 
-class Remove {
-public:
+class Remove
+{
+  public:
     Remove(IOService& ioService, Command& command, ListItemService& listItemService);
     void remove();
     void restore();
     void archive();
-private:
+
+  private:
     IOService& ioService;
     Command& command;
     ListItemService& listItemService;
 };
 
-
-
-#endif //REMOVE_H
+#endif // REMOVE_H

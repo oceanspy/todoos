@@ -1,10 +1,11 @@
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch_test_macros.hpp>
 #include "../../Entities/ListEntity.h"
+#include <catch2/catch_test_macros.hpp>
 
-
-TEST_CASE("ListEntity tests", "[ListEntity]") {
-    SECTION("Test setting and getting name, theme, and sorting") {
+TEST_CASE("ListEntity tests", "[ListEntity]")
+{
+    SECTION("Test setting and getting name, theme, and sorting")
+    {
         // Create a ListEntity object
         ListEntity listEntity;
 

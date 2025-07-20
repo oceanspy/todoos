@@ -1,13 +1,13 @@
 #include "StringHelpers.h"
 
-
-std::string StringHelpers::randomString(const int len) {
+std::string
+StringHelpers::randomString(const int len)
+{
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     seed ^= getpid() + std::clock();
     srand(seed);
-    static const char alphanum[] =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
+    static const char alphanum[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                   "abcdefghijklmnopqrstuvwxyz";
     std::string tmp_s;
     tmp_s.reserve(len);
 
@@ -18,14 +18,15 @@ std::string StringHelpers::randomString(const int len) {
     return tmp_s;
 }
 
-std::string StringHelpers::randomAlNumString(const int len) {
+std::string
+StringHelpers::randomAlNumString(const int len)
+{
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     seed ^= getpid() + std::clock();
     srand(seed);
-    static const char alphanum[] =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
+    static const char alphanum[] = "0123456789"
+                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                   "abcdefghijklmnopqrstuvwxyz";
     std::string tmp_s;
     tmp_s.reserve(len);
 
@@ -36,12 +37,13 @@ std::string StringHelpers::randomAlNumString(const int len) {
     return tmp_s;
 }
 
-std::string StringHelpers::randomLettersLowercase(const int len) {
+std::string
+StringHelpers::randomLettersLowercase(const int len)
+{
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     seed ^= getpid() + std::clock();
     srand(seed);
-    static const char alphanum[] =
-        "abcdefghijklmnopqrstuvwxyz";
+    static const char alphanum[] = "abcdefghijklmnopqrstuvwxyz";
     std::string tmp_s;
     tmp_s.reserve(len);
 
@@ -52,21 +54,29 @@ std::string StringHelpers::randomLettersLowercase(const int len) {
     return tmp_s;
 }
 
-std::wstring StringHelpers::stringToWstring(const std::string& str) {
+std::wstring
+StringHelpers::stringToWstring(const std::string& str)
+{
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     return converter.from_bytes(str);
 }
 
-std::string StringHelpers::wstringToString(const std::wstring& wstr) {
+std::string
+StringHelpers::wstringToString(const std::wstring& wstr)
+{
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     return converter.to_bytes(wstr);
 }
 
-std::string StringHelpers::colorize(const std::string& text, const std::string& color) {
+std::string
+StringHelpers::colorize(const std::string& text, const std::string& color)
+{
     return color + text + "\033[0m";
 }
 
-std::string StringHelpers::adjustStringLength(const std::string& str, int length = 10, const char fill) {
+std::string
+StringHelpers::adjustStringLength(const std::string& str, int length = 10, const char fill)
+{
     std::size_t inputLength = countCharsWithoutBashCodes(str);
     std::wstring adjustedwString = StringHelpers::stringToWstring(str);
     std::string adjustedString;
@@ -88,15 +98,11 @@ std::string StringHelpers::adjustStringLength(const std::string& str, int length
     if (inputLength == length) {
         adjustedwString = result;
         adjustedString = StringHelpers::wstringToString(adjustedwString);
-    }
-    else if (inputLength > length && length > 5)
-    {
+    } else if (inputLength > length && length > 5) {
         result = result.substr(0, length - 3);
         adjustedwString = result;
         adjustedString = StringHelpers::wstringToString(adjustedwString) + "-  ";
-    }
-    else if (inputLength > length && length <= 5)
-    {
+    } else if (inputLength > length && length <= 5) {
         result = result.substr(0, length - 1);
         adjustedwString = result;
         adjustedString = StringHelpers::wstringToString(adjustedwString) + " ";
@@ -105,7 +111,8 @@ std::string StringHelpers::adjustStringLength(const std::string& str, int length
     return adjustedString;
 }
 
-std::string StringHelpers::adjustStringLengthWithString(std::string str, int length, const std::string& fill)
+std::string
+StringHelpers::adjustStringLengthWithString(std::string str, int length, const std::string& fill)
 {
     std::size_t inputLength = countCharsWithoutBashCodes(str);
 
@@ -121,7 +128,9 @@ std::string StringHelpers::adjustStringLengthWithString(std::string str, int len
     return str;
 }
 
-std::size_t StringHelpers::countCharsWithoutBashCodes(const std::string& str) {
+std::size_t
+StringHelpers::countCharsWithoutBashCodes(const std::string& str)
+{
     // Define regular expression pattern to match ANSI escape codes
     std::regex ansi_escape_code("\033\[[0-9;]+m");
 
@@ -146,72 +155,85 @@ std::size_t StringHelpers::countCharsWithoutBashCodes(const std::string& str) {
     return result.length();
 }
 
-bool StringHelpers::containsWord(const std::string& str, const std::string& word) {
+bool
+StringHelpers::containsWord(const std::string& str, const std::string& word)
+{
     std::istringstream iss(str);
-    std::vector<std::string> tokens {
-        std::istream_iterator<std::string>{iss},
-        std::istream_iterator<std::string>{}
-    };
+    std::vector<std::string> tokens{ std::istream_iterator<std::string>{ iss }, std::istream_iterator<std::string>{} };
     auto it = std::find(tokens.begin(), tokens.end(), word);
     return it != tokens.end();
 }
 
-bool StringHelpers::isBeginningOfWord(const std::string& str, const std::string& word) {
+bool
+StringHelpers::isBeginningOfWord(const std::string& str, const std::string& word)
+{
     return str.find(word) == 0;
 }
 
-bool StringHelpers::isBeginningOfAnyWords(const std::string& sentence, const std::string& wordToSearch)
+bool
+StringHelpers::isBeginningOfAnyWords(const std::string& sentence, const std::string& wordToSearch)
 {
-    std::vector <std::string> words = split(sentence, ' ');
+    std::vector<std::string> words = split(sentence, ' ');
     return std::ranges::any_of(words, [&wordToSearch](const std::string& completeWord) {
         return isBeginningOfWord(completeWord, wordToSearch);
     });
 }
 
-bool StringHelpers::containsString(const std::string& str, const std::string& word) {
+bool
+StringHelpers::containsString(const std::string& str, const std::string& word)
+{
     return str.find(word) != std::string::npos;
 }
 
-std::string StringHelpers::toLower(const std::string& str) {
+std::string
+StringHelpers::toLower(const std::string& str)
+{
     std::string lowerStr;
     lowerStr.resize(str.size());
     std::transform(str.begin(), str.end(), lowerStr.begin(), ::tolower);
     return lowerStr;
 }
 
-std::string StringHelpers::toUpper(const std::string& str) {
+std::string
+StringHelpers::toUpper(const std::string& str)
+{
     std::string upperStr;
     upperStr.resize(str.size());
     std::transform(str.begin(), str.end(), upperStr.begin(), ::toupper);
     return upperStr;
 }
 
-std::string StringHelpers::filterAlnumAndSpace(const std::string& str) {
+std::string
+StringHelpers::filterAlnumAndSpace(const std::string& str)
+{
     std::string result = str;
-    result.erase(std::remove_if(result.begin(), result.end(), [](unsigned char c) {
-        return !std::isalnum(c) && !std::isspace(c);
-    }), result.end());
+    result.erase(std::remove_if(result.begin(),
+                                result.end(),
+                                [](unsigned char c) { return !std::isalnum(c) && !std::isspace(c); }),
+                 result.end());
     return result;
 }
 
-std::vector<std::string> StringHelpers::split(const std::string& basicString, char i)
+std::vector<std::string>
+StringHelpers::split(const std::string& basicString, char i)
 {
     std::vector<std::string> result;
     std::stringstream ss(basicString);
     std::string item;
-    while (std::getline(ss, item, i))
-    {
+    while (std::getline(ss, item, i)) {
         result.push_back(item);
     }
     return result;
 }
 
-bool StringHelpers::isAlnum(const std::string& str)
+bool
+StringHelpers::isAlnum(const std::string& str)
 {
-       return std::all_of(str.begin(), str.end(), ::isalnum);
+    return std::all_of(str.begin(), str.end(), ::isalnum);
 }
 
-std::string StringHelpers::escapeChar(const std::string& str, char charToReplace) 
+std::string
+StringHelpers::escapeChar(const std::string& str, char charToReplace)
 {
     std::string escaped;
     for (char ch : str) {

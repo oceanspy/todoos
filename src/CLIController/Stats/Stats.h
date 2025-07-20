@@ -1,16 +1,22 @@
 #ifndef TODOOS_STATS_H
 #define TODOOS_STATS_H
 
-#include "../../IOService/IOService.h"
-#include "../../Command/Command.h"
-#include "../../List/ListItemService.h"
 #include "../../CLIThemes/CLIThemeService.h"
+#include "../../Command/Command.h"
+#include "../../IOService/IOService.h"
+#include "../../List/ListItemService.h"
 
-class Stats {
-public:
-    Stats(IOService& ioService, ConfigService& configService, Command& command, ListItemService& listItemService, CLIThemeService& cliThemeService);
+class Stats
+{
+  public:
+    Stats(IOService& ioService,
+          ConfigService& configService,
+          Command& command,
+          ListItemService& listItemService,
+          CLIThemeService& cliThemeService);
     void print();
-private:
+
+  private:
     IOService& ioService;
     ConfigService& configService;
     Command& command;
@@ -18,5 +24,4 @@ private:
     CLIThemeService& cliThemeService;
 };
 
-
-#endif //TODOOS_STATS_H
+#endif // TODOOS_STATS_H

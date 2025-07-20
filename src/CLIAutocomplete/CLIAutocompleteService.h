@@ -1,24 +1,24 @@
 #ifndef CLIAUTOCOMPLETESERVICE_H
 #define CLIAUTOCOMPLETESERVICE_H
-#include "../IOService/IOService.h"
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
-#include "../List/ListService.h"
-#include "../List/ListItemService.h"
 #include "../Helpers/DateHelpers.h"
 #include "../Helpers/StringHelpers.h"
+#include "../IOService/IOService.h"
+#include "../List/ListItemService.h"
+#include "../List/ListService.h"
 
-
-class CLIAutocompleteService {
-public:
+class CLIAutocompleteService
+{
+  public:
     CLIAutocompleteService(IOService& ioService,
                            CommandService& commandService,
                            Command& command,
                            ListService& listService,
-                           ListItemService& listItemService
-                           );
+                           ListItemService& listItemService);
     bool getCompletion();
-protected:
+
+  protected:
     void autocompleteOptionList();
     void autocompleteBase();
     void autocompletePriority(const Command& firstSubCommand);
@@ -28,11 +28,13 @@ protected:
     void autocompleteMoveList(const Command& firstSubCommand);
     bool isValidListItemId(std::string id);
     void getAllLists(std::string& listString);
-    void showListItemId(const std::vector <std::string>& variants = {"default"});
-    void autocompleteId(const Command& firstSubCommand, const std::vector <std::string>& variants = {"default"});
-    void autocompleteIdIndefinitely(const Command& firstSubCommand, const std::vector <std::string>& variants = {"default"});
+    void showListItemId(const std::vector<std::string>& variants = { "default" });
+    void autocompleteId(const Command& firstSubCommand, const std::vector<std::string>& variants = { "default" });
+    void autocompleteIdIndefinitely(const Command& firstSubCommand,
+                                    const std::vector<std::string>& variants = { "default" });
     std::string getDeadline();
-private:
+
+  private:
     IOService& ioService;
     CommandService& commandService;
     Command& command;
@@ -41,6 +43,4 @@ private:
     bool isStartOfCommand(std::string listOfCommandNames, std::string partialCommandName);
 };
 
-
-
-#endif //CLIAUTOCOMPLETESERVICE_H
+#endif // CLIAUTOCOMPLETESERVICE_H

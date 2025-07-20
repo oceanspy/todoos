@@ -4,8 +4,9 @@
 #include <iostream>
 #include <string>
 
-class IOCliService {
-public:
+class IOCliService
+{
+  public:
     static void print(const std::string& message);
     static void printWithoutLineBreak(const std::string& message);
     static void error(const std::string& message);
@@ -13,6 +14,4 @@ public:
     static void br();
 };
 
-
-
-#endif //IOCLISERVICE_H
+#endif // IOCLISERVICE_H

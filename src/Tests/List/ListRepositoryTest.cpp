@@ -1,13 +1,13 @@
-#include <catch2/catch_test_macros.hpp>
-#include <iostream>
-#include <fstream>
-#include <filesystem>
 #include "../../FileDataStorageRepositories/ListRepository.h"
+#include "../../FileDataStorage/ConfService.h"
+#include "../../FileDataStorage/JSONService.h"
 #include "../../IOService/IOService.h"
 #include "../Mock/MockInit.h"
-#include "../../FileDataStorage/JSONService.h"
 #include "../Mock/MockInstallation.h"
-#include "../../FileDataStorage/ConfService.h"
+#include <catch2/catch_test_macros.hpp>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 
 TEST_CASE("ListRepositoryTest", "[ListRepository]")
 {
@@ -16,7 +16,8 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr = std::make_unique<ConfService>(ioService);
+    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfService>(ioService);
     MockInit init(ioService, "_todoos_ListRepositoryTest");
     MockInstallation installation(ioService, jsonService, confService, init);
     std::string tempListName = "tempListName";
@@ -29,8 +30,9 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
     ConfigService configService(ioService, init, configRepository, cacheRepository, command);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
 
-    SECTION("Test get method") {
-        std::vector <ListEntity> results = listRepository.get();
+    SECTION("Test get method")
+    {
+        std::vector<ListEntity> results = listRepository.get();
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);
@@ -44,7 +46,8 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
         REQUIRE(*results[1].isHidden() == false);
     }
 
-    SECTION("Test find method") {
+    SECTION("Test find method")
+    {
         // Call the get method
         const std::string name = "tempListName";
         const std::string theme = "theme1";
@@ -56,7 +59,8 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
         REQUIRE(*result.getSorting() == "default");
     }
 
-    SECTION("Test update method") {
+    SECTION("Test update method")
+    {
         const std::string name = "tempListName";
         const std::string theme = "theme1";
         const std::string sorting = "sorting1";
@@ -86,7 +90,8 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
         installation.make();
     }
 
-    SECTION("Test create & delete method") {
+    SECTION("Test create & delete method")
+    {
         const std::string name = "tempListName";
         const std::string theme = "theme1";
         const std::string sorting = "sorting1";
@@ -108,9 +113,9 @@ TEST_CASE("ListRepositoryTest", "[ListRepository]")
         REQUIRE(*result.getType() == newTheme);
         REQUIRE(*result.getSorting() == newSorting);
 
-        listRepository.remove(const_cast<std::string &>(newName));
+        listRepository.remove(const_cast<std::string&>(newName));
 
-        std::vector <ListEntity> results = listRepository.get();
+        std::vector<ListEntity> results = listRepository.get();
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);

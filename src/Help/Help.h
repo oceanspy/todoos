@@ -5,15 +5,16 @@
 
 class Help
 {
-public:
+  public:
     explicit Help(IOService& ioService);
     void show();
     void commandNotFound();
     void commandOptionNotSupported();
     static std::string getVersion();
-private:
+
+  private:
     IOService& ioService;
-    static std::vector <std::string> helpListForCli();
+    static std::vector<std::string> helpListForCli();
 };
 
-#endif //HELP_H
+#endif // HELP_H

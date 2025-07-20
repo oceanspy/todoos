@@ -1,22 +1,26 @@
 #ifndef TODOOS_DEFAULTTHEME_H
 #define TODOOS_DEFAULTTHEME_H
 
-#include <utility>
 #include "ThemeAbstract.h"
+#include <utility>
 
-class DefaultTheme : public ThemeAbstract {
-public:
-    DefaultTheme(IOService &ioService,
-                ListService &listService,
-                ListItemService &listItemService,
-                int consoleWidth,
-                int consoleRowMaxLength
-                );
-    void print(std::string currentList, std::string currentListVariant, std::vector <ListItemEntity> listItems, bool showListName, bool showTitle) override;
+class DefaultTheme : public ThemeAbstract
+{
+  public:
+    DefaultTheme(IOService& ioService,
+                 ListService& listService,
+                 ListItemService& listItemService,
+                 int consoleWidth,
+                 int consoleRowMaxLength);
+    void print(std::string currentList,
+               std::string currentListVariant,
+               std::vector<ListItemEntity> listItems,
+               bool showListName,
+               bool showTitle) override;
     void printStats() override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
-    void printAListTitle(std::vector <std::string> titles, std::vector <int> titleSizes) override;
-    void printAList(std::vector <std::string> lines) override;
+    void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) override;
+    void printAList(std::vector<std::string> lines) override;
     void printListName() override;
     std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
     std::string buildTitle() override;
@@ -28,7 +32,8 @@ public:
     void printFullLine(std::string color) override;
     ~DefaultTheme() override = default;
     void renderListStatLine(time_t from, time_t to, std::string name);
-private:
+
+  private:
     static const int ID_LENGTH = 6;
     static const int PRIORITY_LENGTH = 4;
     static const int STATUS_LENGTH = 20;
@@ -42,5 +47,4 @@ private:
     int consoleRowLength;
 };
 
-
-#endif //TODOOS_DEFAULTTHEME_H
+#endif // TODOOS_DEFAULTTHEME_H

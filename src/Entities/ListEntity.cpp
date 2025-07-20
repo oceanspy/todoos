@@ -1,16 +1,17 @@
-#include <stdexcept>
 #include "ListEntity.h"
+#include <stdexcept>
 
-void ListEntity::setName(const std::string name)
+void
+ListEntity::setName(const std::string name)
 {
     this->name = name;
 }
 
-void ListEntity::setType(const std::string type)
+void
+ListEntity::setType(const std::string type)
 {
     for (char ch : type) {
-        if (!std::isalnum(ch) && ch != '_')
-        {
+        if (!std::isalnum(ch) && ch != '_') {
             throw std::invalid_argument("theme must be alphanumeric or _");
         }
     }
@@ -18,11 +19,11 @@ void ListEntity::setType(const std::string type)
     this->theme = type;
 }
 
-void ListEntity::setSorting(const std::string sorting)
+void
+ListEntity::setSorting(const std::string sorting)
 {
     for (char ch : sorting) {
-        if (!std::isalnum(ch) && ch != '_')
-        {
+        if (!std::isalnum(ch) && ch != '_') {
             throw std::invalid_argument("sorting must be alphanumeric or _");
         }
     }
@@ -30,12 +31,14 @@ void ListEntity::setSorting(const std::string sorting)
     this->sorting = sorting;
 }
 
-void ListEntity::setHidden(bool hidden)
+void
+ListEntity::setHidden(bool hidden)
 {
     this->hidden = hidden;
 }
 
-const std::string * ListEntity::getName() const
+const std::string*
+ListEntity::getName() const
 {
     if (name.empty()) {
         return nullptr;
@@ -44,7 +47,8 @@ const std::string * ListEntity::getName() const
     return &name;
 }
 
-const std::string * ListEntity::getType() const
+const std::string*
+ListEntity::getType() const
 {
     if (theme.empty()) {
         return nullptr;
@@ -53,7 +57,8 @@ const std::string * ListEntity::getType() const
     return &theme;
 }
 
-const std::string * ListEntity::getSorting() const
+const std::string*
+ListEntity::getSorting() const
 {
     if (sorting.empty()) {
         return nullptr;
@@ -62,12 +67,14 @@ const std::string * ListEntity::getSorting() const
     return &sorting;
 }
 
-const bool * ListEntity::isHidden() const
+const bool*
+ListEntity::isHidden() const
 {
     return &hidden;
 }
 
-ListEntity ListEntity::setFromVector(const std::vector <std::string>& item)
+ListEntity
+ListEntity::setFromVector(const std::vector<std::string>& item)
 {
     bool hidden = item.at(3) == "true";
 
@@ -80,9 +87,12 @@ ListEntity ListEntity::setFromVector(const std::vector <std::string>& item)
     return listEntity;
 }
 
-std::vector<std::string> ListEntity::makeVector(const ListEntity &listEntity)
+std::vector<std::string>
+ListEntity::makeVector(const ListEntity& listEntity)
 {
     std::string hidden = *listEntity.isHidden() ? "true" : "false";
-    std::vector <std::string> listItem = {*listEntity.getName(), *listEntity.getType(), *listEntity.getSorting(), hidden};
+    std::vector<std::string> listItem = {
+        *listEntity.getName(), *listEntity.getType(), *listEntity.getSorting(), hidden
+    };
     return listItem;
 }

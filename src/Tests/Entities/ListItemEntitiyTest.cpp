@@ -1,13 +1,15 @@
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch_test_macros.hpp>
 #include "../../Entities/ListItemEntity.h"
+#include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
+TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
+{
 
     PriorityService priorityService;
     StatusService statusService;
 
-    SECTION("Test setting and getting properties") {
+    SECTION("Test setting and getting properties")
+    {
         // Create a ListItemEntity object
         ListItemEntity listItemEntity;
 
@@ -47,7 +49,8 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         REQUIRE(*listItemEntity.getUpdatedAt() == updatedAt);
     }
 
-    SECTION("Test setting properties with set method") {
+    SECTION("Test setting properties with set method")
+    {
         // Set properties using set method
         std::string id = "aaaa";
         std::string listName = "test_list";
@@ -61,7 +64,8 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
 
         PriorityEntity priorityEntity = priorityService.getPriorityFromName(priority);
         StatusEntity statusEntity = statusService.getStatusFromName(status);
-        ListItemEntity listItemEntity = ListItemEntity::set(id, listName, value, priorityEntity, statusEntity, 0, 0, createdAt, updatedAt);
+        ListItemEntity listItemEntity =
+            ListItemEntity::set(id, listName, value, priorityEntity, statusEntity, 0, 0, createdAt, updatedAt);
 
         // Verify that the values are set correctly
         REQUIRE(*listItemEntity.getId() == id);
@@ -73,8 +77,8 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         REQUIRE(*listItemEntity.getUpdatedAt() == updatedAt);
     }
 
-
-    SECTION("Test setting properties with invalid data") {
+    SECTION("Test setting properties with invalid data")
+    {
         // Create a ListItemEntity object
         ListItemEntity listItemEntity;
 
@@ -90,7 +94,6 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]") {
         time_t invalidUpdatedAt = -1;
         time_t validCreatedAt = time(nullptr);
         time_t validUpdatedAt = time(nullptr);
-
 
         // Attempt to set invalid properties
         REQUIRE_THROWS(listItemEntity.setId(invalidId));

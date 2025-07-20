@@ -1,22 +1,23 @@
 #ifndef TODOOS_DATEHELPERS_H
 #define TODOOS_DATEHELPERS_H
 
-#include <string>
-#include <vector>
+#include "StringHelpers.h"
+#include <algorithm>
+#include <chrono>
 #include <codecvt>
 #include <iomanip>
-#include <unistd.h>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <algorithm>
 #include <regex>
-#include <chrono>
-#include "StringHelpers.h"
+#include <sstream>
+#include <string>
+#include <unistd.h>
+#include <vector>
 
-class DateHelpers {
-public:
-    static std::string formatTimestamp(time_t timestamp, std::string format = "default", const std::string& separator = ".");
+class DateHelpers
+{
+  public:
+    static std::string formatTimestamp(time_t timestamp,
+                                       std::string format = "default",
+                                       const std::string& separator = ".");
     static std::string formatTimestampToHumanDate(time_t timestamp, std::string format = "default");
     static bool isTimestampToday(time_t timestamp);
     static bool isTimestampNDaysFromToday(time_t timestamp, int n);
@@ -36,5 +37,4 @@ public:
     static time_t getDayEnd(const std::string& day, time_t timestamp);
 };
 
-
-#endif //TODOOS_DATEHELPERS_H
+#endif // TODOOS_DATEHELPERS_H

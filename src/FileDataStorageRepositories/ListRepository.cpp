@@ -1,39 +1,38 @@
 #include "ListRepository.h"
 
 ListRepository::ListRepository(ConfigService& configService, FileDataServiceInterface* fileDataService)
-    : configService(configService), fileDataService(fileDataService)
+  : configService(configService)
+  , fileDataService(fileDataService)
 {
     path = configService.getListofListFilePath();
 }
 
-std::vector <ListEntity> ListRepository::get()
+std::vector<ListEntity>
+ListRepository::get()
 {
-    if (!cacheItems.empty())
-    {
+    if (!cacheItems.empty()) {
         return cacheItems;
     }
 
     fileDataService->load(path);
-    std::vector <std::vector <std::string>> data = fileDataService->read(std::nullopt);
+    std::vector<std::vector<std::string>> data = fileDataService->read(std::nullopt);
 
-    for (const std::vector <std::string>& item : data)
-    {
+    for (const std::vector<std::string>& item : data) {
         cacheItems.push_back(ListEntity::setFromVector(item));
     }
 
     return cacheItems;
 }
 
-ListEntity ListRepository::find(const std::string& key)
+ListEntity
+ListRepository::find(const std::string& key)
 {
     fileDataService->load(path);
 
-    std::vector < std::vector <std::string>> data = fileDataService->read(0);
+    std::vector<std::vector<std::string>> data = fileDataService->read(0);
 
-    for (const std::vector<std::string>& item : data)
-    {
-        if (item[0] == key)
-        {
+    for (const std::vector<std::string>& item : data) {
+        if (item[0] == key) {
             return ListEntity::setFromVector(item);
         }
     }
@@ -41,25 +40,25 @@ ListEntity ListRepository::find(const std::string& key)
     throw std::invalid_argument("Config with key: " + key + " was not found.");
 }
 
-void ListRepository::create(const ListEntity& item)
+void
+ListRepository::create(const ListEntity& item)
 {
     fileDataService->load(path);
-    fileDataService->append({ ListEntity::makeVector(item)});
+    fileDataService->append({ ListEntity::makeVector(item) });
     resetCache();
 }
 
-bool ListRepository::update(const std::string& listName, const ListEntity& item)
+bool
+ListRepository::update(const std::string& listName, const ListEntity& item)
 {
     fileDataService->load(path);
 
-    std::vector < std::vector <std::string>> data = fileDataService->read(0);
-    std::vector < std::vector <std::string>> items;
+    std::vector<std::vector<std::string>> data = fileDataService->read(0);
+    std::vector<std::vector<std::string>> items;
 
     bool found = false;
-    for (std::vector itemFromStorage : data)
-    {
-        if (itemFromStorage[0] == listName)
-        {
+    for (std::vector itemFromStorage : data) {
+        if (itemFromStorage[0] == listName) {
             found = true;
             items.push_back(ListEntity::makeVector(item));
             continue;
@@ -70,29 +69,26 @@ bool ListRepository::update(const std::string& listName, const ListEntity& item)
     fileDataService->write(items);
     resetCache();
     return found;
-
 }
 
-void ListRepository::remove(std::string& name)
+void
+ListRepository::remove(std::string& name)
 {
     fileDataService->load(path);
 
-    std::vector < std::vector <std::string>> data = fileDataService->read(0);
-    std::vector < std::vector <std::string>> items;
+    std::vector<std::vector<std::string>> data = fileDataService->read(0);
+    std::vector<std::vector<std::string>> items;
 
     bool found = false;
-    for (std::vector item : data)
-    {
-        if (item[0] == name)
-        {
+    for (std::vector item : data) {
+        if (item[0] == name) {
             found = true;
             continue;
         }
         items.push_back(item);
     }
 
-    if (!found)
-    {
+    if (!found) {
         throw std::invalid_argument("List with name: " + name + " was not found.");
     }
 
@@ -100,7 +96,8 @@ void ListRepository::remove(std::string& name)
     resetCache();
 }
 
-void ListRepository::resetCache()
+void
+ListRepository::resetCache()
 {
     cacheItems = {};
 }

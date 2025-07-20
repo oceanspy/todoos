@@ -1,23 +1,24 @@
 #ifndef TODOOS_STATUSENTITY_H
 #define TODOOS_STATUSENTITY_H
 
+#include "../Helpers/BashStyle.h"
 #include <string>
 #include <vector>
-#include "../Helpers/BashStyle.h"
 
-class StatusEntity {
-public:
-    [[nodiscard]] const int * getId() const;
-    [[nodiscard]] const int * getPosition() const;
-    [[nodiscard]] const std::string * getName() const;
-    [[nodiscard]] const std::string * getCommandName() const;
-    [[nodiscard]] const std::string * getIcon() const;
+class StatusEntity
+{
+  public:
+    [[nodiscard]] const int* getId() const;
+    [[nodiscard]] const int* getPosition() const;
+    [[nodiscard]] const std::string* getName() const;
+    [[nodiscard]] const std::string* getCommandName() const;
+    [[nodiscard]] const std::string* getIcon() const;
     [[nodiscard]] const int getIconLength() const;
     [[nodiscard]] std::string getColor() const;
     [[nodiscard]] std::string getStyle() const;
-    [[nodiscard]] const bool * isClosed() const;
-    [[nodiscard]] const bool * isCancelled() const;
-    [[nodiscard]] const bool * isPassive() const;
+    [[nodiscard]] const bool* isClosed() const;
+    [[nodiscard]] const bool* isCancelled() const;
+    [[nodiscard]] const bool* isPassive() const;
     void setId(int id);
     void setPosition(int position);
     void setName(std::string name);
@@ -29,9 +30,10 @@ public:
     void setClosed(bool closed);
     void setCancelled(bool cancelled);
     void setPassive(bool passive);
-    static StatusEntity setFromVector(std::vector <std::string> item);
-    static std::vector <std::string> makeVector(const StatusEntity& priorityEntity);
-private:
+    static StatusEntity setFromVector(std::vector<std::string> item);
+    static std::vector<std::string> makeVector(const StatusEntity& priorityEntity);
+
+  private:
     int id = 0;
     int position = 0;
     std::string name;
@@ -45,5 +47,4 @@ private:
     bool statusIsPassive = false;
 };
 
-
-#endif //TODOOS_STATUSENTITY_H
+#endif // TODOOS_STATUSENTITY_H

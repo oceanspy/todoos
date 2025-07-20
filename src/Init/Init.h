@@ -1,14 +1,15 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include "InitInterface.h"
-#include "../IOService/IOService.h"
-#include <filesystem>
 #include "../Entities/ListEntity.h"
 #include "../FileDataStorage/JSONService.h"
+#include "../IOService/IOService.h"
+#include "InitInterface.h"
+#include <filesystem>
 
-class Init: public InitInterface {
-public:
+class Init : public InitInterface
+{
+  public:
     explicit Init(IOService& ioService);
     std::filesystem::path getConfigFilePath() override;
     std::filesystem::path getCacheFilePath() override;
@@ -24,7 +25,8 @@ public:
     const std::string getDefaultExtension() override;
     const std::string getDefaultSystemExtension() override;
     const std::string getConfigExtension() override;
-private:
+
+  private:
     IOService& ioService;
     std::string defaultFileDataStorage;
     std::string defaultSystemFileDataStorage;
@@ -42,6 +44,4 @@ private:
     std::filesystem::path defaultListFileName;
 };
 
-
-
-#endif //INIT_H
+#endif // INIT_H

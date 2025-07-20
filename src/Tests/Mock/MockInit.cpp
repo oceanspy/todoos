@@ -1,92 +1,113 @@
 #include "MockInit.h"
 
 MockInit::MockInit(IOService& ioService, const std::filesystem::path& customSubDir)
-        : ioService(ioService),
-          defaultFileDataStorage("json"),
-          defaultSystemFileDataStorage("json"),
-          defaultConfigFileDataStorage("conf"),
-          customSubDir(customSubDir),
-          homeDir(std::filesystem::temp_directory_path()),
-          mainDirPath(homeDir / customSubDir),
-          appDirPath(homeDir / customSubDir),
-          configDirPath(homeDir / customSubDir),
-          cacheDirPath(homeDir / customSubDir),
-          configFileName("config"),
-          cacheFileName("cache"),
-          cacheFilePath(cacheDirPath / cacheFileName),
-          listOfListFileName("list"),
-          configFilePath(configDirPath / configFileName),
-          defaultListFileName("default")
+  : ioService(ioService)
+  , defaultFileDataStorage("json")
+  , defaultSystemFileDataStorage("json")
+  , defaultConfigFileDataStorage("conf")
+  , customSubDir(customSubDir)
+  , homeDir(std::filesystem::temp_directory_path())
+  , mainDirPath(homeDir / customSubDir)
+  , appDirPath(homeDir / customSubDir)
+  , configDirPath(homeDir / customSubDir)
+  , cacheDirPath(homeDir / customSubDir)
+  , configFileName("config")
+  , cacheFileName("cache")
+  , cacheFilePath(cacheDirPath / cacheFileName)
+  , listOfListFileName("list")
+  , configFilePath(configDirPath / configFileName)
+  , defaultListFileName("default")
 {
-
 }
 
-std::filesystem::path MockInit::getAppDirPath()
+std::filesystem::path
+MockInit::getAppDirPath()
 {
     return appDirPath;
 }
 
-std::filesystem::path MockInit::getConfigFilePath()
+std::filesystem::path
+MockInit::getConfigFilePath()
 {
     std::filesystem::path path = appDirPath / configFileName;
     path += "." + getConfigExtension();
     return path;
 }
 
-std::filesystem::path MockInit::getCacheFilePath()
+std::filesystem::path
+MockInit::getCacheFilePath()
 {
     std::filesystem::path path = appDirPath / cacheFileName;
     path += "." + getConfigExtension();
     return path;
 }
 
-
-std::filesystem::path MockInit::getListOfListFilePath()
+std::filesystem::path
+MockInit::getListOfListFilePath()
 {
     std::filesystem::path path = appDirPath / listOfListFileName;
     path += "." + getDefaultSystemExtension();
     return path;
 }
 
-std::filesystem::path MockInit::getDefaultListFilePath()
+std::filesystem::path
+MockInit::getDefaultListFilePath()
 {
     std::filesystem::path path = appDirPath / defaultListFileName;
     path += "." + getDefaultExtension();
     return path;
 }
 
-std::string MockInit::getListOfListFileName() {
+std::string
+MockInit::getListOfListFileName()
+{
     return listOfListFileName;
 }
 
-std::filesystem::path MockInit::getHomeDir() {
+std::filesystem::path
+MockInit::getHomeDir()
+{
     return homeDir;
 }
 
-std::filesystem::path MockInit::getConfigDirPath() {
+std::filesystem::path
+MockInit::getConfigDirPath()
+{
     return configDirPath;
 }
 
-std::filesystem::path MockInit::getCacheDirPath() {
+std::filesystem::path
+MockInit::getCacheDirPath()
+{
     return cacheDirPath;
 }
 
-std::filesystem::path MockInit::getMainDirPath() {
+std::filesystem::path
+MockInit::getMainDirPath()
+{
     return mainDirPath;
 }
 
-const std::string MockInit::getDefaultListName() {
+const std::string
+MockInit::getDefaultListName()
+{
     return defaultListFileName;
 }
 
-const std::string MockInit::getDefaultExtension() {
+const std::string
+MockInit::getDefaultExtension()
+{
     return defaultFileDataStorage;
 }
 
-const std::string MockInit::getDefaultSystemExtension() {
+const std::string
+MockInit::getDefaultSystemExtension()
+{
     return defaultSystemFileDataStorage;
 }
 
-const std::string MockInit::getConfigExtension() {
+const std::string
+MockInit::getConfigExtension()
+{
     return defaultConfigFileDataStorage;
 }

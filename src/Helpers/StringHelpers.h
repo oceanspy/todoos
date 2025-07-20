@@ -1,19 +1,20 @@
 #ifndef TODOOS_STRINGHELPERS_H
 #define TODOOS_STRINGHELPERS_H
 
-#include <string>
-#include <vector>
+#include <algorithm>
+#include <chrono>
 #include <codecvt>
 #include <iomanip>
-#include <unistd.h>
-#include <sstream>
-#include <algorithm>
-#include <regex>
-#include <chrono>
 #include <iterator>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <unistd.h>
+#include <vector>
 
-class StringHelpers {
-public:
+class StringHelpers
+{
+  public:
     static std::string randomString(int len = 4);
     static std::string randomAlNumString(int len = 4);
     static std::string randomLettersLowercase(int len = 4);
@@ -35,5 +36,4 @@ public:
     static std::string escapeChar(const std::string& str, char charToReplace = ' ');
 };
 
-
-#endif //TODOOS_STRINGHELPERS_H
+#endif // TODOOS_STRINGHELPERS_H

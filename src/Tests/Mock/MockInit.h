@@ -1,11 +1,12 @@
 #pragma once
 
-#include <filesystem>
-#include "../../Init/InitInterface.h"
 #include "../../IOService/IOService.h"
+#include "../../Init/InitInterface.h"
+#include <filesystem>
 
-class MockInit : public InitInterface {
-public:
+class MockInit : public InitInterface
+{
+  public:
     explicit MockInit(IOService& ioService, const std::filesystem::path& customSubDir);
     std::filesystem::path getConfigFilePath() override;
     std::filesystem::path getCacheFilePath() override;
@@ -21,7 +22,8 @@ public:
     const std::string getDefaultExtension() override;
     const std::string getDefaultSystemExtension() override;
     const std::string getConfigExtension() override;
-private:
+
+  private:
     IOService& ioService;
     const std::filesystem::path& customSubDir;
     std::string defaultFileDataStorage;

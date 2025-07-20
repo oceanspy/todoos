@@ -1,22 +1,23 @@
-#include <catch2/catch_test_macros.hpp>
-#include <iostream>
-#include <fstream>
-#include <filesystem>
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
+#include "../../FileDataStorage/ConfService.h"
+#include "../../FileDataStorage/JSONService.h"
 #include "../../IOService/IOService.h"
 #include "../Mock/MockInit.h"
-#include "../../FileDataStorage/JSONService.h"
 #include "../Mock/MockInstallation.h"
-#include "../../FileDataStorage/ConfService.h"
+#include <catch2/catch_test_macros.hpp>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 
-
-TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
+TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
+{
     // Create mock objects
     IOService ioService("cli");
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr = std::make_unique<ConfService>(ioService);
+    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfService>(ioService);
     MockInit init(ioService, "_todoos_ListItemRepositoryTest");
     MockInstallation installation(ioService, jsonService, confService, init);
     std::string tempListName = "tempListName";
@@ -28,11 +29,13 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
     ConfigService configService(ioService, init, configRepository, cacheRepository, command);
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
-    ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+    ListItemRepository listItemRepository(
+        configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     listItemRepository.load(tempListName);
 
-    SECTION("Test get method") {
-        std::vector <ListItemEntity> results = listItemRepository.get();
+    SECTION("Test get method")
+    {
+        std::vector<ListItemEntity> results = listItemRepository.get();
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);
@@ -50,7 +53,8 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         REQUIRE(*results[1].getUpdatedAt() == 1712487272);
     }
 
-    SECTION("Test find method") {
+    SECTION("Test find method")
+    {
         // Call the get method
         const std::string id = "aaaa";
         const std::string value = "test 1";
@@ -69,7 +73,8 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         REQUIRE(*result.getUpdatedAt() == updatedAt);
     }
 
-    SECTION("Test update method") {
+    SECTION("Test update method")
+    {
         std::string id = "aaaa";
         const std::string value = "test 1";
 
@@ -111,7 +116,8 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
         listItemRepository.update(id, oldItem);
     }
 
-    SECTION("Test create & delete method") {
+    SECTION("Test create & delete method")
+    {
         const std::string id = "cccc";
         const std::string newValue = "test 3";
         const std::string newPriority = "medium";
@@ -139,7 +145,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]") {
 
         listItemRepository.remove(id);
 
-        std::vector <ListItemEntity> results = listItemRepository.get();
+        std::vector<ListItemEntity> results = listItemRepository.get();
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);

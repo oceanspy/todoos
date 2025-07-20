@@ -1,17 +1,23 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "../../Config/ConfigService.h"
-#include "../../IOService/IOService.h"
 #include "../../Command/Command.h"
 #include "../../Command/CommandService.h"
+#include "../../Config/ConfigService.h"
+#include "../../IOService/IOService.h"
 #include "../../List/ListService.h"
 
-class Config {
-public:
-    Config(IOService& ioService, Command& command, CommandService& commandService, ConfigService& configService, ListService& listService);
+class Config
+{
+  public:
+    Config(IOService& ioService,
+           Command& command,
+           CommandService& commandService,
+           ConfigService& configService,
+           ListService& listService);
     void make();
-private:
+
+  private:
     IOService& ioService;
     Command& command;
     CommandService& commandService;
@@ -21,6 +27,4 @@ private:
     void showAll();
 };
 
-
-
-#endif //CONFIG_H
+#endif // CONFIG_H

@@ -1,22 +1,23 @@
-#include <catch2/catch_test_macros.hpp>
-#include <iostream>
-#include <fstream>
-#include <filesystem>
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
+#include "../../FileDataStorage/ConfService.h"
 #include "../../FileDataStorage/JSONService.h"
 #include "../../IOService/IOService.h"
 #include "../Mock/MockInit.h"
 #include "../Mock/MockInstallation.h"
-#include "../../FileDataStorage/ConfService.h"
+#include <catch2/catch_test_macros.hpp>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 
-
-TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
+TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]")
+{
     // Create mock objects
     IOService ioService("cli");
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr = std::make_unique<ConfService>(ioService);
+    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfService>(ioService);
     MockInit init(ioService, "_todoos_ConfigRepositoryTest");
     MockInstallation installation(ioService, jsonService, confService, init);
     std::string tempListName = "tempListName";
@@ -25,10 +26,10 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
     installation.make();
     ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
 
-    SECTION("Test get method") {
+    SECTION("Test get method")
+    {
         // Call the get method
-        std::vector <ConfigEntity> results = configRepository.get();
-
+        std::vector<ConfigEntity> results = configRepository.get();
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 7);
@@ -41,7 +42,8 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
         REQUIRE(*configRepository.find("idRandomGenerationType").getValue() == "letters");
     }
 
-    SECTION("Test find method: config") {
+    SECTION("Test find method: config")
+    {
         // Call the get method
         ConfigEntity result = configRepository.find("theme");
 
@@ -49,7 +51,8 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
         REQUIRE(*result.getValue() == "default");
     }
 
-    SECTION("Test update method") {
+    SECTION("Test update method")
+    {
         ConfigEntity oldConfig = configRepository.find("theme");
 
         const std::string key = "theme";
@@ -68,7 +71,8 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
         configRepository.update("theme", oldConfig);
     }
 
-    SECTION("Test create & delete method") {
+    SECTION("Test create & delete method")
+    {
         const std::string key = "newConfig";
         const std::string value = "newValue";
         // Call the get method
@@ -82,7 +86,7 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]") {
         REQUIRE(*result.getKey() == key);
         REQUIRE(*result.getValue() == value);
 
-        configRepository.remove(const_cast<std::string &>(key));
+        configRepository.remove(const_cast<std::string&>(key));
 
         std::vector<ConfigEntity> results = configRepository.get();
         REQUIRE(!results.empty());
