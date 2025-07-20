@@ -1,8 +1,9 @@
 #include "CommandShortcut.h"
 
-std::map <std::string, std::string> CommandShortcut::getShortcutCommands()
+std::map<std::string, std::string>
+CommandShortcut::getShortcutCommands()
 {
-    std::map <std::string, std::string> shortCutCommands;
+    std::map<std::string, std::string> shortCutCommands;
     shortCutCommands["l"] = "list";
     shortCutCommands["a"] = "add";
     shortCutCommands["rm"] = "remove";
@@ -42,15 +43,14 @@ std::map <std::string, std::string> CommandShortcut::getShortcutCommands()
     return shortCutCommands;
 }
 
-std::vector <std::string> CommandShortcut::getShortcutsForCommand(const std::string& commandName)
+std::vector<std::string>
+CommandShortcut::getShortcutsForCommand(const std::string& commandName)
 {
-    std::map <std::string, std::string> shortcutCommands = getShortcutCommands();
+    std::map<std::string, std::string> shortcutCommands = getShortcutCommands();
 
-    std::vector <std::string> command;
-    for (auto const& [key, val] : shortcutCommands)
-    {
-        if (val == commandName)
-        {
+    std::vector<std::string> command;
+    for (auto const& [key, val] : shortcutCommands) {
+        if (val == commandName) {
             command.push_back(key);
         }
     }
@@ -58,14 +58,13 @@ std::vector <std::string> CommandShortcut::getShortcutsForCommand(const std::str
     return command;
 }
 
-std::string CommandShortcut::getCommandName(const std::string& shortcut)
+std::string
+CommandShortcut::getCommandName(const std::string& shortcut)
 {
-    std::map <std::string, std::string> shortCutCommands = getShortcutCommands();
+    std::map<std::string, std::string> shortCutCommands = getShortcutCommands();
 
-    for (auto const& [key, val] : shortCutCommands)
-    {
-        if (key == shortcut)
-        {
+    for (auto const& [key, val] : shortCutCommands) {
+        if (key == shortcut) {
             return val;
         }
     }
@@ -73,18 +72,16 @@ std::string CommandShortcut::getCommandName(const std::string& shortcut)
     return shortcut;
 }
 
-bool CommandShortcut::isCommand(Command command, const std::string& commandName)
+bool
+CommandShortcut::isCommand(Command command, const std::string& commandName)
 {
-    if (command.getName() == commandName)
-    {
+    if (command.getName() == commandName) {
         return true;
     }
 
-    std::map <std::string, std::string> shortCutCommands = getShortcutCommands();
-    for (auto const& [key, val] : shortCutCommands)
-    {
-        if (val == commandName && command.getName() == key)
-        {
+    std::map<std::string, std::string> shortCutCommands = getShortcutCommands();
+    for (auto const& [key, val] : shortCutCommands) {
+        if (val == commandName && command.getName() == key) {
             return true;
         }
     }

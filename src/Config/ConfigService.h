@@ -1,23 +1,22 @@
 #ifndef CONFIGSERVICE_H
 #define CONFIGSERVICE_H
 
-#include <string>
-#include <vector>
+#include "../Command/Command.h"
 #include "../FileDataStorageRepositories/ConfigRepository.h"
 #include "../IOService/IOService.h"
 #include "../Init/InitInterface.h"
-#include "../Command/Command.h"
+#include <string>
+#include <vector>
 
-class ConfigService {
-public:
-    ConfigService(
-        IOService& ioService, 
-        InitInterface& init, 
-        ConfigRepository& configRepository, 
-        ConfigRepository& cacheRepository, 
-        Command& command
-    );
-    std::vector <ConfigEntity> get();
+class ConfigService
+{
+  public:
+    ConfigService(IOService& ioService,
+                  InitInterface& init,
+                  ConfigRepository& configRepository,
+                  ConfigRepository& cacheRepository,
+                  Command& command);
+    std::vector<ConfigEntity> get();
     std::string getValue(const std::string& key);
     bool isTrue(const std::string& key);
     ConfigEntity find(const std::string& key);
@@ -39,7 +38,7 @@ public:
     std::filesystem::path getListArchiveFilePathFromFilePath(std::filesystem::path listFilePath);
     std::filesystem::path getListDeleteFilePathFromFilePath(std::filesystem::path listFilePath);
 
-private:
+  private:
     IOService& ioService;
     InitInterface& init;
     ConfigRepository& configRepository;
@@ -48,4 +47,4 @@ private:
     ConfigRepository getRepository(const std::string& key);
 };
 
-#endif //CONFIGSERVICE_H
+#endif // CONFIGSERVICE_H

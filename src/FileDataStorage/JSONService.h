@@ -1,25 +1,27 @@
 #ifndef JSONSERVICE_H
 #define JSONSERVICE_H
 
-#include "FileDataServiceInterface.h"
 #include "../IOService/IOService.h"
+#include "FileDataServiceInterface.h"
 
 #include <filesystem>
+#include <fstream>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
-#include <fstream>
 
-class JSONService : public FileDataServiceInterface {
-public:
+class JSONService : public FileDataServiceInterface
+{
+  public:
     explicit JSONService(IOService& ioService);
     void load(std::filesystem::path path) override;
     bool isFileWritable(std::filesystem::path path) override;
-    std::vector < std::vector <std::string>> read(std::optional<int> limitOpt) override;
-    void write(std::vector < std::vector <std::string>> data) override;
-    void append(std::vector <std::vector <std::string>> data) override;
+    std::vector<std::vector<std::string>> read(std::optional<int> limitOpt) override;
+    void write(std::vector<std::vector<std::string>> data) override;
+    void append(std::vector<std::vector<std::string>> data) override;
     void empty() override;
-private:
+
+  private:
     IOService& ioService;
     std::filesystem::path path;
     bool fileWritable = false;
@@ -27,6 +29,4 @@ private:
     static std::string escapeQuotes(const std::string& str);
 };
 
-
-
-#endif //JSONSERVICE_H
+#endif // JSONSERVICE_H

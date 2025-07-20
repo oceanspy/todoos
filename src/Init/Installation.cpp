@@ -4,23 +4,23 @@ Installation::Installation(IOService& ioService,
                            FileDataServiceInterface& storageJsonService,
                            FileDataServiceInterface& storageCsvService,
                            FileDataServiceInterface& configStorageService,
-                           InitInterface& init
-                           ) :
-                           ioService(ioService),
-                           storageJsonService(storageJsonService),
-                           storageCsvService(storageCsvService),
-                           configStorageService(configStorageService),
-                           init(init)
+                           InitInterface& init)
+  : ioService(ioService)
+  , storageJsonService(storageJsonService)
+  , storageCsvService(storageCsvService)
+  , configStorageService(configStorageService)
+  , init(init)
 {
-
 }
 
-bool Installation::isNew()
+bool
+Installation::isNew()
 {
     return !std::filesystem::exists(init.getConfigFilePath());
 }
 
-void Installation::make()
+void
+Installation::make()
 {
     ioService.info("First launch detected.");
     ioService.message("Inializing program...");
@@ -35,43 +35,62 @@ void Installation::make()
     ioService.info("Welcome! :-)");
 }
 
-void Installation::populate()
+void
+Installation::populate()
 {
-    std::vector <std::vector <std::string>> defaultConfigData = {
-            { "appDirStorage", init.getAppDirPath().string() },
-            { "fileDataStorageType", "csv" },
-            { "defaultList", "default" },
-            { "theme", "default" },
-            { "consoleRowMaxLength", "0" },
-            { "archiveWhenCompleted", "false" },
-            { "idRandomGenerationType", "letters" }
-    };
+    std::vector<std::vector<std::string>> defaultConfigData = { { "appDirStorage", init.getAppDirPath().string() },
+                                                                { "fileDataStorageType", "csv" },
+                                                                { "defaultList", "default" },
+                                                                { "theme", "default" },
+                                                                { "consoleRowMaxLength", "0" },
+                                                                { "archiveWhenCompleted", "false" },
+                                                                { "idRandomGenerationType", "letters" } };
     configStorageService.load(init.getConfigFilePath());
     configStorageService.write(defaultConfigData);
 
-    std::vector <std::vector <std::string>> defaultCacheData = {
-            { "currentList", "default" },
+    std::vector<std::vector<std::string>> defaultCacheData = {
+        { "currentList", "default" },
     };
     configStorageService.load(init.getCacheFilePath());
     configStorageService.write(defaultCacheData);
 
-    std::vector <std::vector <std::string>> defaultListOfListData = {
-            { "default", "default", "default", "false" }
-    };
+    std::vector<std::vector<std::string>> defaultListOfListData = { { "default", "default", "default", "false" } };
     storageJsonService.load(init.getListOfListFilePath());
     storageJsonService.write(defaultListOfListData);
 
-    std::vector <std::vector <std::string>> defaultListData = {
-            {"aaaa", "Welcome to todoos!", "urgent", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr))},
-            {"bbbb", "Please look at 'todoos -h' to get started!", "high", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr))},
-            {"cccc", "Add your first task by doing: 'todoos add \"My first task\"'", "medium", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr))},
-            {"dddd", "Enjoy! :-)", "low", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr))}
+    std::vector<std::vector<std::string>> defaultListData = {
+        { "aaaa",
+          "Welcome to todoos!",
+          "urgent",
+          "to-do",
+          "0",
+          "0",
+          std::to_string(time(nullptr)),
+          std::to_string(time(nullptr)) },
+        { "bbbb",
+          "Please look at 'todoos -h' to get started!",
+          "high",
+          "to-do",
+          "0",
+          "0",
+          std::to_string(time(nullptr)),
+          std::to_string(time(nullptr)) },
+        { "cccc",
+          "Add your first task by doing: 'todoos add \"My first task\"'",
+          "medium",
+          "to-do",
+          "0",
+          "0",
+          std::to_string(time(nullptr)),
+          std::to_string(time(nullptr)) },
+        { "dddd", "Enjoy! :-)", "low", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr)) }
     };
     storageCsvService.load(init.getDefaultListFilePath());
     storageCsvService.write(defaultListData);
 }
 
-void Installation::createDirectories()
+void
+Installation::createDirectories()
 {
     if (!std::filesystem::exists(init.getMainDirPath())) {
         if (!std::filesystem::create_directory(init.getMainDirPath())) {
@@ -102,40 +121,41 @@ void Installation::createDirectories()
     }
 }
 
-void Installation::createConfigFile()
+void
+Installation::createConfigFile()
 {
     std::ofstream outfile(init.getConfigFilePath(), std::ios::out | std::ios::app);
-    if (!outfile.is_open())
-    {
+    if (!outfile.is_open()) {
         ioService.error("Failed to create application config file");
         return;
     }
     outfile.close();
 }
 
-void Installation::createCacheFile()
+void
+Installation::createCacheFile()
 {
     std::ofstream outfile(init.getCacheFilePath(), std::ios::out | std::ios::app);
-    if (!outfile.is_open())
-    {
+    if (!outfile.is_open()) {
         ioService.error("Failed to create cache file");
         return;
     }
     outfile.close();
 }
 
-void Installation::createListOfListFile()
+void
+Installation::createListOfListFile()
 {
     std::ofstream outfile(init.getListOfListFilePath(), std::ios::out | std::ios::app);
-    if (!outfile.is_open())
-    {
+    if (!outfile.is_open()) {
         ioService.error("Failed to create application list of list file");
         return;
     }
     outfile.close();
 }
 
-void Installation::createListFile(const std::string& listName)
+void
+Installation::createListFile(const std::string& listName)
 {
     std::filesystem::path filePaths[3];
     filePaths[0] = init.getAppDirPath() / listName;
@@ -146,11 +166,9 @@ void Installation::createListFile(const std::string& listName)
     filePaths[2] = init.getAppDirPath() / ".del_";
     filePaths[2] += listName;
     filePaths[2] += "." + init.getDefaultExtension();
-    for (const auto& filePath : filePaths)
-    {
+    for (const auto& filePath : filePaths) {
         std::ofstream outfile(filePath, std::ios::out | std::ios::app);
-        if (!outfile.is_open())
-        {
+        if (!outfile.is_open()) {
             ioService.print("Failed to create default application file");
             return;
         }
@@ -159,20 +177,20 @@ void Installation::createListFile(const std::string& listName)
     }
 }
 
-bool Installation::wipe() {
+bool
+Installation::wipe()
+{
     // TODO: Implement wipe method
     return false;
 }
 
-void Installation::populateNewListFile(std::ofstream& outfile)
+void
+Installation::populateNewListFile(std::ofstream& outfile)
 {
-    if (init.getDefaultExtension() == "json")
-    {
+    if (init.getDefaultExtension() == "json") {
         outfile << "[\n";
         outfile << "]";
-    }
-    else if (init.getDefaultExtension() == "csv")
-    {
+    } else if (init.getDefaultExtension() == "csv") {
         outfile << "# ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT\n";
     }
 }

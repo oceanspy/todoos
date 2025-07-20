@@ -3,25 +3,22 @@
 #include <utility>
 
 SmartCommand::SmartCommand(const Command& command)
-    : command(command)
+  : command(command)
 {
-
 }
 
-Command SmartCommand::apply()
+Command
+SmartCommand::apply()
 {
     std::string name = command.getName();
 
-    if (CommandService::isCommand(command, "add"))
-    {
-        if (command.getArguments().empty())
-        {
+    if (CommandService::isCommand(command, "add")) {
+        if (command.getArguments().empty()) {
             return command;
         }
 
-        if (command.getArguments().at(0) == "list")
-        {
-            std::vector <std::string> arguments = command.getArguments();
+        if (command.getArguments().at(0) == "list") {
+            std::vector<std::string> arguments = command.getArguments();
             // remove first argument
             arguments.erase(arguments.begin());
             // add new command to first argument
@@ -29,28 +26,21 @@ Command SmartCommand::apply()
             Command adaptatedCommand = Command("list", arguments, command.getOptions());
             return adaptatedCommand;
         }
-    }
-    else if (CommandService::isCommand(command, "all"))
-    {
-        if (command.getArguments().empty())
-        {
-            std::vector <std::string> arguments = command.getArguments();
+    } else if (CommandService::isCommand(command, "all")) {
+        if (command.getArguments().empty()) {
+            std::vector<std::string> arguments = command.getArguments();
             // add new command to first argument
             arguments.insert(arguments.begin(), "all");
             Command adaptatedCommand = Command("show", arguments, command.getOptions());
             return adaptatedCommand;
         }
-    }
-    else if (CommandService::isCommand(command, "remove"))
-    {
-        if (command.getArguments().empty())
-        {
+    } else if (CommandService::isCommand(command, "remove")) {
+        if (command.getArguments().empty()) {
             return command;
         }
 
-        if (command.getArguments().at(0) == "list")
-        {
-            std::vector <std::string> arguments = command.getArguments();
+        if (command.getArguments().at(0) == "list") {
+            std::vector<std::string> arguments = command.getArguments();
             // remove first argument
             arguments.erase(arguments.begin());
             // add new command to first argument
@@ -58,18 +48,13 @@ Command SmartCommand::apply()
             Command adaptatedCommand = Command("list", arguments, command.getOptions());
             return adaptatedCommand;
         }
-    }
-    else if (CommandService::isCommand(command, "list"))
-    {
-        if (command.getArguments().size() == 1 && command.getArguments().at(0) != "show")
-        {
+    } else if (CommandService::isCommand(command, "list")) {
+        if (command.getArguments().size() == 1 && command.getArguments().at(0) != "show") {
             return Command("use", command.getArguments(), command.getOptions());
         }
         return command;
-    }
-    else if (CommandService::isCommand(command, "current"))
-    {
-        return Command("list", {"current"}, command.getOptions());
+    } else if (CommandService::isCommand(command, "current")) {
+        return Command("list", { "current" }, command.getOptions());
     }
 
     return command;

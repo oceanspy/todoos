@@ -4,8 +4,9 @@
 #include <filesystem>
 #include <string>
 
-class InstallationInterface {
-public:
+class InstallationInterface
+{
+  public:
     virtual ~InstallationInterface() = default;
     virtual bool isNew() = 0;
     virtual void make() = 0;
@@ -13,4 +14,4 @@ public:
     virtual bool wipe() = 0;
 };
 
-#endif //TODOOS_INSTALLATIONINTERFACE_H
+#endif // TODOOS_INSTALLATIONINTERFACE_H

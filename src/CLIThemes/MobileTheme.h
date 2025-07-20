@@ -1,23 +1,27 @@
 #ifndef TODOOS_MOBILETHEME_H
 #define TODOOS_MOBILETHEME_H
 
-#include <utility>
 #include "ThemeAbstract.h"
+#include <utility>
 
-class MobileTheme : public ThemeAbstract {
-public:
-    MobileTheme(IOService &ioService,
-                ListService &listService,
-                ListItemService &listItemService,
+class MobileTheme : public ThemeAbstract
+{
+  public:
+    MobileTheme(IOService& ioService,
+                ListService& listService,
+                ListItemService& listItemService,
                 int consoleWidth,
-                int consoleRowMaxLength
-                );
-    void print(std::string currentList, std::string currentListVariant, std::vector <ListItemEntity> listItems, bool showListName, bool showTitle) override;
+                int consoleRowMaxLength);
+    void print(std::string currentList,
+               std::string currentListVariant,
+               std::vector<ListItemEntity> listItems,
+               bool showListName,
+               bool showTitle) override;
     void printStats() override;
     void printListName() override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
-    void printAListTitle(std::vector <std::string> titles, std::vector <int> titleSizes) override;
-    void printAList(std::vector <std::string> lines) override;
+    void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) override;
+    void printAList(std::vector<std::string> lines) override;
     std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
     std::string buildTitle() override;
     std::string buildId(const ListItemEntity& listItemEntity) override;
@@ -28,7 +32,8 @@ public:
     void printFullLine(std::string color) override;
     ~MobileTheme() override = default;
     void renderListStatLine(time_t from, time_t to, std::string name);
-private:
+
+  private:
     static const int ID_LENGTH = 6;
     static const int PRIORITY_LENGTH = 4;
     static const int STATUS_LENGTH = 20;
@@ -42,5 +47,4 @@ private:
     int consoleRowLength;
 };
 
-
-#endif //TODOOS_MOBILETHEME_H
+#endif // TODOOS_MOBILETHEME_H

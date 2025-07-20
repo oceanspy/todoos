@@ -1,97 +1,140 @@
 #include "StatusEntity.h"
 
-const int * StatusEntity::getId() const {
+const int*
+StatusEntity::getId() const
+{
     return &id;
 }
 
-const int * StatusEntity::getPosition() const {
+const int*
+StatusEntity::getPosition() const
+{
     return &position;
 }
 
-const std::string * StatusEntity::getName() const {
+const std::string*
+StatusEntity::getName() const
+{
     return &name;
 }
 
-const std::string * StatusEntity::getCommandName() const {
+const std::string*
+StatusEntity::getCommandName() const
+{
     return &command;
 }
 
-const std::string * StatusEntity::getIcon() const {
+const std::string*
+StatusEntity::getIcon() const
+{
     return &icon;
 }
 
-const int StatusEntity::getIconLength() const
+const int
+StatusEntity::getIconLength() const
 {
     return iconLength;
 }
 
-std::string StatusEntity::getColor() const {
+std::string
+StatusEntity::getColor() const
+{
     return BashStyle::getBashCode(color);
 }
 
-std::string StatusEntity::getStyle() const {
+std::string
+StatusEntity::getStyle() const
+{
     return BashStyle::getBashCode(style);
 }
 
-const bool * StatusEntity::isClosed() const {
+const bool*
+StatusEntity::isClosed() const
+{
     return &statusIsClosed;
 }
 
-const bool * StatusEntity::isCancelled() const {
+const bool*
+StatusEntity::isCancelled() const
+{
     return &statusIsCancelled;
 }
 
-const bool * StatusEntity::isPassive() const
+const bool*
+StatusEntity::isPassive() const
 {
     return &statusIsPassive;
 }
 
-void StatusEntity::setId(int id) {
+void
+StatusEntity::setId(int id)
+{
     this->id = id;
 }
 
-void StatusEntity::setPosition(int position) {
+void
+StatusEntity::setPosition(int position)
+{
     this->position = position;
 }
 
-void StatusEntity::setName(std::string name) {
+void
+StatusEntity::setName(std::string name)
+{
     this->name = std::move(name);
 }
 
-void StatusEntity::setCommandName(std::string command) {
+void
+StatusEntity::setCommandName(std::string command)
+{
     this->command = std::move(command);
 }
 
-void StatusEntity::setIcon(std::string icon) {
+void
+StatusEntity::setIcon(std::string icon)
+{
     this->icon = std::move(icon);
 }
 
-void StatusEntity::setIconLength(int iconLength)
+void
+StatusEntity::setIconLength(int iconLength)
 {
     this->iconLength = iconLength;
 }
 
-void StatusEntity::setColor(std::string color) {
+void
+StatusEntity::setColor(std::string color)
+{
     this->color = std::move(color);
 }
 
-void StatusEntity::setStyle(std::string style) {
+void
+StatusEntity::setStyle(std::string style)
+{
     this->style = std::move(style);
 }
 
-void StatusEntity::setClosed(bool closed) {
+void
+StatusEntity::setClosed(bool closed)
+{
     this->statusIsClosed = closed;
 }
 
-void StatusEntity::setCancelled(bool cancelled) {
+void
+StatusEntity::setCancelled(bool cancelled)
+{
     this->statusIsCancelled = cancelled;
 }
 
-void StatusEntity::setPassive(bool passive) {
+void
+StatusEntity::setPassive(bool passive)
+{
     this->statusIsPassive = passive;
 }
 
-StatusEntity StatusEntity::setFromVector(std::vector<std::string> item) {
+StatusEntity
+StatusEntity::setFromVector(std::vector<std::string> item)
+{
     StatusEntity entity;
     // Assuming the vector has the required data in the correct order
     entity.setId(std::stoi(item[0]));
@@ -108,18 +151,18 @@ StatusEntity StatusEntity::setFromVector(std::vector<std::string> item) {
     return entity;
 }
 
-std::vector<std::string> StatusEntity::makeVector(const StatusEntity& statusEntity) {
-    return std::vector<std::string> {
-        std::to_string(*statusEntity.getId()),
-        std::to_string(*statusEntity.getPosition()),
-        *statusEntity.getName(),
-        *statusEntity.getCommandName(),
-        *statusEntity.getIcon(),
-        std::to_string(statusEntity.getIconLength()),
-        statusEntity.getColor(),
-        statusEntity.getStyle(),
-        *statusEntity.isClosed() ? "true" : "false",
-        *statusEntity.isCancelled() ? "true" : "false",
-        *statusEntity.isPassive() ? "true" : "false"
-    };
+std::vector<std::string>
+StatusEntity::makeVector(const StatusEntity& statusEntity)
+{
+    return std::vector<std::string>{ std::to_string(*statusEntity.getId()),
+                                     std::to_string(*statusEntity.getPosition()),
+                                     *statusEntity.getName(),
+                                     *statusEntity.getCommandName(),
+                                     *statusEntity.getIcon(),
+                                     std::to_string(statusEntity.getIconLength()),
+                                     statusEntity.getColor(),
+                                     statusEntity.getStyle(),
+                                     *statusEntity.isClosed() ? "true" : "false",
+                                     *statusEntity.isCancelled() ? "true" : "false",
+                                     *statusEntity.isPassive() ? "true" : "false" };
 }

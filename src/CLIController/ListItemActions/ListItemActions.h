@@ -1,19 +1,23 @@
 #ifndef ADD_H
 #define ADD_H
 
-#include "../../List/ListItemService.h"
-#include "../../IOService/IOService.h"
 #include "../../Command/Command.h"
+#include "../../Command/CommandService.h"
 #include "../../Helpers/DateHelpers.h"
 #include "../../Helpers/StringHelpers.h"
-#include "../../Command/CommandService.h"
+#include "../../IOService/IOService.h"
+#include "../../List/ListItemService.h"
 
-
-class ListItemActions {
-public:
-    ListItemActions(IOService& ioService, Command& command, CommandService& commandService, ListItemService& listItemService);
+class ListItemActions
+{
+  public:
+    ListItemActions(IOService& ioService,
+                    Command& command,
+                    CommandService& commandService,
+                    ListItemService& listItemService);
     void make();
-private:
+
+  private:
     IOService& ioService;
     Command& command;
     CommandService& commandService;
@@ -22,6 +26,4 @@ private:
     static std::string calculateValue(std::vector<std::string> arguments);
 };
 
-
-
-#endif //ADD_H
+#endif // ADD_H

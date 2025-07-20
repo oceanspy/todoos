@@ -1,6 +1,6 @@
 #include "ListActions.h"
-#include "../../Helpers/BashStyle.h"
 #include "../../CLIThemes/ThemeAbstract.h"
+#include "../../Helpers/BashStyle.h"
 
 ListActions::ListActions(IOService& ioService,
                          Command& command,
@@ -9,27 +9,23 @@ ListActions::ListActions(IOService& ioService,
                          ListItemService& listItemService,
                          FileStorageService& fileStorageService,
                          ConfigService& configService,
-                         CLIThemeService& cliThemeService
-     ) :
-     ioService(ioService),
-     command(command),
-     commandService(commandService),
-     listService(listService),
-     listItemService(listItemService),
-     fileStorageService(fileStorageService),
-     configService(configService),
-     cliThemeService(cliThemeService)
+                         CLIThemeService& cliThemeService)
+  : ioService(ioService)
+  , command(command)
+  , commandService(commandService)
+  , listService(listService)
+  , listItemService(listItemService)
+  , fileStorageService(fileStorageService)
+  , configService(configService)
+  , cliThemeService(cliThemeService)
 {
-
 }
 
-
-void ListActions::use()
+void
+ListActions::use()
 {
-    if (command.getArguments().empty())
-    {
-        if (listService.use(configService.getDefaultList()))
-        {
+    if (command.getArguments().empty()) {
+        if (listService.use(configService.getDefaultList())) {
             ioService.br();
             ioService.success("Now using default list: " + configService.getDefaultList());
             ioService.br();
@@ -38,8 +34,7 @@ void ListActions::use()
         return;
     }
 
-    if (listService.use(removeSpaceFromListName(command.getArguments().at(0))))
-    {
+    if (listService.use(removeSpaceFromListName(command.getArguments().at(0)))) {
         ioService.br();
         ioService.success("Now using list: " + addSpaceToListName(command.getArguments().at(0)));
         ioService.br();
@@ -52,43 +47,32 @@ void ListActions::use()
     return;
 }
 
-
-void ListActions::make()
+void
+ListActions::make()
 {
     Command subCommand = commandService.getSubCommand(command);
-    if (subCommand.getName() == "show" || subCommand.getName().empty())
-    {
+    if (subCommand.getName() == "show" || subCommand.getName().empty()) {
         showList();
         return;
-    }
-    else if (CommandService::isCommand(subCommand, "add"))
-    {
+    } else if (CommandService::isCommand(subCommand, "add")) {
         addList(subCommand);
         showList();
         return;
 
-    }
-    else if (CommandService::isCommand(subCommand, "remove"))
-    {
+    } else if (CommandService::isCommand(subCommand, "remove")) {
         removeList(subCommand);
         showList();
         return;
 
-    }
-    else if (CommandService::isCommand(subCommand, "move-to"))
-    {
+    } else if (CommandService::isCommand(subCommand, "move-to")) {
         renameList(subCommand);
         showList();
         return;
-    }
-    else if (CommandService::isCommand(subCommand, "copy"))
-    {
+    } else if (CommandService::isCommand(subCommand, "copy")) {
         copy();
         showList();
         return;
-    }
-    else if (CommandService::isCommand(subCommand, "current"))
-    {
+    } else if (CommandService::isCommand(subCommand, "current")) {
         ioService.printWithoutLineBreak(addSpaceToListName(configService.getCurrentList()));
         return;
     }
@@ -96,16 +80,16 @@ void ListActions::make()
     throw std::invalid_argument("Invalid config action.");
 }
 
-void ListActions::showList()
+void
+ListActions::showList()
 {
     ThemeAbstract* theme = cliThemeService.getTheme();
     theme->printATitle("Lists available", "");
 
-    std::vector <ListEntity> listItems = listService.get();
+    std::vector<ListEntity> listItems = listService.get();
     int i = 0;
-    std::vector <std::string> lines;
-    for (ListEntity& listItem : listItems)
-    {
+    std::vector<std::string> lines;
+    for (ListEntity& listItem : listItems) {
         std::string line;
         ++i;
         line = " " + std::to_string(i) + ". ";
@@ -116,16 +100,16 @@ void ListActions::showList()
     // TODO: Create in theme a method to print a raw list
     std::string title = "    NAME";
     theme->printFullLine(GRAY);
-    theme->printAListTitle({title}, {40});
+    theme->printAListTitle({ title }, { 40 });
     theme->printAList(lines);
 }
 
-void ListActions::addList(Command subCommand)
+void
+ListActions::addList(Command subCommand)
 {
-    std::vector <std::string> arguments = subCommand.getArguments();
+    std::vector<std::string> arguments = subCommand.getArguments();
 
-    if (arguments.empty())
-    {
+    if (arguments.empty()) {
         ioService.br();
         ioService.error("Please provide a name for the list item.");
         ioService.br();
@@ -154,19 +138,18 @@ void ListActions::addList(Command subCommand)
     ioService.br();
 }
 
-void ListActions::removeList(Command subCommand)
+void
+ListActions::removeList(Command subCommand)
 {
-    std::vector <std::string> arguments = subCommand.getArguments();
+    std::vector<std::string> arguments = subCommand.getArguments();
 
-    if (arguments.empty())
-    {
+    if (arguments.empty()) {
         ioService.error("Please provide a name for the list item.");
         return;
     }
     std::string listName = removeSpaceFromListName(arguments.at(0));
-    std::string goBackList = configService.getCurrentList() == listName
-            ? configService.getDefaultList()
-            : configService.getCurrentList();
+    std::string goBackList =
+        configService.getCurrentList() == listName ? configService.getDefaultList() : configService.getCurrentList();
 
     try {
         listService.remove(listName);
@@ -179,26 +162,24 @@ void ListActions::removeList(Command subCommand)
         return;
     }
 
-
     ioService.br();
     ioService.success("List " + listName + " removed.");
     ioService.br();
 }
 
-void ListActions::renameList(Command subCommand)
+void
+ListActions::renameList(Command subCommand)
 {
-    std::vector <std::string> arguments = subCommand.getArguments();
+    std::vector<std::string> arguments = subCommand.getArguments();
 
-    if (arguments.size() < 2)
-    {
+    if (arguments.size() < 2) {
         ioService.error("Please provide the name of the list you want to rename and the new name.");
         return;
     }
     std::string oldListName = removeSpaceFromListName(arguments.at(0));
     std::string newListName = removeSpaceFromListName(arguments.at(1));
-    std::string goBackList = configService.getCurrentList() == oldListName
-            ? newListName
-            : configService.getCurrentList();
+    std::string goBackList =
+        configService.getCurrentList() == oldListName ? newListName : configService.getCurrentList();
 
     try {
         fileStorageService.moveFileTo(oldListName, newListName);
@@ -215,38 +196,34 @@ void ListActions::renameList(Command subCommand)
     ioService.br();
 }
 
-std::string ListActions::buildName(const ListEntity& listEntity)
+std::string
+ListActions::buildName(const ListEntity& listEntity)
 {
     std::string name = addSpaceToListName(*listEntity.getName());
 
-    if (configService.getDefaultList() == *listEntity.getName())
-    {
+    if (configService.getDefaultList() == *listEntity.getName()) {
         name += " (default)";
     }
 
-    if (configService.getCurrentList() == *listEntity.getName())
-    {
+    if (configService.getCurrentList() == *listEntity.getName()) {
         name += " (in use)";
         name = StringHelpers::colorize(name, BG_GREEN);
-    }
-    else if (configService.getDefaultList() == *listEntity.getName())
-    {
+    } else if (configService.getDefaultList() == *listEntity.getName()) {
         name = StringHelpers::colorize(name, BG_BLUE);
     }
 
     return StringHelpers::adjustStringLength(name, 40);
 }
 
-void ListActions::copy()
+void
+ListActions::copy()
 {
-    if (command.getArguments().empty())
-    {
+    if (command.getArguments().empty()) {
         ioService.error("Please provide the name of the list to copy.");
         return;
     }
 
-    if (command.getArguments().size() <= 2)
-    {
+    if (command.getArguments().size() <= 2) {
         ioService.error("Please provide the name of the list to copy and the new name.");
         return;
     }
@@ -277,9 +254,8 @@ void ListActions::copy()
         newList.setName(newListName);
         fileStorageService.createNewListFile(newListName);
         listService.add(newListName);
-        std::vector <ListItemEntity> listItems = listItemService.load(listName).get();
-        for (ListItemEntity& listItem : listItems)
-        {
+        std::vector<ListItemEntity> listItems = listItemService.load(listName).get();
+        for (ListItemEntity& listItem : listItems) {
             listItemService.copy(*listItem.getId(), listName, newListName);
         }
     } catch (std::invalid_argument& e) {
@@ -292,13 +268,12 @@ void ListActions::copy()
     ioService.br();
 }
 
-std::string ListActions::makeListNameFromArguments(std::vector<std::string> &arguments)
+std::string
+ListActions::makeListNameFromArguments(std::vector<std::string>& arguments)
 {
     std::string name;
-    for (int i = 0; i < arguments.size(); i++)
-    {
-        if (i == 0)
-        {
+    for (int i = 0; i < arguments.size(); i++) {
+        if (i == 0) {
             name += arguments.at(i);
             continue;
         }
@@ -307,13 +282,15 @@ std::string ListActions::makeListNameFromArguments(std::vector<std::string> &arg
     return name;
 }
 
-std::string ListActions::removeSpaceFromListName(std::string listName)
+std::string
+ListActions::removeSpaceFromListName(std::string listName)
 {
     std::replace(listName.begin(), listName.end(), ' ', '_');
     return listName;
 }
 
-std::string ListActions::addSpaceToListName(std::string listName)
+std::string
+ListActions::addSpaceToListName(std::string listName)
 {
     std::replace(listName.begin(), listName.end(), '_', ' ');
     return listName;

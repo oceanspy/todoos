@@ -3,7 +3,8 @@
 #include <iterator>
 #include <utility>
 
-std::string DateHelpers::formatTimestamp(time_t timestamp, std::string format, const std::string& separator)
+std::string
+DateHelpers::formatTimestamp(time_t timestamp, std::string format, const std::string& separator)
 {
     if (timestamp == 0) {
         return "N/A";
@@ -11,20 +12,15 @@ std::string DateHelpers::formatTimestamp(time_t timestamp, std::string format, c
 
     if (format == "default") {
         format = "%d" + separator + "%m" + separator + "%Y - %H:%M";
-    }
-    else if (format == "date" || format == "dmy") {
+    } else if (format == "date" || format == "dmy") {
         format = "%d" + separator + "%m" + separator + "%Y";
-    }
-    else if (format == "ymd") {
+    } else if (format == "ymd") {
         format = "%Y" + separator + "%m" + separator + "%d";
-    }
-    else if (format == "shortTime") {
+    } else if (format == "shortTime") {
         format = "%H:%M";
-    }
-    else if (format == "time") {
+    } else if (format == "time") {
         format = "%H:%M:%S";
-    }
-    else if (format == "long") {
+    } else if (format == "long") {
         format = "%d" + separator + "%m" + separator + "%Y - %H:%M:%S";
     } else if (format == "d" || format == "day") {
         format = "%d";
@@ -40,7 +36,8 @@ std::string DateHelpers::formatTimestamp(time_t timestamp, std::string format, c
     return ss.str();
 }
 
-std::string DateHelpers::formatTimestampToHumanDate(time_t timestamp, std::string format)
+std::string
+DateHelpers::formatTimestampToHumanDate(time_t timestamp, std::string format)
 {
     if (timestamp == 0) {
         return "N/A";
@@ -49,22 +46,22 @@ std::string DateHelpers::formatTimestampToHumanDate(time_t timestamp, std::strin
     std::stringstream ss;
     tm* timeinfo = localtime(&timestamp);
     if (format == "default") {
-//        ss << std::put_time(timeinfo, "%a %d.%m at %H:%M");
+        //        ss << std::put_time(timeinfo, "%a %d.%m at %H:%M");
         ss << std::put_time(timeinfo, "%a %d %b at %H:%M");
-    }
-    else if (format == "date") {
+    } else if (format == "date") {
         ss << std::put_time(timeinfo, "%a %d %b");
-    }
-    else {
+    } else {
         ss << std::put_time(timeinfo, "%A %eth at %H:%M");
     }
     return ss.str();
 }
 
-bool DateHelpers::isTimestampToday(time_t timestamp) {
+bool
+DateHelpers::isTimestampToday(time_t timestamp)
+{
     // Get the current time
     time_t now = time(nullptr);
-    tm *now_tm = localtime(&now);
+    tm* now_tm = localtime(&now);
 
     // Set the hour, minute, and second fields to 0
     now_tm->tm_hour = 0;
@@ -78,10 +75,12 @@ bool DateHelpers::isTimestampToday(time_t timestamp) {
     return timestamp >= startOfDay;
 }
 
-bool DateHelpers::isTimestampNDaysFromToday(time_t timestamp, int n) {
+bool
+DateHelpers::isTimestampNDaysFromToday(time_t timestamp, int n)
+{
     // Get the current time
     time_t now = time(nullptr);
-    tm *now_tm = localtime(&now);
+    tm* now_tm = localtime(&now);
 
     // Set the hour, minute, and second fields to 0
     now_tm->tm_hour = 0;
@@ -102,13 +101,14 @@ bool DateHelpers::isTimestampNDaysFromToday(time_t timestamp, int n) {
     return timestamp >= startOfTargetDay && timestamp < startOfNextDay;
 }
 
-std::string DateHelpers::timestampToDuration(time_t startedAt, time_t endedAt)
+std::string
+DateHelpers::timestampToDuration(time_t startedAt, time_t endedAt)
 {
     if (startedAt == endedAt) {
         return "0s";
     }
 
-    time_t timestamp = (int) difftime(endedAt, startedAt);
+    time_t timestamp = (int)difftime(endedAt, startedAt);
     std::stringstream ss;
     int years = timestamp / 31536000;
     int days = timestamp / 86400;
@@ -141,7 +141,8 @@ std::string DateHelpers::timestampToDuration(time_t startedAt, time_t endedAt)
     return ss.str();
 }
 
-time_t DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t referenceTime)
+time_t
+DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t referenceTime)
 {
     // TODO: refactor this method to be more readable
     // -> Also create an Helper dedicated to date manipulation
@@ -165,20 +166,17 @@ time_t DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t refer
 
     std::time_t t;
     if (referenceTime == 0) {
-        t = std::time(nullptr);   // get time now
+        t = std::time(nullptr); // get time now
     } else {
         t = referenceTime;
     }
 
     // Weekdays
-    std::map<std::string, int> weekDays = {
-        {"sunday", 0}, {"monday", 1}, {"tuesday", 2}, {"wednesday", 3},
-        {"thursday", 4}, {"friday", 5}, {"saturday", 6}
-    };
+    std::map<std::string, int> weekDays = { { "sunday", 0 },   { "monday", 1 }, { "tuesday", 2 }, { "wednesday", 3 },
+                                            { "thursday", 4 }, { "friday", 5 }, { "saturday", 6 } };
 
     // if stringDate is a recognized word
-    if (returnDate.empty() && weekDays.count(StringHelpers::toLower(stringDate)) > 0)
-    {
+    if (returnDate.empty() && weekDays.count(StringHelpers::toLower(stringDate)) > 0) {
         std::tm* now = std::localtime(&t);
         int currentDayOfWeek = now->tm_wday;
         int targetDayOfWeek = weekDays[StringHelpers::toLower(stringDate)];
@@ -188,60 +186,55 @@ time_t DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t refer
         }
         now->tm_mday += daysUntilTarget;
         mktime(now); // Normalize the date
-        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" + std::to_string(now->tm_mday);
+        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" +
+                     std::to_string(now->tm_mday);
     }
 
     // if stringDate is a recognized word
-    if (returnDate.empty() && stringDate == "today")
-    {
+    if (returnDate.empty() && stringDate == "today") {
         std::tm* now = std::localtime(&t);
-        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" + std::to_string(now->tm_mday);
-    }
-    else if (returnDate.empty() && stringDate == "tomorrow")
-    {
+        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" +
+                     std::to_string(now->tm_mday);
+    } else if (returnDate.empty() && stringDate == "tomorrow") {
         std::tm* now = std::localtime(&t);
         now->tm_mday += 1; // Add 7 days to the current date
-        std::mktime(now); // Normalize the date
-        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" + std::to_string(now->tm_mday);
-    }
-    else if (returnDate.empty() && stringDate == "next-week")
-    {
+        std::mktime(now);  // Normalize the date
+        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" +
+                     std::to_string(now->tm_mday);
+    } else if (returnDate.empty() && stringDate == "next-week") {
         std::tm* now = std::localtime(&t);
         now->tm_mday += 7; // Add 7 days to the current date
-        std::mktime(now); // Normalize the date
-        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" + std::to_string(now->tm_mday);
-    }
-    else if (returnDate.empty() && stringDate == "next-month")
-    {
+        std::mktime(now);  // Normalize the date
+        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" +
+                     std::to_string(now->tm_mday);
+    } else if (returnDate.empty() && stringDate == "next-month") {
         std::tm* now = std::localtime(&t);
         std::mktime(now); // Normalize the date
-        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" + std::to_string(now->tm_mday);
-    }
-    else if (returnDate.empty() && stringDate == "next-year")
-    {
+        returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" +
+                     std::to_string(now->tm_mday);
+    } else if (returnDate.empty() && stringDate == "next-year") {
         std::tm* now = std::localtime(&t);
         std::mktime(now); // Normalize the date
-        returnDate = std::to_string(now->tm_year + 1901) + "-" + std::to_string(now->tm_mon + 1) + "-" + std::to_string(now->tm_mday);
+        returnDate = std::to_string(now->tm_year + 1901) + "-" + std::to_string(now->tm_mon + 1) + "-" +
+                     std::to_string(now->tm_mday);
     }
 
     // if date format is "xxxx.xx.xx"
-    if (returnDate.empty() && stringDate.find('.') != std::string::npos)
-    {
+    if (returnDate.empty() && stringDate.find('.') != std::string::npos) {
         std::replace(stringDate.begin(), stringDate.end(), '.', '-');
         returnDate = stringDate;
     }
 
     // if date format is "xx-xx"
-    if (returnDate.empty() && stringDate.length() == 5 && (stringDate.find('.') != std::string::npos || stringDate.find('-') != std::string::npos))
-    {
+    if (returnDate.empty() && stringDate.length() == 5 &&
+        (stringDate.find('.') != std::string::npos || stringDate.find('-') != std::string::npos)) {
         std::tm* now = std::localtime(&t);
         int year = now->tm_year + 1900; // tm_year is years since 1900
         returnDate = std::to_string(year) + "-" + stringDate;
     }
 
     // if date format is "xd", "xm", "xy", "xday(s)", "xmonth(s)", "xyear(s)"
-    if (returnDate.empty())
-    {
+    if (returnDate.empty()) {
         std::string unit;
         char lastChar;
         if (stringDate.size() >= 3) {
@@ -260,7 +253,6 @@ time_t DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t refer
             lastChar = stringDate.back();
         }
 
-
         if (lastChar == 'd' || lastChar == 'm' || lastChar == 'y') {
             std::string numberPart = stringDate.substr(0, stringDate.size() - 1);
             int number = std::stoi(numberPart);
@@ -276,13 +268,13 @@ time_t DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t refer
             }
 
             mktime(now); // Normalize the date
-            returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" + std::to_string(now->tm_mday);
+            returnDate = std::to_string(now->tm_year + 1900) + "-" + std::to_string(now->tm_mon + 1) + "-" +
+                         std::to_string(now->tm_mday);
         }
     }
 
     // if date format is "xx"
-    if (returnDate.empty() && stringDate.length() <= 2 && stoi(stringDate) <= 31)
-    {
+    if (returnDate.empty() && stringDate.length() <= 2 && stoi(stringDate) <= 31) {
         std::tm* now = std::localtime(&t);
         int year = now->tm_year + 1900; // tm_year is years since 1900
         int month;
@@ -295,8 +287,7 @@ time_t DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t refer
     }
 
     // if date format is "xxxx-xx-xx"
-    if (returnDate.empty() && stringDate.find('-') != std::string::npos)
-    {
+    if (returnDate.empty() && stringDate.find('-') != std::string::npos) {
         returnDate = stringDate;
     }
 
@@ -310,7 +301,9 @@ time_t DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t refer
     return endOfDayTimestamp(std::mktime(&tm));
 }
 
-time_t DateHelpers::endOfDayTimestamp(time_t inputTimestamp) {
+time_t
+DateHelpers::endOfDayTimestamp(time_t inputTimestamp)
+{
     // Convert to a tm
     std::tm* input_tm = std::localtime(&inputTimestamp);
 
@@ -325,36 +318,35 @@ time_t DateHelpers::endOfDayTimestamp(time_t inputTimestamp) {
     return endOfDayTimestamp;
 }
 
-bool DateHelpers::isDateValidFromUser(std::string date)
+bool
+DateHelpers::isDateValidFromUser(std::string date)
 {
     // replace dots with dashes
     std::replace(date.begin(), date.end(), '.', '-');
 
     // if date is xxxx-xx-xx format
     std::regex dateRegex(R"(^(\d{4})-(\d{2})-(\d{2})$)");
-    if (std::regex_match(date, dateRegex))
-    {
+    if (std::regex_match(date, dateRegex)) {
         return true;
     }
 
     // if date is xx-xx format
     std::regex dateRegex2(R"(^(\d{2})-(\d{2})$)");
-    if (std::regex_match(date, dateRegex2))
-    {
+    if (std::regex_match(date, dateRegex2)) {
         return true;
     }
 
     // if date is xx format
     std::regex dateRegex3(R"(^(\d{2})$)");
-    if (std::regex_match(date, dateRegex3))
-    {
+    if (std::regex_match(date, dateRegex3)) {
         return true;
     }
 
     return false;
 }
 
-time_t DateHelpers::getTodayStart(int offset)
+time_t
+DateHelpers::getTodayStart(int offset)
 {
     time_t today_start;
     // get today at 00:00
@@ -369,14 +361,16 @@ time_t DateHelpers::getTodayStart(int offset)
     return today_start;
 }
 
-time_t DateHelpers::getTodayEnd(int offset)
+time_t
+DateHelpers::getTodayEnd(int offset)
 {
     time_t start = getTodayStart(offset);
     time_t today_end = start + 24 * 60 * 60;
     return today_end;
 }
 
-time_t DateHelpers::getWeekStart(int offset)
+time_t
+DateHelpers::getWeekStart(int offset)
 {
     time_t week_start;
     // get Monday at 00:00
@@ -400,14 +394,16 @@ time_t DateHelpers::getWeekStart(int offset)
     return week_start;
 }
 
-time_t DateHelpers::getWeekEnd(int offset)
+time_t
+DateHelpers::getWeekEnd(int offset)
 {
     time_t start = getWeekStart(offset);
     time_t week_end = start + 7 * 24 * 60 * 60;
     return week_end;
 }
 
-time_t DateHelpers::getMonthStart(int offset)
+time_t
+DateHelpers::getMonthStart(int offset)
 {
     time_t month_start;
     // get the first day of the month at 00:00
@@ -423,7 +419,8 @@ time_t DateHelpers::getMonthStart(int offset)
     return month_start;
 }
 
-time_t DateHelpers::getMonthEnd(int offset)
+time_t
+DateHelpers::getMonthEnd(int offset)
 {
     time_t start = getMonthStart(offset);
     tm* timeinfo = localtime(&start);
@@ -432,7 +429,8 @@ time_t DateHelpers::getMonthEnd(int offset)
     return month_end;
 }
 
-time_t DateHelpers::getYearStart(int offset)
+time_t
+DateHelpers::getYearStart(int offset)
 {
     time_t year_start;
     // get the first day of the year at 00:00
@@ -449,7 +447,8 @@ time_t DateHelpers::getYearStart(int offset)
     return year_start;
 }
 
-time_t DateHelpers::getYearEnd(int offset)
+time_t
+DateHelpers::getYearEnd(int offset)
 {
     time_t start = getYearStart(offset);
     tm* timeinfo = localtime(&start);
@@ -458,12 +457,11 @@ time_t DateHelpers::getYearEnd(int offset)
     return year_end;
 }
 
-time_t DateHelpers::getDayStart(const std::string& day, time_t timestamp)
+time_t
+DateHelpers::getDayStart(const std::string& day, time_t timestamp)
 {
-    std::map<std::string, int> weekDays = {
-        {"sunday", 0}, {"monday", 1}, {"tuesday", 2}, {"wednesday", 3},
-        {"thursday", 4}, {"friday", 5}, {"saturday", 6}
-    };
+    std::map<std::string, int> weekDays = { { "sunday", 0 },   { "monday", 1 }, { "tuesday", 2 }, { "wednesday", 3 },
+                                            { "thursday", 4 }, { "friday", 5 }, { "saturday", 6 } };
 
     if (weekDays.count(StringHelpers::toLower(day)) == 0) {
         throw std::invalid_argument("Invalid day name.");
@@ -482,7 +480,8 @@ time_t DateHelpers::getDayStart(const std::string& day, time_t timestamp)
     return r;
 }
 
-time_t DateHelpers::getDayEnd(const std::string& day, time_t timestamp)
+time_t
+DateHelpers::getDayEnd(const std::string& day, time_t timestamp)
 {
     time_t start = getDayStart(day, timestamp);
     time_t day_end = start + 24 * 60 * 60;

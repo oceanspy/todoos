@@ -3,15 +3,16 @@
 
 #include <string>
 
-class Event {
-public:
+class Event
+{
+  public:
     Event(std::string type, std::string payload);
     std::string getType();
     std::string getPayload();
-private:
+
+  private:
     std::string type;
     std::string payload;
 };
 
-
-#endif //TODOOS_EVENT_H
+#endif // TODOOS_EVENT_H

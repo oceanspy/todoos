@@ -2,19 +2,21 @@
 #define CLISERVICE_H
 
 #include <filesystem>
-#include "../IOService/IOService.h"
-#include "../Help/Help.h"
+
+#include "../CLIThemes/CLIThemeService.h"
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Command/SmartCommand.h"
 #include "../Config/ConfigService.h"
+#include "../FileStorage/FileStorageService.h"
+#include "../Help/Help.h"
+#include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
-#include "../FileStorage/FileStorageService.h"
-#include "../CLIThemes/CLIThemeService.h"
 
-class CLIController {
-public:
+class CLIController
+{
+  public:
     CLIController(IOService& ioService,
                   Help& help,
                   CommandService& commandService,
@@ -24,8 +26,10 @@ public:
                   ListService& listService,
                   ListItemService& listItemService,
                   CLIThemeService& cliThemeService);
+
     void actions();
-private:
+
+  private:
     IOService& ioService;
     Help& help;
     CommandService& commandService;
@@ -55,6 +59,4 @@ private:
     void clean();
 };
 
-
-
-#endif //CLISERVICE_H
+#endif // CLISERVICE_H

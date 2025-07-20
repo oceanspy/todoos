@@ -1,24 +1,24 @@
 #include "CSVService.h"
 
 CSVService::CSVService(IOService& ioService)
-    : ioService(ioService)
+  : ioService(ioService)
 {
 }
 
-void CSVService::load(std::filesystem::path path)
+void
+CSVService::load(std::filesystem::path path)
 {
     this->path = path;
 
-    if (!isFileWritable(path))
-    {
+    if (!isFileWritable(path)) {
         throw std::invalid_argument("Error: Unable to load the file: " + path.string());
     }
 }
 
-bool CSVService::isFileWritable(std::filesystem::path path)
+bool
+CSVService::isFileWritable(std::filesystem::path path)
 {
-    if (!fileWritable)
-    {
+    if (!fileWritable) {
         std::ofstream file(path, std::ofstream::out | std::ofstream::app);
         fileWritable = file.is_open();
         file.close();
@@ -26,8 +26,8 @@ bool CSVService::isFileWritable(std::filesystem::path path)
     return fileWritable;
 }
 
-
-std::vector < std::vector <std::string>> CSVService::read(std::optional<int> limitOpt)
+std::vector<std::vector<std::string>>
+CSVService::read(std::optional<int> limitOpt)
 {
     int limit = limitOpt.value_or(10000); // Use 10000 as default value
     std::vector<std::vector<std::string>> data;
@@ -43,10 +43,10 @@ std::vector < std::vector <std::string>> CSVService::read(std::optional<int> lim
             continue;
         }
 
-        const char *mystart = line.c_str(); // prepare to parse the line - start is position of begin of field
-        bool instring{false};
-        for (const char *p = mystart; *p; p++) { // iterate through the string
-            if (*p == '"') { // toggle flag if we're btw double quote
+        const char* mystart = line.c_str(); // prepare to parse the line - start is position of begin of field
+        bool instring{ false };
+        for (const char* p = mystart; *p; p++) { // iterate through the string
+            if (*p == '"') {                     // toggle flag if we're btw double quote
                 instring = !instring;
             } else if (*p == ',' && !instring) { // if comma OUTSIDE double quote
                 std::string field = std::string(mystart, p - mystart);
@@ -64,7 +64,7 @@ std::vector < std::vector <std::string>> CSVService::read(std::optional<int> lim
                 }
 
                 row.push_back(field); // keep the field
-                mystart = p + 1; // and start parsing next one
+                mystart = p + 1;      // and start parsing next one
             }
         }
         std::string field = std::string(mystart);
@@ -92,7 +92,8 @@ std::vector < std::vector <std::string>> CSVService::read(std::optional<int> lim
     return data;
 }
 
-void CSVService::write(std::vector <std::vector <std::string>> data)
+void
+CSVService::write(std::vector<std::vector<std::string>> data)
 {
     std::ofstream file(path, std::ofstream::out);
 
@@ -109,7 +110,8 @@ void CSVService::write(std::vector <std::vector <std::string>> data)
     file.close();
 }
 
-void CSVService::append(std::vector <std::vector <std::string>> data)
+void
+CSVService::append(std::vector<std::vector<std::string>> data)
 {
     std::ofstream file(path, std::ios::app);
 
@@ -126,13 +128,16 @@ void CSVService::append(std::vector <std::vector <std::string>> data)
     file.close();
 }
 
-void CSVService::empty()
+void
+CSVService::empty()
 {
     std::ofstream file(path, std::ofstream::out);
     file.close();
 }
 
-std::string CSVService::createItem(const std::string& str) {
+std::string
+CSVService::createItem(const std::string& str)
+{
     std::string item;
     item = escapeQuotes(str);
 
@@ -144,7 +149,9 @@ std::string CSVService::createItem(const std::string& str) {
     return item;
 }
 
-std::string CSVService::escapeQuotes(const std::string& str) {
+std::string
+CSVService::escapeQuotes(const std::string& str)
+{
     std::string item = str;
     for (size_t i = 0; i < item.size(); i++) {
         if (item[i] == '"') {

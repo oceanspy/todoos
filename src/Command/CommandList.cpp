@@ -1,6 +1,6 @@
-#include <stdexcept>
-#include <algorithm>
 #include "CommandList.h"
+#include <algorithm>
+#include <stdexcept>
 
 CommandList::CommandList()
 {
@@ -17,41 +17,12 @@ CommandList::CommandList()
  *
  */
 
-void CommandList::make()
+void
+CommandList::make()
 {
-    commandIds = {
-            SHOW,
-            ADD,
-            EDIT,
-            APPEND,
-            PREPEND,
-            FIND,
-            PRIORITY,
-            INCREASE,
-            DECREASE,
-            STATUS,
-            TO_DO,
-            START,
-            PAUSE,
-            REVIEW,
-            PENDING,
-            COMPLETE,
-            CANCEL,
-            REMOVE,
-            ARCHIVE,
-            RESTORE,
-            MOVE,
-            COPY,
-            EMPTY,
-            CLEAN,
-            DUPLICATE,
-            DEADLINE,
-            LIST,
-            USE,
-            STATS,
-            RESET,
-            COMMANDS
-    };
+    commandIds = { SHOW,  ADD,   EDIT,      APPEND,   PREPEND,  FIND,   PRIORITY, INCREASE, DECREASE, STATUS, TO_DO,
+                   START, PAUSE, REVIEW,    PENDING,  COMPLETE, CANCEL, REMOVE,   ARCHIVE,  RESTORE,  MOVE,   COPY,
+                   EMPTY, CLEAN, DUPLICATE, DEADLINE, LIST,     USE,    STATS,    RESET,    COMMANDS };
 
     // loop to commandIds to get the command name
     for (int commandId : commandIds) {
@@ -161,25 +132,27 @@ void CommandList::make()
     }
 }
 
-bool CommandList::isValid(const std::string &commandNameToEvaluate)
+bool
+CommandList::isValid(const std::string& commandNameToEvaluate)
 {
     return std::ranges::any_of(commands, [&commandNameToEvaluate](const auto& command) {
         return command.second.name == commandNameToEvaluate;
     });
 }
 
-bool CommandList::isBeginningOfCommand(const std::string &partialCommandNameToEvaluate)
+bool
+CommandList::isBeginningOfCommand(const std::string& partialCommandNameToEvaluate)
 {
     return std::ranges::any_of(commands, [&partialCommandNameToEvaluate](const auto& command) {
         return command.second.name.compare(0, partialCommandNameToEvaluate.size(), partialCommandNameToEvaluate) == 0;
     });
 }
 
-int CommandList::getCommandId(const std::string &commandName) {
-    auto it = std::find_if(commands.begin(), commands.end(),
-    [&commandName](const auto& pair) {
-        return pair.second.name == commandName;
-    });
+int
+CommandList::getCommandId(const std::string& commandName)
+{
+    auto it = std::find_if(
+        commands.begin(), commands.end(), [&commandName](const auto& pair) { return pair.second.name == commandName; });
 
     if (it != commands.end()) {
         return it->second.id;
@@ -188,7 +161,8 @@ int CommandList::getCommandId(const std::string &commandName) {
     throw std::invalid_argument("Invalid command.");
 }
 
-std::vector<std::string> CommandList::getMainCommandNames(bool showOnlyAutocomplete)
+std::vector<std::string>
+CommandList::getMainCommandNames(bool showOnlyAutocomplete)
 {
     std::vector<std::string> commandNames;
     commandNames.reserve(commands.size());
@@ -202,77 +176,44 @@ std::vector<std::string> CommandList::getMainCommandNames(bool showOnlyAutocompl
     return commandNames;
 }
 
-bool CommandList::isCommandValidWithOptions(const std::string commandName, const std::map<std::string, std::string> options)
+bool
+CommandList::isCommandValidWithOptions(const std::string commandName, const std::map<std::string, std::string> options)
 {
     if (options.empty() || commandName == "show") {
         return true;
     }
 
     return std::ranges::any_of(options, [&commandName](const auto& option) {
-        if (option.first == "list")
-        {
+        if (option.first == "list") {
             return true;
-        }
-        else if (option.first == "priority")
-        {
-            if (commandName == "show" ||
-                commandName == "add" ||
-                commandName == "edit" ||
-                commandName == "append" ||
-                commandName == "prepend"
-            ) {
+        } else if (option.first == "priority") {
+            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
+                commandName == "prepend") {
                 return true;
             }
-        }
-        else if (option.first == "status")
-        {
-            if (commandName == "show" ||
-                commandName == "add" ||
-                commandName == "edit" ||
-                commandName == "append" ||
-                commandName == "prepend"
-            ) {
+        } else if (option.first == "status") {
+            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
+                commandName == "prepend") {
                 return true;
             }
-        }
-        else if (option.first == "deadline")
-        {
-            if (commandName == "show" ||
-                commandName == "add" ||
-                commandName == "edit" ||
-                commandName == "append" ||
-                commandName == "prepend"
-            ) {
+        } else if (option.first == "deadline") {
+            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
+                commandName == "prepend") {
                 return true;
             }
-        }
-        else if (option.first == "archive")
-        {
-            if (commandName == "show" ||
-                commandName == "find"
-            ) {
+        } else if (option.first == "archive") {
+            if (commandName == "show" || commandName == "find") {
                 return true;
             }
-        }
-        else if (option.first == "delete")
-        {
-            if (commandName == "show" ||
-                commandName == "find"
-            ) {
+        } else if (option.first == "delete") {
+            if (commandName == "show" || commandName == "find") {
                 return true;
             }
-        }
-        else if (option.first == "force")
-        {
-            if (commandName == "remove" ||
-                commandName == "move-to" ||
-                commandName == "copy-to"
-            ) {
+        } else if (option.first == "force") {
+            if (commandName == "remove" || commandName == "move-to" || commandName == "copy-to") {
                 return true;
             }
-        }
-        else if (option.first == "config")
-        {
+        } else if (option.first == "config") {
             // only show
             // TODO: implement edit config
         }
@@ -280,4 +221,3 @@ bool CommandList::isCommandValidWithOptions(const std::string commandName, const
         return false;
     });
 }
-

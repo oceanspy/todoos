@@ -1,20 +1,24 @@
 #include "MockInstallation.h"
 
-MockInstallation::MockInstallation(IOService& ioService, FileDataServiceInterface& storageService, FileDataServiceInterface& configStorageService, InitInterface& init)
-        : ioService(ioService),
-          storageService(storageService),
-          configStorageService(configStorageService),
-          init(init)
+MockInstallation::MockInstallation(IOService& ioService,
+                                   FileDataServiceInterface& storageService,
+                                   FileDataServiceInterface& configStorageService,
+                                   InitInterface& init)
+  : ioService(ioService)
+  , storageService(storageService)
+  , configStorageService(configStorageService)
+  , init(init)
 {
-
 }
 
-bool MockInstallation::isNew()
+bool
+MockInstallation::isNew()
 {
     return !std::filesystem::exists(init.getConfigFilePath());
 }
 
-void MockInstallation::make()
+void
+MockInstallation::make()
 {
     ioService.info("First launch detected.");
     ioService.print("MockInstallationializing program...");
@@ -31,57 +35,57 @@ void MockInstallation::make()
     ioService.info("Welcome! :-)");
 }
 
-void MockInstallation::populate()
+void
+MockInstallation::populate()
 {
-    std::vector <std::vector <std::string>> defaultConfigData = {
-            { "appDirStorage", init.getAppDirPath().string() },
-            { "fileDataStorageType", "json" },
-            { "defaultList", "default" },
-            { "theme", "default" },
-            { "consoleRowMaxLength", "96" },
-            { "archiveWhenCompleted", "false" },
-            { "idRandomGenerationType", "letters" }
+    std::vector<std::vector<std::string>> defaultConfigData = { { "appDirStorage", init.getAppDirPath().string() },
+                                                                { "fileDataStorageType", "json" },
+                                                                { "defaultList", "default" },
+                                                                { "theme", "default" },
+                                                                { "consoleRowMaxLength", "96" },
+                                                                { "archiveWhenCompleted", "false" },
+                                                                { "idRandomGenerationType", "letters" }
 
     };
     configStorageService.load(init.getConfigFilePath());
     configStorageService.write(defaultConfigData);
 
-    std::vector <std::vector <std::string>> defaultCacheData = {
-            { "currentList", "tempListName" },
+    std::vector<std::vector<std::string>> defaultCacheData = {
+        { "currentList", "tempListName" },
     };
     configStorageService.load(init.getCacheFilePath());
     configStorageService.write(defaultCacheData);
 
-    std::vector <std::vector <std::string>> defaultListofListData = {
-            { "tempListName", "default", "default", "false" },
-            { "tempList2Name", "default", "default", "false" }
+    std::vector<std::vector<std::string>> defaultListofListData = {
+        { "tempListName", "default", "default", "false" }, { "tempList2Name", "default", "default", "false" }
     };
     storageService.load(init.getListOfListFilePath());
     storageService.write(defaultListofListData);
 
-    std::vector <std::vector <std::string>> defaultListData = {
-            {"aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259"},
-            {"bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272"}
+    std::vector<std::vector<std::string>> defaultListData = {
+        { "aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259" },
+        { "bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getDefaultListFilePath());
     storageService.write(defaultListData);
 
-    std::vector <std::vector <std::string>> tempListData = {
-            {"aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259"},
-            {"bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272"}
+    std::vector<std::vector<std::string>> tempListData = {
+        { "aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259" },
+        { "bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getMainDirPath() / "tempListName.json");
     storageService.write(tempListData);
 
-    std::vector <std::vector <std::string>> temp2ListData = {
-            {"cccc", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259"},
-            {"dddd", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272"}
+    std::vector<std::vector<std::string>> temp2ListData = {
+        { "cccc", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259" },
+        { "dddd", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getMainDirPath() / "tempList2Name.json");
     storageService.write(temp2ListData);
 }
 
-void MockInstallation::createDirectories()
+void
+MockInstallation::createDirectories()
 {
     ioService.print(init.getHomeDir().string());
     if (!std::filesystem::exists(init.getMainDirPath())) {
@@ -106,40 +110,41 @@ void MockInstallation::createDirectories()
     }
 }
 
-void MockInstallation::createConfigFile()
+void
+MockInstallation::createConfigFile()
 {
     std::ofstream outfile(init.getConfigFilePath(), std::ios::out | std::ios::app);
-    if (!outfile.is_open())
-    {
+    if (!outfile.is_open()) {
         ioService.print("Failed to create application config file");
         return;
     }
     outfile.close();
 }
 
-void MockInstallation::createCacheFile()
+void
+MockInstallation::createCacheFile()
 {
     std::ofstream outfile(init.getCacheFilePath(), std::ios::out | std::ios::app);
-    if (!outfile.is_open())
-    {
+    if (!outfile.is_open()) {
         ioService.print("Failed to create application config file");
         return;
     }
     outfile.close();
 }
 
-void MockInstallation::createListOfListFile()
+void
+MockInstallation::createListOfListFile()
 {
     std::ofstream outfile(init.getListOfListFilePath(), std::ios::out | std::ios::app);
-    if (!outfile.is_open())
-    {
+    if (!outfile.is_open()) {
         ioService.print("Failed to create application list of list file");
         return;
     }
     outfile.close();
 }
 
-void MockInstallation::createListFile(const std::string& listName)
+void
+MockInstallation::createListFile(const std::string& listName)
 {
     std::filesystem::path filePaths[3];
     filePaths[0] = init.getAppDirPath() / listName;
@@ -150,11 +155,9 @@ void MockInstallation::createListFile(const std::string& listName)
     filePaths[2] = init.getAppDirPath() / ".del_";
     filePaths[2] += listName;
     filePaths[2] += "." + init.getDefaultExtension();
-    for (const auto& filePath : filePaths)
-    {
+    for (const auto& filePath : filePaths) {
         std::ofstream outfile(filePath, std::ios::out | std::ios::app);
-        if (!outfile.is_open())
-        {
+        if (!outfile.is_open()) {
             ioService.print("Failed to create default application file");
             return;
         }
@@ -163,7 +166,9 @@ void MockInstallation::createListFile(const std::string& listName)
     }
 }
 
-bool MockInstallation::wipe() {
+bool
+MockInstallation::wipe()
+{
     try {
         std::filesystem::remove_all(init.getMainDirPath());
     } catch (std::filesystem::filesystem_error& e) {
@@ -173,15 +178,13 @@ bool MockInstallation::wipe() {
     return true;
 }
 
-void MockInstallation::populateNewListFile(std::ofstream& outfile)
+void
+MockInstallation::populateNewListFile(std::ofstream& outfile)
 {
-    if (init.getDefaultExtension() == "json")
-    {
+    if (init.getDefaultExtension() == "json") {
         outfile << "[\n";
         outfile << "]";
-    }
-    else if (init.getDefaultExtension() == "csv")
-    {
+    } else if (init.getDefaultExtension() == "csv") {
         outfile << "# ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT";
     }
 }

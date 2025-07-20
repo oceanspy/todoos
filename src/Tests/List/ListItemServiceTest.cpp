@@ -1,11 +1,11 @@
-#include <catch2/catch_test_macros.hpp>
-#include <filesystem>
 #include "../../List/ListItemService.h"
+#include "../../FileDataStorage/ConfService.h"
+#include "../../FileDataStorage/JSONService.h"
 #include "../../IOService/IOService.h"
 #include "../Mock/MockInit.h"
-#include "../../FileDataStorage/JSONService.h"
 #include "../Mock/MockInstallation.h"
-#include "../../FileDataStorage/ConfService.h"
+#include <catch2/catch_test_macros.hpp>
+#include <filesystem>
 
 // {"aaaa", "test 1", "3", "0", "1712487259", "1712487259", "0", "0"}
 // {"bbbb", "test 2", "1", "1", "1712487272", "1712487272", "1712487259", "0"}
@@ -17,7 +17,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     ConfService confService = ConfService(ioService);
     JSONService jsonService = JSONService(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr = std::make_unique<ConfService>(ioService);
+    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfService>(ioService);
     MockInit init(ioService, "_todoos_ListItemServiceTest");
     MockInstallation installation(ioService, jsonService, confService, init);
     std::string tempListName = "tempListName";
@@ -33,18 +34,21 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
-    ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+    ListItemRepository listItemRepository(
+        configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService, bus);
     listItemService.load(configService.getCurrentList());
 
-    SECTION("get") {
+    SECTION("get")
+    {
         std::vector<ListItemEntity> listItems = listItemService.get();
         REQUIRE(listItems.size() == 2);
         REQUIRE(*listItems[0].getId() == "aaaa");
         REQUIRE(*listItems[1].getId() == "bbbb");
     }
 
-    SECTION("get + filters") {
+    SECTION("get + filters")
+    {
         std::vector<ListItemEntity> listItems = listItemService.get();
         listItemService.filterPriorityAbove(listItems, 0);
         REQUIRE(listItems.size() == 2);
@@ -60,18 +64,19 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItems2[0].getId() == "bbbb");
 
         std::vector<ListItemEntity> listItems3 = listItemService.get();
-        listItemService.filterStatus(listItems3, {0, 1});
+        listItemService.filterStatus(listItems3, { 0, 1 });
         REQUIRE(listItems3.size() == 2);
         REQUIRE(*listItems3[0].getId() == "aaaa");
         REQUIRE(*listItems3[1].getId() == "bbbb");
 
         std::vector<ListItemEntity> listItems4 = listItemService.get();
-        listItemService.filterStatus(listItems4, {0});
+        listItemService.filterStatus(listItems4, { 0 });
         REQUIRE(listItems4.size() == 1);
         REQUIRE(*listItems4[0].getId() == "aaaa");
     }
 
-    SECTION("find") {
+    SECTION("find")
+    {
         ListItemEntity listItemEntity = listItemService.find("aaaa");
         REQUIRE(*listItemEntity.getId() == "aaaa");
         REQUIRE(*listItemEntity.getValue() == "test 1");
@@ -82,7 +87,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getUpdatedAt() == 1712487259);
     }
 
-    SECTION("add") {
+    SECTION("add")
+    {
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
         std::string statusValue = "to-do";
@@ -100,16 +106,21 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*(*listItemEntity2.status()).getCommandName() == "to-do");
     }
 
-    SECTION("add too long") {
+    SECTION("add too long")
+    {
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
         std::string statusValue = "to-do";
         const std::string* status = &statusValue;
-        std::string value = "long string of more than 255 characters xxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+        std::string value =
+            "long string of more than 255 characters xxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx "
+            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx "
+            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
         REQUIRE_THROWS(listItemService.add(value, priority, status));
     }
 
-    SECTION("add with deadline") {
+    SECTION("add with deadline")
+    {
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
         std::string statusValue = "to-do";
@@ -123,7 +134,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getId() == id);
     }
 
-    SECTION("edit") {
+    SECTION("edit")
+    {
         std::string id = "aaaa";
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
@@ -145,7 +157,6 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*(*listItemEntity.status()).getCommandName() == "started");
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
 
-
         listItemService.edit(id, "update only value");
         listItemEntity = listItemService.find(id);
         REQUIRE(*listItemEntity.getId() == "aaaa");
@@ -163,7 +174,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
     }
 
-    SECTION("close item (complete/cancel)") {
+    SECTION("close item (complete/cancel)")
+    {
         std::string id = "aaaa";
 
         const int statusValue = StatusService::COMPLETED;
@@ -183,7 +195,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getClosedAt() > 0);
     }
 
-    SECTION("editStatus") {
+    SECTION("editStatus")
+    {
         std::string id = "aaaa";
         const int statusValue = StatusService::TO_DO;
         const int* status = &statusValue;
@@ -211,9 +224,10 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
     }
 
-    SECTION("editStatus to closed with auto archive") {
+    SECTION("editStatus to closed with auto archive")
+    {
         configService.edit("archiveWhenCompleted", "true");
-        std::vector <ConfigEntity> configs = configService.get();
+        std::vector<ConfigEntity> configs = configService.get();
 
         std::string id = "aaaa";
 
@@ -227,7 +241,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE_NOTHROW(listItemService.load(tempListName, "archive").find("aaaa"));
     }
 
-    SECTION("add & remove") {
+    SECTION("add & remove")
+    {
         std::string priorityValue = "low";
         const std::string* priority = &priorityValue;
         std::string statusValue = "to-do";
@@ -266,8 +281,9 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listRestoreItems[2].getId() == id);
     }
 
-    SECTION("Search") {
-        std::vector<std::string> searchValues = {"test"};
+    SECTION("Search")
+    {
+        std::vector<std::string> searchValues = { "test" };
         std::vector<ListItemEntity> listItems = listItemService.search(searchValues);
         REQUIRE(listItems.size() == 2);
         REQUIRE(*listItems[0].getId() == "aaaa");
@@ -280,23 +296,24 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         std::string value = "bonjour tout le monde, ça marche?";
         std::string id = listItemService.add(value, priority, status);
 
-        searchValues = {"bonjour"};
+        searchValues = { "bonjour" };
         std::vector<ListItemEntity> listItems2 = listItemService.search(searchValues);
         REQUIRE(listItems2.size() == 1);
         REQUIRE(*listItems2[0].getId() == id);
 
-        searchValues = {"monde"};
+        searchValues = { "monde" };
         std::vector<ListItemEntity> listItems3 = listItemService.search(searchValues);
         REQUIRE(listItems3.size() == 1);
         REQUIRE(*listItems3[0].getId() == id);
 
-        searchValues = {"truc"};
+        searchValues = { "truc" };
         REQUIRE_THROWS(listItemService.search(searchValues));
 
         listItemService.remove(id);
     }
 
-    SECTION("append") {
+    SECTION("append")
+    {
         std::string id = "aaaa";
         std::string value = "append test";
         listItemService.append(id, value);
@@ -315,7 +332,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemService.edit(id, "test 1", priority, status);
     }
 
-    SECTION("prepend") {
+    SECTION("prepend")
+    {
         std::string id = "aaaa";
         std::string value = "prepend";
         listItemService.prepend(id, value);
@@ -334,7 +352,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemService.edit(id, "test 1", priority, status);
     }
 
-    SECTION("increase/decrease priority") {
+    SECTION("increase/decrease priority")
+    {
         std::string id = "aaaa";
 
         listItemService.increasePriority(id);
@@ -356,7 +375,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*(*listItemEntity.priority()).getName() == "urgent");
     }
 
-    SECTION("set priority") {
+    SECTION("set priority")
+    {
         std::string id = "aaaa";
 
         std::string priorityValue = "critical";
@@ -374,7 +394,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*(*listItemEntity2.priority()).getName() == "low");
     }
 
-    SECTION("set status") {
+    SECTION("set status")
+    {
         std::string id = "aaaa";
 
         std::string statusValue = "paused";
@@ -392,7 +413,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*(*listItemEntity2.status()).getCommandName() == "to-do");
     }
 
-    SECTION("min/max priority") {
+    SECTION("min/max priority")
+    {
         REQUIRE(priorityService.isMax("critical"));
         REQUIRE_FALSE(priorityService.isMax("high"));
         REQUIRE_FALSE(priorityService.isMax("low"));
@@ -402,7 +424,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE_FALSE(priorityService.isMin("medium"));
     }
 
-    SECTION("empty") {
+    SECTION("empty")
+    {
         listItemService.archiveAll();
         std::vector<ListItemEntity> listItems = listItemService.get();
         REQUIRE(listItems.empty());
@@ -414,7 +437,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         installation.make();
     }
 
-    SECTION("archiveFinishedItems") {
+    SECTION("archiveFinishedItems")
+    {
         std::string priorityValue = "low";
         const std::string* priority = &priorityValue;
         std::string statusValue = "to-do";
@@ -454,7 +478,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         installation.make();
     }
 
-    SECTION("Archive and restore item") {
+    SECTION("Archive and restore item")
+    {
         std::string id = "aaaa";
         std::vector<ListItemEntity> listItems = listItemService.get();
         REQUIRE(listItems.size() == 2);
@@ -475,7 +500,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         installation.make();
     }
 
-    SECTION("Move item to another list") {
+    SECTION("Move item to another list")
+    {
         std::string id = "aaaa";
         std::vector<ListItemEntity> listItems = listItemService.get();
         REQUIRE(listItems.size() == 2);
@@ -497,7 +523,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         installation.make();
     }
 
-    SECTION("Copy item to another list") {
+    SECTION("Copy item to another list")
+    {
         std::string id = "aaaa";
         std::vector<ListItemEntity> listItems = listItemService.get();
         REQUIRE(listItems.size() == 2);
@@ -517,7 +544,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItems3[0].getId() == "aaaa");
         REQUIRE(*listItems3[1].getId() == "bbbb");
 
-        // Can copy/move an item that already exist in list (it will delete previous -- confirmation asked in Controller)
+        // Can copy/move an item that already exist in list (it will delete previous -- confirmation asked in
+        // Controller)
         REQUIRE_NOTHROW(listItemService.copy(id, tempListName, tempList2Name));
         REQUIRE_NOTHROW(listItemService.move(id, tempListName, tempList2Name));
 
@@ -525,7 +553,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         installation.make();
     }
 
-    SECTION("Edit deadline of an item") {
+    SECTION("Edit deadline of an item")
+    {
         std::string id = listItemService.add("test item", new std::string("high"), new std::string("to-do"));
 
         std::string deadline0 = "2024.12.31";
@@ -563,23 +592,26 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItem4.getDueAt() == 0);
     }
 
-    SECTION("Count()") {
+    SECTION("Count()")
+    {
         std::vector<ListItemEntity> listItems = listItemService.load(tempListName).get();
         REQUIRE(listItems.size() == listItemService.count());
     }
 
-    SECTION("countWithStatus()") {
-        REQUIRE(1 == listItemService.countWithStatus({0}));
-        REQUIRE(0 == listItemService.countWithStatus({4}));
-        REQUIRE(1 == listItemService.countWithStatus({1,4}));
-        REQUIRE_THROWS(listItemService.countWithStatus({10}));
+    SECTION("countWithStatus()")
+    {
+        REQUIRE(1 == listItemService.countWithStatus({ 0 }));
+        REQUIRE(0 == listItemService.countWithStatus({ 4 }));
+        REQUIRE(1 == listItemService.countWithStatus({ 1, 4 }));
+        REQUIRE_THROWS(listItemService.countWithStatus({ 10 }));
     }
 
-    SECTION("countWithPriority()") {
-        REQUIRE(1 == listItemService.countWithPriority({1}));
-        REQUIRE(0 == listItemService.countWithPriority({0}));
-        REQUIRE(0 == listItemService.countWithPriority({0,3}));
-        REQUIRE(2 == listItemService.countWithPriority({1,2}));
-        REQUIRE_THROWS(listItemService.countWithPriority({10}));
+    SECTION("countWithPriority()")
+    {
+        REQUIRE(1 == listItemService.countWithPriority({ 1 }));
+        REQUIRE(0 == listItemService.countWithPriority({ 0 }));
+        REQUIRE(0 == listItemService.countWithPriority({ 0, 3 }));
+        REQUIRE(2 == listItemService.countWithPriority({ 1, 2 }));
+        REQUIRE_THROWS(listItemService.countWithPriority({ 10 }));
     }
 }

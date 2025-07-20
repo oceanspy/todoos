@@ -1,21 +1,23 @@
 #ifndef TODOOS_COMMANDLIST_H
 #define TODOOS_COMMANDLIST_H
 
-#include <string>
-#include <map>
 #include "CommandOption.h"
+#include <map>
+#include <string>
 #include <vector>
 
-class CommandList {
-public:
+class CommandList
+{
+  public:
     CommandList();
-    std::vector <std::string> getMainCommandNames(const bool showOnlyAutocomplete = true);
-    int getCommandId(const std::string &command);
+    std::vector<std::string> getMainCommandNames(const bool showOnlyAutocomplete = true);
+    int getCommandId(const std::string& command);
     bool isValid(const std::string& commandNameToEvaluate);
     bool isBeginningOfCommand(const std::string& partialCommandNameToEvaluate);
     static bool isCommandValidWithOptions(std::string option, std::map<std::string, std::string> options);
 
-    enum CommandIds {
+    enum CommandIds
+    {
         SHOW = 0,
         ADD = 1,
         EDIT = 2,
@@ -49,19 +51,19 @@ public:
         COMMANDS = 100
     };
 
-private:
-    std::vector <int> commandIds;
+  private:
+    std::vector<int> commandIds;
 
-    struct CommandEntity {
+    struct CommandEntity
+    {
         int id;
         std::string name;
-        std::vector <int> childrenIds;
+        std::vector<int> childrenIds;
         bool showInAutocomplete = true;
     };
 
-    std::map <int, CommandEntity> commands;
+    std::map<int, CommandEntity> commands;
     void make();
 };
 
-
-#endif //TODOOS_COMMANDLIST_H
+#endif // TODOOS_COMMANDLIST_H

@@ -1,10 +1,11 @@
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch_test_macros.hpp>
 #include "../../Entities/ConfigEntity.h"
+#include <catch2/catch_test_macros.hpp>
 
-
-TEST_CASE("ConfigEntity tests", "[ConfigEntity]") {
-    SECTION("Test setting and getting key, value, and arguments") {
+TEST_CASE("ConfigEntity tests", "[ConfigEntity]")
+{
+    SECTION("Test setting and getting key, value, and arguments")
+    {
         // Create a ConfigEntity object
         ConfigEntity configEntity;
 

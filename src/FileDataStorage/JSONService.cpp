@@ -4,31 +4,30 @@
 using json = nlohmann::json;
 
 JSONService::JSONService(IOService& ioService)
-    : ioService(ioService)
+  : ioService(ioService)
 {
 }
 
-void JSONService::load(std::filesystem::path path)
+void
+JSONService::load(std::filesystem::path path)
 {
     this->path = path;
 
-    if (!isFileWritable(path))
-    {
+    if (!isFileWritable(path)) {
         throw std::invalid_argument("Error: Unable to load the file: " + path.string());
     }
 
     // if file empty
-    if (std::filesystem::is_empty(path))
-    {
+    if (std::filesystem::is_empty(path)) {
         // Create an empty JSON array
         write({});
     }
 }
 
-bool JSONService::isFileWritable(std::filesystem::path path)
+bool
+JSONService::isFileWritable(std::filesystem::path path)
 {
-    if (!fileWritable)
-    {
+    if (!fileWritable) {
         std::ofstream file(path, std::ofstream::out | std::ofstream::app);
         fileWritable = file.is_open();
         file.close();
@@ -36,8 +35,8 @@ bool JSONService::isFileWritable(std::filesystem::path path)
     return fileWritable;
 }
 
-
-std::vector < std::vector <std::string>> JSONService::read(std::optional<int> limitOpt)
+std::vector<std::vector<std::string>>
+JSONService::read(std::optional<int> limitOpt)
 {
     int limit = limitOpt.value_or(10000); // Use 10000 as default value
     std::vector<std::vector<std::string>> data;
@@ -85,7 +84,8 @@ std::vector < std::vector <std::string>> JSONService::read(std::optional<int> li
     return data;
 }
 
-void JSONService::write(std::vector <std::vector <std::string>> data)
+void
+JSONService::write(std::vector<std::vector<std::string>> data)
 {
     json json_data = json::array();
     for (const auto& innerVec : data) {
@@ -102,20 +102,24 @@ void JSONService::write(std::vector <std::vector <std::string>> data)
     file.close();
 }
 
-void JSONService::append(std::vector <std::vector <std::string>> data)
+void
+JSONService::append(std::vector<std::vector<std::string>> data)
 {
-    std::vector <std::vector <std::string>> existingData = read(std::nullopt);
+    std::vector<std::vector<std::string>> existingData = read(std::nullopt);
     existingData.insert(existingData.end(), data.begin(), data.end());
     write(existingData);
 }
 
-void JSONService::empty()
+void
+JSONService::empty()
 {
     std::ofstream file(path, std::ofstream::out);
     file.close();
 }
 
-std::string JSONService::createItem(const std::string& str) {
+std::string
+JSONService::createItem(const std::string& str)
+{
     std::string item;
     if (str.find(',') != std::string::npos) {
         item = "\"" + escapeQuotes(str) + "\"";
@@ -125,11 +129,13 @@ std::string JSONService::createItem(const std::string& str) {
     return item;
 }
 
-std::string JSONService::escapeQuotes(const std::string& str) {
+std::string
+JSONService::escapeQuotes(const std::string& str)
+{
     std::string escapedItem = str;
     size_t pos = escapedItem.find('"');
     while (pos != std::string::npos) {
-        escapedItem.insert(pos, 1, '"'); // Double the quote
+        escapedItem.insert(pos, 1, '"');      // Double the quote
         pos = escapedItem.find('"', pos + 2); // Find next quote after the doubled quote
     }
     return escapedItem;

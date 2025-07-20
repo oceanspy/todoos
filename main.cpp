@@ -1,25 +1,25 @@
-#include "src/Command/CommandValidation.h"
+#include "src/CLIController/CLIController.h"
 #include "src/Command/Command.h"
+#include "src/Command/CommandValidation.h"
+#include "src/Config/ConfigService.h"
+#include "src/FileDataStorageRepositories/ConfigRepository.h"
 #include "src/Help/Help.h"
 #include "src/IOService/IOService.h"
 #include "src/Init/Init.h"
 #include "src/Init/Installation.h"
-#include "src/Config/ConfigService.h"
-#include "src/FileDataStorageRepositories/ConfigRepository.h"
-#include "src/CLIController/CLIController.h"
 
 #include "src/CLIAutocomplete/CLIAutocompleteService.h"
 #include "src/Command/CommandService.h"
 #include "src/FileDataStorage/CSVService.h"
+#include "src/FileDataStorage/ConfService.h"
 #include "src/FileDataStorage/JSONService.h"
 #include "src/FileDataStorageRepositories/ListItemRepository.h"
-#include "src/List/ListItemService.h"
 #include "src/FileDataStorageRepositories/ListRepository.h"
+#include "src/List/ListItemService.h"
 #include "src/List/ListService.h"
-#include "src/FileDataStorage/ConfService.h"
 
-
-int main(int argc, const char *argv[])
+int
+main(int argc, const char* argv[])
 {
     std::string channel = "cli";
     IOService ioService = IOService(channel);
@@ -43,10 +43,8 @@ int main(int argc, const char *argv[])
 
     Init init = Init(ioService);
     Installation installation = Installation(ioService, jsonService, csvService, confService, init);
-    if (installation.isNew())
-    {
-        if (commandValidation.getCommandName() == "commands")
-        {
+    if (installation.isNew()) {
+        if (commandValidation.getCommandName() == "commands") {
             return 0;
         }
 
@@ -60,6 +58,7 @@ int main(int argc, const char *argv[])
                     commandValidation.getRawCommand());
     CommandList commandList = CommandList();
     auto commandService = CommandService(commandList, commandOption);
+
     // Autocorrect command for common mistakes
     SmartCommand smartCommand = SmartCommand(command);
     command = smartCommand.apply();
@@ -70,14 +69,11 @@ int main(int argc, const char *argv[])
 
     FileStorageService fileStorageService = FileStorageService(ioService, configService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr;
-    if (configService.getFileDataStorageType() == "csv")
-    {
+    if (configService.getFileDataStorageType() == "csv") {
         fileDataStorageServicePtr = std::make_unique<CSVService>(ioService);
-    } else if (configService.getFileDataStorageType() == "json")
-    {
+    } else if (configService.getFileDataStorageType() == "json") {
         fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    } else
-    {
+    } else {
         ioService.error("File data storage type not supported.");
         return 1;
     }
@@ -86,38 +82,33 @@ int main(int argc, const char *argv[])
     EventBus bus = EventBus();
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
-    ListItemRepository listItemRepository = ListItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService = ListItemService(ioService, configService, listItemRepository, priorityService, statusService, bus);
+    ListItemRepository listItemRepository =
+        ListItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+    ListItemService listItemService =
+        ListItemService(ioService, configService, listItemRepository, priorityService, statusService, bus);
     ListRepository listRepository = ListRepository(configService, jsonFileDataStorageServicePtr.get());
     ListService listService = ListService(ioService, configService, listRepository, bus);
 
     // Checking if current list is valid:
-    if (!CommandService::isCommand(command, "commands") &&
-        !CommandService::isCommand(command, "use") &&
-        !CommandService::isCommand(command, "list") &&
-        !listService.isListExist(configService.getCurrentList())
-    ) {
+    if (!CommandService::isCommand(command, "commands") && !CommandService::isCommand(command, "use") &&
+        !CommandService::isCommand(command, "list") && !listService.isListExist(configService.getCurrentList())) {
         ioService.br();
-        ioService.error("List does not exist. Please use `todoos use {list}` to switch to a valid list.");
+        ioService.error("List does not exist. Please use `todoos use {list}` to "
+                        "switch to a valid list.");
         return 1;
     }
 
     bool autocomplete = false;
     try {
-        CLIAutocompleteService cliAutocompleteService = CLIAutocompleteService(ioService,
-                                                                               commandService,
-                                                                               command,
-                                                                               listService,
-                                                                               listItemService
-                                                                               );
+        CLIAutocompleteService cliAutocompleteService =
+            CLIAutocompleteService(ioService, commandService, command, listService, listItemService);
         autocomplete = cliAutocompleteService.getCompletion();
     } catch (const std::exception& e) {
         // Just Quit
         return 1;
     }
 
-    if (autocomplete)
-    {
+    if (autocomplete) {
         return 0;
     }
 
@@ -130,8 +121,7 @@ int main(int argc, const char *argv[])
                                              fileStorageService,
                                              listService,
                                              listItemService,
-                                             cliThemeService
-                                             );
+                                             cliThemeService);
     cliService.actions();
 
     return 0;

@@ -1,10 +1,9 @@
-#include <catch2/catch_test_macros.hpp>
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../../FileDataStorage/ConfService.h"
 #include "../../FileDataStorage/JSONService.h"
 #include "../../IOService/IOService.h"
-#include "../../FileDataStorage/ConfService.h"
-
+#include "../Mock/MockInit.h"
+#include "../Mock/MockInstallation.h"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("isNew returns true when main directory is not present", "[Installation]")
 {
