@@ -76,6 +76,14 @@ IOService::show(const std::vector<std::string>& messages)
     }
 }
 
+void
+IOService::title(const std::string& title)
+{
+    if (channel == "cli") {
+        IOCliService::print(" # " + title);
+    }
+}
+
 std::string
 IOService::ask(const std::string& message)
 {

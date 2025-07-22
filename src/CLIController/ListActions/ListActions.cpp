@@ -84,7 +84,8 @@ void
 ListActions::showList()
 {
     ThemeAbstract* theme = cliThemeService.getTheme();
-    theme->printATitle("Lists available", "");
+    ioService.br();
+    ioService.title("Lists available");
 
     std::vector<ListEntity> listItems = listService.get();
     int i = 0;
@@ -97,10 +98,7 @@ ListActions::showList()
         lines.push_back(line);
     }
 
-    // TODO: Create in theme a method to print a raw list
-    std::string title = "    NAME";
     theme->printFullLine(GRAY);
-    theme->printAListTitle({ title }, { 40 });
     theme->printAList(lines);
 }
 
@@ -207,9 +205,9 @@ ListActions::buildName(const ListEntity& listEntity)
 
     if (configService.getCurrentList() == *listEntity.getName()) {
         name += " (in use)";
-        name = StringHelpers::colorize(name, BG_GREEN);
+        name = StringHelpers::colorize(name, GREEN);
     } else if (configService.getDefaultList() == *listEntity.getName()) {
-        name = StringHelpers::colorize(name, BG_BLUE);
+        name = StringHelpers::colorize(name, BLUE);
     }
 
     return StringHelpers::adjustStringLength(name, 40);
