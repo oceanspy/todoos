@@ -30,6 +30,11 @@ CLIThemeService::getTheme()
     throw std::invalid_argument("Theme not found -- Please fix your config file. [default theme: default]");
 }
 
+ThemeAbstract*
+CLIThemeService::getLightTheme()
+{
+    return new MobileTheme(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+}
 void
 CLIThemeService::getConsoleRowMaxLengthAndThemeType()
 {

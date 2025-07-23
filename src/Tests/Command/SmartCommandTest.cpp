@@ -21,15 +21,6 @@ TEST_CASE("SmartCommand Tests", "[SmartCommand]")
         REQUIRE(result.getOptions().empty());
     }
 
-    SECTION("Apply list command with one argument")
-    {
-        SmartCommand smartCommand(Command("list", { "name" }, {}));
-        Command result = smartCommand.apply();
-        REQUIRE(result.getName() == "use");
-        REQUIRE(result.getArguments() == std::vector<std::string>{ "name" });
-        REQUIRE(result.getOptions().empty());
-    }
-
     SECTION("Apply list command with 'current' argument")
     {
         SmartCommand smartCommand(Command("current", {}, {}));

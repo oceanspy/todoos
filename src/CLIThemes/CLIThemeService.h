@@ -18,6 +18,7 @@ class CLIThemeService
     CLIThemeService adaptConsoleRowLengthWithMaxItemValueLength(const std::vector<ListItemEntity>& listItems);
     CLIThemeService substractConsoleRowLength(const int substract = 0);
     ThemeAbstract* getTheme();
+    ThemeAbstract* getLightTheme();
 
   private:
     IOService& ioService;

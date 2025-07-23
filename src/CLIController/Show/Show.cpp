@@ -27,6 +27,6 @@ Show::print(std::vector<ListItemEntity>& listItems, bool showListName, bool show
 void
 Show::printInAllLoop(std::vector<ListItemEntity>& listItems, bool showListName, bool showTitle)
 {
-    ThemeAbstract* theme = cliThemeService.substractConsoleRowLength(50).getTheme();
+    ThemeAbstract* theme = cliThemeService.substractConsoleRowLength(15).getLightTheme();
     theme->print(currentList, currentListVariant, listItems, showListName, showTitle);
 }

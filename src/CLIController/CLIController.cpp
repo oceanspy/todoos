@@ -138,7 +138,7 @@ CLIController::show()
 {
     if (commandService.hasSubCommand(command) && commandService.getSubCommand(command).getName() == "all") {
         ioService.br();
-        ioService.info("Showing all lists items ");
+        ioService.info("Showing all items of all lists");
         ioService.br();
 
         // fetch all lists
