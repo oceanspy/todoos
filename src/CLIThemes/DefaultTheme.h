@@ -12,19 +12,19 @@ class DefaultTheme : public ThemeAbstract
                  ListItemService& listItemService,
                  int consoleWidth,
                  int consoleRowMaxLength);
-    void print(std::string currentList,
-               std::string currentListVariant,
+    void print(std::string& listName,
+               std::string& listVariant,
                std::vector<ListItemEntity> listItems,
                bool showListName,
                bool showTitle) override;
-    void printMultipleList(std::string& listName,
+    void printMultipleList(std::vector<std::string>& listNames,
                            std::string& listVariant,
                            std::vector<ListItemEntity>& listItems) override;
-    void printStats() override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) override;
     void printAList(std::vector<std::string> lines) override;
-    void printListName() override;
+    void printStats(std::string& listName, std::string& listVariant) override;
+    void printListName(std::vector<std::string>& listName, std::string& listVariant) override;
     std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
     std::string buildTitle() override;
     std::string buildId(const ListItemEntity& listItemEntity) override;

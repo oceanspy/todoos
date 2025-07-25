@@ -1,4 +1,5 @@
 #include "ListService.h"
+#include <stdexcept>
 
 ListService::ListService(IOService& ioService,
                          ConfigService& configService,
@@ -113,7 +114,7 @@ ListService::isListExist(const std::string& listName)
 {
     try {
         listRepository.find(listName);
-    } catch (std::exception& e) {
+    } catch (...) {
         return false;
     }
     return true;

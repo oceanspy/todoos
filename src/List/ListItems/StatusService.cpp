@@ -50,7 +50,7 @@ StatusService::make()
                                       "4",
                                       "pending",
                                       "pending",
-                                      "🚧",
+                                      "🕛",
                                       "1",
                                       "MAGENTA",
                                       "ITALIC",

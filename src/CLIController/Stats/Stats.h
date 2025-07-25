@@ -13,7 +13,9 @@ class Stats
           ConfigService& configService,
           Command& command,
           ListItemService& listItemService,
-          CLIThemeService& cliThemeService);
+          CLIThemeService& cliThemeService,
+          std::string& listName,
+          std::string& listVariant);
     void print();
 
   private:
@@ -22,6 +24,8 @@ class Stats
     Command& command;
     ListItemService& listItemService;
     CLIThemeService& cliThemeService;
+    std::string& listName;
+    std::string& listVariant;
 };
 
 #endif // TODOOS_STATS_H

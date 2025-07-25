@@ -18,17 +18,19 @@ class ThemeAbstract
       , listItemService(listItemService)
       , consoleWidth(consoleWidth) {};
 
-    virtual void print(std::string currentList,
-                       std::string currentListVariant,
+    virtual void print(std::string& listName,
+                       std::string& listVariant,
                        std::vector<ListItemEntity> listItems,
                        bool showListName,
                        bool showTitle) = 0;
-    virtual void printMultipleList(std::string& name, std::string& variant, std::vector<ListItemEntity>& listItems) = 0;
+    virtual void printMultipleList(std::vector<std::string>& listNames,
+                                   std::string& listVariant,
+                                   std::vector<ListItemEntity>& listItems) = 0;
     virtual void printATitle(std::string titleLine1, std::string titleLine2) = 0;
     virtual void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) = 0;
     virtual void printAList(std::vector<std::string> lines) = 0;
-    virtual void printStats() = 0;
-    virtual void printListName() = 0;
+    virtual void printStats(std::string& listName, std::string& listVariant) = 0;
+    virtual void printListName(std::vector<std::string>& listName, std::string& listVariant) = 0;
     virtual std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) = 0;
     virtual std::string buildTitle() = 0;
     virtual std::string buildId(const ListItemEntity& listItemEntity) = 0;

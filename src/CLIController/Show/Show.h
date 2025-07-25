@@ -12,12 +12,15 @@ class Show
          ConfigService& configService,
          ListService& listService,
          ListItemService& listItemService,
-         CLIThemeService& cliThemeService,
-         std::string& currentList,
-         std::string& currentListVariant);
-    void print(std::vector<ListItemEntity>& listItems, bool showListName = true, bool showTitle = true);
-    void printMultipleList(std::vector<ListItemEntity>& listItems, std::string& listName, std::string& variant);
-    void printInAllLoop(std::vector<ListItemEntity>& listItems, bool showListName = true, bool showTitle = true);
+         CLIThemeService& cliThemeService);
+    void print(std::vector<ListItemEntity>& listItems,
+               std::string& listName,
+               std::string& listVariant,
+               bool showListName = true,
+               bool showTitle = true);
+    void printMultipleList(std::vector<ListItemEntity>& listItems,
+                           std::vector<std::string>& listNames,
+                           std::string& listVariant);
 
   private:
     IOService& ioService;
@@ -25,8 +28,6 @@ class Show
     ListService& listService;
     ListItemService& listItemService;
     CLIThemeService& cliThemeService;
-    std::string& currentList;
-    std::string& currentListVariant;
 };
 
 #endif // SHOW_H
