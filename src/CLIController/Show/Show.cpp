@@ -25,6 +25,13 @@ Show::print(std::vector<ListItemEntity>& listItems, bool showListName, bool show
 }
 
 void
+Show::printMultipleList(std::vector<ListItemEntity>& listItems, std::string& listName, std::string& listVariant)
+{
+    ThemeAbstract* theme = cliThemeService.adaptConsoleRowLengthWithMaxItemValueLength(listItems).getTheme();
+    theme->printMultipleList(listName, listVariant, listItems);
+}
+
+void
 Show::printInAllLoop(std::vector<ListItemEntity>& listItems, bool showListName, bool showTitle)
 {
     ThemeAbstract* theme = cliThemeService.substractConsoleRowLength(15).getLightTheme();

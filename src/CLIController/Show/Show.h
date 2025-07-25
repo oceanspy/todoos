@@ -16,6 +16,7 @@ class Show
          std::string& currentList,
          std::string& currentListVariant);
     void print(std::vector<ListItemEntity>& listItems, bool showListName = true, bool showTitle = true);
+    void printMultipleList(std::vector<ListItemEntity>& listItems, std::string& listName, std::string& variant);
     void printInAllLoop(std::vector<ListItemEntity>& listItems, bool showListName = true, bool showTitle = true);
 
   private:

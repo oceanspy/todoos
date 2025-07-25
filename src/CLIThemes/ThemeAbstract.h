@@ -23,6 +23,7 @@ class ThemeAbstract
                        std::vector<ListItemEntity> listItems,
                        bool showListName,
                        bool showTitle) = 0;
+    virtual void printMultipleList(std::string& name, std::string& variant, std::vector<ListItemEntity>& listItems) = 0;
     virtual void printATitle(std::string titleLine1, std::string titleLine2) = 0;
     virtual void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) = 0;
     virtual void printAList(std::vector<std::string> lines) = 0;
@@ -33,7 +34,7 @@ class ThemeAbstract
     virtual std::string buildId(const ListItemEntity& listItemEntity) = 0;
     virtual std::string buildStatus(const ListItemEntity& listItemEntity) = 0;
     virtual std::string buildPriority(const ListItemEntity& listItemEntity) = 0;
-    virtual std::string buildValue(const ListItemEntity& listItemEntity) = 0;
+    virtual std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset) = 0;
     virtual std::string buildDate(const ListItemEntity& listItemEntity) = 0;
     virtual void printFullLine(std::string color = GRAY) = 0;
     virtual ~ThemeAbstract() = default;

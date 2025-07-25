@@ -17,6 +17,9 @@ class DefaultTheme : public ThemeAbstract
                std::vector<ListItemEntity> listItems,
                bool showListName,
                bool showTitle) override;
+    void printMultipleList(std::string& listName,
+                           std::string& listVariant,
+                           std::vector<ListItemEntity>& listItems) override;
     void printStats() override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) override;
@@ -27,7 +30,7 @@ class DefaultTheme : public ThemeAbstract
     std::string buildId(const ListItemEntity& listItemEntity) override;
     std::string buildStatus(const ListItemEntity& listItemEntity) override;
     std::string buildPriority(const ListItemEntity& listItemEntity) override;
-    std::string buildValue(const ListItemEntity& listItemEntity) override;
+    std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset) override;
     std::string buildDate(const ListItemEntity& listItemEntity) override;
     void printFullLine(std::string color) override;
     ~DefaultTheme() override = default;

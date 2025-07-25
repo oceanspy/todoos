@@ -48,6 +48,29 @@ DefaultTheme::print(std::string currentListName,
     }
 }
 
+void
+DefaultTheme::printMultipleList(std::string& listName, std::string& listVariant, std::vector<ListItemEntity>& listItems)
+{
+    currentList = listName;
+    currentListVariant = listVariant;
+
+    printListName();
+
+    std::string title = buildTitle();
+    ioService.print(title);
+    printFullLine(GRAY);
+
+    if (listItems.empty()) {
+        ioService.print(" No items found.");
+        return;
+    }
+
+    for (const ListItemEntity& listItemEntity : listItems) {
+        std::string line = buildLine(listItemEntity, false);
+        ioService.print(line);
+    }
+}
+
 std::string
 DefaultTheme::buildTitle()
 {
@@ -68,16 +91,19 @@ DefaultTheme::buildTitle()
 std::string
 DefaultTheme::buildLine(const ListItemEntity& listItemEntity, bool hideListNameInLine)
 {
+    int listNameLeftOffset = 0;
     std::string line = "";
+
     // ID
     line += buildId(listItemEntity);
     // Priority
     line += buildPriority(listItemEntity);
     // Value
     if (!hideListNameInLine) {
+        listNameLeftOffset = 12;
         line += StringHelpers::adjustStringLength(*listItemEntity.getListName() + " ", LISTNAME_LENGTH);
     }
-    line += buildValue(listItemEntity);
+    line += buildValue(listItemEntity, listNameLeftOffset);
     // Status
     line += buildStatus(listItemEntity);
     // Date
@@ -123,10 +149,10 @@ DefaultTheme::buildPriority(const ListItemEntity& listItemEntity)
 }
 
 std::string
-DefaultTheme::buildValue(const ListItemEntity& listItemEntity)
+DefaultTheme::buildValue(const ListItemEntity& listItemEntity, const int leftOffset)
 {
     std::string value = *listItemEntity.getValue();
-    value = autoLineBreak(value, consoleRowLength, ID_LENGTH + PRIORITY_LENGTH);
+    value = autoLineBreak(value, consoleRowLength - leftOffset, ID_LENGTH + PRIORITY_LENGTH + leftOffset);
     value = StringHelpers::colorize(value, (*listItemEntity.status()).getColor());
     value = StringHelpers::colorize(value, (*listItemEntity.status()).getStyle());
     return value;

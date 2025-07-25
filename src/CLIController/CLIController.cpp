@@ -133,66 +133,134 @@ CLIController::actions()
     }
 }
 
+std::string
+CLIController::getListName()
+{
+    if (command.hasOption("list")) {
+        return command.getOption("list");
+    }
+
+    return configService.getCurrentList();
+}
+
+std::string
+CLIController::getListVariant()
+{
+    if (command.hasOption("archive")) {
+        return "archive";
+    } else if (command.hasOption("delete")) {
+        return "delete";
+    }
+
+    return configService.getCurrentListVariant();
+}
+
+void
+CLIController::filterListItemsWithOptions(std::vector<ListItemEntity>* listItems)
+{
+    if (command.hasOption("priority")) {
+        try {
+            int priority = listItemService.priority().getIdFromName(command.getOption("priority"));
+            listItemService.filterPriorityAbove(*listItems, priority);
+        } catch (std::invalid_argument& e) {
+            ioService.br();
+            ioService.error(e.what());
+            ioService.br();
+            return;
+        }
+    }
+    if (command.hasOption("status")) {
+        try {
+            int status = listItemService.status().getIdFromName(command.getOption("status"));
+            listItemService.filterStatus(*listItems, { status });
+        } catch (std::invalid_argument& e) {
+            ioService.br();
+            ioService.error(e.what());
+            ioService.br();
+            return;
+        }
+    }
+    if (command.hasOption("deadline")) {
+        try {
+            listItemService.filterDeadlineBefore(*listItems,
+                                                 DateHelpers::relativeDateToTimestamp(command.getOption("deadline")));
+            listItemService.filterStatus(*listItems, { 0, 1, 2 });
+        } catch (std::invalid_argument& e) {
+            ioService.br();
+            ioService.error(e.what());
+            ioService.br();
+            return;
+        }
+    }
+}
+
 void
 CLIController::show()
 {
     if (commandService.hasSubCommand(command) && commandService.getSubCommand(command).getName() == "all") {
-        ioService.br();
-        ioService.info("Showing all items of all lists");
-        ioService.br();
-
         // fetch all lists
+        std::string allListName = "All Lists";
+        std::string listVariant = getListVariant();
+
+        std::vector<ListItemEntity> allListItems = {};
+
         std::vector<ListEntity> lists = listService.get();
         for (const ListEntity& list : lists) {
             std::string listName = *list.getName();
-            std::string listVariant = "default";
 
-            Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
+            std::vector<ListItemEntity> listItems =
+                listItemService.load(*list.getName()).loadVariant(listVariant).get();
+            filterListItemsWithOptions(&listItems);
 
-            std::vector<ListItemEntity> listItems = listItemService.load(*list.getName()).loadVariant("default").get();
-
-            if (command.hasOption("priority")) {
-                try {
-                    int priority = listItemService.priority().getIdFromName(command.getOption("priority"));
-                    listItemService.filterPriorityAbove(listItems, priority);
-                } catch (std::invalid_argument& e) {
-                    ioService.br();
-                    ioService.error(e.what());
-                    ioService.br();
-                    return;
-                }
+            for (auto listItem : listItems) {
+                allListItems.push_back(listItem);
             }
-            if (command.hasOption("status")) {
-                try {
-                    int status = listItemService.status().getIdFromName(command.getOption("status"));
-                    listItemService.filterStatus(listItems, { status });
-                } catch (std::invalid_argument& e) {
-                    ioService.br();
-                    ioService.error(e.what());
-                    ioService.br();
-                    return;
-                }
-            }
-            if (command.hasOption("deadline")) {
-                try {
-                    listItemService.filterDeadlineBefore(
-                        listItems, DateHelpers::relativeDateToTimestamp(command.getOption("deadline")));
-                    listItemService.filterStatus(listItems, { 0, 1, 2 });
-                } catch (std::invalid_argument& e) {
-                    ioService.br();
-                    ioService.error(e.what());
-                    ioService.br();
-                    return;
-                }
+        }
+
+        Show show(ioService, configService, listService, listItemService, cliThemeService, allListName, listVariant);
+        try {
+            show.printMultipleList(allListItems, allListName, listVariant);
+        } catch (std::exception& e) {
+            ioService.br();
+            ioService.error(e.what());
+            ioService.br();
+        }
+
+        return;
+    }
+
+    if (commandService.hasSubCommand(command) && command.countArguments() > 1) {
+        std::string allListName = "";
+        std::string listVariant = getListVariant();
+
+        int listCount = 0;
+        std::vector<ListItemEntity> allListItems = {};
+
+        for (std::string listName : command.getArguments()) {
+            listCount++;
+            if (!listService.isListExist(listName)) {
+                ioService.error("List " + listName + " does not exists.");
+                help.commandNotFound();
+                return;
             }
 
-            try {
-                show.printInAllLoop(listItems, false, false);
-            } catch (std::exception& e) {
-                ioService.br();
-                ioService.error(e.what());
-                ioService.br();
+            allListName = allListName + " " + listName;
+            std::vector<ListItemEntity> listItems = listItemService.load(listName).loadVariant(listVariant).get();
+            filterListItemsWithOptions(&listItems);
+
+            for (auto listItem : listItems) {
+                allListItems.push_back(listItem);
             }
+        }
+
+        Show show(ioService, configService, listService, listItemService, cliThemeService, allListName, listVariant);
+
+        try {
+            show.printMultipleList(allListItems, allListName, listVariant);
+        } catch (std::exception& e) {
+            ioService.br();
+            ioService.error(e.what());
+            ioService.br();
         }
 
         return;
@@ -204,102 +272,6 @@ CLIController::show()
     } else if (command.hasOption("version")) {
         ioService.message(Help::getVersion());
         return;
-    } else if (command.hasOption("archive")) {
-        Show show(
-            ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
-
-        std::vector<ListItemEntity> listItems = listItemService.loadVariant("archive").get();
-        if (command.hasOption("priority")) {
-            try {
-                int priority = listItemService.priority().getIdFromName(command.getOption("priority"));
-                listItemService.filterPriorityAbove(listItems, priority);
-            } catch (std::invalid_argument& e) {
-                ioService.br();
-                ioService.error(e.what());
-                ioService.br();
-                return;
-            }
-        }
-        if (command.hasOption("status")) {
-            try {
-                int status = listItemService.status().getIdFromName(command.getOption("status"));
-                listItemService.filterStatus(listItems, { status });
-            } catch (std::invalid_argument& e) {
-                ioService.br();
-                ioService.error(e.what());
-                ioService.br();
-                return;
-            }
-        }
-        if (command.hasOption("deadline")) {
-            try {
-                listItemService.filterDeadlineBefore(
-                    listItems, DateHelpers::relativeDateToTimestamp(command.getOption("deadline")));
-                listItemService.filterStatus(listItems, { 0, 1, 2 });
-            } catch (std::invalid_argument& e) {
-                ioService.br();
-                ioService.error(e.what());
-                ioService.br();
-                return;
-            }
-        }
-
-        try {
-            show.print(listItems);
-        } catch (std::exception& e) {
-            ioService.br();
-            ioService.error(e.what());
-            ioService.br();
-        }
-        return;
-    } else if (command.hasOption("delete")) {
-        Show show(
-            ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
-
-        std::vector<ListItemEntity> listItems = listItemService.loadVariant("delete").get();
-        if (command.hasOption("priority")) {
-            try {
-                int priority = listItemService.priority().getIdFromName(command.getOption("priority"));
-                listItemService.filterPriorityAbove(listItems, priority);
-            } catch (std::invalid_argument& e) {
-                ioService.br();
-                ioService.error(e.what());
-                ioService.br();
-                return;
-            }
-        }
-        if (command.hasOption("status")) {
-            try {
-                int status = listItemService.status().getIdFromName(command.getOption("status"));
-                listItemService.filterStatus(listItems, { status });
-            } catch (std::invalid_argument& e) {
-                ioService.br();
-                ioService.error(e.what());
-                ioService.br();
-                return;
-            }
-        }
-        if (command.hasOption("deadline")) {
-            try {
-                listItemService.filterDeadlineBefore(
-                    listItems, DateHelpers::relativeDateToTimestamp(command.getOption("deadline")));
-                listItemService.filterStatus(listItems, { 0, 1, 2 });
-            } catch (std::invalid_argument& e) {
-                ioService.br();
-                ioService.error(e.what());
-                ioService.br();
-                return;
-            }
-        }
-
-        try {
-            show.print(listItems);
-        } catch (std::exception& e) {
-            ioService.br();
-            ioService.error(e.what());
-            ioService.br();
-        }
-        return;
     } else if (command.hasOption("config")) {
         Config config(ioService, command, commandService, configService, listService);
 
@@ -307,43 +279,12 @@ CLIController::show()
         return;
     }
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
-    std::vector<ListItemEntity> listItems = listItemService.get();
-    if (command.hasOption("priority")) {
-        try {
-            int priority = listItemService.priority().getIdFromName(command.getOption("priority"));
-            listItemService.filterPriorityAbove(listItems, priority);
-        } catch (std::invalid_argument& e) {
-            ioService.br();
-            ioService.error(e.what());
-            ioService.br();
-            return;
-        }
-    }
-    if (command.hasOption("status")) {
-        try {
-            int status = listItemService.status().getIdFromName(command.getOption("status"));
-            listItemService.filterStatus(listItems, { status });
-        } catch (std::invalid_argument& e) {
-            ioService.br();
-            ioService.error(e.what());
-            ioService.br();
-            return;
-        }
-    }
-    if (command.hasOption("deadline")) {
-        try {
-            listItemService.filterDeadlineBefore(listItems,
-                                                 DateHelpers::relativeDateToTimestamp(command.getOption("deadline")));
-            listItemService.filterStatus(listItems, { 0, 1, 2 });
-        } catch (std::invalid_argument& e) {
-            ioService.br();
-            ioService.error(e.what());
-            ioService.br();
-            return;
-        }
-    }
+    std::vector<ListItemEntity> listItems = listItemService.load(listName).loadVariant(listVariant).get();
+    filterListItemsWithOptions(&listItems);
 
     try {
         show.print(listItems);
@@ -360,7 +301,9 @@ CLIController::listItemActions()
     ListItemActions listItemActions(ioService, command, commandService, listItemService);
     listItemActions.make();
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::vector<ListItemEntity> listItems = listItemService.get();
     try {
@@ -375,7 +318,9 @@ CLIController::listItemActions()
 void
 CLIController::find()
 {
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::string stringSearch;
     for (const std::string& argument : command.getArguments()) {
@@ -440,7 +385,9 @@ CLIController::priority(std::string action)
         priority.decrease();
     }
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::vector<ListItemEntity> listItems = listItemService.get();
     try {
@@ -462,8 +409,9 @@ CLIController::reset()
         Status status(ioService, command, listItemService);
         status.reset();
 
-        Show show(
-            ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+        std::string listName = getListName();
+        std::string listVariant = getListVariant();
+        Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
         std::vector<ListItemEntity> listItems = listItemService.get();
         try {
@@ -490,7 +438,9 @@ CLIController::status(int statusNumber)
         status.markAs(statusNumber);
     }
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::vector<ListItemEntity> listItems = listItemService.get();
     try {
@@ -508,7 +458,9 @@ CLIController::remove()
     Remove remove(ioService, command, listItemService);
     remove.remove();
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::vector<ListItemEntity> listItems = listItemService.get();
     try {
@@ -526,7 +478,9 @@ CLIController::archive()
     Remove remove(ioService, command, listItemService);
     remove.archive();
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::vector<ListItemEntity> listItems = listItemService.get();
     try {
@@ -544,7 +498,9 @@ CLIController::restore()
     Remove remove(ioService, command, listItemService);
     remove.restore();
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::vector<ListItemEntity> listItems = listItemService.get();
     try {
@@ -583,10 +539,10 @@ CLIController::use()
                      cliThemeService);
 
     list.use();
-    currentList = configService.getCurrentList();
-    currentListVariant = "default";
 
-    Show show(ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+    std::string listName = getListName();
+    std::string listVariant = getListVariant();
+    Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
     std::vector<ListItemEntity> listItems = listItemService.load(configService.getCurrentList()).get();
 
@@ -606,9 +562,10 @@ CLIController::move()
 
     std::string newListName = move.make();
     if (!newListName.empty()) {
-        std::string listVariant = "default";
 
-        Show show(ioService, configService, listService, listItemService, cliThemeService, newListName, listVariant);
+        std::string listName = getListName();
+        std::string listVariant = getListVariant();
+        Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
         std::vector<ListItemEntity> listItems = listItemService.load(newListName).get();
         try {
@@ -657,8 +614,9 @@ CLIController::clean()
         ioService.success("List cleaned.");
         ioService.br();
 
-        Show show(
-            ioService, configService, listService, listItemService, cliThemeService, currentList, currentListVariant);
+        std::string listName = getListName();
+        std::string listVariant = getListVariant();
+        Show show(ioService, configService, listService, listItemService, cliThemeService, listName, listVariant);
 
         std::vector<ListItemEntity> listItems = listItemService.get();
 

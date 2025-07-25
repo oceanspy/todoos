@@ -40,8 +40,9 @@ class CLIController
     ListService& listService;
     ListItemService& listItemService;
     CLIThemeService& cliThemeService;
-    std::string currentList = configService.getCurrentList();
-    std::string currentListVariant = configService.getCurrentListVariant();
+    std::string getListName();
+    std::string getListVariant();
+    void filterListItemsWithOptions(std::vector<ListItemEntity>* listItems);
     void show();
     void listItemActions();
     void find();

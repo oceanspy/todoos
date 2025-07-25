@@ -17,6 +17,7 @@ class MobileTheme : public ThemeAbstract
                std::vector<ListItemEntity> listItems,
                bool showListName,
                bool showTitle) override;
+    void printMultipleList(std::string& name, std::string& variant, std::vector<ListItemEntity>& listItems) override;
     void printStats() override;
     void printListName() override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
@@ -27,7 +28,7 @@ class MobileTheme : public ThemeAbstract
     std::string buildId(const ListItemEntity& listItemEntity) override;
     std::string buildStatus(const ListItemEntity& listItemEntity) override;
     std::string buildPriority(const ListItemEntity& listItemEntity) override;
-    std::string buildValue(const ListItemEntity& listItemEntity) override;
+    std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset) override;
     std::string buildDate(const ListItemEntity& listItemEntity) override;
     void printFullLine(std::string color) override;
     ~MobileTheme() override = default;
