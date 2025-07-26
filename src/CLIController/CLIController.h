@@ -41,8 +41,6 @@ class CLIController
     ListService& listService;
     ListItemService& listItemService;
     CLIThemeService& cliThemeService;
-    std::string getListName();
-    std::string getListVariant();
     void filterListItemsWithOptions(std::vector<ListItemEntity>* listItems);
     void show();
     void listItemActions();

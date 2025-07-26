@@ -86,8 +86,8 @@ CLIController::actions()
         case CommandList::PAUSE:
             status(StatusService::PAUSED);
             return;
-        case CommandList::PENDING:
-            status(StatusService::PENDING);
+        case CommandList::BLOCKED:
+            status(StatusService::BLOCKED);
             return;
         case CommandList::COMPLETE:
             status(StatusService::COMPLETED);
@@ -133,18 +133,6 @@ CLIController::actions()
     }
 }
 
-std::string
-CLIController::getListName()
-{
-    return configService.getUsedListNameStr();
-}
-
-std::string
-CLIController::getListVariant()
-{
-    return configService.getUsedListVariantStr();
-}
-
 void
 CLIController::filterListItemsWithOptions(std::vector<ListItemEntity>* listItems)
 {
@@ -188,15 +176,12 @@ void
 CLIController::show()
 {
     if (commandService.hasSubCommand(command) && commandService.getSubCommand(command).getName() == "all") {
-        // fetch all lists
-        std::string listVariant = getListVariant();
-
         std::vector<ListName> listNames = {};
         std::vector<ListItemEntity> allListItems = {};
 
         std::vector<ListEntity> lists = listService.get();
         for (const ListEntity& list : lists) {
-            ListName listName = listService.createListName(*list.getName(), getListVariant());
+            ListName listName = listService.createListName(*list.getName(), configService.getUsedListVariantStr());
             listNames.push_back(listName);
 
             std::vector<ListItemEntity> listItems = listItemService.get(listName);
@@ -220,8 +205,6 @@ CLIController::show()
     }
 
     if (commandService.hasSubCommand(command) && command.countArguments() > 1) {
-        std::string listVariant = getListVariant();
-
         std::vector<ListName> listNames = {};
         std::vector<ListItemEntity> allListItems = {};
 
@@ -231,7 +214,7 @@ CLIController::show()
                 help.commandNotFound();
                 return;
             }
-            ListName listName = listService.createListName(listNameStr, getListVariant());
+            ListName listName = listService.createListName(listNameStr, configService.getUsedListVariantStr());
             listNames.push_back(listName);
 
             std::vector<ListItemEntity> listItems = listItemService.get(listName);
@@ -268,7 +251,7 @@ CLIController::show()
         return;
     }
 
-    std::string listNameStr = getListName();
+    std::string listNameStr = configService.getUsedListNameStr();
     if (commandService.hasSubCommand(command) && command.countArguments() == 1) {
         listNameStr = commandService.getSubCommand(command).getName();
         if (!listService.isListExist(listNameStr)) {
@@ -277,7 +260,7 @@ CLIController::show()
             return;
         }
     }
-    ListName listName = listService.createListName(listNameStr, getListVariant());
+    ListName listName = listService.createListName(listNameStr, configService.getUsedListVariantStr());
     Show show(ioService, listService, listItemService, cliThemeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
@@ -295,7 +278,8 @@ CLIController::show()
 void
 CLIController::listItemActions()
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     ListItemActions listItemActions(ioService, command, commandService, listItemService);
     listItemActions.make(listName);
 
@@ -314,7 +298,8 @@ CLIController::listItemActions()
 void
 CLIController::find()
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");
     Show show(ioService, listService, listItemService, cliThemeService);
@@ -372,7 +357,8 @@ CLIController::find()
 void
 CLIController::priority(std::string action)
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     Priority priority(ioService, command, listItemService);
 
     if (action == "set") {
@@ -401,7 +387,8 @@ CLIController::reset()
     std::string answer = ioService.ask("Are you sure you want to reset item(s) to brand new and not mark them "
                                        "as to-do? (y/n) ");
 
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     if (answer == "y" || answer == "yes") {
         Status status(ioService, command, listItemService);
         status.reset(listName);
@@ -426,7 +413,8 @@ CLIController::reset()
 void
 CLIController::status(int statusNumber)
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     Status status(ioService, command, listItemService);
     if (statusNumber == -1) {
         status.set(listName);
@@ -449,7 +437,8 @@ CLIController::status(int statusNumber)
 void
 CLIController::remove()
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     Remove remove(ioService, command, listItemService);
     remove.remove(listName);
 
@@ -468,7 +457,8 @@ CLIController::remove()
 void
 CLIController::archive()
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     Remove remove(ioService, command, listItemService);
     remove.archive(listName);
 
@@ -487,7 +477,8 @@ CLIController::archive()
 void
 CLIController::restore()
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     Remove remove(ioService, command, listItemService);
     remove.restore(listName);
 
@@ -531,7 +522,8 @@ CLIController::use()
 
     list.use();
 
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     Show show(ioService, listService, listItemService, cliThemeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
@@ -550,11 +542,12 @@ CLIController::move()
 {
     Move move(ioService, command, commandService, listService, listItemService);
 
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     std::string newListNameStr = move.make(listName);
     if (!newListNameStr.empty()) {
 
-        ListName newListName = listService.createListName(newListNameStr, getListVariant());
+        ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());
         Show show(ioService, listService, listItemService, cliThemeService);
 
         std::vector<ListItemEntity> listItems = listItemService.get(newListName);
@@ -578,7 +571,8 @@ CLIController::empty()
     std::string answer = ioService.ask(message);
 
     if (answer == "yes") {
-        ListName listName = listService.createListName(getListName(), getListVariant());
+        ListName listName =
+            listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
         listItemService.archiveAll(listName);
         ioService.br();
         ioService.success("List cleared.");
@@ -600,7 +594,8 @@ CLIController::clean()
     std::string answer = ioService.ask(message);
 
     if (answer == "yes") {
-        ListName listName = listService.createListName(getListName(), getListVariant());
+        ListName listName =
+            listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
         listItemService.archiveFinishedItems(listName);
         ioService.br();
         ioService.success("List cleaned.");
@@ -627,7 +622,8 @@ CLIController::clean()
 void
 CLIController::stats()
 {
-    ListName listName = listService.createListName(getListName(), getListVariant());
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     Stats stats(ioService, configService, command, listItemService, cliThemeService, listName);
 
     stats.print();

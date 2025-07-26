@@ -218,7 +218,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     }
     titleListName.pop_back();
 
-    std::string totalEmoji = "📄 ";
+    std::string totalEmoji = "📈 ";
     int totalCount = 0;
     for (auto listName : listNames) {
         totalCount += listItemService.count(listName);
@@ -227,7 +227,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     int totalCharLength = 3 + static_cast<int>(totalStr.length());
     totalStr = totalEmoji + totalStr;
 
-    std::string todoEmoji = " ↔ ⏳ ";
+    std::string todoEmoji = " → ⏳ ";
     int todoCount = 0;
     for (auto listName : listNames) {
         todoCount += listItemService.countWithStatus(listName, { StatusService::TO_DO });
@@ -255,7 +255,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     int underReviewCharLength = 4 + static_cast<int>(underReviewStr.length());
     underReviewStr = underReviewEmoji + underReviewStr;
 
-    std::string pauseEmoji = " 🚧 ";
+    std::string pauseEmoji = " 💤 ";
     int pauseCount = 0;
     for (auto listName : listNames) {
         pauseCount += listItemService.countWithStatus(listName, { StatusService::PAUSED });
@@ -264,68 +264,52 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     int pauseCharLength = 4 + static_cast<int>(pauseStr.length());
     pauseStr = pauseEmoji + pauseStr;
 
-    std::string pendingEmoji = " 🕛 ";
-    int pendingCount = 0;
+    std::string blockedEmoji = " 🚫 ";
+    int blockedCount = 0;
     for (auto listName : listNames) {
-        pendingCount += listItemService.countWithStatus(listName, { StatusService::PENDING });
+        blockedCount += listItemService.countWithStatus(listName, { StatusService::BLOCKED });
     }
-    std::string pendingStr = std::to_string(pendingCount);
-    int pendingCharLength = 4 + static_cast<int>(pendingStr.length());
-    pendingStr = pendingEmoji + pendingStr;
-
-    std::string completedEmoji = " ✅ ";
-    int completedCount = 0;
-    for (auto listName : listNames) {
-        completedCount += listItemService.countWithStatus(listName, { StatusService::COMPLETED });
-    }
-    std::string completedStr = std::to_string(completedCount);
-    int completedCharLength = 4 + static_cast<int>(completedStr.length());
-    completedStr = completedEmoji + completedStr;
-
-    std::string cancelEmoji = " 🪧 ";
-    int cancelCount = 0;
-    for (auto listName : listNames) {
-        cancelCount += listItemService.countWithStatus(listName, { StatusService::CANCELLED });
-    }
-    std::string cancelStr = std::to_string(cancelCount);
-    int cancelCharLength = 4 + static_cast<int>(cancelStr.length());
-    cancelStr = cancelEmoji + cancelStr;
+    std::string blockedStr = std::to_string(blockedCount);
+    int blockedCharLength = 4 + static_cast<int>(blockedStr.length());
+    blockedStr = blockedEmoji + blockedStr;
 
     std::string archivedEmoji = " ↔ 🚀 ";
     int archivedCount = 0;
     for (auto listName : listNames) {
         ListName listNameArchive = ListName::createVariant(listName, "archive");
+        archivedCount += listItemService.countWithStatus(listName, { StatusService::COMPLETED });
         archivedCount += listItemService.countWithStatus(listNameArchive, { StatusService::COMPLETED });
     }
     std::string archivedStr = std::to_string(archivedCount);
     int archivedCharLength = 6 + static_cast<int>(archivedStr.length());
     archivedStr = archivedEmoji + archivedStr;
 
-    std::string cancelledArchivedEmoji = " 🚫 ";
+    std::string cancelledArchivedEmoji = " ✖️ ";
     int cancelledCount = 0;
     for (auto listName : listNames) {
         ListName listNameArchive = ListName::createVariant(listName, "archive");
+        cancelledCount += listItemService.countWithStatus(listName, { StatusService::CANCELLED });
         cancelledCount += listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED });
     }
     std::string cancelledStr = std::to_string(cancelledCount);
     int cancelledArchivedCharLength = 4 + static_cast<int>(cancelledStr.length());
     cancelledStr = cancelledArchivedEmoji + cancelledStr;
 
-    std::string deletedEmoji = " ↔ 🧹 ";
+    std::string deletedEmoji = " 🧹 ";
     int deleteCount = 0;
     for (auto listName : listNames) {
         ListName listNameDelete = ListName::createVariant(listName, "delete");
         deleteCount += listItemService.count(listNameDelete);
     }
     std::string deleteStr = std::to_string(deleteCount);
-    int deletedCharLength = 6 + static_cast<int>(deleteStr.length());
+    int deletedCharLength = 4 + static_cast<int>(deleteStr.length());
     deleteStr = deletedEmoji + deleteStr;
 
-    std::string statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + pendingStr +
-                                   completedStr + cancelStr + archivedStr + cancelledStr + deleteStr;
-    int statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength + pendingCharLength +
-                            underReviewCharLength + completedCharLength + cancelCharLength + archivedCharLength +
-                            cancelledArchivedCharLength + deletedCharLength;
+    std::string statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + blockedStr +
+                                   archivedStr + cancelledStr + deleteStr;
+    int statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength + blockedCharLength +
+                            underReviewCharLength + archivedCharLength + cancelledArchivedCharLength +
+                            deletedCharLength;
 
     std::string criticalEmoji = StringHelpers::colorize("■ ", WHITE);
     int criticalCount = 0;
@@ -336,7 +320,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     int criticalCharLength = 2 + static_cast<int>(criticalStr.length());
     criticalStr = criticalEmoji + criticalStr;
 
-    std::string urgentEmoji = StringHelpers::colorize("▲ ", RED);
+    std::string urgentEmoji = StringHelpers::colorize("● ", RED);
     int urgentCount = 0;
     for (auto listName : listNames) {
         urgentCount += listItemService.countWithPriority(listName, { PriorityService::URGENT });
@@ -345,7 +329,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     int urgentCharLength = 2 + static_cast<int>(urgentStr.length());
     urgentStr = urgentEmoji + urgentStr;
 
-    std::string highEmoji = StringHelpers::colorize("▶ ", ORANGE);
+    std::string highEmoji = StringHelpers::colorize("● ", ORANGE);
     int highCount = 0;
     for (auto listName : listNames) {
         highCount += listItemService.countWithPriority(listName, { PriorityService::HIGH });
@@ -354,7 +338,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     int highCharLength = 2 + static_cast<int>(highStr.length());
     highStr = highEmoji + highStr;
 
-    std::string mediumEmoji = StringHelpers::colorize("▼ ", LIGHT_GREEN);
+    std::string mediumEmoji = StringHelpers::colorize("● ", LIGHT_GREEN);
     int mediumCount = 0;
     for (auto listName : listNames) {
         mediumCount += listItemService.countWithPriority(listName, { PriorityService::MEDIUM });
@@ -363,7 +347,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
     int mediumCharLength = 2 + static_cast<int>(mediumStr.length());
     mediumStr = mediumEmoji + mediumStr;
 
-    std::string lowEmoji = StringHelpers::colorize("▽ ", GREEN);
+    std::string lowEmoji = StringHelpers::colorize("◌ ", GREEN);
     int lowCount = 0;
     for (auto listName : listNames) {
         lowCount += listItemService.countWithPriority(listName, { PriorityService::LOW });
@@ -382,17 +366,15 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
         separator = listTitleLength - (statusCountLength + priorityCountLength);
     }
     if (separator <= 10) {
-        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + completedStr + cancelStr +
-                           archivedStr + deleteStr;
+        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + archivedStr + deleteStr;
         statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength +
-                            underReviewCharLength + completedCharLength + cancelCharLength + archivedCharLength +
-                            deletedCharLength;
+                            underReviewCharLength + archivedCharLength + deletedCharLength;
         separator = listTitleLength - (statusCountLength + priorityCountLength);
     }
     if (separator <= 10) {
-        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + completedStr + cancelStr;
-        statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength +
-                            underReviewCharLength + completedCharLength + cancelCharLength;
+        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr;
+        statusCountLength =
+            totalCharLength + todoCharLength + startedCharLength + pauseCharLength + underReviewCharLength;
         separator = listTitleLength - (statusCountLength + priorityCountLength);
     }
     if (separator <= 10) {
