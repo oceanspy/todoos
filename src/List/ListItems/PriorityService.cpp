@@ -11,10 +11,10 @@ PriorityService::make()
 {
     // Note: Everything is string because we suppose that we are getting the data from storage
     // ID, position, name, icon, color
-    priorities = { PriorityEntity::setFromVector({ std::to_string(LOW), "0", "low", "▽", "GREEN" }),
-                   PriorityEntity::setFromVector({ std::to_string(MEDIUM), "1", "medium", "▼", "LIGHT_GREEN" }),
-                   PriorityEntity::setFromVector({ std::to_string(HIGH), "2", "high", "▶", "ORANGE" }),
-                   PriorityEntity::setFromVector({ std::to_string(URGENT), "3", "urgent", "▲", "RED" }),
+    priorities = { PriorityEntity::setFromVector({ std::to_string(LOW), "0", "low", "◌", "GREEN" }),
+                   PriorityEntity::setFromVector({ std::to_string(MEDIUM), "1", "medium", "●", "LIGHT_GREEN" }),
+                   PriorityEntity::setFromVector({ std::to_string(HIGH), "2", "high", "●", "ORANGE" }),
+                   PriorityEntity::setFromVector({ std::to_string(URGENT), "3", "urgent", "●", "RED" }),
                    PriorityEntity::setFromVector({ std::to_string(CRITICAL), "4", "critical", "■", "WHITE" }) };
 }
 
@@ -39,7 +39,7 @@ PriorityService::getPriorityFromName(const std::string& name)
         }
     }
 
-    return PriorityEntity::setFromVector({ std::to_string(-1), "-1", "invalid", "▽", "WHITE" });
+    return PriorityEntity::setFromVector({ std::to_string(-1), "-1", "invalid", "◌", "WHITE" });
 }
 
 std::vector<std::string>

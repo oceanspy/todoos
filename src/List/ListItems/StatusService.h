@@ -17,7 +17,7 @@ class StatusService
         STARTED = 1,
         REVIEWING = 2,
         PAUSED = 3,
-        PENDING = 4,
+        BLOCKED = 4,
         TENTATIVELY_CLOSED = 5,
         COMPLETED = 6,
         CANCELLED = 7

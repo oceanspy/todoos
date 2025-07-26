@@ -86,8 +86,8 @@ CLIController::actions()
         case CommandList::PAUSE:
             status(StatusService::PAUSED);
             return;
-        case CommandList::PENDING:
-            status(StatusService::PENDING);
+        case CommandList::BLOCKED:
+            status(StatusService::BLOCKED);
             return;
         case CommandList::COMPLETE:
             status(StatusService::COMPLETED);
