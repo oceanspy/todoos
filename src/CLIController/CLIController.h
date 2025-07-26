@@ -12,6 +12,7 @@
 #include "../Help/Help.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
+#include "../List/ListName.h"
 #include "../List/ListService.h"
 
 class CLIController

@@ -1,20 +1,19 @@
+#include "src/CLIAutocomplete/CLIAutocompleteService.h"
 #include "src/CLIController/CLIController.h"
 #include "src/Command/Command.h"
+#include "src/Command/CommandService.h"
 #include "src/Command/CommandValidation.h"
 #include "src/Config/ConfigService.h"
+#include "src/FileDataStorage/CSVService.h"
+#include "src/FileDataStorage/ConfService.h"
+#include "src/FileDataStorage/JSONService.h"
 #include "src/FileDataStorageRepositories/ConfigRepository.h"
+#include "src/FileDataStorageRepositories/ListItemRepository.h"
+#include "src/FileDataStorageRepositories/ListRepository.h"
 #include "src/Help/Help.h"
 #include "src/IOService/IOService.h"
 #include "src/Init/Init.h"
 #include "src/Init/Installation.h"
-
-#include "src/CLIAutocomplete/CLIAutocompleteService.h"
-#include "src/Command/CommandService.h"
-#include "src/FileDataStorage/CSVService.h"
-#include "src/FileDataStorage/ConfService.h"
-#include "src/FileDataStorage/JSONService.h"
-#include "src/FileDataStorageRepositories/ListItemRepository.h"
-#include "src/FileDataStorageRepositories/ListRepository.h"
 #include "src/List/ListItemService.h"
 #include "src/List/ListService.h"
 
@@ -85,18 +84,9 @@ main(int argc, const char* argv[])
     ListItemRepository listItemRepository =
         ListItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     ListItemService listItemService =
-        ListItemService(ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService(ioService, configService, listItemRepository, priorityService, statusService);
     ListRepository listRepository = ListRepository(configService, jsonFileDataStorageServicePtr.get());
     ListService listService = ListService(ioService, configService, listRepository, bus);
-
-    // Checking if current list is valid:
-    if (!CommandService::isCommand(command, "commands") && !CommandService::isCommand(command, "use") &&
-        !CommandService::isCommand(command, "list") && !listService.isListExist(configService.getCurrentList())) {
-        ioService.br();
-        ioService.error("List does not exist. Please use `todoos use {list}` to "
-                        "switch to a valid list.");
-        return 1;
-    }
 
     bool autocomplete = false;
     try {
@@ -124,6 +114,9 @@ main(int argc, const char* argv[])
                                              cliThemeService);
     try {
         cliService.actions();
+    } catch (ListNotFoundException& e) {
+        help.listNotFound(e.getName());
+        return 1;
     } catch (std::exception& e) {
         help.commandNotFound();
         return 1;

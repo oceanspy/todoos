@@ -15,7 +15,7 @@ class ListItemActions
                     Command& command,
                     CommandService& commandService,
                     ListItemService& listItemService);
-    void make();
+    void make(ListName& listName);
 
   private:
     IOService& ioService;

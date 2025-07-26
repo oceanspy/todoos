@@ -1,12 +1,16 @@
 #ifndef TODOOS_THEMEABSTRACT_H
 #define TODOOS_THEMEABSTRACT_H
 
+#include <iterator>
+#include <sstream>
 #include <utility>
+#include <vector>
 
 #include "../Helpers/DateHelpers.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
+#include "../List/ListName.h"
 #include "../List/ListService.h"
 
 class ThemeAbstract
@@ -18,19 +22,16 @@ class ThemeAbstract
       , listItemService(listItemService)
       , consoleWidth(consoleWidth) {};
 
-    virtual void print(std::string& listName,
-                       std::string& listVariant,
+    virtual void print(ListName& listName,
                        std::vector<ListItemEntity> listItems,
                        bool showListName,
                        bool showTitle) = 0;
-    virtual void printMultipleList(std::vector<std::string>& listNames,
-                                   std::string& listVariant,
-                                   std::vector<ListItemEntity>& listItems) = 0;
+    virtual void printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems) = 0;
     virtual void printATitle(std::string titleLine1, std::string titleLine2) = 0;
     virtual void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) = 0;
     virtual void printAList(std::vector<std::string> lines) = 0;
-    virtual void printStats(std::string& listName, std::string& listVariant) = 0;
-    virtual void printListName(std::vector<std::string>& listName, std::string& listVariant) = 0;
+    virtual void printStats(ListName& listName) = 0;
+    virtual void printListName(std::vector<ListName>& listName) = 0;
     virtual std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) = 0;
     virtual std::string buildTitle() = 0;
     virtual std::string buildId(const ListItemEntity& listItemEntity) = 0;

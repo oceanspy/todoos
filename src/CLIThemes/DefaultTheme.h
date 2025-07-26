@@ -12,19 +12,13 @@ class DefaultTheme : public ThemeAbstract
                  ListItemService& listItemService,
                  int consoleWidth,
                  int consoleRowMaxLength);
-    void print(std::string& listName,
-               std::string& listVariant,
-               std::vector<ListItemEntity> listItems,
-               bool showListName,
-               bool showTitle) override;
-    void printMultipleList(std::vector<std::string>& listNames,
-                           std::string& listVariant,
-                           std::vector<ListItemEntity>& listItems) override;
+    void print(ListName& listName, std::vector<ListItemEntity> listItems, bool showListName, bool showTitle) override;
+    void printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems) override;
+    void printStats(ListName& listName) override;
+    void printListName(std::vector<ListName>& listName) override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) override;
     void printAList(std::vector<std::string> lines) override;
-    void printStats(std::string& listName, std::string& listVariant) override;
-    void printListName(std::vector<std::string>& listName, std::string& listVariant) override;
     std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
     std::string buildTitle() override;
     std::string buildId(const ListItemEntity& listItemEntity) override;
@@ -34,7 +28,7 @@ class DefaultTheme : public ThemeAbstract
     std::string buildDate(const ListItemEntity& listItemEntity) override;
     void printFullLine(std::string color) override;
     ~DefaultTheme() override = default;
-    void renderListStatLine(time_t from, time_t to, std::string name);
+    void renderListStatLine(ListName& listName, time_t from, time_t to, std::string name);
 
   private:
     static const int ID_LENGTH = 6;

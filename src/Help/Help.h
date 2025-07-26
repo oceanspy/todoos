@@ -10,6 +10,7 @@ class Help
     void show();
     void commandNotFound();
     void commandOptionNotSupported();
+    void listNotFound(std::string list);
     static std::string getVersion();
 
   private:

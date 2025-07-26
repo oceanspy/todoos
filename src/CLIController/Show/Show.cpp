@@ -1,12 +1,10 @@
 #include "Show.h"
 
 Show::Show(IOService& ioService,
-           ConfigService& configService,
            ListService& listService,
            ListItemService& listItemService,
            CLIThemeService& cliThemeService)
   : ioService(ioService)
-  , configService(configService)
   , listService(listService)
   , listItemService(listItemService)
   , cliThemeService(cliThemeService)
@@ -14,21 +12,15 @@ Show::Show(IOService& ioService,
 }
 
 void
-Show::print(std::vector<ListItemEntity>& listItems,
-            std::string& listName,
-            std::string& listVariant,
-            bool showListName,
-            bool showTitle)
+Show::print(std::vector<ListItemEntity>& listItems, ListName& listName, bool showListName, bool showTitle)
 {
     ThemeAbstract* theme = cliThemeService.adaptConsoleRowLengthWithMaxItemValueLength(listItems).getTheme();
-    theme->print(listName, listVariant, listItems, showListName, showTitle);
+    theme->print(listName, listItems, showListName, showTitle);
 }
 
 void
-Show::printMultipleList(std::vector<ListItemEntity>& listItems,
-                        std::vector<std::string>& listNames,
-                        std::string& listVariant)
+Show::printMultipleList(std::vector<ListItemEntity>& listItems, std::vector<ListName>& listNames)
 {
     ThemeAbstract* theme = cliThemeService.adaptConsoleRowLengthWithMaxItemValueLength(listItems).getTheme();
-    theme->printMultipleList(listNames, listVariant, listItems);
+    theme->printMultipleList(listNames, listItems);
 }
