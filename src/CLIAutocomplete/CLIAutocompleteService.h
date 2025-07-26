@@ -21,17 +21,16 @@ class CLIAutocompleteService
   protected:
     void autocompleteOptionList();
     void autocompleteBase();
-    void autocompletePriority(const Command& firstSubCommand);
-    void autocompleteStatus(const Command& firstSubCommand);
+    void autocompletePriority(const Command& firstSubCommand, std::vector<ListName>& listNames);
+    void autocompleteStatus(const Command& firstSubCommand, std::vector<ListName>& listNames);
     void autocompleteList(const Command& firstSubCommand);
     void autocompleteUseList(const Command& firstSubCommand);
-    void autocompleteMoveList(const Command& firstSubCommand);
-    bool isValidListItemId(std::string id);
+    void autocompleteMoveList(const Command& firstSubCommand, std::vector<ListName>& listNames);
+    bool isValidListItemId(std::string id, ListName& listName);
     void getAllLists(std::string& listString);
-    void showListItemId(const std::vector<std::string>& variants = { "default" });
-    void autocompleteId(const Command& firstSubCommand, const std::vector<std::string>& variants = { "default" });
-    void autocompleteIdIndefinitely(const Command& firstSubCommand,
-                                    const std::vector<std::string>& variants = { "default" });
+    void showListItemId(std::vector<ListName>& listNames);
+    void autocompleteId(const Command& firstSubCommand, std::vector<ListName>& listNames);
+    void autocompleteIdIndefinitely(const Command& firstSubCommand, std::vector<ListName>& listNames);
     std::string getDeadline();
 
   private:

@@ -8,7 +8,7 @@ Remove::Remove(IOService& ioService, Command& command, ListItemService& listItem
 }
 
 void
-Remove::remove()
+Remove::remove(ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -26,12 +26,12 @@ Remove::remove()
     for (const auto& id : ids) {
         try {
             if (command.hasOption("force")) {
-                listItemService.remove(id);
+                listItemService.remove(id, listName);
                 ioService.success("Item with id: " + id + " correctly removed.");
                 continue;
             }
 
-            listItemService.softDelete(id);
+            listItemService.softDelete(id, listName);
             ioService.success("Item with id: " + id + " correctly removed.");
         } catch (std::exception& e) {
             ioService.error("Item with id: " + id + " couldn't be deleted.");
@@ -42,7 +42,7 @@ Remove::remove()
 }
 
 void
-Remove::restore()
+Remove::restore(ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -59,7 +59,7 @@ Remove::restore()
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.restore(id);
+            listItemService.restore(id, listName);
             ioService.success("Item with id: " + id + " correctly restored.");
         } catch (std::exception& e) {
             ioService.error("Item with id: " + id + " couldn't be restored.");
@@ -70,7 +70,7 @@ Remove::restore()
 }
 
 void
-Remove::archive()
+Remove::archive(ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -87,7 +87,7 @@ Remove::archive()
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.archive(id);
+            listItemService.archive(id, listName);
             ioService.success("Item with id: " + id + " correctly archived.");
         } catch (std::exception& e) {
             ioService.error("Item with id: " + id + " couldn't be archived.");

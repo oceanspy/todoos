@@ -1,9 +1,5 @@
 #include "ThemeAbstract.h"
 
-#include <iterator>
-#include <sstream>
-#include <vector>
-
 std::string
 ThemeAbstract::autoLineBreak(const std::string& value, const int& length, const int leadingSpaces)
 {

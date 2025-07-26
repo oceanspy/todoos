@@ -9,9 +9,9 @@ class Status
 {
   public:
     Status(IOService& ioService, Command& command, ListItemService& listItemService);
-    void markAs(int status);
-    void set();
-    void reset();
+    void markAs(ListName& listName, int status);
+    void set(ListName& listName);
+    void reset(ListName& listName);
 
   private:
     IOService& ioService;

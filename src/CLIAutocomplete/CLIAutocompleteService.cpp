@@ -19,6 +19,7 @@ CLIAutocompleteService::getCompletion()
     if (!CommandService::isCommand(command, "commands")) {
         return false;
     }
+    ListName listName = listService.createUsedListName();
 
     // Autocomplete for options
     if (!command.getOptions().empty()) {
@@ -32,14 +33,16 @@ CLIAutocompleteService::getCompletion()
         } else if (command.hasOption("priority") &&
                    !listItemService.priority().isNameValid(command.getOption("priority"))) {
             try {
-                autocompletePriority(command);
+                std::vector<ListName> listNames = { listName };
+                autocompletePriority(command, listNames);
             } catch (std::exception& e) {
                 return true;
             }
             return true;
         } else if (command.hasOption("status") && !listItemService.status().isNameValid(command.getOption("status"))) {
             try {
-                autocompleteStatus(command);
+                std::vector<ListName> listNames = { listName };
+                autocompleteStatus(command, listNames);
             } catch (std::exception& e) {
                 return true;
             }
@@ -77,7 +80,8 @@ CLIAutocompleteService::getCompletion()
     } else if (CommandService::isCommand(firstSubCommand, "append") ||
                CommandService::isCommand(firstSubCommand, "prepend")) {
         try {
-            autocompleteId(firstSubCommand);
+            std::vector<ListName> listNames = { listName };
+            autocompleteId(firstSubCommand, listNames);
         } catch (std::exception& e) {
             return true;
         }
@@ -85,7 +89,8 @@ CLIAutocompleteService::getCompletion()
     } else if (CommandService::isCommand(firstSubCommand, "edit")) {
         if (!commandService.hasSubCommand(firstSubCommand)) {
             try {
-                autocompleteId(firstSubCommand);
+                std::vector<ListName> listNames = { listName };
+                autocompleteId(firstSubCommand, listNames);
             } catch (std::exception& e) {
                 return true;
             }
@@ -94,9 +99,10 @@ CLIAutocompleteService::getCompletion()
 
         Command secondSubCommand = commandService.getSubCommand(firstSubCommand);
 
-        if (!isValidListItemId(secondSubCommand.getName())) {
+        if (!isValidListItemId(secondSubCommand.getName(), listName)) {
             try {
-                autocompleteId(firstSubCommand);
+                std::vector<ListName> listNames = { listName };
+                autocompleteId(firstSubCommand, listNames);
             } catch (std::exception& e) {
                 return true;
             }
@@ -104,7 +110,7 @@ CLIAutocompleteService::getCompletion()
         }
 
         try {
-            ListItemEntity listItemEntity = listItemService.find(secondSubCommand.getName());
+            ListItemEntity listItemEntity = listItemService.find(secondSubCommand.getName(), listName);
             if (!(*listItemEntity.getId()).empty()) {
                 std::string value = *listItemEntity.getValue();
                 std::string escapedValue = StringHelpers::escapeChar(value, ' ');
@@ -129,13 +135,15 @@ CLIAutocompleteService::getCompletion()
                 ioService.print(deadline);
                 return true;
             }
-            autocompleteIdIndefinitely(secondSubCommand);
+            std::vector<ListName> listNames = { listName };
+            autocompleteIdIndefinitely(secondSubCommand, listNames);
             return true;
         }
         ioService.print(deadline);
 
         try {
-            autocompleteId(firstSubCommand);
+            std::vector<ListName> listNames = { listName };
+            autocompleteId(firstSubCommand, listNames);
         } catch (std::exception& e) {
             return true;
         }
@@ -154,7 +162,8 @@ CLIAutocompleteService::getCompletion()
                CommandService::isCommand(firstSubCommand, "increase") ||
                CommandService::isCommand(firstSubCommand, "decrease")) {
         try {
-            autocompleteIdIndefinitely(firstSubCommand);
+            std::vector<ListName> listNames = { listName };
+            autocompleteIdIndefinitely(firstSubCommand, listNames);
         } catch (std::exception& e) {
             return true;
         }
@@ -162,7 +171,10 @@ CLIAutocompleteService::getCompletion()
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "restore")) {
         try {
-            autocompleteIdIndefinitely(firstSubCommand, { "archive", "delete" });
+            ListName listNameArchive = ListName::createVariant(listName, "archive");
+            ListName listNameDelete = ListName::createVariant(listName, "delete");
+            std::vector<ListName> listNames = { listNameArchive, listNameDelete };
+            autocompleteIdIndefinitely(firstSubCommand, listNames);
         } catch (std::exception& e) {
             return true;
         }
@@ -170,7 +182,8 @@ CLIAutocompleteService::getCompletion()
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "priority")) {
         try {
-            autocompletePriority(firstSubCommand);
+            std::vector<ListName> listNames = { listName };
+            autocompletePriority(firstSubCommand, listNames);
         } catch (std::exception& e) {
             return true;
         }
@@ -178,7 +191,8 @@ CLIAutocompleteService::getCompletion()
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "status")) {
         try {
-            autocompleteStatus(firstSubCommand);
+            std::vector<ListName> listNames = { listName };
+            autocompleteStatus(firstSubCommand, listNames);
         } catch (std::exception& e) {
             return true;
         }
@@ -186,6 +200,7 @@ CLIAutocompleteService::getCompletion()
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "list")) {
         try {
+            std::vector<ListName> listNames = { listName };
             autocompleteList(firstSubCommand);
         } catch (std::exception& e) {
             return true;
@@ -194,6 +209,7 @@ CLIAutocompleteService::getCompletion()
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "use")) {
         try {
+            std::vector<ListName> listNames = { listName };
             autocompleteUseList(firstSubCommand);
         } catch (std::exception& e) {
             return true;
@@ -204,7 +220,8 @@ CLIAutocompleteService::getCompletion()
                CommandService::isCommand(firstSubCommand, "copy-to") ||
                CommandService::isCommand(firstSubCommand, "duplicate")) {
         try {
-            autocompleteMoveList(firstSubCommand);
+            std::vector<ListName> listNames = { listName };
+            autocompleteMoveList(firstSubCommand, listNames);
         } catch (std::exception& e) {
             return true;
         }
@@ -252,7 +269,7 @@ CLIAutocompleteService::autocompleteBase()
 }
 
 void
-CLIAutocompleteService::autocompletePriority(const Command& firstSubCommand)
+CLIAutocompleteService::autocompletePriority(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     std::string priorityList = listItemService.priority().getNamesAsString();
 
@@ -262,14 +279,14 @@ CLIAutocompleteService::autocompletePriority(const Command& firstSubCommand)
             ioService.print(priorityList);
             return;
         }
-        autocompleteIdIndefinitely(secondSubCommand);
+        autocompleteIdIndefinitely(secondSubCommand, listNames);
         return;
     }
     ioService.print(priorityList);
 }
 
 void
-CLIAutocompleteService::autocompleteStatus(const Command& firstSubCommand)
+CLIAutocompleteService::autocompleteStatus(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     std::string statusList = listItemService.status().getCommandNamesAsString();
 
@@ -279,14 +296,14 @@ CLIAutocompleteService::autocompleteStatus(const Command& firstSubCommand)
             ioService.print(statusList);
             return;
         }
-        autocompleteIdIndefinitely(secondSubCommand);
+        autocompleteIdIndefinitely(secondSubCommand, listNames);
         return;
     }
     ioService.print(statusList);
 }
 
 void
-CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand)
+CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     std::string listString;
     getAllLists(listString);
@@ -301,7 +318,7 @@ CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand)
             ioService.print(listString);
             return;
         }
-        autocompleteIdIndefinitely(secondSubCommand);
+        autocompleteIdIndefinitely(secondSubCommand, listNames);
         return;
     }
     ioService.print(listString);
@@ -356,11 +373,11 @@ CLIAutocompleteService::autocompleteUseList(const Command& firstSubCommand)
 }
 
 void
-CLIAutocompleteService::showListItemId(const std::vector<std::string>& variants)
+CLIAutocompleteService::showListItemId(std::vector<ListName>& listNames)
 {
     std::string listItemIds;
-    for (const std::string& variant : variants) {
-        std::vector<ListItemEntity> listItems = listItemService.loadVariant(variant).get();
+    for (auto listName : listNames) {
+        std::vector<ListItemEntity> listItems = listItemService.get(listName);
         int i = 0;
         for (const ListItemEntity& list : listItems) {
             listItemIds += *list.getId();
@@ -375,10 +392,10 @@ CLIAutocompleteService::showListItemId(const std::vector<std::string>& variants)
 }
 
 bool
-CLIAutocompleteService::isValidListItemId(std::string id)
+CLIAutocompleteService::isValidListItemId(std::string id, ListName& listName)
 {
     try {
-        ListItemEntity listItemEntity = listItemService.find(id);
+        ListItemEntity listItemEntity = listItemService.find(id, listName);
         if (!(*listItemEntity.getId()).empty()) {
             return true;
         }
@@ -389,31 +406,32 @@ CLIAutocompleteService::isValidListItemId(std::string id)
 }
 
 void
-CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, const std::vector<std::string>& variants)
+CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     if (commandService.hasSubCommand(firstSubCommand)) {
         Command subSubCommand = commandService.getSubCommand(firstSubCommand);
-        if (isValidListItemId(subSubCommand.getName())) {
-            return;
+        for (auto listName : listNames) {
+            if (isValidListItemId(subSubCommand.getName(), listName)) {
+                return;
+            }
         }
     }
-    showListItemId(variants);
+    showListItemId(listNames);
 }
 
 void
-CLIAutocompleteService::autocompleteIdIndefinitely(const Command& firstSubCommand,
-                                                   const std::vector<std::string>& variants)
+CLIAutocompleteService::autocompleteIdIndefinitely(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     if (commandService.hasSubCommand(firstSubCommand)) {
         Command subSubCommand = commandService.getSubCommand(firstSubCommand);
         try {
-            for (const std::string& variant : variants) {
-                ListItemEntity listItemEntity = listItemService.loadVariant(variant).find(subSubCommand.getName());
+            for (auto listName : listNames) {
+                ListItemEntity listItemEntity = listItemService.find(subSubCommand.getName(), listName);
             }
         } catch (std::exception& e) {
         }
     }
-    showListItemId(variants);
+    showListItemId(listNames);
 }
 
 bool

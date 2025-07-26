@@ -21,6 +21,12 @@ Command::getName()
     return command;
 }
 
+int
+Command::countArguments()
+{
+    return getArguments().size();
+}
+
 std::vector<std::string>
 Command::getArguments()
 {

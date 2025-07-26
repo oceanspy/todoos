@@ -59,8 +59,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -87,8 +86,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -115,8 +113,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -143,8 +140,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -171,8 +167,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -199,8 +194,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -227,8 +221,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -256,8 +249,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -285,8 +277,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -316,8 +307,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -344,8 +334,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -372,8 +361,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -400,8 +388,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -428,8 +415,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -456,8 +442,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -484,8 +469,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -512,8 +496,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -540,8 +523,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -568,8 +550,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -596,8 +577,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -624,8 +604,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -652,8 +631,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -681,8 +659,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -712,8 +689,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -740,8 +716,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -768,8 +743,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -796,8 +770,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -824,8 +797,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -852,8 +824,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -880,8 +851,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -908,8 +878,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -936,8 +905,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -964,8 +932,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -992,8 +959,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1020,8 +986,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1048,8 +1013,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1076,8 +1040,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1104,8 +1067,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1132,8 +1094,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1160,8 +1121,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1188,8 +1148,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1216,8 +1175,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1244,8 +1202,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1272,8 +1229,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1300,8 +1256,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1328,8 +1283,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1356,8 +1310,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1384,8 +1337,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1412,8 +1364,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1441,8 +1392,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1469,8 +1419,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1498,8 +1447,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1526,8 +1474,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1558,8 +1505,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(
-            ioService, configService, listItemRepository, priorityService, statusService, bus);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 

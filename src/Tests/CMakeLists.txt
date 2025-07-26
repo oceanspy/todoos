@@ -14,6 +14,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Help/Help.cpp
         ../IOService/IOService.cpp
         ../IOService/IOCliService/IOCliService.cpp
+        ../Exception/ListNotFoundException.cpp
         ../Entities/ConfigEntity.cpp
         ../Entities/ListEntity.cpp
         ../Entities/ListItemEntity.cpp
@@ -34,6 +35,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../List/ListItems/PriorityService.cpp
         ../List/ListItems/StatusService.cpp
         ../List/ListService.cpp
+        ../List/ListName.cpp
         ../List/ListItemService.cpp
         ../List/ListItems/PriorityService.cpp
         ../List/ListItems/StatusService.cpp

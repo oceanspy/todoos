@@ -12,13 +12,10 @@ class MobileTheme : public ThemeAbstract
                 ListItemService& listItemService,
                 int consoleWidth,
                 int consoleRowMaxLength);
-    void print(std::string currentList,
-               std::string currentListVariant,
-               std::vector<ListItemEntity> listItems,
-               bool showListName,
-               bool showTitle) override;
-    void printStats() override;
-    void printListName() override;
+    void print(ListName& listName, std::vector<ListItemEntity> listItems, bool showListName, bool showTitle) override;
+    void printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems) override;
+    void printStats(ListName& listName) override;
+    void printListName(std::vector<ListName>& listName) override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printAListTitle(std::vector<std::string> titles, std::vector<int> titleSizes) override;
     void printAList(std::vector<std::string> lines) override;
@@ -27,11 +24,11 @@ class MobileTheme : public ThemeAbstract
     std::string buildId(const ListItemEntity& listItemEntity) override;
     std::string buildStatus(const ListItemEntity& listItemEntity) override;
     std::string buildPriority(const ListItemEntity& listItemEntity) override;
-    std::string buildValue(const ListItemEntity& listItemEntity) override;
+    std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset) override;
     std::string buildDate(const ListItemEntity& listItemEntity) override;
     void printFullLine(std::string color) override;
     ~MobileTheme() override = default;
-    void renderListStatLine(time_t from, time_t to, std::string name);
+    void renderListStatLine(ListName& listName, time_t from, time_t to, std::string name);
 
   private:
     static const int ID_LENGTH = 6;

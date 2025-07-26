@@ -16,6 +16,13 @@ Help::show()
 }
 
 void
+Help::listNotFound(std::string list)
+{
+    ioService.error("List " + list + " not found");
+    ioService.info("Type 'todoos list' to show all available lists.");
+}
+
+void
 Help::commandNotFound()
 {
     ioService.error("Command not found");

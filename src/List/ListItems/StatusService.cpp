@@ -39,28 +39,24 @@ StatusService::make()
                                       "3",
                                       "paused",
                                       "paused",
-                                      "🚧",
+                                      "💤",
                                       "1",
                                       "LIGHT_BLUE",
                                       "ITALIC",
                                       "false",
                                       "false",
                                       "true" }),
-        StatusEntity::setFromVector({ std::to_string(PENDING),
+        StatusEntity::setFromVector({ std::to_string(BLOCKED),
                                       "4",
-                                      "pending",
-                                      "pending",
-                                      "🚧",
+                                      "blocked",
+                                      "blocked",
+                                      "🚫",
                                       "1",
                                       "MAGENTA",
                                       "ITALIC",
                                       "false",
                                       "false",
                                       "true" }),
-        //          StatusEntity::setFromVector(
-        //              {std::to_string(TENTATIVELY_CLOSED), "5", "tentat. closed", "tentatively-closed", "✅", "1",
-        //              "MAGENTA", "ITALIC", "false", "false", "true"}
-        //          ),
         StatusEntity::setFromVector({ std::to_string(COMPLETED),
                                       "6",
                                       "completed",
@@ -73,7 +69,7 @@ StatusService::make()
                                       "false",
                                       "true" }),
         StatusEntity::setFromVector(
-            { std::to_string(CANCELLED), "7", "cancelled", "cancelled", "🪧", "1", "GRAY", "", "true", "true", "true" })
+            { std::to_string(CANCELLED), "7", "cancelled", "cancelled", "✖️", "1", "GRAY", "", "true", "true", "true" })
     };
 }
 

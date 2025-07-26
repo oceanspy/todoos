@@ -142,7 +142,7 @@ ConfigService::getDefaultList()
 }
 
 std::string
-ConfigService::getCurrentList()
+ConfigService::getUsedListNameStr()
 {
     if (!command.getOptions().empty() && command.hasOption("list")) {
         return command.getOption("list");
@@ -153,7 +153,7 @@ ConfigService::getCurrentList()
 }
 
 std::string
-ConfigService::getCurrentListVariant()
+ConfigService::getUsedListVariantStr()
 {
     if (!command.getOptions().empty() && command.hasOption("archive")) {
         return "archive";
@@ -196,7 +196,7 @@ ConfigService::getListDeleteFilePath(const std::string& listName)
 std::filesystem::path
 ConfigService::getCurrentListFilePath()
 {
-    return getListFilePath(getCurrentList());
+    return getListFilePath(getUsedListNameStr());
 }
 
 std::filesystem::path

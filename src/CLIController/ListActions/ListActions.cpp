@@ -73,7 +73,7 @@ ListActions::make()
         showList();
         return;
     } else if (CommandService::isCommand(subCommand, "current")) {
-        ioService.print(addSpaceToListName(configService.getCurrentList()));
+        ioService.print(addSpaceToListName(configService.getUsedListNameStr()));
         return;
     }
 
@@ -146,8 +146,8 @@ ListActions::removeList(Command subCommand)
         return;
     }
     std::string listName = removeSpaceFromListName(arguments.at(0));
-    std::string goBackList =
-        configService.getCurrentList() == listName ? configService.getDefaultList() : configService.getCurrentList();
+    std::string goBackList = configService.getUsedListNameStr() == listName ? configService.getDefaultList()
+                                                                            : configService.getUsedListNameStr();
 
     try {
         listService.remove(listName);
@@ -177,7 +177,7 @@ ListActions::renameList(Command subCommand)
     std::string oldListName = removeSpaceFromListName(arguments.at(0));
     std::string newListName = removeSpaceFromListName(arguments.at(1));
     std::string goBackList =
-        configService.getCurrentList() == oldListName ? newListName : configService.getCurrentList();
+        configService.getUsedListNameStr() == oldListName ? newListName : configService.getUsedListNameStr();
 
     try {
         fileStorageService.moveFileTo(oldListName, newListName);
@@ -203,7 +203,7 @@ ListActions::buildName(const ListEntity& listEntity)
         name += " (default)";
     }
 
-    if (configService.getCurrentList() == *listEntity.getName()) {
+    if (configService.getUsedListNameStr() == *listEntity.getName()) {
         name += " (in use)";
         name = StringHelpers::colorize(name, GREEN);
     } else if (configService.getDefaultList() == *listEntity.getName()) {
@@ -226,21 +226,21 @@ ListActions::copy()
         return;
     }
 
-    std::string listName = removeSpaceFromListName(command.getArguments().at(1));
-    std::string newListName = removeSpaceFromListName(command.getArguments().at(2));
+    std::string listNameStr = removeSpaceFromListName(command.getArguments().at(1));
+    std::string newListNameStr = removeSpaceFromListName(command.getArguments().at(2));
     try {
-        listService.find(listName);
+        listService.find(listNameStr);
     } catch (std::invalid_argument& e) {
         ioService.br();
-        ioService.error("List " + addSpaceToListName(listName) + " not found.");
+        ioService.error("List " + addSpaceToListName(listNameStr) + " not found.");
         ioService.br();
         return;
     }
 
     try {
-        listService.find(newListName);
+        listService.find(newListNameStr);
         ioService.br();
-        ioService.error("List " + addSpaceToListName(newListName) + " already exist.");
+        ioService.error("List " + addSpaceToListName(newListNameStr) + " already exist.");
         ioService.br();
         return;
     } catch (std::invalid_argument& e) {
@@ -249,10 +249,14 @@ ListActions::copy()
 
     try {
         ListEntity newList;
-        newList.setName(newListName);
-        fileStorageService.createNewListFile(newListName);
-        listService.add(newListName);
-        std::vector<ListItemEntity> listItems = listItemService.load(listName).get();
+        newList.setName(newListNameStr);
+        fileStorageService.createNewListFile(newListNameStr);
+        listService.add(newListNameStr);
+
+        ListName listName = listService.createListName(listNameStr);
+        ListName newListName = listService.createListName(newListNameStr);
+
+        std::vector<ListItemEntity> listItems = listItemService.get(listName);
         for (ListItemEntity& listItem : listItems) {
             listItemService.copy(*listItem.getId(), listName, newListName);
         }
@@ -262,7 +266,7 @@ ListActions::copy()
     }
 
     ioService.br();
-    ioService.success("List " + addSpaceToListName(listName) + " copied.");
+    ioService.success("List " + addSpaceToListName(listNameStr) + " copied.");
     ioService.br();
 }
 

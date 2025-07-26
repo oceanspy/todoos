@@ -1,10 +1,5 @@
 #include "ListItemRepository.h"
 
-#include <filesystem>
-#include <fstream>
-#include <utility>
-#include <vector>
-
 ListItemRepository::ListItemRepository(ConfigService& configService,
                                        FileDataServiceInterface* fileDataService,
                                        PriorityService& priorityService,
@@ -16,60 +11,14 @@ ListItemRepository::ListItemRepository(ConfigService& configService,
 {
 }
 
-ListItemRepository&
-ListItemRepository::load(const std::string& listNameStr, std::string variantStr)
-{
-    std::filesystem::path path;
-    if (listNameStr.empty()) {
-        this->listName = configService.getCurrentList();
-        path = configService.getCurrentListFilePath();
-    } else {
-        this->listName = listNameStr;
-        path = configService.getListFilePath(listNameStr);
-    }
-    //    this->listVariant = variantStr;
-
-    if (variantStr == "archive") {
-        path = configService.getListArchiveFilePathFromFilePath(path);
-    } else if (variantStr == "delete") {
-        path = configService.getListDeleteFilePathFromFilePath(path);
-    }
-
-    if (path == listFilePath) {
-        return *this;
-    }
-
-    this->listFilePath = path;
-    return *this;
-}
-
-ListItemRepository&
-ListItemRepository::loadVariant(const std::string& variantStr)
-{
-    std::filesystem::path path;
-
-    if (variantStr == "archive") {
-        path = configService.getListArchiveFilePathFromFilePath(path);
-    } else if (variantStr == "delete") {
-        path = configService.getListDeleteFilePathFromFilePath(path);
-    }
-
-    if (path == listFilePath) {
-        return *this;
-    }
-
-    this->listFilePath = path;
-    return *this;
-}
-
 std::vector<ListItemEntity>
-ListItemRepository::get()
+ListItemRepository::get(ListName& listName)
 {
     if (!cacheItems.empty()) {
         return cacheItems;
     }
 
-    fileDataService->load(listFilePath);
+    fileDataService->load(getFilePath(listName));
 
     std::vector<std::vector<std::string>> data = fileDataService->read(0);
 
@@ -81,13 +30,11 @@ ListItemRepository::get()
 
     for (const std::vector<std::string>& item : data) {
         try {
-            listItems.push_back(
-                ListItemEntity::setFromVector(priorityService, statusService, item, listName, listVariant));
+            listItems.push_back(ListItemEntity::setFromVector(priorityService, statusService, item, listName));
         } catch (std::invalid_argument& e) {
             std::string invalidValue = StringHelpers::colorize("Invalid item -- please check storage", RED);
             std::vector<std::string> invalidItem = { "xxxx", invalidValue, "0", "0", "0", "0", "0", "0" };
-            listItems.push_back(
-                ListItemEntity::setFromVector(priorityService, statusService, invalidItem, listName, listVariant));
+            listItems.push_back(ListItemEntity::setFromVector(priorityService, statusService, invalidItem, listName));
         }
     }
 
@@ -95,9 +42,9 @@ ListItemRepository::get()
 }
 
 ListItemEntity
-ListItemRepository::find(const std::string& id)
+ListItemRepository::find(const std::string& id, ListName& listName)
 {
-    fileDataService->load(listFilePath);
+    fileDataService->load(getFilePath(listName));
 
     std::vector<std::vector<std::string>> data = fileDataService->read(0);
     std::vector<std::vector<std::string>> items;
@@ -105,7 +52,7 @@ ListItemRepository::find(const std::string& id)
     int i = 0;
     for (std::vector item : data) {
         if (item[0] == id) {
-            return ListItemEntity::setFromVector(priorityService, statusService, item, listName, listVariant);
+            return ListItemEntity::setFromVector(priorityService, statusService, item, listName);
         }
         i++;
     }
@@ -114,17 +61,17 @@ ListItemRepository::find(const std::string& id)
 }
 
 void
-ListItemRepository::create(const ListItemEntity& item)
+ListItemRepository::create(const ListItemEntity& item, ListName& listName)
 {
-    fileDataService->load(listFilePath);
+    fileDataService->load(getFilePath(listName));
     fileDataService->append({ ListItemEntity::makeVector(item) });
     resetCache();
 }
 
 bool
-ListItemRepository::update(const std::string& id, const ListItemEntity& item)
+ListItemRepository::update(const std::string& id, ListName& listName, const ListItemEntity& item)
 {
-    fileDataService->load(listFilePath);
+    fileDataService->load(getFilePath(listName));
 
     std::vector<std::vector<std::string>> data = fileDataService->read(0);
     std::vector<std::vector<std::string>> items;
@@ -145,9 +92,9 @@ ListItemRepository::update(const std::string& id, const ListItemEntity& item)
 }
 
 bool
-ListItemRepository::remove(const std::string& id)
+ListItemRepository::remove(const std::string& id, ListName& listName)
 {
-    fileDataService->load(listFilePath);
+    fileDataService->load(getFilePath(listName));
 
     std::vector<std::vector<std::string>> data = fileDataService->read(0);
     std::vector<std::vector<std::string>> items;
@@ -170,4 +117,18 @@ void
 ListItemRepository::resetCache()
 {
     cacheItems = {};
+}
+
+std::string
+ListItemRepository::getFilePath(ListName& listName)
+{
+    std::filesystem::path path = configService.getListFilePath(listName.getName());
+
+    if (listName.getVariant() == "archive") {
+        path = configService.getListArchiveFilePathFromFilePath(path);
+    } else if (listName.getVariant() == "delete") {
+        path = configService.getListDeleteFilePathFromFilePath(path);
+    }
+
+    return path;
 }

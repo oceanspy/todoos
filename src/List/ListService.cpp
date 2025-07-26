@@ -1,4 +1,5 @@
 #include "ListService.h"
+#include <stdexcept>
 
 ListService::ListService(IOService& ioService,
                          ConfigService& configService,
@@ -10,6 +11,26 @@ ListService::ListService(IOService& ioService,
   , bus(bus)
 {
     subscribeToEvents(bus);
+}
+
+ListName
+ListService::createUsedListName()
+{
+    return ListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
+}
+
+ListName
+ListService::createListName(std::string name, std::string variant)
+{
+    if (!isListExist(name)) {
+        throw ListNotFoundException("List not found: invalid list name.", name, variant);
+    }
+
+    if (!ListName::isVariantExists(variant)) {
+        throw ListNotFoundException("List not found: invalid list variant.", name, variant);
+    }
+
+    return ListName(name, variant);
 }
 
 std::vector<ListEntity>
@@ -109,11 +130,11 @@ ListService::getType(const std::string& listName)
 }
 
 bool
-ListService::isListExist(const std::string& listName)
+ListService::isListExist(const std::string& name)
 {
     try {
-        listRepository.find(listName);
-    } catch (std::exception& e) {
+        listRepository.find(name);
+    } catch (...) {
         return false;
     }
     return true;
