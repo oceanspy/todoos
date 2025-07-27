@@ -135,4 +135,25 @@ TEST_CASE("ListServiceTest", "[ListService]")
         REQUIRE_THROWS(listService.createListName("unknownList"));
         REQUIRE_THROWS(listService.createListName(tempListNameStr, "truc"));
     }
+
+    SECTION("getAutocompleteLists")
+    {
+        std::string variant = "default";
+        std::string autocompletedList = "temp*";
+        std::vector<ListName> listNames = listService.getAutocompletedLists(autocompletedList, variant);
+
+        REQUIRE(listNames.size() == 2);
+        REQUIRE(listNames[0].getName() == tempListName2.getName());
+        REQUIRE(listNames[1].getName() == tempListName.getName());
+
+        std::string list = "tempList2Name2";
+        listService.add(list, "default", "default");
+        std::string variantArchive = "archive";
+        std::string autocompletedList2 = "tempList2Name*";
+        std::vector<ListName> listNames2 = listService.getAutocompletedLists(autocompletedList2, variant);
+
+        REQUIRE(listNames2.size() == 2);
+        REQUIRE(listNames[0].getName() == tempListName2.getName());
+        REQUIRE(listNames2[1].getName() == list);
+    }
 }

@@ -17,6 +17,7 @@ class ListService
     ListService(IOService& ioService, ConfigService& configService, ListRepository& listRepository, EventBus& bus);
     ListName createUsedListName();
     ListName createListName(std::string name, std::string variant = "default");
+    std::vector<ListName> getAutocompletedLists(std::string& name, std::string& variant);
     ListEntity find(const std::string& listName);
     void add(const std::string& listName, const std::string& type = "default", const std::string& sorting = "default");
     void edit(const std::string& oldListName, std::string newListName);

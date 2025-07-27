@@ -8,6 +8,7 @@
 #include "Show/Show.h"
 #include "Stats/Stats.h"
 #include "Status/Status.h"
+#include <exception>
 
 CLIController::CLIController(IOService& ioService,
                              Help& help,
@@ -204,18 +205,34 @@ CLIController::show()
         return;
     }
 
-    if (commandService.hasSubCommand(command) && command.countArguments() > 1) {
+    if (commandService.hasSubCommand(command) && command.countArguments() >= 1) {
+        std::string variant = configService.getUsedListVariantStr();
         std::vector<ListName> listNames = {};
         std::vector<ListItemEntity> allListItems = {};
 
         for (std::string listNameStr : command.getArguments()) {
+            if (listNameStr.back() == '*') {
+                try {
+                    std::vector<ListName> listNamesAutocomplete =
+                        listService.getAutocompletedLists(listNameStr, variant);
+                    listNames.insert(listNames.end(), listNamesAutocomplete.begin(), listNamesAutocomplete.end());
+                } catch (std::exception& e) {
+                    // do nothing
+                }
+
+                continue;
+            }
+
             if (!listService.isListExist(listNameStr)) {
                 help.listNotFound(listNameStr);
                 return;
             }
-            ListName listName = listService.createListName(listNameStr, configService.getUsedListVariantStr());
-            listNames.push_back(listName);
 
+            ListName listName = listService.createListName(listNameStr, variant);
+            listNames.push_back(listName);
+        }
+
+        for (auto listName : listNames) {
             std::vector<ListItemEntity> listItems = listItemService.get(listName);
             filterListItemsWithOptions(&listItems);
 
@@ -227,7 +244,11 @@ CLIController::show()
         Show show(ioService, listService, listItemService, cliThemeService);
 
         try {
-            show.printMultipleList(allListItems, listNames);
+            if (listNames.size() > 1) {
+                show.printMultipleList(allListItems, listNames);
+            } else {
+                show.print(allListItems, listNames.at(0));
+            }
         } catch (std::exception& e) {
             ioService.br();
             ioService.error(e.what());
@@ -251,13 +272,6 @@ CLIController::show()
     }
 
     std::string listNameStr = configService.getUsedListNameStr();
-    if (commandService.hasSubCommand(command) && command.countArguments() == 1) {
-        listNameStr = commandService.getSubCommand(command).getName();
-        if (!listService.isListExist(listNameStr)) {
-            help.listNotFound(listNameStr);
-            return;
-        }
-    }
     ListName listName = listService.createListName(listNameStr, configService.getUsedListVariantStr());
     Show show(ioService, listService, listItemService, cliThemeService);
 

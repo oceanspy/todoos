@@ -33,6 +33,26 @@ ListService::createListName(std::string name, std::string variant)
     return ListName(name, variant);
 }
 
+std::vector<ListName>
+ListService::getAutocompletedLists(std::string& name, std::string& variant)
+{
+    std::string listBeginWith;
+    if (name.back() != '*') {
+        throw std::exception();
+    }
+    listBeginWith = name.substr(0, name.size() - 1);
+
+    std::vector<ListName> listNames = {};
+    std::vector<ListEntity> lists = get();
+    for (auto list : lists) {
+        if ((*list.getName()).rfind(listBeginWith, 0) == 0) {
+            listNames.push_back(createListName((*list.getName()), variant));
+        }
+    }
+
+    return listNames;
+}
+
 std::vector<ListEntity>
 ListService::get(bool keepHidden)
 {
