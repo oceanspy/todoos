@@ -23,7 +23,8 @@ class CLIAutocompleteService
     void autocompleteBase();
     void autocompletePriority(const Command& firstSubCommand, std::vector<ListName>& listNames);
     void autocompleteStatus(const Command& firstSubCommand, std::vector<ListName>& listNames);
-    void autocompleteList(const Command& firstSubCommand);
+    void autocompleteListActions(const Command& firstSubCommand);
+    void autocompleteListIndefinitely(const Command& firstSubCommand);
     void autocompleteUseList(const Command& firstSubCommand);
     void autocompleteMoveList(const Command& firstSubCommand, std::vector<ListName>& listNames);
     bool isValidListItemId(std::string id, ListName& listName);

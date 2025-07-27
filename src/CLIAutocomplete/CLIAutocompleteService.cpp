@@ -75,7 +75,15 @@ CLIAutocompleteService::getCompletion()
         return true;
     }
 
-    if (CommandService::isCommand(firstSubCommand, "add")) {
+    if (CommandService::isCommand(firstSubCommand, "show")) {
+        try {
+            autocompleteListIndefinitely(firstSubCommand);
+        } catch (std::exception& e) {
+            return true;
+        }
+
+        return true;
+    } else if (CommandService::isCommand(firstSubCommand, "add")) {
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "append") ||
                CommandService::isCommand(firstSubCommand, "prepend")) {
@@ -200,8 +208,7 @@ CLIAutocompleteService::getCompletion()
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "list")) {
         try {
-            std::vector<ListName> listNames = { listName };
-            autocompleteList(firstSubCommand);
+            autocompleteListActions(firstSubCommand);
         } catch (std::exception& e) {
             return true;
         }
@@ -325,7 +332,7 @@ CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand, std
 }
 
 void
-CLIAutocompleteService::autocompleteList(const Command& firstSubCommand)
+CLIAutocompleteService::autocompleteListActions(const Command& firstSubCommand)
 {
     std::string listActions = "add rename remove show copy";
 
@@ -359,6 +366,14 @@ CLIAutocompleteService::autocompleteList(const Command& firstSubCommand)
             ioService.print(listString);
         }
     }
+}
+
+void
+CLIAutocompleteService::autocompleteListIndefinitely(const Command& firstSubCommand)
+{
+    std::string listString;
+    getAllLists(listString);
+    ioService.print(listString);
 }
 
 void

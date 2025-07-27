@@ -99,7 +99,7 @@ main(int argc, const char* argv[])
     }
 
     if (autocomplete) {
-        return 0;
+        return 1;
     }
 
     CLIThemeService cliThemeService = CLIThemeService(ioService, configService, listService, listItemService);
