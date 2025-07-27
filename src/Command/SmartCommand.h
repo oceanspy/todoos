@@ -1,6 +1,7 @@
 #ifndef SMARTCOMMAND_H
 #define SMARTCOMMAND_H
 
+#include "../List/ListService.h"
 #include "Command.h"
 #include "CommandService.h"
 

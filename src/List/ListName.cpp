@@ -1,7 +1,7 @@
 #include "ListName.h"
-#include <algorithm>
 #include <stdexcept>
 
+// IMPORTANT: Do not instanciate this class directly. Use ListService.
 ListName::ListName(std::string name, std::string variant)
   : name(std::move(name))
   , variant(std::move(variant))

@@ -210,8 +210,7 @@ CLIController::show()
 
         for (std::string listNameStr : command.getArguments()) {
             if (!listService.isListExist(listNameStr)) {
-                ioService.error("List " + listNameStr + " does not exists.");
-                help.commandNotFound();
+                help.listNotFound(listNameStr);
                 return;
             }
             ListName listName = listService.createListName(listNameStr, configService.getUsedListVariantStr());
@@ -255,8 +254,7 @@ CLIController::show()
     if (commandService.hasSubCommand(command) && command.countArguments() == 1) {
         listNameStr = commandService.getSubCommand(command).getName();
         if (!listService.isListExist(listNameStr)) {
-            ioService.error("List " + listNameStr + " does not exists.");
-            help.commandNotFound();
+            help.listNotFound(listNameStr);
             return;
         }
     }

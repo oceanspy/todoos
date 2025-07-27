@@ -75,6 +75,60 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         REQUIRE(printedString == expectedString);
     }
 
+    SECTION("Autocomplete commands: commands show")
+    {
+        Command command = Command("commands", { "show" }, {}, "commands show");
+
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+
+        // Create an instance of CLIAutocompleteService
+        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+
+        // Test getCompletion function
+        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+
+        // Capture the printed output of getCompletion()
+        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string expectedString = "tempList2Name tempListName\n";
+        REQUIRE(printedString == expectedString);
+    }
+
+    SECTION("Autocomplete commands: commands show tempListName")
+    {
+        Command command = Command("commands", { "show", "tempListName" }, {}, "commands show tempListName");
+
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+
+        // Create an instance of CLIAutocompleteService
+        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+
+        // Test getCompletion function
+        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+
+        // Capture the printed output of getCompletion()
+        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string expectedString = "tempList2Name tempListName\n";
+        REQUIRE(printedString == expectedString);
+    }
+
     SECTION("Autocomplete commands: commands add")
     {
         Command command = Command("commands", { "add" }, {}, "commands add");

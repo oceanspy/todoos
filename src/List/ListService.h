@@ -26,6 +26,7 @@ class ListService
     std::string getType(const std::string& listName);
     std::vector<ListEntity> get(bool keepHidden = false);
     void subscribeToEvents(EventBus& eventBus);
+    static void validateListName(const std::string& newListName);
 
   private:
     IOService& ioService;
@@ -33,7 +34,6 @@ class ListService
     ListRepository& listRepository;
     EventBus& bus;
     std::string list;
-    static void validateListName(const std::string& newListName);
     static std::vector<ListEntity> sort(std::vector<ListEntity> listItems);
 };
 

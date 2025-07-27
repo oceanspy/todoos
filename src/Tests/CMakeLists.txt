@@ -68,6 +68,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Config/ConfigRepositoryTest.cpp
         List/ListRepositoryTest.cpp
         List/ListItemServiceTest.cpp
+        List/ListServiceTest.cpp
+        List/ListNameTest.cpp
         List/ListItemRepositoryTest.cpp
         Init/InstallationTest.cpp
         FileDataStorage/ConfServiceTest.cpp
