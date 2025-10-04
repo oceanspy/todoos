@@ -213,6 +213,8 @@ CommandList::isCommandValidWithOptions(const std::string commandName, const std:
             if (commandName == "remove" || commandName == "move-to" || commandName == "copy-to") {
                 return true;
             }
+        } else if (option.first == "no-quit") {
+            return true;
         } else if (option.first == "config") {
             // only show
             // TODO: implement edit config

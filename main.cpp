@@ -122,5 +122,10 @@ main(int argc, const char* argv[])
         return 1;
     }
 
+    if (command.hasOption("no-quit")) {
+        ioService.br();
+        ioService.ask("Press any key to quit");
+    }
+
     return 1;
 }
