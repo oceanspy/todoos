@@ -12,7 +12,7 @@ ListItemActions::ListItemActions(IOService& ioService,
 }
 
 void
-ListItemActions::make()
+ListItemActions::make(ListName& listName)
 {
     const std::vector<std::string> arguments = command.getArguments();
     std::vector<std::string> itemValueFromArguments = command.getArguments();
@@ -50,7 +50,7 @@ ListItemActions::make()
 
         std::string id;
         try {
-            id = listItemService.add(calculateValue(itemValueFromArguments), priority, status, dueAt);
+            id = listItemService.add(listName, calculateValue(itemValueFromArguments), priority, status, dueAt);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error("Item could not be added.");
@@ -104,7 +104,7 @@ ListItemActions::make()
                 try {
                     std::string dateString = command.getOption("deadline");
                     dueAt = DateHelpers::relativeDateToTimestamp(dateString);
-                    listItemService.editDeadline(id, dueAt);
+                    listItemService.editDeadline(id, listName, dueAt);
                 } catch (std::exception& e) {
                     ioService.br();
                     ioService.error("Invalid deadline date.");
@@ -115,20 +115,20 @@ ListItemActions::make()
 
             std::string value = calculateValue(itemValueFromArguments);
             if (priority != nullptr) {
-                listItemService.setPriority(id, priority);
+                listItemService.setPriority(id, listName, priority);
                 ioService.br();
                 ioService.success("Priority of " + id + " updated.");
                 ioService.br();
                 return;
             } else if (status != nullptr) {
-                listItemService.setStatus(id, status);
+                listItemService.setStatus(id, listName, status);
                 ioService.br();
                 ioService.success("Priority of " + id + " updated.");
                 ioService.br();
                 return;
             }
 
-            listItemService.edit(id, value, priority, status);
+            listItemService.edit(id, listName, value, priority, status);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error("Item could not be updated.");
@@ -163,15 +163,15 @@ ListItemActions::make()
         itemValueFromArguments.erase(itemValueFromArguments.begin());
 
         try {
-            listItemService.append(id, calculateValue(itemValueFromArguments));
+            listItemService.append(id, listName, calculateValue(itemValueFromArguments));
             if (command.hasOption("priority") &&
                 listItemService.priority().isNameValid(command.getOption("priority"))) {
                 std::string priority = command.getOption("priority");
-                listItemService.setPriority(id, &priority);
+                listItemService.setPriority(id, listName, &priority);
             }
             if (command.hasOption("status") && listItemService.status().isNameValid(command.getOption("status"))) {
                 std::string status = command.getOption("status");
-                listItemService.setStatus(id, &status);
+                listItemService.setStatus(id, listName, &status);
             }
         } catch (std::exception& e) {
             ioService.br();
@@ -207,15 +207,15 @@ ListItemActions::make()
         itemValueFromArguments.erase(itemValueFromArguments.begin());
 
         try {
-            listItemService.prepend(id, calculateValue(itemValueFromArguments));
+            listItemService.prepend(id, listName, calculateValue(itemValueFromArguments));
             if (command.hasOption("priority") &&
                 listItemService.priority().isNameValid(command.getOption("priority"))) {
                 std::string priority = command.getOption("priority");
-                listItemService.setPriority(id, &priority);
+                listItemService.setPriority(id, listName, &priority);
             }
             if (command.hasOption("status") && listItemService.status().isNameValid(command.getOption("status"))) {
                 std::string status = command.getOption("status");
-                listItemService.setStatus(id, &status);
+                listItemService.setStatus(id, listName, &status);
             }
         } catch (std::exception& e) {
             ioService.br();
@@ -254,7 +254,7 @@ ListItemActions::make()
 
             try {
                 time_t dueAt = DateHelpers::relativeDateToTimestamp(stringDate);
-                listItemService.editDeadline(id, dueAt);
+                listItemService.editDeadline(id, listName, dueAt);
                 ioService.success("Deadline of " + id + " updated.");
             } catch (std::exception& e) {
                 ioService.error(e.what());

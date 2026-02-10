@@ -1,22 +1,43 @@
 #define CATCH_CONFIG_MAIN
 #include "../../Entities/ListItemEntity.h"
+#include "../../FileDataStorage/ConfService.h"
+#include "../../FileDataStorage/JSONService.h"
+#include "../../FileDataStorageRepositories/ListRepository.h"
+#include "../../IOService/IOService.h"
+#include "../../List/ListService.h"
+#include "../Mock/MockInit.h"
+#include "../Mock/MockInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
 {
-
-    PriorityService priorityService;
-    StatusService statusService;
+    // Create mock objects
+    IOService ioService("cli");
+    ConfService confService = ConfService(ioService);
+    JSONService jsonService = JSONService(ioService);
+    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
+    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfService>(ioService);
+    MockInit init(ioService, "_todoos_ListItemRepositoryTest");
+    Command command = Command("", {}, {}, "");
+    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+    ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+    ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+    PriorityService priorityService = PriorityService();
+    StatusService statusService = StatusService();
+    ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+    EventBus bus = EventBus();
+    ListService listService(ioService, configService, listRepository, bus);
+    ListName listName = listService.createUsedListName();
 
     SECTION("Test setting and getting properties")
     {
         // Create a ListItemEntity object
-        ListItemEntity listItemEntity;
+        ListItemEntity listItemEntity(listName);
 
         // Set properties
         std::string id = "aaaa";
         int position = 1;
-        std::string listName = "test_list";
         std::string value = "test_value";
         std::string priority = "high";
         std::string status = "started";
@@ -27,7 +48,6 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
 
         listItemEntity.setId(id);
         listItemEntity.setPosition(position);
-        listItemEntity.setListName(listName);
         listItemEntity.setValue(value);
         PriorityEntity priorityEntity = priorityService.getPriorityFromName(priority);
         listItemEntity.setPriority(priorityEntity);
@@ -41,7 +61,7 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
         // Verify that the values are set correctly
         REQUIRE(*listItemEntity.getId() == id);
         REQUIRE(*listItemEntity.getPosition() == position);
-        REQUIRE(*listItemEntity.getListName() == listName);
+        REQUIRE((*listItemEntity.getListName()).getName() == "tempListName");
         REQUIRE(*listItemEntity.getValue() == value);
         REQUIRE(*(*listItemEntity.priority()).getName() == priority);
         REQUIRE(*(*listItemEntity.status()).getName() == status);
@@ -53,7 +73,6 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
     {
         // Set properties using set method
         std::string id = "aaaa";
-        std::string listName = "test_list";
         std::string value = "test_value";
         std::string priority = "high";
         int priorityId = priorityService.getIdFromName(priority);
@@ -65,11 +84,11 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
         PriorityEntity priorityEntity = priorityService.getPriorityFromName(priority);
         StatusEntity statusEntity = statusService.getStatusFromName(status);
         ListItemEntity listItemEntity =
-            ListItemEntity::set(id, listName, value, priorityEntity, statusEntity, 0, 0, createdAt, updatedAt);
+            ListItemEntity::set(id, value, priorityEntity, statusEntity, 0, 0, createdAt, updatedAt, listName);
 
         // Verify that the values are set correctly
         REQUIRE(*listItemEntity.getId() == id);
-        REQUIRE(*listItemEntity.getListName() == listName);
+        REQUIRE((*listItemEntity.getListName()).getName() == "tempListName");
         REQUIRE(*listItemEntity.getValue() == value);
         REQUIRE(*(*listItemEntity.priority()).getName() == priority);
         REQUIRE(*(*listItemEntity.status()).getName() == status);
@@ -80,14 +99,13 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
     SECTION("Test setting properties with invalid data")
     {
         // Create a ListItemEntity object
-        ListItemEntity listItemEntity;
+        ListItemEntity listItemEntity(listName);
 
         // Set invalid properties
         std::string invalidId;
         std::string validId = "aaaa";
         int invalidPosition = -1;
         int validPosition = 1;
-        std::string listName;
         std::string invalidValue;
         std::string validValue = "test value";
         time_t invalidCreatedAt = -1;
@@ -102,7 +120,6 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
         listItemEntity.setId(validId);
         REQUIRE_THROWS(listItemEntity.setPosition(invalidPosition));
         listItemEntity.setPosition(validPosition);
-        listItemEntity.setListName(listName);
         REQUIRE_THROWS(listItemEntity.setValue(invalidValue));
         listItemEntity.setValue(validValue);
         REQUIRE_THROWS(listItemEntity.setCreatedAt(invalidCreatedAt));
@@ -113,7 +130,7 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
         // Verify that the values remain unchanged (default values)
         REQUIRE(*listItemEntity.getId() == validId);
         REQUIRE(*listItemEntity.getPosition() == validPosition);
-        REQUIRE(*listItemEntity.getListName() == listName);
+        REQUIRE((*listItemEntity.getListName()).getName() == "tempListName");
         REQUIRE(*listItemEntity.getValue() == validValue);
         REQUIRE(*listItemEntity.getCreatedAt() == validCreatedAt);
         REQUIRE(*listItemEntity.getUpdatedAt() == validUpdatedAt);

@@ -8,7 +8,7 @@ Status::Status(IOService& ioService, Command& command, ListItemService& listItem
 }
 
 void
-Status::markAs(int status)
+Status::markAs(ListName& listName, int status)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -25,7 +25,7 @@ Status::markAs(int status)
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.editStatus(id, &status);
+            listItemService.editStatus(id, listName, &status);
             ioService.success(
                 "Status of: " + id + " correctly updated to " +
                 StringHelpers::colorize(
@@ -40,7 +40,7 @@ Status::markAs(int status)
 }
 
 void
-Status::reset()
+Status::reset(ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -55,12 +55,12 @@ Status::reset()
         ioService.br();
 
         if (answer == "y" || answer == "yes") {
-            std::vector<ListItemEntity> listItems = listItemService.get();
+            std::vector<ListItemEntity> listItems = listItemService.get(listName);
 
             ioService.br();
             for (const ListItemEntity& listItem : listItems) {
                 try {
-                    listItemService.reset(*listItem.getId());
+                    listItemService.reset(*listItem.getId(), listName);
                     ioService.success("Item with id: " + *listItem.getId() + " was reset.");
                 } catch (std::exception& e) {
                     ioService.error("Item with id: " + *listItem.getId() + " was not found.");
@@ -84,7 +84,7 @@ Status::reset()
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.reset(id);
+            listItemService.reset(id, listName);
             ioService.success("Item with id: " + id + " was reset.");
         } catch (std::invalid_argument& e) {
             ioService.error("Item with id: " + id + " was not found.");
@@ -95,7 +95,7 @@ Status::reset()
 }
 
 void
-Status::set()
+Status::set(ListName& listName)
 {
     const std::vector<std::string> arguments = command.getArguments();
     std::vector<std::string> adaptedArguments = command.getArguments();
@@ -133,7 +133,7 @@ Status::set()
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.setStatus(id, status);
+            listItemService.setStatus(id, listName, status);
             ioService.success("Status of: " + id + " correctly updated.");
         } catch (std::invalid_argument& e) {
             ioService.error(e.what());

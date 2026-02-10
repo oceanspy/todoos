@@ -9,9 +9,9 @@ class Remove
 {
   public:
     Remove(IOService& ioService, Command& command, ListItemService& listItemService);
-    void remove();
-    void restore();
-    void archive();
+    void remove(ListName& listName);
+    void restore(ListName& listName);
+    void archive(ListName& listName);
 
   private:
     IOService& ioService;

@@ -2,6 +2,11 @@
 #include <stdexcept>
 #include <utility>
 
+ListItemEntity::ListItemEntity(ListName& listName)
+  : listName(listName)
+{
+}
+
 const std::string*
 ListItemEntity::getId() const
 {
@@ -14,16 +19,10 @@ ListItemEntity::getPosition() const
     return &position;
 }
 
-const std::string*
+const ListName*
 ListItemEntity::getListName() const
 {
     return &listName;
-}
-
-const std::string*
-ListItemEntity::getListVariant() const
-{
-    return &listVariant;
 }
 
 const std::string*
@@ -96,18 +95,6 @@ ListItemEntity::setPosition(int positionInt)
 }
 
 void
-ListItemEntity::setListName(std::string listNameStr)
-{
-    this->listName = std::move(listNameStr);
-}
-
-void
-ListItemEntity::setListVariant(std::string listVariantStr)
-{
-    this->listVariant = std::move(listVariantStr);
-}
-
-void
 ListItemEntity::setValue(const std::string& valueStr)
 {
     if (valueStr.empty()) {
@@ -175,18 +162,17 @@ ListItemEntity::setUpdatedAt(time_t updatedAtDate)
 
 ListItemEntity
 ListItemEntity::set(const std::string& id,
-                    const std::string& listName,
                     const std::string& value,
                     const PriorityEntity& priority,
                     const StatusEntity& status,
                     const time_t& dueAt,
                     const time_t& closedAt,
                     const time_t& createdAt,
-                    const time_t& updatedAt)
+                    const time_t& updatedAt,
+                    ListName& listName)
 {
-    ListItemEntity listItemEntity;
+    ListItemEntity listItemEntity(listName);
     listItemEntity.setId(id);
-    listItemEntity.setListName(listName);
     listItemEntity.setValue(value);
     listItemEntity.setPriority(priority);
     listItemEntity.setStatus(status);
@@ -201,10 +187,9 @@ ListItemEntity
 ListItemEntity::setFromVector(PriorityService& priorityService,
                               StatusService& statusService,
                               const std::vector<std::string>& item,
-                              const std::string& listName,
-                              const std::string& listVariant)
+                              ListName& listName)
 {
-    ListItemEntity listItemEntity;
+    ListItemEntity listItemEntity(listName);
     listItemEntity.setId(item[0]);
     listItemEntity.setValue(item[1]);
     listItemEntity.setPriority(priorityService.getPriorityFromName(item[2]));
@@ -213,8 +198,6 @@ ListItemEntity::setFromVector(PriorityService& priorityService,
     listItemEntity.setClosedAt(std::stoi(item[5]));
     listItemEntity.setCreatedAt(std::stoi(item[6]));
     listItemEntity.setUpdatedAt(std::stoi(item[7]));
-    listItemEntity.setListName(listName);
-    listItemEntity.setListVariant(listVariant);
     return listItemEntity;
 }
 

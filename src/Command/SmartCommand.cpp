@@ -26,14 +26,6 @@ SmartCommand::apply()
             Command adaptatedCommand = Command("list", arguments, command.getOptions());
             return adaptatedCommand;
         }
-    } else if (CommandService::isCommand(command, "all")) {
-        if (command.getArguments().empty()) {
-            std::vector<std::string> arguments = command.getArguments();
-            // add new command to first argument
-            arguments.insert(arguments.begin(), "all");
-            Command adaptatedCommand = Command("show", arguments, command.getOptions());
-            return adaptatedCommand;
-        }
     } else if (CommandService::isCommand(command, "remove")) {
         if (command.getArguments().empty()) {
             return command;
@@ -50,6 +42,14 @@ SmartCommand::apply()
         }
     } else if (CommandService::isCommand(command, "current")) {
         return Command("list", { "current" }, command.getOptions());
+    } else if (CommandService::isCommand(command, "all")) {
+        if (command.getArguments().empty()) {
+            std::vector<std::string> arguments = command.getArguments();
+            // add new command to first argument
+            arguments.insert(arguments.begin(), "all");
+            Command adaptatedCommand = Command("show", arguments, command.getOptions());
+            return adaptatedCommand;
+        }
     }
 
     return command;

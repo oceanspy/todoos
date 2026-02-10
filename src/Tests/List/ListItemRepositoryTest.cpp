@@ -2,6 +2,7 @@
 #include "../../FileDataStorage/ConfService.h"
 #include "../../FileDataStorage/JSONService.h"
 #include "../../IOService/IOService.h"
+#include "../../List/ListService.h"
 #include "../Mock/MockInit.h"
 #include "../Mock/MockInstallation.h"
 #include <catch2/catch_test_macros.hpp>
@@ -31,11 +32,14 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
     StatusService statusService = StatusService();
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    listItemRepository.load(tempListName);
+    ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+    EventBus bus = EventBus();
+    ListService listService(ioService, configService, listRepository, bus);
+    ListName listName = listService.createUsedListName();
 
     SECTION("Test get method")
     {
-        std::vector<ListItemEntity> results = listItemRepository.get();
+        std::vector<ListItemEntity> results = listItemRepository.get(listName);
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);
@@ -63,7 +67,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         const std::time_t createdAt = 1712487259;
         const std::time_t updatedAt = 1712487259;
 
-        ListItemEntity result = listItemRepository.find(id);
+        ListItemEntity result = listItemRepository.find(id, listName);
 
         REQUIRE(*result.getId() == id);
         REQUIRE(*result.getValue() == value);
@@ -78,7 +82,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         std::string id = "aaaa";
         const std::string value = "test 1";
 
-        ListItemEntity oldItem = listItemRepository.find(id);
+        ListItemEntity oldItem = listItemRepository.find(id, listName);
 
         const std::string newValue = "test 1 updated";
         const std::string newPriority = "medium";
@@ -86,34 +90,34 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         const std::time_t newCreatedAt = 1712487260;
         const std::time_t newUpdatedAt = 1712487260;
 
-        ListItemEntity newItem;
+        ListItemEntity newItem(listName);
         newItem.setId(id);
         newItem.setValue(newValue);
         newItem.setPriority(priorityService.getPriorityFromName(newPriority));
         newItem.setStatus(statusService.getStatusFromName(newStatus));
 
-        listItemRepository.update(id, newItem);
+        listItemRepository.update(id, listName, newItem);
 
-        ListItemEntity result = listItemRepository.find(id);
+        ListItemEntity result = listItemRepository.find(id, listName);
         REQUIRE(*result.getId() == id);
         REQUIRE(*result.getValue() == newValue);
         REQUIRE(*(*result.priority()).getName() == newPriority);
         REQUIRE(*(*result.status()).getCommandName() == newStatus);
 
-        listItemRepository.update(id, oldItem);
+        listItemRepository.update(id, listName, oldItem);
 
-        ListItemEntity newItem2 = listItemRepository.find(id);
+        ListItemEntity newItem2 = listItemRepository.find(id, listName);
         newItem2.setPriority(priorityService.getPriorityFromName(newPriority));
         newItem2.setStatus(statusService.getStatusFromName(newStatus));
-        listItemRepository.update(id, newItem2);
+        listItemRepository.update(id, listName, newItem2);
 
-        ListItemEntity result2 = listItemRepository.find(id);
+        ListItemEntity result2 = listItemRepository.find(id, listName);
         REQUIRE(*result2.getId() == id);
         REQUIRE(*result2.getValue() == "test 1");
         REQUIRE(*(*result2.priority()).getName() == newPriority);
         REQUIRE(*(*result2.status()).getCommandName() == newStatus);
 
-        listItemRepository.update(id, oldItem);
+        listItemRepository.update(id, listName, oldItem);
     }
 
     SECTION("Test create & delete method")
@@ -125,7 +129,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         const std::time_t newCreatedAt = 1712487260;
         const std::time_t newUpdatedAt = 1712487260;
 
-        ListItemEntity newItem;
+        ListItemEntity newItem(listName);
         newItem.setId(id);
         newItem.setValue(newValue);
         newItem.setPriority(priorityService.getPriorityFromName(newPriority));
@@ -133,9 +137,9 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         newItem.setCreatedAt(newCreatedAt);
         newItem.setUpdatedAt(newUpdatedAt);
 
-        listItemRepository.create(newItem);
+        listItemRepository.create(newItem, listName);
 
-        ListItemEntity result = listItemRepository.find(id);
+        ListItemEntity result = listItemRepository.find(id, listName);
         REQUIRE(*result.getId() == id);
         REQUIRE(*result.getValue() == newValue);
         REQUIRE(*(*result.priority()).getName() == newPriority);
@@ -143,9 +147,9 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         REQUIRE(*result.getCreatedAt() == newCreatedAt);
         REQUIRE(*result.getUpdatedAt() == newUpdatedAt);
 
-        listItemRepository.remove(id);
+        listItemRepository.remove(id, listName);
 
-        std::vector<ListItemEntity> results = listItemRepository.get();
+        std::vector<ListItemEntity> results = listItemRepository.get(listName);
 
         REQUIRE(!results.empty());
         REQUIRE(results.size() == 2);

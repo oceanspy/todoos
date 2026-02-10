@@ -1,20 +1,20 @@
 #include "Move.h"
 
 Move::Move(IOService& ioService,
-           ConfigService& configService,
            Command& command,
            CommandService& commandService,
+           ListService& listService,
            ListItemService& listItemService)
   : ioService(ioService)
-  , configService(configService)
   , command(command)
   , commandService(commandService)
+  , listService(listService)
   , listItemService(listItemService)
 {
 }
 
 std::string
-Move::make()
+Move::make(ListName& listName)
 {
     const std::vector<std::string> arguments = command.getArguments();
     std::vector<std::string> adaptedArguments = command.getArguments();
@@ -26,8 +26,7 @@ Move::make()
         return "";
     }
 
-    std::string oldList = configService.getCurrentList();
-    std::string newList;
+    std::string newListStr;
 
     if (CommandService::isCommand(command, "duplicate")) {
         if (arguments.size() < 1) {
@@ -37,7 +36,7 @@ Move::make()
             return "";
         }
 
-        newList = oldList;
+        newListStr = listName.getName();
     } else if (CommandService::isCommand(command, "move-to") || CommandService::isCommand(command, "copy-to")) {
         if (arguments.size() < 2) {
             ioService.br();
@@ -46,9 +45,11 @@ Move::make()
             return "";
         }
 
-        newList = command.getArguments().at(0);
+        newListStr = command.getArguments().at(0);
         adaptedArguments.erase(adaptedArguments.begin());
     }
+
+    ListName newListName = listService.createListName(newListStr);
 
     std::vector<std::string> ids = adaptedArguments;
 
@@ -59,90 +60,93 @@ Move::make()
     for (const auto& id : ids) {
         try {
             if (CommandService::isCommand(command, "copy-to")) {
-                ListItemEntity listItemEntity;
+                ListItemEntity listItemEntity(listName);
                 try {
-                    listItemEntity = listItemService.load(newList).find(id);
+                    listItemEntity = listItemService.find(id, listName);
                 } catch (std::exception& e) {
                     //
                 }
 
                 if (!(*listItemEntity.getId()).empty() && !command.hasOption("force")) {
-                    std::string answer = ioService.ask("Item " + id + " already exists in list " + newList +
-                                                       ". Do you want to overwrite it? (y/n) ");
+                    std::string answer = ioService.ask("Item " + id + " already exists in list " +
+                                                       newListName.getName() + ". Do you want to overwrite it? (y/n) ");
                     if (answer != "y" && answer != "yes") {
                         ioService.br();
-                        ioService.info("Item " + id + " was not copied from list " + oldList + " to list " + newList +
-                                       ".");
+                        ioService.info("Item " + id + " was not copied from list " + listName.getName() + " to list " +
+                                       newListName.getName() + ".");
                         ioService.br();
                         return "";
                     }
                 }
 
                 try {
-                    listItemService.copy(id, configService.getCurrentList(), newList);
+                    listItemService.copy(id, listName, newListName);
                 } catch (std::exception& e) {
-                    ioService.error("Item " + id + " could not be copied from list " + oldList + " to list " + newList +
-                                    ".");
+                    ioService.error("Item " + id + " could not be copied from list " + listName.getName() +
+                                    " to list " + newListName.getName() + ".");
                     ioService.info(e.what());
                     return "";
                 }
 
-                ioService.success("Item " + id + " copied from " + oldList + " to list " + newList + ".");
+                ioService.success("Item " + id + " copied from " + listName.getName() + " to list " +
+                                  newListName.getName() + ".");
             } else if (CommandService::isCommand(command, "move-to")) {
-                if (configService.getCurrentList() == newList) {
-                    ioService.error("Item " + id + " is already in list " + newList + ".");
+                if (listName.getName() == newListName.getName()) {
+                    ioService.error("Item " + id + " is already in list " + newListName.getName() + ".");
                     return "";
                 }
 
-                ListItemEntity listItemEntity;
+                ListItemEntity listItemEntity(listName);
 
                 try {
-                    listItemEntity = listItemService.load(newList).find(id);
+                    listItemEntity = listItemService.find(id, newListName);
                 } catch (std::exception& e) {
                     //
                 }
 
                 if (!(*listItemEntity.getId()).empty() && !command.hasOption("force")) {
-                    std::string answer = ioService.ask("Item " + id + " already exists in list " + newList +
-                                                       ". Do you want to overwrite it? (y/n) ");
+                    std::string answer = ioService.ask("Item " + id + " already exists in list " +
+                                                       newListName.getName() + ". Do you want to overwrite it? (y/n) ");
                     if (answer != "y" && answer != "yes") {
                         ioService.br();
-                        ioService.info("Item " + id + " was not moved from list " + oldList + " to list " + newList +
-                                       ".");
+                        ioService.info("Item " + id + " was not moved from list " + listName.getName() + " to list " +
+                                       newListName.getName() + ".");
                         ioService.br();
                         return "";
                     }
                 }
 
                 try {
-                    listItemService.move(id, configService.getCurrentList(), newList);
+                    listItemService.move(id, listName, newListName);
                 } catch (std::exception& e) {
-                    ioService.error("Item " + id + " could not be moved from list " + oldList + " to list " + newList +
-                                    ".");
+                    ioService.error("Item " + id + " could not be moved from list " + listName.getName() + " to list " +
+                                    newListName.getName() + ".");
                     ioService.info(e.what());
                     return "";
                 }
 
-                ioService.success("Item " + id + " moved from " + oldList + " to list " + newList + ".");
+                ioService.success("Item " + id + " moved from " + listName.getName() + " to list " +
+                                  newListName.getName() + ".");
             } else if (CommandService::isCommand(command, "duplicate")) {
                 try {
-                    listItemService.duplicate(id, configService.getCurrentList());
+                    listItemService.duplicate(id, listName);
                 } catch (std::exception& e) {
-                    ioService.error("Item " + id + " could not be copied from list " + oldList + " to list " + newList +
-                                    ".");
+                    ioService.error("Item " + id + " could not be copied from list " + listName.getName() +
+                                    " to list " + newListName.getName() + ".");
                     ioService.info(e.what());
                     return "";
                 }
 
-                ioService.success("Item " + id + " copied from " + oldList + " to list " + newList + ".");
+                ioService.success("Item " + id + " copied from " + listName.getName() + " to list " +
+                                  newListName.getName() + ".");
             }
         } catch (std::exception& e) {
-            ioService.error("Item " + id + " could not be moved or copied from list " + oldList + " to " + newList +
-                            ".");
+            ioService.error("Item " + id + " could not be moved or copied from list " + listName.getName() + " to " +
+                            newListName.getName() + ".");
             return "";
         }
     }
     ioService.br();
 
-    return newList;
+    return newListStr;
 }

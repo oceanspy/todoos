@@ -13,6 +13,7 @@ class Command
             std::map<std::string, std::string> options,
             std::string rawCommand = "");
     std::string getName();
+    int countArguments();
     std::vector<std::string> getArguments();
     std::map<std::string, std::string> getOptions();
     std::string getOption(const std::string& optionName);

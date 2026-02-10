@@ -29,10 +29,14 @@ add_executable(todoos main.cpp
         src/List/ListItems/StatusService.h
         src/List/ListService.cpp
         src/List/ListService.h
+        src/List/ListName.cpp
+        src/List/ListName.h
         src/Init/Init.cpp
         src/Init/Init.h
         src/Init/Installation.cpp
         src/Init/Installation.h
+        src/Exception/ListNotFoundException.cpp
+        src/Exception/ListNotFoundException.h
         src/Entities/ConfigEntity.cpp
         src/Entities/ConfigEntity.h
         src/Entities/ListEntity.cpp

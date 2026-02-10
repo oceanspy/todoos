@@ -32,7 +32,7 @@ class CommandList
         START = 32,
         PAUSE = 33,
         REVIEW = 34,
-        PENDING = 35,
+        BLOCKED = 35,
         COMPLETE = 36,
         CANCEL = 37,
         REMOVE = 40,

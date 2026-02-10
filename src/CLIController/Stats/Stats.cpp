@@ -5,12 +5,14 @@ Stats::Stats(IOService& ioService,
              ConfigService& configService,
              Command& command,
              ListItemService& listItemService,
-             CLIThemeService& cliThemeService)
+             CLIThemeService& cliThemeService,
+             ListName& listName)
   : ioService(ioService)
   , configService(configService)
   , command(command)
   , listItemService(listItemService)
   , cliThemeService(cliThemeService)
+  , listName(listName)
 {
 }
 
@@ -18,6 +20,6 @@ void
 Stats::print()
 {
     ThemeAbstract* theme = cliThemeService.getTheme();
-    theme->printATitle("Statistics", "List: " + configService.getCurrentList());
-    theme->printStats();
+    theme->printATitle("Statistics", "List: " + listName.getName());
+    theme->printStats(listName);
 }

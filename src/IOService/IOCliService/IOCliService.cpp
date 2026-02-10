@@ -29,6 +29,6 @@ IOCliService::ask(const std::string& message)
 {
     std::string answer;
     std::cout << message;
-    std::cin >> answer;
+    std::getline(std::cin, answer);
     return answer;
 }
