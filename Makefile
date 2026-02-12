@@ -50,6 +50,8 @@ build: show-compiler cmake-config
 	@echo "==> Building $(BINARY_NAME) in $(BUILD_DIR) ..."
 	@$(BUILD_CMD)
 	@echo "Build complete!"
+	@mkdir -p ~/.cache/oceanspy/todoos/
+	@echo "currentList: default" > ~/.cache/oceanspy/todoos/cache.conf
 
 show-compiler:
 	@echo "$(MSG_GEN)"
@@ -60,10 +62,6 @@ cmake-config:
 	@cmake $(CMAKE_FLAGS) $(CMAKE_GENERATOR) -S . -B $(BUILD_DIR)
 
 install: ln-bin zsh-autocomplete zsh-aliases
-
-upgrade:
-	@mkdir -p ~/.cache/oceanspy/todoos/
-	@echo "currentList: default" > ~/.cache/oceanspy/todoos/cache.conf
 
 ln-bin:
 	@echo "==> Installing symlink $(BINDIR)/$(BINARY_NAME) -> $(abspath $(BUILD_DIR)/$(BINARY_NAME))"
