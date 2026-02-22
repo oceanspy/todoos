@@ -8,7 +8,7 @@ Priority::Priority(IOService& ioService, Command& command, ListItemService& list
 }
 
 void
-Priority::increase()
+Priority::increase(ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -37,7 +37,7 @@ Priority::increase()
     for (const auto& id : ids) {
         for (int i = 0; i < times; i++) {
             try {
-                listItemService.increasePriority(id);
+                listItemService.increasePriority(id, listName);
                 ioService.success("Priority of: " + id + " correctly increased.");
             } catch (std::invalid_argument& e) {
                 ioService.error("Priority of item with id: " + id + " couldn't be increased.");
@@ -49,7 +49,7 @@ Priority::increase()
 }
 
 void
-Priority::decrease()
+Priority::decrease(ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -78,7 +78,7 @@ Priority::decrease()
     for (const auto& id : ids) {
         for (int i = 0; i < times; i++) {
             try {
-                listItemService.decreasePriority(id);
+                listItemService.decreasePriority(id, listName);
                 ioService.success("Priority of: " + id + " correctly decreased.");
             } catch (std::invalid_argument& e) {
                 ioService.error("Priority of item with id: " + id + " couldn't be decreased.");
@@ -90,7 +90,7 @@ Priority::decrease()
 }
 
 void
-Priority::set()
+Priority::set(ListName& listName)
 {
     const std::vector<std::string> arguments = command.getArguments();
     std::vector<std::string> adaptedArguments = command.getArguments();
@@ -128,7 +128,7 @@ Priority::set()
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.setPriority(id, priority);
+            listItemService.setPriority(id, listName, priority);
             ioService.success("Priority of: " + id + " correctly updated.");
         } catch (std::invalid_argument& e) {
             ioService.error(e.what());

@@ -34,13 +34,14 @@ TEST_CASE("FileStorage", "[moveFileTo]")
     StatusService statusService = StatusService();
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService, bus);
+    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
+    ListName listName = listService.createListName("tempListName");
 
     SECTION("moveFileTo test")
     {
-        std::vector<ListItemEntity> listItems = listItemService.load("tempListName").get();
+        std::vector<ListItemEntity> listItems = listItemService.get(listName);
         REQUIRE(listItems.size() == 2);
 
         REQUIRE_NOTHROW(fileStorageService.moveFileTo("tempListName", "tempListName-new"));
@@ -51,7 +52,8 @@ TEST_CASE("FileStorage", "[moveFileTo]")
         REQUIRE_NOTHROW(listService.find("tempListName-new"));
         REQUIRE_THROWS(listService.find("tempListName"));
 
-        std::vector<ListItemEntity> listItems2 = listItemService.load("tempListName-new").get();
+        ListName listNameNew = listService.createListName("tempListName-new");
+        std::vector<ListItemEntity> listItems2 = listItemService.get(listNameNew);
         REQUIRE(listItems2.size() == 2);
     }
 
@@ -60,7 +62,7 @@ TEST_CASE("FileStorage", "[moveFileTo]")
         installation.wipe();
         installation.make();
 
-        std::vector<ListItemEntity> listItems = listItemService.load("tempListName").get();
+        std::vector<ListItemEntity> listItems = listItemService.get(listName);
         REQUIRE(listItems.size() == 2);
 
         REQUIRE_NOTHROW(fileStorageService.createNewListFile("tempListName-new-create"));
@@ -70,8 +72,9 @@ TEST_CASE("FileStorage", "[moveFileTo]")
 
         REQUIRE_NOTHROW(listService.find("tempListName-new-create"));
 
-        listItemService.load("tempListName-new-create").add("auto");
-        std::vector<ListItemEntity> listItems2 = listItemService.load("tempListName-new-create").get();
+        ListName listNameNew = listService.createListName("tempListName-new-create");
+        listItemService.add(listNameNew, "auto");
+        std::vector<ListItemEntity> listItems2 = listItemService.get(listNameNew);
         REQUIRE(listItems2.size() == 1);
     }
 }

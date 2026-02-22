@@ -37,7 +37,7 @@ ListRepository::find(const std::string& key)
         }
     }
 
-    throw std::invalid_argument("Config with key: " + key + " was not found.");
+    throw std::invalid_argument("List: " + key + " was not found.");
 }
 
 void

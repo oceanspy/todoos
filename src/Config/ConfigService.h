@@ -27,8 +27,8 @@ class ConfigService
     std::filesystem::path getAppDirPath();
     std::string getFileDataStorageType();
     std::string getDefaultSystemExtension();
-    std::string getCurrentList();
-    std::string getCurrentListVariant();
+    std::string getUsedListNameStr();
+    std::string getUsedListVariantStr();
     std::string getDefaultList();
     std::filesystem::path getListofListFilePath();
     std::filesystem::path getListFilePath(const std::string& listName);

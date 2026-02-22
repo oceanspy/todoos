@@ -5,6 +5,7 @@
 #include "../../Command/Command.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
+#include "../../List/ListName.h"
 
 class Stats
 {
@@ -13,7 +14,8 @@ class Stats
           ConfigService& configService,
           Command& command,
           ListItemService& listItemService,
-          CLIThemeService& cliThemeService);
+          CLIThemeService& cliThemeService,
+          ListName& listName);
     void print();
 
   private:
@@ -22,6 +24,7 @@ class Stats
     Command& command;
     ListItemService& listItemService;
     CLIThemeService& cliThemeService;
+    ListName& listName;
 };
 
 #endif // TODOOS_STATS_H

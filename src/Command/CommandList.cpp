@@ -21,7 +21,7 @@ void
 CommandList::make()
 {
     commandIds = { SHOW,  ADD,   EDIT,      APPEND,   PREPEND,  FIND,   PRIORITY, INCREASE, DECREASE, STATUS, TO_DO,
-                   START, PAUSE, REVIEW,    PENDING,  COMPLETE, CANCEL, REMOVE,   ARCHIVE,  RESTORE,  MOVE,   COPY,
+                   START, PAUSE, REVIEW,    BLOCKED,  COMPLETE, CANCEL, REMOVE,   ARCHIVE,  RESTORE,  MOVE,   COPY,
                    EMPTY, CLEAN, DUPLICATE, DEADLINE, LIST,     USE,    STATS,    RESET,    COMMANDS };
 
     // loop to commandIds to get the command name
@@ -74,8 +74,8 @@ CommandList::make()
             case REVIEW:
                 commands[commandId].name = "review";
                 break;
-            case PENDING:
-                commands[commandId].name = "pend";
+            case BLOCKED:
+                commands[commandId].name = "block";
                 break;
             case COMPLETE:
                 commands[commandId].name = "complete";
@@ -213,6 +213,8 @@ CommandList::isCommandValidWithOptions(const std::string commandName, const std:
             if (commandName == "remove" || commandName == "move-to" || commandName == "copy-to") {
                 return true;
             }
+        } else if (option.first == "no-quit") {
+            return true;
         } else if (option.first == "config") {
             // only show
             // TODO: implement edit config

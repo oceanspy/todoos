@@ -16,6 +16,13 @@ Help::show()
 }
 
 void
+Help::listNotFound(std::string list)
+{
+    ioService.error("List \"" + list + "\" not found");
+    ioService.info("Type 'todoos list' to show all available lists.");
+}
+
+void
 Help::commandNotFound()
 {
     ioService.error("Command not found");
@@ -43,6 +50,8 @@ Help::helpListForCli()
         "for show/find command)",
         "\033[96m-f/--force\033[0m                                                      Force an action (valid for "
         "delete, copy-to & move-to commands)",
+        "\033[96m-Q/--no-quit\033[0m                                                    Force the application to not "
+        "quit at the end of the process",
         "",
         "\033[94m-l/--list {name}\033[0m                                                Use a list for the command",
         "\033[94m-p/--priority {name}\033[0m                                            Precise the priority of the "
@@ -124,5 +133,5 @@ Help::helpListForCli()
 std::string
 Help::getVersion()
 {
-    return "release candidate rc-1.2";
+    return "Version 0.2.11";
 }

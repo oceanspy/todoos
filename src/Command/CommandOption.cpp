@@ -19,6 +19,7 @@ CommandOption::populateOptions()
     options["v"] = "version";
     options["c"] = "config";
     options["i"] = "deadline";
+    options["Q"] = "no-quit";
 }
 
 bool

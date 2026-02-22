@@ -5,22 +5,23 @@
 #include "../../Command/CommandService.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
+#include "../../List/ListService.h"
 
 class Move
 {
   public:
     Move(IOService& ioService,
-         ConfigService& configService,
          Command& command,
          CommandService& commandService,
+         ListService& listService,
          ListItemService& listItemService);
-    std::string make();
+    std::string make(ListName& listName);
 
   private:
     IOService& ioService;
-    ConfigService& configService;
     Command& command;
     CommandService& commandService;
+    ListService& listService;
     ListItemService& listItemService;
 };
 

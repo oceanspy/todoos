@@ -9,9 +9,9 @@ class Priority
 {
   public:
     Priority(IOService& ioService, Command& command, ListItemService& listItemService);
-    void increase();
-    void decrease();
-    void set();
+    void increase(ListName& listName);
+    void decrease(ListName& listName);
+    void set(ListName& listName);
 
   private:
     IOService& ioService;

@@ -4,14 +4,14 @@
 #include "ThemeAbstract.h"
 #include <utility>
 
-class DefaultTheme : public ThemeAbstract
+class LightTheme : public ThemeAbstract
 {
   public:
-    DefaultTheme(IOService& ioService,
-                 ListService& listService,
-                 ListItemService& listItemService,
-                 int consoleWidth,
-                 int consoleRowMaxLength);
+    LightTheme(IOService& ioService,
+               ListService& listService,
+               ListItemService& listItemService,
+               int consoleWidth,
+               int consoleRowMaxLength);
     void print(ListName& listName, std::vector<ListItemEntity> listItems, bool showListName, bool showTitle) override;
     void printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems) override;
     void printStats(ListName& listName) override;
@@ -27,7 +27,7 @@ class DefaultTheme : public ThemeAbstract
     std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset) override;
     std::string buildDate(const ListItemEntity& listItemEntity) override;
     void printFullLine(std::string color) override;
-    ~DefaultTheme() override = default;
+    ~LightTheme() override = default;
     void renderListStatLine(ListName& listName, time_t from, time_t to, std::string name);
 
   private:
