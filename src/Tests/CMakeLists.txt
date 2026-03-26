@@ -74,6 +74,13 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Init/InstallationTest.cpp
         FileDataStorage/ConfServiceTest.cpp
         FileStorage/FileStorageTest.cpp
+        Command/CommandOptionTest.cpp
+        Events/EventTest.cpp
+        Entities/StatusEntityTest.cpp
+        Entities/PriorityEntityTest.cpp
+        Helpers/BashStyleTest.cpp
+        Exception/ListNotFoundExceptionTest.cpp
+        Config/ConfigServiceTest.cpp
 )
 
 target_link_libraries(TestsRun PRIVATE nlohmann_json::nlohmann_json)

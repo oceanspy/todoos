@@ -136,6 +136,55 @@ TEST_CASE("ListServiceTest", "[ListService]")
         REQUIRE_THROWS(listService.createListName(tempListNameStr, "truc"));
     }
 
+    SECTION("use")
+    {
+        bool result = listService.use(tempListNameStr);
+        REQUIRE(result == true);
+
+        // Verify currentList was updated
+        REQUIRE(configService.getUsedListNameStr() == tempListNameStr);
+
+        // Using a non-existent list returns false
+        bool result2 = listService.use("nonExistentList");
+        REQUIRE(result2 == false);
+    }
+
+    SECTION("getType")
+    {
+        std::string type = listService.getType(tempListNameStr);
+        REQUIRE(type == "default");
+    }
+
+    SECTION("validateListName edge cases")
+    {
+        // Empty string should be valid (regex matches empty)
+        REQUIRE_NOTHROW(ListService::validateListName(""));
+
+        // Exactly 50 characters should be valid
+        REQUIRE_NOTHROW(
+            ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeee"));
+
+        // 51 characters should be invalid
+        REQUIRE_THROWS(
+            ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeef"));
+
+        // Special characters should be invalid
+        REQUIRE_THROWS(ListService::validateListName("list with spaces"));
+        REQUIRE_THROWS(ListService::validateListName("list@name"));
+        REQUIRE_THROWS(ListService::validateListName("list.name"));
+        REQUIRE_THROWS(ListService::validateListName("list/name"));
+
+        // Underscore and hyphen should be valid
+        REQUIRE_NOTHROW(ListService::validateListName("list_name"));
+        REQUIRE_NOTHROW(ListService::validateListName("list-name"));
+        REQUIRE_NOTHROW(ListService::validateListName("LIST-NAME_123"));
+    }
+
+    SECTION("add duplicate list throws")
+    {
+        REQUIRE_THROWS(listService.add(tempListNameStr, "default", "default"));
+    }
+
     SECTION("getAutocompleteLists")
     {
         std::string variant = "default";
