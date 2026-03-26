@@ -57,15 +57,34 @@ StringHelpers::randomLettersLowercase(const int len)
 std::wstring
 StringHelpers::stringToWstring(const std::string& str)
 {
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    return converter.from_bytes(str);
+    static bool localeSet = [] { std::setlocale(LC_CTYPE, ""); return true; }();
+    (void)localeSet;
+
+    if (str.empty()) return {};
+    const char* src = str.c_str();
+    std::mbstate_t state{};
+    std::size_t len = std::mbsrtowcs(nullptr, &src, 0, &state);
+    if (len == static_cast<std::size_t>(-1)) return {};
+    std::wstring wstr(len, L'\0');
+    src = str.c_str();
+    state = std::mbstate_t{};
+    std::mbsrtowcs(wstr.data(), &src, len, &state);
+    return wstr;
 }
 
 std::string
 StringHelpers::wstringToString(const std::wstring& wstr)
 {
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    return converter.to_bytes(wstr);
+    if (wstr.empty()) return {};
+    const wchar_t* src = wstr.c_str();
+    std::mbstate_t state{};
+    std::size_t len = std::wcsrtombs(nullptr, &src, 0, &state);
+    if (len == static_cast<std::size_t>(-1)) return {};
+    std::string str(len, '\0');
+    src = wstr.c_str();
+    state = std::mbstate_t{};
+    std::wcsrtombs(str.data(), &src, len, &state);
+    return str;
 }
 
 std::string
@@ -138,8 +157,7 @@ StringHelpers::countCharsWithoutBashCodes(const std::string& str)
     std::string result = std::regex_replace(str, ansi_escape_code, "");
 
     // Convert the string to a wide character string
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    std::wstring wideStr = converter.from_bytes(result);
+    std::wstring wideStr = stringToWstring(result);
 
     // Use a ctype facet to remove accents from the wide character string
     std::locale locale("en_US.UTF8");
@@ -149,7 +167,7 @@ StringHelpers::countCharsWithoutBashCodes(const std::string& str)
     }
 
     // Convert the wide character string back to a byte string
-    result = converter.to_bytes(wideStr);
+    result = wstringToString(wideStr);
 
     // Return the length of the string
     return result.length();
