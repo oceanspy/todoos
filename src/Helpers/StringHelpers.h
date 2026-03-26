@@ -3,7 +3,8 @@
 
 #include <algorithm>
 #include <chrono>
-#include <codecvt>
+#include <clocale>
+#include <cwchar>
 #include <iomanip>
 #include <iterator>
 #include <regex>

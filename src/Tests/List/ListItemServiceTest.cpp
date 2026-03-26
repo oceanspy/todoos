@@ -601,6 +601,56 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItem4.getDueAt() == 0);
     }
 
+    SECTION("duplicate")
+    {
+        std::string id = "aaaa";
+        std::vector<ListItemEntity> listItemsBefore = listItemService.get(tempListName);
+        REQUIRE(listItemsBefore.size() == 2);
+
+        listItemService.duplicate(id, tempListName);
+
+        std::vector<ListItemEntity> listItemsAfter = listItemService.get(tempListName);
+        REQUIRE(listItemsAfter.size() == 3);
+
+        // The duplicated item should have a different ID but same value
+        bool foundOriginal = false;
+        bool foundDuplicate = false;
+        for (auto& item : listItemsAfter) {
+            if (*item.getId() == "aaaa") {
+                foundOriginal = true;
+            } else if (*item.getValue() == "test 1" && *item.getId() != "aaaa") {
+                foundDuplicate = true;
+            }
+        }
+        REQUIRE(foundOriginal);
+        REQUIRE(foundDuplicate);
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("reset")
+    {
+        std::string id = "aaaa";
+
+        // First change status to something else
+        const int newStatusValue = StatusService::STARTED;
+        const int* newStatus = &newStatusValue;
+        listItemService.editStatus(id, listName, newStatus);
+        ListItemEntity listItemEntity = listItemService.find(id, listName);
+        REQUIRE(*(*listItemEntity.status()).getCommandName() == "started");
+
+        // Reset should bring it back to to-do
+        listItemService.reset(id, listName);
+        ListItemEntity resetItem = listItemService.find(id, listName);
+        REQUIRE(*(*resetItem.status()).getCommandName() == "to-do");
+    }
+
+    SECTION("find non-existent item throws")
+    {
+        REQUIRE_THROWS(listItemService.find("zzzz", listName));
+    }
+
     SECTION("Count()")
     {
         std::vector<ListItemEntity> listItems = listItemService.get(tempListName);
@@ -622,5 +672,31 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(0 == listItemService.countWithPriority(tempListName, { 0, 3 }));
         REQUIRE(2 == listItemService.countWithPriority(tempListName, { 1, 2 }));
         REQUIRE_THROWS(listItemService.countWithPriority(tempListName, { 10 }));
+    }
+
+    SECTION("countCreatedBetween()")
+    {
+        // Both items were created at 1712487259 and 1712487272
+        REQUIRE(2 == listItemService.countCreatedBetween(tempListName, 1712487250, 1712487280));
+        REQUIRE(1 == listItemService.countCreatedBetween(tempListName, 1712487260, 1712487280));
+        REQUIRE(0 == listItemService.countCreatedBetween(tempListName, 1712487280, 1712487290));
+    }
+
+    SECTION("countClosedBetween()")
+    {
+        // No items are closed initially
+        REQUIRE(0 == listItemService.countClosedBetween(tempListName, 0, time(nullptr) + 100000));
+    }
+
+    SECTION("makeId returns a string of correct length")
+    {
+        std::string id = listItemService.makeId(tempListName);
+        REQUIRE(id.length() == listItemService.idLength);
+    }
+
+    SECTION("isIdAvailable")
+    {
+        REQUIRE(listItemService.isIdAvailable("zzzz", tempListName) == true);
+        REQUIRE(listItemService.isIdAvailable("aaaa", tempListName) == false);
     }
 }

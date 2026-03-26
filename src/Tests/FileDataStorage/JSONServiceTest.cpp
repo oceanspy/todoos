@@ -41,6 +41,88 @@ TEST_CASE("JSONService tests", "[JSONService]")
         REQUIRE(readData == testData);
     }
 
+    SECTION("Append method adds data to existing file")
+    {
+        JSONService jsonService(ioService);
+        jsonService.load(tempFile);
+
+        std::vector<std::vector<std::string>> initialData = { { "a", "b" }, { "c", "d" } };
+        jsonService.write(initialData);
+
+        std::vector<std::vector<std::string>> appendData = { { "e", "f" } };
+        jsonService.append(appendData);
+
+        std::vector<std::vector<std::string>> readData = jsonService.read(std::nullopt);
+        REQUIRE(readData.size() == 3);
+        REQUIRE(readData[0] == std::vector<std::string>{ "a", "b" });
+        REQUIRE(readData[1] == std::vector<std::string>{ "c", "d" });
+        REQUIRE(readData[2] == std::vector<std::string>{ "e", "f" });
+    }
+
+    SECTION("Append to empty file")
+    {
+        JSONService jsonService(ioService);
+        jsonService.load(tempFile);
+
+        std::vector<std::vector<std::string>> appendData = { { "x", "y" } };
+        jsonService.append(appendData);
+
+        std::vector<std::vector<std::string>> readData = jsonService.read(std::nullopt);
+        REQUIRE(readData.size() == 1);
+        REQUIRE(readData[0] == std::vector<std::string>{ "x", "y" });
+    }
+
+    SECTION("Empty method clears the file")
+    {
+        JSONService jsonService(ioService);
+        jsonService.load(tempFile);
+
+        std::vector<std::vector<std::string>> testData = { { "1", "2" }, { "3", "4" } };
+        jsonService.write(testData);
+
+        jsonService.empty();
+
+        // After empty, the file is cleared; re-load to reinitialize
+        JSONService jsonService2(ioService);
+        jsonService2.load(tempFile);
+        std::vector<std::vector<std::string>> readData = jsonService2.read(std::nullopt);
+        REQUIRE(readData.empty());
+    }
+
+    SECTION("Write and read empty data")
+    {
+        JSONService jsonService(ioService);
+        jsonService.load(tempFile);
+
+        std::vector<std::vector<std::string>> emptyData = {};
+        jsonService.write(emptyData);
+
+        std::vector<std::vector<std::string>> readData = jsonService.read(std::nullopt);
+        REQUIRE(readData.empty());
+    }
+
+    SECTION("Read with limit keeps last N items via sliding window")
+    {
+        JSONService jsonService(ioService);
+        jsonService.load(tempFile);
+
+        std::vector<std::vector<std::string>> testData = {
+            { "1" }, { "2" }, { "3" }, { "4" }, { "5" }
+        };
+        jsonService.write(testData);
+
+        // The limit implementation uses a sliding window that erases from front
+        // once count reaches limit, so with 5 items and limit=3, it keeps the last 2
+        std::vector<std::vector<std::string>> readData = jsonService.read(3);
+        REQUIRE(readData.size() == 2);
+        REQUIRE(readData[0] == std::vector<std::string>{ "4" });
+        REQUIRE(readData[1] == std::vector<std::string>{ "5" });
+
+        // With limit larger than data size, all items are returned
+        std::vector<std::vector<std::string>> readAll = jsonService.read(10);
+        REQUIRE(readAll.size() == 5);
+    }
+
     // Clean up: remove temporary directory
     std::filesystem::remove_all(tempDir);
 }

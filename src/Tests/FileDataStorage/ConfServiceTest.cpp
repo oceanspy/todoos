@@ -43,6 +43,52 @@ TEST_CASE("ConfService tests", "[ConfService]")
         REQUIRE(readData == testData);
     }
 
+    SECTION("Append method adds data to existing file")
+    {
+        ConfService confService(ioService);
+        confService.load(tempFile);
+
+        std::vector<std::vector<std::string>> initialData = { { "key1", "value1" }, { "key2", "value2" } };
+        confService.write(initialData);
+
+        std::vector<std::vector<std::string>> appendData = { { "key3", "value3" } };
+        confService.append(appendData);
+
+        std::vector<std::vector<std::string>> readData = confService.read(std::nullopt);
+        REQUIRE(readData.size() == 3);
+        REQUIRE(readData[0] == std::vector<std::string>{ "key1", "value1" });
+        REQUIRE(readData[1] == std::vector<std::string>{ "key2", "value2" });
+        REQUIRE(readData[2] == std::vector<std::string>{ "key3", "value3" });
+    }
+
+    SECTION("Empty method clears the file")
+    {
+        ConfService confService(ioService);
+        confService.load(tempFile);
+
+        std::vector<std::vector<std::string>> testData = { { "key1", "value1" }, { "key2", "value2" } };
+        confService.write(testData);
+
+        confService.empty();
+
+        ConfService confService2(ioService);
+        confService2.load(tempFile);
+        std::vector<std::vector<std::string>> readData = confService2.read(std::nullopt);
+        REQUIRE(readData.empty());
+    }
+
+    SECTION("Write and read empty data")
+    {
+        ConfService confService(ioService);
+        confService.load(tempFile);
+
+        std::vector<std::vector<std::string>> emptyData = {};
+        confService.write(emptyData);
+
+        std::vector<std::vector<std::string>> readData = confService.read(std::nullopt);
+        REQUIRE(readData.empty());
+    }
+
     // Clean up: remove temporary directory
     std::filesystem::remove_all(tempDir);
 }
