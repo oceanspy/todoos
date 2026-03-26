@@ -132,6 +132,38 @@ TEST_CASE("ConfigServiceTest", "[ConfigService]")
         REQUIRE(listName == "myList");
     }
 
+    SECTION("add with unknown key throws")
+    {
+        REQUIRE_THROWS_AS(configService.add("unknownKey", "testValue"), std::invalid_argument);
+    }
+
+    SECTION("editCurrentList updates cache")
+    {
+        std::string originalList = configService.getUsedListNameStr();
+        configService.editCurrentList("newListValue");
+        REQUIRE(configService.getUsedListNameStr() == "newListValue");
+        // Restore
+        configService.editCurrentList(originalList);
+    }
+
+    SECTION("getDefaultSystemExtension returns non-empty")
+    {
+        std::string ext = configService.getDefaultSystemExtension();
+        REQUIRE(ext.empty() == false);
+    }
+
+    SECTION("getListofListFilePath returns non-empty")
+    {
+        std::filesystem::path path = configService.getListofListFilePath();
+        REQUIRE(path.empty() == false);
+    }
+
+    SECTION("getCurrentListFilePath returns non-empty")
+    {
+        std::filesystem::path path = configService.getCurrentListFilePath();
+        REQUIRE(path.empty() == false);
+    }
+
     SECTION("getListFilePath")
     {
         std::filesystem::path path = configService.getListFilePath("testList");

@@ -401,6 +401,288 @@ TEST_CASE("escapeChar", "[StringHelpers]")
     REQUIRE(resultTest2 == expectedTest2);
 }
 
+TEST_CASE("StringHelper::randomAlNumString function", "[Helpers]")
+{
+    SECTION("Test random alphanumeric string length")
+    {
+        int len = 10;
+        std::string result = StringHelpers::randomAlNumString(len);
+        REQUIRE(result.length() == len);
+    }
+
+    SECTION("Test random alphanumeric string contains only alnum chars")
+    {
+        std::string result = StringHelpers::randomAlNumString(20);
+        REQUIRE(StringHelpers::isAlnum(result));
+    }
+}
+
+TEST_CASE("StringHelper::randomLettersLowercase function", "[Helpers]")
+{
+    SECTION("Test random lowercase string length")
+    {
+        int len = 10;
+        std::string result = StringHelpers::randomLettersLowercase(len);
+        REQUIRE(result.length() == len);
+    }
+
+    SECTION("Test random lowercase string is all lowercase")
+    {
+        std::string result = StringHelpers::randomLettersLowercase(20);
+        REQUIRE(result == StringHelpers::toLower(result));
+    }
+}
+
+TEST_CASE("StringHelper::toUpper function", "[Helpers]")
+{
+    REQUIRE(StringHelpers::toUpper("hello") == "HELLO");
+    REQUIRE(StringHelpers::toUpper("HeLLo") == "HELLO");
+    REQUIRE(StringHelpers::toUpper("123abc") == "123ABC");
+    REQUIRE(StringHelpers::toUpper("") == "");
+}
+
+TEST_CASE("StringHelper::containsString function", "[Helpers]")
+{
+    REQUIRE(StringHelpers::containsString("hello world", "world") == true);
+    REQUIRE(StringHelpers::containsString("hello world", "llo") == true);
+    REQUIRE(StringHelpers::containsString("hello world", "xyz") == false);
+    REQUIRE(StringHelpers::containsString("hello", "") == true);
+    REQUIRE(StringHelpers::containsString("", "hello") == false);
+}
+
+TEST_CASE("StringHelper::split function", "[Helpers]")
+{
+    SECTION("Split by space")
+    {
+        std::vector<std::string> result = StringHelpers::split("hello world foo", ' ');
+        REQUIRE(result.size() == 3);
+        REQUIRE(result[0] == "hello");
+        REQUIRE(result[1] == "world");
+        REQUIRE(result[2] == "foo");
+    }
+
+    SECTION("Split by comma")
+    {
+        std::vector<std::string> result = StringHelpers::split("a,b,c", ',');
+        REQUIRE(result.size() == 3);
+        REQUIRE(result[0] == "a");
+        REQUIRE(result[1] == "b");
+        REQUIRE(result[2] == "c");
+    }
+
+    SECTION("Split single item")
+    {
+        std::vector<std::string> result = StringHelpers::split("hello", ' ');
+        REQUIRE(result.size() == 1);
+        REQUIRE(result[0] == "hello");
+    }
+
+    SECTION("Split empty string")
+    {
+        std::vector<std::string> result = StringHelpers::split("", ' ');
+        REQUIRE(result.empty());
+    }
+}
+
+TEST_CASE("StringHelper::isAlnum function", "[Helpers]")
+{
+    REQUIRE(StringHelpers::isAlnum("hello123") == true);
+    REQUIRE(StringHelpers::isAlnum("HELLO") == true);
+    REQUIRE(StringHelpers::isAlnum("123") == true);
+    REQUIRE(StringHelpers::isAlnum("hello world") == false);
+    REQUIRE(StringHelpers::isAlnum("hello!") == false);
+    REQUIRE(StringHelpers::isAlnum("") == true);
+}
+
+TEST_CASE("StringHelper::colorize function", "[Helpers]")
+{
+    std::string result = StringHelpers::colorize("hello", "\033[31m");
+    REQUIRE(result == "\033[31mhello\033[0m");
+
+    std::string result2 = StringHelpers::colorize("", "\033[32m");
+    REQUIRE(result2 == "\033[32m\033[0m");
+}
+
+TEST_CASE("StringHelper::adjustStringLengthWithString function", "[Helpers]")
+{
+    SECTION("Pad with custom string")
+    {
+        std::string result = StringHelpers::adjustStringLengthWithString("hi", 6, "-");
+        REQUIRE(result == "hi----");
+    }
+
+    SECTION("String already long enough returns as-is")
+    {
+        std::string result = StringHelpers::adjustStringLengthWithString("hello", 3, "-");
+        REQUIRE(result == "hello");
+    }
+
+    SECTION("Exact length returns as-is")
+    {
+        std::string result = StringHelpers::adjustStringLengthWithString("hello", 5, "-");
+        REQUIRE(result == "hello");
+    }
+}
+
+TEST_CASE("StringHelper::stringToWstring and wstringToString round-trip", "[Helpers]")
+{
+    std::string original = "Hello World";
+    std::wstring wide = StringHelpers::stringToWstring(original);
+    std::string back = StringHelpers::wstringToString(wide);
+    REQUIRE(back == original);
+}
+
+TEST_CASE("DateHelper::endOfDayTimestamp function", "[DateHelpers]")
+{
+    time_t now = time(nullptr);
+    time_t endOfDay = DateHelpers::endOfDayTimestamp(now);
+    tm* timeinfo = localtime(&endOfDay);
+
+    REQUIRE(timeinfo->tm_hour == 23);
+    REQUIRE(timeinfo->tm_min == 59);
+    REQUIRE(timeinfo->tm_sec == 59);
+}
+
+TEST_CASE("DateHelper::isTimestampToday function", "[DateHelpers]")
+{
+    time_t now = time(nullptr);
+    REQUIRE(DateHelpers::isTimestampToday(now) == true);
+
+    // A very old timestamp should not be today
+    time_t oldTimestamp = 1000000;
+    REQUIRE(DateHelpers::isTimestampToday(oldTimestamp) == false);
+}
+
+TEST_CASE("DateHelper::isTimestampNDaysFromToday function", "[DateHelpers]")
+{
+    time_t now = time(nullptr);
+    REQUIRE(DateHelpers::isTimestampNDaysFromToday(now, 0) == true);
+
+    // Tomorrow's timestamp should be 1 day from today
+    time_t tomorrow = now + 24 * 60 * 60;
+    REQUIRE(DateHelpers::isTimestampNDaysFromToday(tomorrow, 1) == true);
+    REQUIRE(DateHelpers::isTimestampNDaysFromToday(tomorrow, 0) == false);
+}
+
+TEST_CASE("DateHelper::isDateValidFromUser function", "[DateHelpers]")
+{
+    REQUIRE(DateHelpers::isDateValidFromUser("2024-03-15") == true);
+    REQUIRE(DateHelpers::isDateValidFromUser("2024.03.15") == true);
+    REQUIRE(DateHelpers::isDateValidFromUser("03-15") == true);
+    REQUIRE(DateHelpers::isDateValidFromUser("03.15") == true);
+    REQUIRE(DateHelpers::isDateValidFromUser("15") == true);
+    REQUIRE(DateHelpers::isDateValidFromUser("today") == false);
+    REQUIRE(DateHelpers::isDateValidFromUser("abc") == false);
+    REQUIRE(DateHelpers::isDateValidFromUser("1") == false);
+}
+
+TEST_CASE("DateHelper::formatTimestampToHumanDate function", "[DateHelpers]")
+{
+    SECTION("Returns N/A for zero timestamp")
+    {
+        REQUIRE(DateHelpers::formatTimestampToHumanDate(0) == "N/A");
+    }
+
+    SECTION("Returns formatted date for valid timestamp")
+    {
+        time_t timestamp = 1709506799; // 2024-03-03
+        std::string result = DateHelpers::formatTimestampToHumanDate(timestamp, "default");
+        REQUIRE(result.empty() == false);
+    }
+
+    SECTION("Returns date-only format")
+    {
+        time_t timestamp = 1709506799;
+        std::string result = DateHelpers::formatTimestampToHumanDate(timestamp, "date");
+        REQUIRE(result.empty() == false);
+    }
+}
+
+TEST_CASE("DateHelper::getMonthStart and getMonthEnd", "[DateHelpers]")
+{
+    time_t monthStart = DateHelpers::getMonthStart(0);
+    time_t monthEnd = DateHelpers::getMonthEnd(0);
+
+    tm* startInfo = localtime(&monthStart);
+    REQUIRE(startInfo->tm_mday == 1);
+    REQUIRE(startInfo->tm_hour == 0);
+    REQUIRE(startInfo->tm_min == 0);
+    REQUIRE(startInfo->tm_sec == 0);
+
+    REQUIRE(monthEnd > monthStart);
+
+    // Next month start should equal this month end
+    time_t nextMonthStart = DateHelpers::getMonthStart(1);
+    REQUIRE(nextMonthStart == monthEnd);
+}
+
+TEST_CASE("DateHelper::getYearStart and getYearEnd", "[DateHelpers]")
+{
+    time_t yearStart = DateHelpers::getYearStart(0);
+    time_t yearEnd = DateHelpers::getYearEnd(0);
+
+    tm* startInfo = localtime(&yearStart);
+    REQUIRE(startInfo->tm_mday == 1);
+    REQUIRE(startInfo->tm_mon == 0); // January
+    REQUIRE(startInfo->tm_hour == 0);
+
+    REQUIRE(yearEnd > yearStart);
+
+    // Next year start should equal this year end
+    time_t nextYearStart = DateHelpers::getYearStart(1);
+    REQUIRE(nextYearStart == yearEnd);
+}
+
+TEST_CASE("DateHelper::getDayEnd function", "[DateHelpers]")
+{
+    time_t timestamp = 1717144878;
+    time_t dayStart = DateHelpers::getDayStart("monday", timestamp);
+    time_t dayEnd = DateHelpers::getDayEnd("monday", timestamp);
+
+    REQUIRE(dayEnd == dayStart + 24 * 60 * 60);
+}
+
+TEST_CASE("DateHelper::relativeDateToTimestamp special values", "[DateHelpers]")
+{
+    SECTION("empty string returns 0")
+    {
+        REQUIRE(DateHelpers::relativeDateToTimestamp("") == 0);
+    }
+
+    SECTION("reset/clear/none return 0")
+    {
+        REQUIRE(DateHelpers::relativeDateToTimestamp("reset") == 0);
+        REQUIRE(DateHelpers::relativeDateToTimestamp("clear") == 0);
+        REQUIRE(DateHelpers::relativeDateToTimestamp("none") == 0);
+    }
+
+    SECTION("now returns current timestamp")
+    {
+        time_t before = time(nullptr);
+        time_t result = DateHelpers::relativeDateToTimestamp("now");
+        time_t after = time(nullptr);
+        REQUIRE(result >= before);
+        REQUIRE(result <= after);
+    }
+
+    SECTION("end-of-day returns today at 23:59:59")
+    {
+        time_t result = DateHelpers::relativeDateToTimestamp("end-of-day");
+        tm* timeinfo = localtime(&result);
+        REQUIRE(timeinfo->tm_hour == 23);
+        REQUIRE(timeinfo->tm_min == 59);
+        REQUIRE(timeinfo->tm_sec == 59);
+    }
+
+    SECTION("weekday names work")
+    {
+        time_t referenceTime = time(nullptr);
+        REQUIRE_NOTHROW(DateHelpers::relativeDateToTimestamp("monday", referenceTime));
+        REQUIRE_NOTHROW(DateHelpers::relativeDateToTimestamp("friday", referenceTime));
+        REQUIRE_NOTHROW(DateHelpers::relativeDateToTimestamp("sunday", referenceTime));
+    }
+}
+
 TEST_CASE("DateHelper::relativeDateToTimestamp function", "[Helpers]")
 {
     SECTION("Test relativeDateToTimestamp method")

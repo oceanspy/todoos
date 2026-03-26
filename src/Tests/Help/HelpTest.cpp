@@ -4,11 +4,33 @@
 
 TEST_CASE("Help tests", "[Help]")
 {
-    SECTION("Help test")
+    IOService ioService("cli");
+    Help help(ioService);
+
+    SECTION("show does not throw")
     {
-        IOService ioService("cli");
-        Help help(ioService);
         REQUIRE_NOTHROW(help.show());
-        // No direct way to check output in CLI, can check for exceptions
+    }
+
+    SECTION("commandNotFound does not throw")
+    {
+        REQUIRE_NOTHROW(help.commandNotFound());
+    }
+
+    SECTION("commandOptionNotSupported does not throw")
+    {
+        REQUIRE_NOTHROW(help.commandOptionNotSupported());
+    }
+
+    SECTION("listNotFound does not throw")
+    {
+        REQUIRE_NOTHROW(help.listNotFound("nonExistentList"));
+    }
+
+    SECTION("getVersion returns a version string")
+    {
+        std::string version = Help::getVersion();
+        REQUIRE(version.empty() == false);
+        REQUIRE(version.find("Version") != std::string::npos);
     }
 }

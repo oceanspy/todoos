@@ -673,4 +673,30 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(2 == listItemService.countWithPriority(tempListName, { 1, 2 }));
         REQUIRE_THROWS(listItemService.countWithPriority(tempListName, { 10 }));
     }
+
+    SECTION("countCreatedBetween()")
+    {
+        // Both items were created at 1712487259 and 1712487272
+        REQUIRE(2 == listItemService.countCreatedBetween(tempListName, 1712487250, 1712487280));
+        REQUIRE(1 == listItemService.countCreatedBetween(tempListName, 1712487260, 1712487280));
+        REQUIRE(0 == listItemService.countCreatedBetween(tempListName, 1712487280, 1712487290));
+    }
+
+    SECTION("countClosedBetween()")
+    {
+        // No items are closed initially
+        REQUIRE(0 == listItemService.countClosedBetween(tempListName, 0, time(nullptr) + 100000));
+    }
+
+    SECTION("makeId returns a string of correct length")
+    {
+        std::string id = listItemService.makeId(tempListName);
+        REQUIRE(id.length() == listItemService.idLength);
+    }
+
+    SECTION("isIdAvailable")
+    {
+        REQUIRE(listItemService.isIdAvailable("zzzz", tempListName) == true);
+        REQUIRE(listItemService.isIdAvailable("aaaa", tempListName) == false);
+    }
 }

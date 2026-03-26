@@ -58,6 +58,81 @@ TEST_CASE("IOService CLI channel tests", "[IOService][CLI]")
     //    }
 }
 
+TEST_CASE("IOService additional CLI channel tests", "[IOService][CLI]")
+{
+    SECTION("message does not throw")
+    {
+        IOService io("cli");
+        REQUIRE_NOTHROW(io.message("Test message"));
+    }
+
+    SECTION("printWithoutLineBreak does not throw")
+    {
+        IOService io("cli");
+        REQUIRE_NOTHROW(io.printWithoutLineBreak("Test"));
+    }
+
+    SECTION("success does not throw")
+    {
+        IOService io("cli");
+        REQUIRE_NOTHROW(io.success("Operation completed"));
+    }
+
+    SECTION("info does not throw")
+    {
+        IOService io("cli");
+        REQUIRE_NOTHROW(io.info("Information message"));
+    }
+
+    SECTION("title does not throw")
+    {
+        IOService io("cli");
+        REQUIRE_NOTHROW(io.title("Test Title"));
+    }
+
+    SECTION("getConsoleDisplayWidth returns non-negative")
+    {
+        int width = IOService::getConsoleDisplayWidth();
+        REQUIRE(width >= 0);
+    }
+}
+
+TEST_CASE("IOService non-CLI channel silently ignores", "[IOService][Other]")
+{
+    IOService io("other");
+
+    SECTION("message does not throw on non-CLI channel")
+    {
+        REQUIRE_NOTHROW(io.message("Test"));
+    }
+
+    SECTION("printWithoutLineBreak does not throw on non-CLI channel")
+    {
+        REQUIRE_NOTHROW(io.printWithoutLineBreak("Test"));
+    }
+
+    SECTION("success does not throw on non-CLI channel")
+    {
+        REQUIRE_NOTHROW(io.success("Test"));
+    }
+
+    SECTION("info does not throw on non-CLI channel")
+    {
+        REQUIRE_NOTHROW(io.info("Test"));
+    }
+
+    SECTION("title does not throw on non-CLI channel")
+    {
+        REQUIRE_NOTHROW(io.title("Test"));
+    }
+
+    SECTION("ask returns empty on non-CLI channel")
+    {
+        std::string result = io.ask("question?");
+        REQUIRE(result == "");
+    }
+}
+
 TEST_CASE("IOService other channel tests", "[IOService][Other]")
 {
     SECTION("Print test")
