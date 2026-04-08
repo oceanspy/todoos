@@ -113,8 +113,6 @@ Status::set(ListName& listName)
         ioService.br();
         return;
     }
-    std::string* status;
-
     if (!listItemService.status().isNameValid(adaptedArguments.at(0))) {
         ioService.br();
         ioService.error("Please provide a valid status.");
@@ -122,7 +120,7 @@ Status::set(ListName& listName)
         return;
     }
 
-    status = new std::string(adaptedArguments.at(0));
+    std::string status = adaptedArguments.at(0);
     adaptedArguments.erase(adaptedArguments.begin());
 
     std::vector<std::string> ids = adaptedArguments;
@@ -133,7 +131,7 @@ Status::set(ListName& listName)
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.setStatus(id, listName, status);
+            listItemService.setStatus(id, listName, &status);
             ioService.success("Status of: " + id + " correctly updated.");
         } catch (std::invalid_argument& e) {
             ioService.error(e.what());
@@ -141,6 +139,4 @@ Status::set(ListName& listName)
         }
     }
     ioService.br();
-
-    free(status);
 }

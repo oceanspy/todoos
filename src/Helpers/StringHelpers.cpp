@@ -1,18 +1,23 @@
 #include "StringHelpers.h"
 
+static std::mt19937&
+getGenerator()
+{
+    static std::mt19937 gen(std::random_device{}());
+    return gen;
+}
+
 std::string
 StringHelpers::randomString(const int len)
 {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    seed ^= getpid() + std::clock();
-    srand(seed);
     static const char alphanum[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                    "abcdefghijklmnopqrstuvwxyz";
+    std::uniform_int_distribution<int> dis(0, sizeof(alphanum) - 2);
     std::string tmp_s;
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+        tmp_s += alphanum[dis(getGenerator())];
     }
 
     return tmp_s;
@@ -21,17 +26,15 @@ StringHelpers::randomString(const int len)
 std::string
 StringHelpers::randomAlNumString(const int len)
 {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    seed ^= getpid() + std::clock();
-    srand(seed);
     static const char alphanum[] = "0123456789"
                                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                    "abcdefghijklmnopqrstuvwxyz";
+    std::uniform_int_distribution<int> dis(0, sizeof(alphanum) - 2);
     std::string tmp_s;
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+        tmp_s += alphanum[dis(getGenerator())];
     }
 
     return tmp_s;
@@ -40,15 +43,13 @@ StringHelpers::randomAlNumString(const int len)
 std::string
 StringHelpers::randomLettersLowercase(const int len)
 {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    seed ^= getpid() + std::clock();
-    srand(seed);
     static const char alphanum[] = "abcdefghijklmnopqrstuvwxyz";
+    std::uniform_int_distribution<int> dis(0, sizeof(alphanum) - 2);
     std::string tmp_s;
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+        tmp_s += alphanum[dis(getGenerator())];
     }
 
     return tmp_s;

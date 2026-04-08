@@ -25,14 +25,18 @@ ListItemActions::make(ListName& listName)
             return;
         }
 
+        std::string priorityValue;
         std::string* priority = nullptr;
         if (command.hasOption("priority") && listItemService.priority().isNameValid(command.getOption("priority"))) {
-            priority = new std::string(command.getOption("priority"));
+            priorityValue = command.getOption("priority");
+            priority = &priorityValue;
         }
 
+        std::string statusValue;
         std::string* status = nullptr;
         if (command.hasOption("status") && listItemService.status().isNameValid(command.getOption("status"))) {
-            status = new std::string(command.getOption("status"));
+            statusValue = command.getOption("status");
+            status = &statusValue;
         }
 
         time_t dueAt = 0;
@@ -58,8 +62,6 @@ ListItemActions::make(ListName& listName)
             ioService.br();
             return;
         }
-
-        free(priority);
 
         ioService.br();
         ioService.success("Item " + id + " correctly added.");
@@ -88,15 +90,19 @@ ListItemActions::make(ListName& listName)
         itemValueFromArguments.erase(itemValueFromArguments.begin());
 
         try {
+            std::string priorityValue;
             std::string* priority = nullptr;
             if (command.hasOption("priority") &&
                 listItemService.priority().isNameValid(command.getOption("priority"))) {
-                priority = new std::string(command.getOption("priority"));
+                priorityValue = command.getOption("priority");
+                priority = &priorityValue;
             }
 
+            std::string statusValue;
             std::string* status = nullptr;
             if (command.hasOption("status") && listItemService.status().isNameValid(command.getOption("status"))) {
-                status = new std::string(command.getOption("status"));
+                statusValue = command.getOption("status");
+                status = &statusValue;
             }
 
             time_t dueAt = 0;

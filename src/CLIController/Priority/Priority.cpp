@@ -108,8 +108,6 @@ Priority::set(ListName& listName)
         ioService.br();
         return;
     }
-    std::string* priority;
-
     if (!listItemService.priority().isNameValid(adaptedArguments.at(0))) {
         ioService.br();
         ioService.error("Please provide a valid priority.");
@@ -117,7 +115,7 @@ Priority::set(ListName& listName)
         return;
     }
 
-    priority = new std::string(adaptedArguments.at(0));
+    std::string priority = adaptedArguments.at(0);
     adaptedArguments.erase(adaptedArguments.begin());
 
     std::vector<std::string> ids = adaptedArguments;
@@ -128,7 +126,7 @@ Priority::set(ListName& listName)
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.setPriority(id, listName, priority);
+            listItemService.setPriority(id, listName, &priority);
             ioService.success("Priority of: " + id + " correctly updated.");
         } catch (std::invalid_argument& e) {
             ioService.error(e.what());
@@ -136,6 +134,4 @@ Priority::set(ListName& listName)
         }
     }
     ioService.br();
-
-    free(priority);
 }
