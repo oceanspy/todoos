@@ -13,7 +13,6 @@ class StatusEntity
     [[nodiscard]] const std::string* getName() const;
     [[nodiscard]] const std::string* getCommandName() const;
     [[nodiscard]] const std::string* getIcon() const;
-    [[nodiscard]] const int getIconLength() const;
     [[nodiscard]] std::string getColor() const;
     [[nodiscard]] std::string getStyle() const;
     [[nodiscard]] const bool* isClosed() const;
@@ -24,7 +23,6 @@ class StatusEntity
     void setName(std::string name);
     void setCommandName(std::string command);
     void setIcon(std::string icon);
-    void setIconLength(int iconLength);
     void setColor(std::string color);
     void setStyle(std::string style);
     void setClosed(bool closed);
@@ -39,7 +37,6 @@ class StatusEntity
     std::string name;
     std::string command;
     std::string icon;
-    int iconLength = 0;
     std::string color;
     std::string style;
     bool statusIsClosed = false;

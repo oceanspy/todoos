@@ -30,12 +30,6 @@ StatusEntity::getIcon() const
     return &icon;
 }
 
-const int
-StatusEntity::getIconLength() const
-{
-    return iconLength;
-}
-
 std::string
 StatusEntity::getColor() const
 {
@@ -97,12 +91,6 @@ StatusEntity::setIcon(std::string icon)
 }
 
 void
-StatusEntity::setIconLength(int iconLength)
-{
-    this->iconLength = iconLength;
-}
-
-void
 StatusEntity::setColor(std::string color)
 {
     this->color = std::move(color);
@@ -142,12 +130,11 @@ StatusEntity::setFromVector(std::vector<std::string> item)
     entity.setName(item[2]);
     entity.setCommandName(item[3]);
     entity.setIcon(item[4]);
-    entity.setIconLength(std::stoi(item[5]));
-    entity.setColor(item[6]);
-    entity.setStyle(item[7]);
-    entity.setClosed(item[8] == "true");
-    entity.setCancelled(item[9] == "true");
-    entity.setPassive(item[10] == "true");
+    entity.setColor(item[5]);
+    entity.setStyle(item[6]);
+    entity.setClosed(item[7] == "true");
+    entity.setCancelled(item[8] == "true");
+    entity.setPassive(item[9] == "true");
     return entity;
 }
 
@@ -159,7 +146,6 @@ StatusEntity::makeVector(const StatusEntity& statusEntity)
                                      *statusEntity.getName(),
                                      *statusEntity.getCommandName(),
                                      *statusEntity.getIcon(),
-                                     std::to_string(statusEntity.getIconLength()),
                                      statusEntity.getColor(),
                                      statusEntity.getStyle(),
                                      *statusEntity.isClosed() ? "true" : "false",

@@ -619,13 +619,12 @@ TEST_CASE("DateHelper::getMonthStart and getMonthEnd", "[DateHelpers]")
 TEST_CASE("DateHelper::getYearStart and getYearEnd", "[DateHelpers]")
 {
     time_t yearStart = DateHelpers::getYearStart(0);
+    tm startInfo = *localtime(&yearStart);
+    REQUIRE(startInfo.tm_mday == 1);
+    REQUIRE(startInfo.tm_mon == 0); // January
+    REQUIRE(startInfo.tm_hour == 0);
+
     time_t yearEnd = DateHelpers::getYearEnd(0);
-
-    tm* startInfo = localtime(&yearStart);
-    REQUIRE(startInfo->tm_mday == 1);
-    REQUIRE(startInfo->tm_mon == 0); // January
-    REQUIRE(startInfo->tm_hour == 0);
-
     REQUIRE(yearEnd > yearStart);
 
     // Next year start should equal this year end

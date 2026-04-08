@@ -116,7 +116,7 @@ MobileTheme::buildStatus(const ListItemEntity& listItemEntity)
                  ? StringHelpers::colorize(*(*listItemEntity.status()).getName(), (*listItemEntity.status()).getStyle())
                  : *(*listItemEntity.status()).getName();
 
-    int length = STATUS_LENGTH + 1 - (*listItemEntity.status()).getIconLength();
+    int length = STATUS_LENGTH;
     render = StringHelpers::adjustStringLength(icon + render, length);
     std::string final_render = StringHelpers::colorize(render, (*listItemEntity.status()).getColor());
     return final_render;

@@ -86,6 +86,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../CLIController/Status/Status.cpp
         ../CLIController/Priority/Priority.cpp
         ../CLIController/ListItemActions/ListItemActions.cpp
+        TestMain.cpp
 )
 
 target_link_libraries(TestsRun PRIVATE nlohmann_json::nlohmann_json)

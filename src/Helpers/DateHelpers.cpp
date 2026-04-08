@@ -433,17 +433,16 @@ time_t
 DateHelpers::getYearStart(int offset)
 {
     time_t year_start;
-    // get the first day of the year at 00:00
     time(&year_start);
-    tm* timeinfo = localtime(&year_start);
-    timeinfo->tm_hour = 0;
-    timeinfo->tm_min = 0;
-    timeinfo->tm_sec = 0;
-    timeinfo->tm_mday = 1;
-    timeinfo->tm_mon = 0;
-    // add offset
-    timeinfo->tm_year += offset;
-    year_start = mktime(timeinfo);
+    tm timeinfo = *localtime(&year_start);
+    timeinfo.tm_hour = 0;
+    timeinfo.tm_min = 0;
+    timeinfo.tm_sec = 0;
+    timeinfo.tm_mday = 1;
+    timeinfo.tm_mon = 0;
+    timeinfo.tm_isdst = -1;
+    timeinfo.tm_year += offset;
+    year_start = mktime(&timeinfo);
     return year_start;
 }
 
@@ -451,9 +450,9 @@ time_t
 DateHelpers::getYearEnd(int offset)
 {
     time_t start = getYearStart(offset);
-    tm* timeinfo = localtime(&start);
-    timeinfo->tm_year += 1;
-    time_t year_end = mktime(timeinfo);
+    tm timeinfo = *localtime(&start);
+    timeinfo.tm_year += 1;
+    time_t year_end = mktime(&timeinfo);
     return year_end;
 }
 

@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <chrono>
-#include <clocale>
 #include <cwchar>
 #include <iomanip>
 #include <iterator>
