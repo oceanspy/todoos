@@ -157,26 +157,24 @@ TEST_CASE("ListServiceTest", "[ListService]")
 
     SECTION("validateListName edge cases")
     {
-        // Empty string should be valid (regex matches empty)
-        REQUIRE_NOTHROW(ListService::validateListName(""));
+        // Empty string should be invalid (at least 1 char required)
+        REQUIRE_THROWS(ListService::validateListName(""));
 
         // Exactly 50 characters should be valid
-        REQUIRE_NOTHROW(
-            ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeee"));
+        REQUIRE_NOTHROW(ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeee"));
 
         // 51 characters should be invalid
-        REQUIRE_THROWS(
-            ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeef"));
+        REQUIRE_THROWS(ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeef"));
 
         // Special characters should be invalid
         REQUIRE_THROWS(ListService::validateListName("list with spaces"));
         REQUIRE_THROWS(ListService::validateListName("list@name"));
-        REQUIRE_THROWS(ListService::validateListName("list.name"));
         REQUIRE_THROWS(ListService::validateListName("list/name"));
 
-        // Underscore and hyphen should be valid
+        // Dot, underscore and hyphen should be valid
         REQUIRE_NOTHROW(ListService::validateListName("list_name"));
         REQUIRE_NOTHROW(ListService::validateListName("list-name"));
+        REQUIRE_NOTHROW(ListService::validateListName("list.name"));
         REQUIRE_NOTHROW(ListService::validateListName("LIST-NAME_123"));
     }
 

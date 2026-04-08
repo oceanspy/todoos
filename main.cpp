@@ -16,10 +16,13 @@
 #include "src/Init/Installation.h"
 #include "src/List/ListItemService.h"
 #include "src/List/ListService.h"
+#include <clocale>
 
 int
 main(int argc, const char* argv[])
 {
+    std::setlocale(LC_CTYPE, "");
+
     std::string channel = "cli";
     IOService ioService = IOService(channel);
     Help help = Help(ioService);

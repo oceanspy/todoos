@@ -30,10 +30,9 @@ CommandValidation::make()
         // Removing the line breaks
         std::string arg = argv[i];
         arg.erase(std::remove(arg.begin(), arg.end(), '\n'), arg.end());
-        argv[i] = strdup(arg.c_str());
 
         // Keeping the raw commands
-        rawCommand += argv[i];
+        rawCommand += arg;
         if (i != argc - 1) {
             rawCommand += " ";
         }

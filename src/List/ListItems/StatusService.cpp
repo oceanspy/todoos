@@ -9,16 +9,15 @@ void
 StatusService::make()
 {
     // NOTE: Everything is string because we suppose that we are getting the data from storage
-    // ID, position, name, icon, iconLength, color, style, statusIsClosed, statusIsCancelled, statusIsPassive
+    // ID, position, name, commandName, icon, color, style, statusIsClosed, statusIsCancelled, statusIsPassive
     statuses = {
         StatusEntity::setFromVector(
-            { std::to_string(TO_DO), "0", "to do", "to-do", "⏳", "2", "WHITE", "", "false", "false", "false" }),
+            { std::to_string(TO_DO), "0", "to do", "to-do", "⏳", "WHITE", "", "false", "false", "false" }),
         StatusEntity::setFromVector({ std::to_string(STARTED),
                                       "1",
                                       "started",
                                       "started",
                                       "🏃",
-                                      "1",
                                       "LIGHT_YELLOW",
                                       "ITALIC",
                                       "false",
@@ -29,7 +28,6 @@ StatusService::make()
                                       "reviewing",
                                       "reviewing",
                                       "🔍",
-                                      "1",
                                       "LIGHT_CYAN",
                                       "ITALIC",
                                       "false",
@@ -40,7 +38,6 @@ StatusService::make()
                                       "paused",
                                       "paused",
                                       "💤",
-                                      "1",
                                       "LIGHT_BLUE",
                                       "ITALIC",
                                       "false",
@@ -51,25 +48,15 @@ StatusService::make()
                                       "blocked",
                                       "blocked",
                                       "🚫",
-                                      "1",
                                       "MAGENTA",
                                       "ITALIC",
                                       "false",
                                       "false",
                                       "true" }),
-        StatusEntity::setFromVector({ std::to_string(COMPLETED),
-                                      "6",
-                                      "completed",
-                                      "completed",
-                                      "✅",
-                                      "2",
-                                      "GRAY",
-                                      "",
-                                      "true",
-                                      "false",
-                                      "true" }),
         StatusEntity::setFromVector(
-            { std::to_string(CANCELLED), "7", "cancelled", "cancelled", "✖️", "1", "GRAY", "", "true", "true", "true" })
+            { std::to_string(COMPLETED), "6", "completed", "completed", "✅", "GRAY", "", "true", "false", "true" }),
+        StatusEntity::setFromVector(
+            { std::to_string(CANCELLED), "7", "cancelled", "cancelled", "✖️", "GRAY", "", "true", "true", "true" })
     };
 }
 

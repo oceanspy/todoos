@@ -14,7 +14,7 @@ JSONService::load(std::filesystem::path path)
     this->path = path;
 
     if (!isFileWritable(path)) {
-        throw std::invalid_argument("Error: Unable to load the file: " + path.string());
+        throw std::invalid_argument("Error: Unable to load the file: " + path.filename().string());
     }
 
     // if file empty
@@ -49,7 +49,7 @@ JSONService::read(std::optional<int> limitOpt)
     try {
         file >> j;
     } catch (json::parse_error& e) {
-        throw std::invalid_argument("Error: Unable to parse the file: " + path.string());
+        throw std::invalid_argument("Error: Unable to parse the file: " + path.filename().string());
     }
 
     // Check if the JSON is an array

@@ -31,7 +31,8 @@ TEST_CASE("Remove controller", "[CLIController][Remove]")
 
     PriorityService priorityService;
     StatusService statusService;
-    ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+    ListItemRepository listItemRepository(
+        configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
@@ -139,7 +140,8 @@ TEST_CASE("Status controller", "[CLIController][Status]")
 
     PriorityService priorityService;
     StatusService statusService;
-    ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+    ListItemRepository listItemRepository(
+        configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
@@ -233,7 +235,8 @@ TEST_CASE("Priority controller", "[CLIController][Priority]")
 
     PriorityService priorityService;
     StatusService statusService;
-    ListItemRepository listItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+    ListItemRepository listItemRepository(
+        configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);

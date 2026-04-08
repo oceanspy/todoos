@@ -11,7 +11,6 @@ TEST_CASE("StatusEntityTest", "[StatusEntity]")
         entity.setName("completed");
         entity.setCommandName("completed");
         entity.setIcon("✓");
-        entity.setIconLength(1);
         entity.setColor("GREEN");
         entity.setStyle("BOLD");
         entity.setClosed(true);
@@ -23,7 +22,6 @@ TEST_CASE("StatusEntityTest", "[StatusEntity]")
         REQUIRE(*entity.getName() == "completed");
         REQUIRE(*entity.getCommandName() == "completed");
         REQUIRE(*entity.getIcon() == "✓");
-        REQUIRE(entity.getIconLength() == 1);
         REQUIRE(*entity.isClosed() == true);
         REQUIRE(*entity.isCancelled() == false);
         REQUIRE(*entity.isPassive() == false);
@@ -82,9 +80,8 @@ TEST_CASE("StatusEntityTest", "[StatusEntity]")
 
     SECTION("setFromVector and makeVector round-trip")
     {
-        std::vector<std::string> data = {
-            "3", "2", "completed", "completed", "✓", "1", "GREEN", "BOLD", "true", "false", "false"
-        };
+        std::vector<std::string> data = { "3",     "2",    "completed", "completed", "✓",
+                                          "GREEN", "BOLD", "true",      "false",     "false" };
 
         StatusEntity entity = StatusEntity::setFromVector(data);
         REQUIRE(*entity.getId() == 3);
@@ -92,7 +89,6 @@ TEST_CASE("StatusEntityTest", "[StatusEntity]")
         REQUIRE(*entity.getName() == "completed");
         REQUIRE(*entity.getCommandName() == "completed");
         REQUIRE(*entity.getIcon() == "✓");
-        REQUIRE(entity.getIconLength() == 1);
         REQUIRE(*entity.isClosed() == true);
         REQUIRE(*entity.isCancelled() == false);
         REQUIRE(*entity.isPassive() == false);
@@ -103,16 +99,15 @@ TEST_CASE("StatusEntityTest", "[StatusEntity]")
         REQUIRE(vectorResult[2] == "completed");
         REQUIRE(vectorResult[3] == "completed");
         REQUIRE(vectorResult[4] == "✓");
-        REQUIRE(vectorResult[5] == "1");
-        REQUIRE(vectorResult[8] == "true");
+        REQUIRE(vectorResult[7] == "true");
+        REQUIRE(vectorResult[8] == "false");
         REQUIRE(vectorResult[9] == "false");
-        REQUIRE(vectorResult[10] == "false");
     }
 
     SECTION("setFromVector with false booleans")
     {
         std::vector<std::string> data = {
-            "0", "0", "to-do", "to-do", "○", "1", "WHITE", "RESET", "false", "false", "false"
+            "0", "0", "to-do", "to-do", "○", "WHITE", "RESET", "false", "false", "false"
         };
 
         StatusEntity entity = StatusEntity::setFromVector(data);

@@ -1,18 +1,23 @@
 #include "StringHelpers.h"
 
+static std::mt19937&
+getGenerator()
+{
+    static std::mt19937 gen(std::random_device{}());
+    return gen;
+}
+
 std::string
 StringHelpers::randomString(const int len)
 {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    seed ^= getpid() + std::clock();
-    srand(seed);
     static const char alphanum[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                    "abcdefghijklmnopqrstuvwxyz";
+    std::uniform_int_distribution<int> dis(0, sizeof(alphanum) - 2);
     std::string tmp_s;
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+        tmp_s += alphanum[dis(getGenerator())];
     }
 
     return tmp_s;
@@ -21,17 +26,15 @@ StringHelpers::randomString(const int len)
 std::string
 StringHelpers::randomAlNumString(const int len)
 {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    seed ^= getpid() + std::clock();
-    srand(seed);
     static const char alphanum[] = "0123456789"
                                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                    "abcdefghijklmnopqrstuvwxyz";
+    std::uniform_int_distribution<int> dis(0, sizeof(alphanum) - 2);
     std::string tmp_s;
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+        tmp_s += alphanum[dis(getGenerator())];
     }
 
     return tmp_s;
@@ -40,15 +43,13 @@ StringHelpers::randomAlNumString(const int len)
 std::string
 StringHelpers::randomLettersLowercase(const int len)
 {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    seed ^= getpid() + std::clock();
-    srand(seed);
     static const char alphanum[] = "abcdefghijklmnopqrstuvwxyz";
+    std::uniform_int_distribution<int> dis(0, sizeof(alphanum) - 2);
     std::string tmp_s;
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+        tmp_s += alphanum[dis(getGenerator())];
     }
 
     return tmp_s;
@@ -57,14 +58,13 @@ StringHelpers::randomLettersLowercase(const int len)
 std::wstring
 StringHelpers::stringToWstring(const std::string& str)
 {
-    static bool localeSet = [] { std::setlocale(LC_CTYPE, ""); return true; }();
-    (void)localeSet;
-
-    if (str.empty()) return {};
+    if (str.empty())
+        return {};
     const char* src = str.c_str();
     std::mbstate_t state{};
     std::size_t len = std::mbsrtowcs(nullptr, &src, 0, &state);
-    if (len == static_cast<std::size_t>(-1)) return {};
+    if (len == static_cast<std::size_t>(-1))
+        return {};
     std::wstring wstr(len, L'\0');
     src = str.c_str();
     state = std::mbstate_t{};
@@ -75,11 +75,13 @@ StringHelpers::stringToWstring(const std::string& str)
 std::string
 StringHelpers::wstringToString(const std::wstring& wstr)
 {
-    if (wstr.empty()) return {};
+    if (wstr.empty())
+        return {};
     const wchar_t* src = wstr.c_str();
     std::mbstate_t state{};
     std::size_t len = std::wcsrtombs(nullptr, &src, 0, &state);
-    if (len == static_cast<std::size_t>(-1)) return {};
+    if (len == static_cast<std::size_t>(-1))
+        return {};
     std::string str(len, '\0');
     src = wstr.c_str();
     state = std::mbstate_t{};
@@ -98,7 +100,6 @@ StringHelpers::adjustStringLength(const std::string& str, int length = 10, const
 {
     std::size_t inputLength = countCharsWithoutBashCodes(str);
     std::wstring adjustedwString = StringHelpers::stringToWstring(str);
-    std::string adjustedString;
 
     // Pad with spaces if the string is shorter than length characters
     if (inputLength < length) {
@@ -111,7 +112,8 @@ StringHelpers::adjustStringLength(const std::string& str, int length = 10, const
     // Remove all bash codes from the string
     // shrink the string
     // TODO: implement a way to put back the bash codes
-    std::regex ansi_escape_code("\033\[[0-9;]+m");
+    std::string adjustedString;
+    static const std::regex ansi_escape_code("\033\[[0-9;]+m");
     std::wstring result = StringHelpers::stringToWstring(std::regex_replace(str, ansi_escape_code, ""));
 
     if (inputLength == length) {
@@ -150,27 +152,17 @@ StringHelpers::adjustStringLengthWithString(std::string str, int length, const s
 std::size_t
 StringHelpers::countCharsWithoutBashCodes(const std::string& str)
 {
-    // Define regular expression pattern to match ANSI escape codes
-    std::regex ansi_escape_code("\033\[[0-9;]+m");
-
-    // Remove ANSI escape codes from the input string
+    static const std::regex ansi_escape_code("\033\[[0-9;]+m");
     std::string result = std::regex_replace(str, ansi_escape_code, "");
 
-    // Convert the string to a wide character string
     std::wstring wideStr = stringToWstring(result);
 
-    // Use a ctype facet to remove accents from the wide character string
-    std::locale locale("en_US.UTF8");
-    const std::ctype<wchar_t>& ctype = std::use_facet<std::ctype<wchar_t>>(locale);
-    for (wchar_t& c : wideStr) {
-        c = ctype.widen(ctype.narrow(c, '?'));
+    std::size_t width = 0;
+    for (wchar_t c : wideStr) {
+        int w = wcwidth(c);
+        width += (w > 0) ? w : (c != L'\0' ? 1 : 0);
     }
-
-    // Convert the wide character string back to a byte string
-    result = wstringToString(wideStr);
-
-    // Return the length of the string
-    return result.length();
+    return width;
 }
 
 bool

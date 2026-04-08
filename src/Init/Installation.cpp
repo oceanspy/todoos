@@ -92,32 +92,30 @@ Installation::populate()
 void
 Installation::createDirectories()
 {
-    if (!std::filesystem::exists(init.getMainDirPath())) {
-        if (!std::filesystem::create_directory(init.getMainDirPath())) {
-            ioService.error("Failed to create config main directory");
-            return;
-        }
+    std::error_code ec;
+
+    std::filesystem::create_directories(init.getMainDirPath(), ec);
+    if (ec) {
+        ioService.error("Failed to create config main directory");
+        return;
     }
 
-    if (!std::filesystem::exists(init.getCacheDirPath())) {
-        if (!std::filesystem::create_directory(init.getCacheDirPath())) {
-            ioService.error("Failed to create cache directory");
-            return;
-        }
+    std::filesystem::create_directories(init.getCacheDirPath(), ec);
+    if (ec) {
+        ioService.error("Failed to create cache directory");
+        return;
     }
 
-    if (!std::filesystem::exists(init.getConfigDirPath())) {
-        if (!std::filesystem::create_directory(init.getConfigDirPath())) {
-            ioService.error("Failed to create config directory");
-            return;
-        }
+    std::filesystem::create_directories(init.getConfigDirPath(), ec);
+    if (ec) {
+        ioService.error("Failed to create config directory");
+        return;
     }
 
-    if (!std::filesystem::exists(init.getAppDirPath())) {
-        if (!std::filesystem::create_directory(init.getAppDirPath())) {
-            ioService.error("Failed to create application directory");
-            return;
-        }
+    std::filesystem::create_directories(init.getAppDirPath(), ec);
+    if (ec) {
+        ioService.error("Failed to create application directory");
+        return;
     }
 }
 

@@ -44,7 +44,7 @@ else
   MSG_GEN := Ninja found; using Ninja.
 endif
 
-.PHONY: build ln-bin zsh-autocomplete zsh-aliases install show-gen clean distclean cmake-config test
+.PHONY: build ln-bin zsh-autocomplete zsh-aliases install show-gen clean distclean cmake-config test format
 
 build: show-compiler cmake-config
 	@echo "==> Building $(BINARY_NAME) in $(BUILD_DIR) ..."
@@ -86,6 +86,11 @@ zsh-aliases:
 
 test:
 	@./runtests.sh
+
+format:
+	@echo "==> Formatting source files with clang-format..."
+	@find main.cpp src -name '*.cpp' -o -name '*.h' | grep -v _deps | xargs clang-format -i
+	@echo "Done!"
 
 clean:
 	@echo "==> Cleaning build artifacts (keeping CMake configuration)."

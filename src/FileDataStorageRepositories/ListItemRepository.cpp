@@ -50,8 +50,8 @@ ListItemRepository::find(const std::string& id, ListName& listName)
     std::vector<std::vector<std::string>> items;
 
     int i = 0;
-    for (std::vector item : data) {
-        if (item[0] == id) {
+    for (const std::vector<std::string>& item : data) {
+        if (!item.empty() && item[0] == id) {
             return ListItemEntity::setFromVector(priorityService, statusService, item, listName);
         }
         i++;
@@ -77,8 +77,8 @@ ListItemRepository::update(const std::string& id, ListName& listName, const List
     std::vector<std::vector<std::string>> items;
 
     bool found = false;
-    for (std::vector itemFromStorage : data) {
-        if (itemFromStorage[0] == id) {
+    for (const std::vector<std::string>& itemFromStorage : data) {
+        if (!itemFromStorage.empty() && itemFromStorage[0] == id) {
             found = true;
             items.push_back(ListItemEntity::makeVector(item));
             continue;
@@ -100,8 +100,8 @@ ListItemRepository::remove(const std::string& id, ListName& listName)
     std::vector<std::vector<std::string>> items;
 
     bool found = false;
-    for (std::vector item : data) {
-        if (item[0] == id) {
+    for (const std::vector<std::string>& item : data) {
+        if (!item.empty() && item[0] == id) {
             found = true;
             continue;
         }
