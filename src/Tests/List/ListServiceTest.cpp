@@ -161,12 +161,10 @@ TEST_CASE("ListServiceTest", "[ListService]")
         REQUIRE_NOTHROW(ListService::validateListName(""));
 
         // Exactly 50 characters should be valid
-        REQUIRE_NOTHROW(
-            ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeee"));
+        REQUIRE_NOTHROW(ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeee"));
 
         // 51 characters should be invalid
-        REQUIRE_THROWS(
-            ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeef"));
+        REQUIRE_THROWS(ListService::validateListName("aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeef"));
 
         // Special characters should be invalid
         REQUIRE_THROWS(ListService::validateListName("list with spaces"));

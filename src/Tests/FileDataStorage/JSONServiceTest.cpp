@@ -106,9 +106,7 @@ TEST_CASE("JSONService tests", "[JSONService]")
         JSONService jsonService(ioService);
         jsonService.load(tempFile);
 
-        std::vector<std::vector<std::string>> testData = {
-            { "1" }, { "2" }, { "3" }, { "4" }, { "5" }
-        };
+        std::vector<std::vector<std::string>> testData = { { "1" }, { "2" }, { "3" }, { "4" }, { "5" } };
         jsonService.write(testData);
 
         // The limit implementation uses a sliding window that erases from front

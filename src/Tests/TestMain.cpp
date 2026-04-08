@@ -7,10 +7,7 @@ struct LocaleSetup : Catch::EventListenerBase
 {
     using Catch::EventListenerBase::EventListenerBase;
 
-    void testRunStarting(Catch::TestRunInfo const&) override
-    {
-        std::setlocale(LC_CTYPE, "");
-    }
+    void testRunStarting(Catch::TestRunInfo const&) override { std::setlocale(LC_CTYPE, ""); }
 };
 
 CATCH_REGISTER_LISTENER(LocaleSetup)

@@ -53,16 +53,8 @@ StatusService::make()
                                       "false",
                                       "false",
                                       "true" }),
-        StatusEntity::setFromVector({ std::to_string(COMPLETED),
-                                      "6",
-                                      "completed",
-                                      "completed",
-                                      "✅",
-                                      "GRAY",
-                                      "",
-                                      "true",
-                                      "false",
-                                      "true" }),
+        StatusEntity::setFromVector(
+            { std::to_string(COMPLETED), "6", "completed", "completed", "✅", "GRAY", "", "true", "false", "true" }),
         StatusEntity::setFromVector(
             { std::to_string(CANCELLED), "7", "cancelled", "cancelled", "✖️", "GRAY", "", "true", "true", "true" })
     };
