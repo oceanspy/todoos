@@ -35,7 +35,7 @@ FileStorageService::removeListFile(const std::string& listName)
     std::filesystem::path listDeletePath = configService.getListDeleteFilePath(listName);
 
     if (!std::filesystem::exists(listPath)) {
-        throw std::invalid_argument("File does not exist: " + listPath.string());
+        throw std::invalid_argument("File does not exist: " + listPath.filename().string());
     }
 
     try {
@@ -43,7 +43,7 @@ FileStorageService::removeListFile(const std::string& listName)
         std::filesystem::remove(listArchivePath);
         std::filesystem::remove(listDeletePath);
     } catch (std::filesystem::filesystem_error& e) {
-        throw std::invalid_argument("Failed to remove file: " + listPath.string());
+        throw std::invalid_argument("Failed to remove file: " + listPath.filename().string());
     }
 }
 
@@ -59,6 +59,10 @@ FileStorageService::moveFileTo(const std::string& oldListName, const std::string
 
     if (std::filesystem::exists(newListPath)) {
         throw std::invalid_argument("File already exists: " + newListName);
+    }
+
+    if (std::filesystem::is_symlink(oldListPath) || std::filesystem::is_symlink(newListPath)) {
+        throw std::invalid_argument("Cannot operate on symlinked files");
     }
 
     // move file

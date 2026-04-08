@@ -108,13 +108,13 @@ DateHelpers::timestampToDuration(time_t startedAt, time_t endedAt)
         return "0s";
     }
 
-    time_t timestamp = (int)difftime(endedAt, startedAt);
+    long long timestamp = static_cast<long long>(difftime(endedAt, startedAt));
     std::stringstream ss;
-    int years = timestamp / 31536000;
-    int days = timestamp / 86400;
-    int hours = (timestamp % 86400) / 3600;
-    int minutes = (timestamp % 3600) / 60;
-    int seconds = timestamp % 60;
+    long long years = timestamp / 31536000;
+    long long days = timestamp / 86400;
+    long long hours = (timestamp % 86400) / 3600;
+    long long minutes = (timestamp % 3600) / 60;
+    long long seconds = timestamp % 60;
 
     if (years > 0) {
         ss << years << "y";
@@ -274,16 +274,24 @@ DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t referenceTim
     }
 
     // if date format is "xx"
-    if (returnDate.empty() && stringDate.length() <= 2 && stoi(stringDate) <= 31) {
-        std::tm* now = std::localtime(&t);
-        int year = now->tm_year + 1900; // tm_year is years since 1900
-        int month;
-        if (stoi(stringDate) < now->tm_mday) {
-            month = now->tm_mon += 2; // tm_mon is months since January
-        } else {
-            month = now->tm_mon += 1; // tm_mon is months since January
+    if (returnDate.empty() && stringDate.length() <= 2) {
+        int dayValue;
+        try {
+            dayValue = stoi(stringDate);
+        } catch (...) {
+            throw std::invalid_argument("Invalid date format.");
         }
-        returnDate = std::to_string(year) + "-" + std::to_string(month) + "-" + stringDate;
+        if (dayValue > 0 && dayValue <= 31) {
+            std::tm* now = std::localtime(&t);
+            int year = now->tm_year + 1900;
+            int month;
+            if (dayValue < now->tm_mday) {
+                month = now->tm_mon += 2;
+            } else {
+                month = now->tm_mon += 1;
+            }
+            returnDate = std::to_string(year) + "-" + std::to_string(month) + "-" + stringDate;
+        }
     }
 
     // if date format is "xxxx-xx-xx"

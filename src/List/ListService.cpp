@@ -163,8 +163,8 @@ ListService::isListExist(const std::string& name)
 void
 ListService::validateListName(const std::string& newListName)
 {
-    if (!std::regex_match(newListName, std::regex("^[a-zA-Z0-9_-]*$"))) {
-        throw std::invalid_argument("List name must be alphanumeric and can contain _.-");
+    if (!std::regex_match(newListName, std::regex("^[a-zA-Z0-9._-]+$"))) {
+        throw std::invalid_argument("List name must be alphanumeric and can contain . _ or -");
     }
     if (newListName.length() > 50) {
         throw std::invalid_argument("List name must not exceed 50 characters.");

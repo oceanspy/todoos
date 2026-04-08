@@ -11,7 +11,7 @@ CSVService::load(std::filesystem::path path)
     this->path = path;
 
     if (!isFileWritable(path)) {
-        throw std::invalid_argument("Error: Unable to load the file: " + path.string());
+        throw std::invalid_argument("Error: Unable to load the file: " + path.filename().string());
     }
 }
 
@@ -30,16 +30,15 @@ std::vector<std::vector<std::string>>
 CSVService::read(std::optional<int> limitOpt)
 {
     int limit = limitOpt.value_or(10000); // Use 10000 as default value
-    std::vector<std::vector<std::string>> data;
-    // data.reserve(limit); // Reserve space for n elements
+    std::deque<std::vector<std::string>> data;
     std::ifstream file(path);
     std::string line;
     int i = 0;
     while (std::getline(file, line)) {
-        std::vector<std::string> row; // Moved the declaration inside the loop
+        std::vector<std::string> row;
 
-        // Skip line if it starts with #
-        if (line[0] == '#' || line.empty()) {
+        // Skip empty lines or comments
+        if (line.empty() || line[0] == '#') {
             continue;
         }
 
@@ -85,11 +84,11 @@ CSVService::read(std::optional<int> limitOpt)
         data.push_back(row);
 
         if (limit > 0 && data.size() > limit) {
-            data.erase(data.begin());
+            data.pop_front();
         }
     }
     file.close();
-    return data;
+    return std::vector<std::vector<std::string>>{ data.begin(), data.end() };
 }
 
 void

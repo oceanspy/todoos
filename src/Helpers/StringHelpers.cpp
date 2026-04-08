@@ -113,7 +113,7 @@ StringHelpers::adjustStringLength(const std::string& str, int length = 10, const
     // shrink the string
     // TODO: implement a way to put back the bash codes
     std::string adjustedString;
-    std::regex ansi_escape_code("\033\[[0-9;]+m");
+    static const std::regex ansi_escape_code("\033\[[0-9;]+m");
     std::wstring result = StringHelpers::stringToWstring(std::regex_replace(str, ansi_escape_code, ""));
 
     if (inputLength == length) {
@@ -152,7 +152,7 @@ StringHelpers::adjustStringLengthWithString(std::string str, int length, const s
 std::size_t
 StringHelpers::countCharsWithoutBashCodes(const std::string& str)
 {
-    std::regex ansi_escape_code("\033\[[0-9;]+m");
+    static const std::regex ansi_escape_code("\033\[[0-9;]+m");
     std::string result = std::regex_replace(str, ansi_escape_code, "");
 
     std::wstring wideStr = stringToWstring(result);

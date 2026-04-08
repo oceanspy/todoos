@@ -76,12 +76,16 @@ ListEntity::isHidden() const
 ListEntity
 ListEntity::setFromVector(const std::vector<std::string>& item)
 {
-    bool hidden = item.at(3) == "true";
+    if (item.size() < 4) {
+        throw std::invalid_argument("ListEntity requires at least 4 fields");
+    }
+
+    bool hidden = item[3] == "true";
 
     ListEntity listEntity = ListEntity();
-    listEntity.setName(item.at(0));
-    listEntity.setType(item.at(1));
-    listEntity.setSorting(item.at(2));
+    listEntity.setName(item[0]);
+    listEntity.setType(item[1]);
+    listEntity.setSorting(item[2]);
     listEntity.setHidden(hidden);
 
     return listEntity;
