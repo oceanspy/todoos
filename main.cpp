@@ -1,8 +1,7 @@
-#include "src/CLIAutocomplete/CLIAutocompleteService.h"
-#include "src/CommandRouter/CommandRouter.h"
 #include "src/Command/Command.h"
 #include "src/Command/CommandService.h"
 #include "src/Command/CommandValidation.h"
+#include "src/CommandRouter/CommandRouter.h"
 #include "src/Config/ConfigService.h"
 #include "src/FileDataStorage/CSVService.h"
 #include "src/FileDataStorage/ConfService.h"
@@ -16,6 +15,7 @@
 #include "src/Init/Installation.h"
 #include "src/List/ListItemService.h"
 #include "src/List/ListService.h"
+#include "src/UseCase/CommandAutoCompleteUseCase.h"
 #include <clocale>
 
 int
@@ -53,12 +53,25 @@ main(int argc, const char* argv[])
     CommandList commandList = CommandList();
     auto commandService = CommandService(commandList, commandOption);
 
-    // Autocorrect command for common mistakes
+    // ----
+    // Autocorrect command for common mistakes or allowed shortcuts
     SmartCommand smartCommand = SmartCommand(command);
     command = smartCommand.apply();
 
     // ----
-    // Program installation
+    // Verify command is valid
+    if (!commandService.isValid(command)) {
+        help.commandNotFoundSkipCommandAutocomplete(command);
+        return 1;
+    }
+
+    if (!CommandService::isCommandValidWithOption(command)) {
+        help.commandOptionNotSupportedSkipCommandAutocomplete(command);
+        return 1;
+    }
+
+    // ----
+    // Program initialization and first launch
     Init init = Init(ioService);
     Installation installation = Installation(ioService, jsonService, csvService, confService, init);
     if (installation.isNew()) {
@@ -106,9 +119,9 @@ main(int argc, const char* argv[])
     // Dealing with command autocomplete
     if (CommandService::isCommand(command, "commands")) {
         try {
-            CLIAutocompleteService cliAutocompleteService =
-                CLIAutocompleteService(ioService, commandService, command, listService, listItemService);
-            cliAutocompleteService.getCompletion();
+            CommandAutoCompleteUseCase cliAutocompleteService =
+                CommandAutoCompleteUseCase(ioService, commandService, listService, listItemService);
+            cliAutocompleteService.execute(command);
             return 1;
         } catch (const std::exception& e) {
             // Just Quit

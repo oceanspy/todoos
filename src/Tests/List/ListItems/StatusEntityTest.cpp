@@ -1,4 +1,4 @@
-#include "../../Entities/StatusEntity.h"
+#include "../../../List/ListItems/StatusEntity.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("StatusEntityTest", "[StatusEntity]")

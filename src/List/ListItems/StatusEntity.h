@@ -1,7 +1,7 @@
 #ifndef TODOOS_STATUSENTITY_H
 #define TODOOS_STATUSENTITY_H
 
-#include "../Helpers/BashStyle.h"
+#include "../../Helpers/BashStyle.h"
 #include <string>
 #include <vector>
 

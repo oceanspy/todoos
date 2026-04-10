@@ -1,15 +1,15 @@
 #pragma once
 
-#include <vector>
 #include "../CLIThemes/CLIThemeService.h"
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Config/ConfigService.h"
-#include "../Entities/ListItemEntity.h"
 #include "../Help/Help.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListService.h"
+#include <vector>
 
 class ShowUseCase
 {

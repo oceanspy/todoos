@@ -1,4 +1,4 @@
-#include "../../Entities/PriorityEntity.h"
+#include "../../../List/ListItems/PriorityEntity.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("PriorityEntityTest", "[PriorityEntity]")

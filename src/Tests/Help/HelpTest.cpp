@@ -33,4 +33,28 @@ TEST_CASE("Help tests", "[Help]")
         REQUIRE(version.empty() == false);
         REQUIRE(version.find("Version") != std::string::npos);
     }
+
+    SECTION("commandNotFoundSkipCommandAutocomplete skips output for 'commands'")
+    {
+        Command command("commands", {}, {});
+        REQUIRE_NOTHROW(help.commandNotFoundSkipCommandAutocomplete(command));
+    }
+
+    SECTION("commandNotFoundSkipCommandAutocomplete shows error for unknown command")
+    {
+        Command command("unknown", {}, {});
+        REQUIRE_NOTHROW(help.commandNotFoundSkipCommandAutocomplete(command));
+    }
+
+    SECTION("commandOptionNotSupportedSkipCommandAutocomplete skips output for 'commands'")
+    {
+        Command command("commands", {}, {});
+        REQUIRE_NOTHROW(help.commandOptionNotSupportedSkipCommandAutocomplete(command));
+    }
+
+    SECTION("commandOptionNotSupportedSkipCommandAutocomplete shows error for regular command")
+    {
+        Command command("add", {}, {});
+        REQUIRE_NOTHROW(help.commandOptionNotSupportedSkipCommandAutocomplete(command));
+    }
 }

@@ -12,7 +12,7 @@ class CommandService
     explicit CommandService(CommandList& commandList, CommandOption& commandOption);
     std::vector<std::string> getBaseCommandList();
     std::string getMainCommandListAsString();
-    bool isValid(std::string& commandName);
+    bool isValid(Command& command);
     static bool isCommand(Command& command, const std::string& commandName);
     bool isBeginningOfCommand(Command command);
     bool hasSubCommand(Command command);
@@ -20,7 +20,7 @@ class CommandService
     Command getSubCommand(Command command);
     CommandList& list();
     CommandOption& options();
-    static bool isCommandValidWithOption(std::string commandName, std::map<std::string, std::string> options);
+    static bool isCommandValidWithOption(Command& command);
 
   private:
     CommandList& commandList;

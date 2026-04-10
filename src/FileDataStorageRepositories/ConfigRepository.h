@@ -1,7 +1,7 @@
 #ifndef CONFIGREPOSITORY_H
 #define CONFIGREPOSITORY_H
 
-#include "../Entities/ConfigEntity.h"
+#include "../Config/ConfigEntity.h"
 #include "../FileDataStorage/FileDataServiceInterface.h"
 #include "../IOService/IOService.h"
 #include <filesystem>

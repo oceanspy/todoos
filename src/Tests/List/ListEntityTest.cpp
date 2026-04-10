@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "../../Entities/ListEntity.h"
+#include "../../List/ListEntity.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("ListEntity tests", "[ListEntity]")

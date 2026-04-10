@@ -2,13 +2,13 @@
 #include "../Actions/ListActions/ListActions.h"
 
 ListUseCase::ListUseCase(IOService& ioService,
-                          Command& command,
-                          CommandService& commandService,
-                          ListService& listService,
-                          ListItemService& listItemService,
-                          FileStorageService& fileStorageService,
-                          ConfigService& configService,
-                          CLIThemeService& cliThemeService)
+                         Command& command,
+                         CommandService& commandService,
+                         ListService& listService,
+                         ListItemService& listItemService,
+                         FileStorageService& fileStorageService,
+                         ConfigService& configService,
+                         CLIThemeService& cliThemeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)

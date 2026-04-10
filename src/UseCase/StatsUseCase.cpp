@@ -3,11 +3,11 @@
 #include "../List/ListName.h"
 
 StatsUseCase::StatsUseCase(IOService& ioService,
-                            Command& command,
-                            ConfigService& configService,
-                            ListItemService& listItemService,
-                            CLIThemeService& cliThemeService,
-                            ListService& listService)
+                           Command& command,
+                           ConfigService& configService,
+                           ListItemService& listItemService,
+                           CLIThemeService& cliThemeService,
+                           ListService& listService)
   : ioService(ioService)
   , command(command)
   , configService(configService)

@@ -1,15 +1,15 @@
 #include "RestoreUseCase.h"
 #include "../Actions/Remove/Remove.h"
 #include "../Actions/Show/Show.h"
-#include "../Entities/ListItemEntity.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 RestoreUseCase::RestoreUseCase(IOService& ioService,
-                                Command& command,
-                                ListItemService& listItemService,
-                                ListService& listService,
-                                ConfigService& configService,
-                                CLIThemeService& cliThemeService)
+                               Command& command,
+                               ListItemService& listItemService,
+                               ListService& listService,
+                               ConfigService& configService,
+                               CLIThemeService& cliThemeService)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)

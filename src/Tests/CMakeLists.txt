@@ -15,11 +15,11 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../IOService/IOService.cpp
         ../IOService/IOCliService/IOCliService.cpp
         ../Exception/ListNotFoundException.cpp
-        ../Entities/ConfigEntity.cpp
-        ../Entities/ListEntity.cpp
-        ../Entities/ListItemEntity.cpp
-        ../Entities/PriorityEntity.cpp
-        ../Entities/StatusEntity.cpp
+        ../Config/ConfigEntity.cpp
+        ../List/ListEntity.cpp
+        ../List/ListItems/ListItemEntity.cpp
+        ../List/ListItems/PriorityEntity.cpp
+        ../List/ListItems/StatusEntity.cpp
         ../FileDataStorage/ConfService.cpp
         ../FileDataStorage/JSONService.cpp
         ../FileDataStorage/CSVService.cpp
@@ -31,7 +31,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Command/CommandService.cpp
         ../Command/SmartCommand.cpp
         ../Command/CommandShortcut.cpp
-        ../CLIAutocomplete/CLIAutocompleteService.cpp
+        ../UseCase/CommandAutoCompleteUseCase.cpp
         ../List/ListItems/PriorityService.cpp
         ../List/ListItems/StatusService.cpp
         ../List/ListService.cpp
@@ -51,9 +51,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Help/HelpTest.cpp
         FileDataStorage/JSONServiceTest.cpp
         FileDataStorage/CSVServiceTest.cpp
-        Entities/ConfigEntityTest.cpp
-        Entities/ListItemEntitiyTest.cpp
-        Entities/ListEntityTest.cpp
+        Config/ConfigEntityTest.cpp
+        List/ListItems/ListItemEntityTest.cpp
+        List/ListEntityTest.cpp
         Command/CommandTest.cpp
         Command/CommandListTest.cpp
         Command/CommandValidationTest.cpp
@@ -76,8 +76,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         FileStorage/FileStorageTest.cpp
         Command/CommandOptionTest.cpp
         Events/EventTest.cpp
-        Entities/StatusEntityTest.cpp
-        Entities/PriorityEntityTest.cpp
+        List/ListItems/StatusEntityTest.cpp
+        List/ListItems/PriorityEntityTest.cpp
         Helpers/BashStyleTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
@@ -106,7 +106,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/ArchiveUseCase.cpp
         ../UseCase/RestoreUseCase.cpp
         ../UseCase/ListUseCase.cpp
-        ../UseCase/UseUseCase.cpp
+        ../UseCase/SwitchListUseCase.cpp
         ../UseCase/StatsUseCase.cpp
         ../UseCase/MoveUseCase.cpp
         ../UseCase/EmptyUseCase.cpp

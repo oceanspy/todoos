@@ -13,7 +13,7 @@
 #include "../UseCase/ShowUseCase.h"
 #include "../UseCase/StatsUseCase.h"
 #include "../UseCase/StatusUseCase.h"
-#include "../UseCase/UseUseCase.h"
+#include "../UseCase/SwitchListUseCase.h"
 
 CommandRouter::CommandRouter(IOService& ioService,
                              Help& help,
@@ -37,21 +37,7 @@ CommandRouter::CommandRouter(IOService& ioService,
 void
 CommandRouter::execute(Command& command)
 {
-    std::string commandName = CommandService::getCommandName(command.getName());
-    std::map<std::string, std::string> options = command.getOptions();
-
-    if (!CommandService::isCommandValidWithOption(CommandService::getCommandName(command.getName()),
-                                                  command.getOptions())) {
-        help.commandOptionNotSupported();
-        return;
-    }
-
-    if (!commandService.isValid(commandName)) {
-        help.commandNotFound();
-        return;
-    }
-
-    switch (commandService.list().getCommandId(commandName)) {
+    switch (commandService.list().getCommandId(CommandService::getCommandName(command.getName()))) {
         case CommandList::SHOW:
             ShowUseCase(
                 ioService, help, commandService, command, configService, listService, listItemService, cliThemeService)
@@ -181,14 +167,14 @@ CommandRouter::execute(Command& command)
                 .execute();
             return;
         case CommandList::USE:
-            UseUseCase(ioService,
-                       command,
-                       commandService,
-                       listService,
-                       listItemService,
-                       fileStorageService,
-                       configService,
-                       cliThemeService)
+            SwitchListUseCase(ioService,
+                              command,
+                              commandService,
+                              listService,
+                              listItemService,
+                              fileStorageService,
+                              configService,
+                              cliThemeService)
                 .execute();
             return;
         case CommandList::STATS:

@@ -1,16 +1,16 @@
 #include "StatusUseCase.h"
 #include "../Actions/Show/Show.h"
 #include "../Actions/Status/Status.h"
-#include "../Entities/ListItemEntity.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 StatusUseCase::StatusUseCase(IOService& ioService,
-                              Command& command,
-                              ListItemService& listItemService,
-                              ListService& listService,
-                              ConfigService& configService,
-                              CLIThemeService& cliThemeService,
-                              int statusNumber)
+                             Command& command,
+                             ListItemService& listItemService,
+                             ListService& listService,
+                             ConfigService& configService,
+                             CLIThemeService& cliThemeService,
+                             int statusNumber)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)

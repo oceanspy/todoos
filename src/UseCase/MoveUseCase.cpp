@@ -1,16 +1,16 @@
 #include "MoveUseCase.h"
 #include "../Actions/Move/Move.h"
 #include "../Actions/Show/Show.h"
-#include "../Entities/ListItemEntity.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 MoveUseCase::MoveUseCase(IOService& ioService,
-                          Command& command,
-                          CommandService& commandService,
-                          ListService& listService,
-                          ListItemService& listItemService,
-                          ConfigService& configService,
-                          CLIThemeService& cliThemeService)
+                         Command& command,
+                         CommandService& commandService,
+                         ListService& listService,
+                         ListItemService& listItemService,
+                         ConfigService& configService,
+                         CLIThemeService& cliThemeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)

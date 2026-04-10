@@ -4,10 +4,10 @@
 #include "../List/ListName.h"
 
 EmptyUseCase::EmptyUseCase(IOService& ioService,
-                            Command& command,
-                            ListItemService& listItemService,
-                            ListService& listService,
-                            ConfigService& configService)
+                           Command& command,
+                           ListItemService& listItemService,
+                           ListService& listService,
+                           ConfigService& configService)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)

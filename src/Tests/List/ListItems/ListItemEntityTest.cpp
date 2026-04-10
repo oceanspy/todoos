@@ -1,12 +1,12 @@
 #define CATCH_CONFIG_MAIN
-#include "../../Entities/ListItemEntity.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
-#include "../../FileDataStorageRepositories/ListRepository.h"
-#include "../../IOService/IOService.h"
-#include "../../List/ListService.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../../../List/ListItems/ListItemEntity.h"
+#include "../../../FileDataStorage/ConfService.h"
+#include "../../../FileDataStorage/JSONService.h"
+#include "../../../FileDataStorageRepositories/ListRepository.h"
+#include "../../../IOService/IOService.h"
+#include "../../../List/ListService.h"
+#include "../../Mock/MockInit.h"
+#include "../../Mock/MockInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("ListItemEntity tests", "[ListItemEntity]")

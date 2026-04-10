@@ -30,10 +30,30 @@ Help::commandNotFound()
 }
 
 void
+Help::commandNotFoundSkipCommandAutocomplete(Command& command)
+{
+    if (command.getName() == "commands") {
+        return;
+    }
+
+    Help::commandNotFound();
+}
+
+void
 Help::commandOptionNotSupported()
 {
     ioService.error("The arguments of the command do not match. Aborting.");
     ioService.info("Type '-h/--help' for help");
+}
+
+void
+Help::commandOptionNotSupportedSkipCommandAutocomplete(Command& command)
+{
+    if (command.getName() == "commands") {
+        return;
+    }
+
+    Help::commandOptionNotSupported();
 }
 
 std::vector<std::string>
@@ -133,5 +153,5 @@ Help::helpListForCli()
 std::string
 Help::getVersion()
 {
-    return "Version 0.2.11";
+    return "Version 0.4.0";
 }

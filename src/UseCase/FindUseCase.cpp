@@ -1,6 +1,6 @@
 #include "FindUseCase.h"
 #include "../Actions/Show/Show.h"
-#include "../Entities/ListItemEntity.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 FindUseCase::FindUseCase(IOService& ioService,

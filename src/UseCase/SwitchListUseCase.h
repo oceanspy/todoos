@@ -9,17 +9,17 @@
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
 
-class UseUseCase
+class SwitchListUseCase
 {
   public:
-    UseUseCase(IOService& ioService,
-               Command& command,
-               CommandService& commandService,
-               ListService& listService,
-               ListItemService& listItemService,
-               FileStorageService& fileStorageService,
-               ConfigService& configService,
-               CLIThemeService& cliThemeService);
+    SwitchListUseCase(IOService& ioService,
+                      Command& command,
+                      CommandService& commandService,
+                      ListService& listService,
+                      ListItemService& listItemService,
+                      FileStorageService& fileStorageService,
+                      ConfigService& configService,
+                      CLIThemeService& cliThemeService);
     void execute();
 
   private:

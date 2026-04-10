@@ -1,7 +1,7 @@
 #ifndef TODOOS_PRIORITYENTITY_H
 #define TODOOS_PRIORITYENTITY_H
 
-#include "../Helpers/BashStyle.h"
+#include "../../Helpers/BashStyle.h"
 #include <string>
 #include <vector>
 

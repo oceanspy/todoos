@@ -2,9 +2,9 @@
 #define LISTREPOSITORY_H
 
 #include "../Config/ConfigService.h"
-#include "../Entities/ListEntity.h"
 #include "../FileDataStorage/FileDataServiceInterface.h"
 #include "../IOService/IOService.h"
+#include "../List/ListEntity.h"
 #include <filesystem>
 #include <fstream>
 #include <string>

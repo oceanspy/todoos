@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "../../Entities/ConfigEntity.h"
+#include "../../Config/ConfigEntity.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("ConfigEntity tests", "[ConfigEntity]")

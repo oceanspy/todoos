@@ -1,7 +1,7 @@
 #include "ListItemActionsUseCase.h"
 #include "../Actions/ListItemActions/ListItemActions.h"
 #include "../Actions/Show/Show.h"
-#include "../Entities/ListItemEntity.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 ListItemActionsUseCase::ListItemActionsUseCase(IOService& ioService,

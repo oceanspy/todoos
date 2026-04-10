@@ -1,9 +1,9 @@
 #ifndef LISTITEMENTITY_H
 #define LISTITEMENTITY_H
 
-#include "../List/ListItems/PriorityService.h"
-#include "../List/ListItems/StatusService.h"
-#include "../List/ListName.h"
+#include "../../List/ListName.h"
+#include "PriorityService.h"
+#include "StatusService.h"
 #include <string>
 
 class ListItemEntity

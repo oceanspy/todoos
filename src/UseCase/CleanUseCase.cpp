@@ -1,16 +1,16 @@
 #include "CleanUseCase.h"
 #include "../Actions/Show/Show.h"
-#include "../Entities/ListItemEntity.h"
 #include "../Helpers/BashStyle.h"
 #include "../Helpers/StringHelpers.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 CleanUseCase::CleanUseCase(IOService& ioService,
-                            Command& command,
-                            ListItemService& listItemService,
-                            ListService& listService,
-                            ConfigService& configService,
-                            CLIThemeService& cliThemeService)
+                           Command& command,
+                           ListItemService& listItemService,
+                           ListService& listService,
+                           ConfigService& configService,
+                           CLIThemeService& cliThemeService)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)

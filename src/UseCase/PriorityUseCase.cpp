@@ -1,16 +1,16 @@
 #include "PriorityUseCase.h"
 #include "../Actions/Priority/Priority.h"
 #include "../Actions/Show/Show.h"
-#include "../Entities/ListItemEntity.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 PriorityUseCase::PriorityUseCase(IOService& ioService,
-                                  Command& command,
-                                  ListItemService& listItemService,
-                                  ListService& listService,
-                                  ConfigService& configService,
-                                  CLIThemeService& cliThemeService,
-                                  std::string action)
+                                 Command& command,
+                                 ListItemService& listItemService,
+                                 ListService& listService,
+                                 ConfigService& configService,
+                                 CLIThemeService& cliThemeService,
+                                 std::string action)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)

@@ -1,20 +1,18 @@
-#include "CLIAutocompleteService.h"
+#include "CommandAutoCompleteUseCase.h"
 
-CLIAutocompleteService::CLIAutocompleteService(IOService& ioService,
-                                               CommandService& commandService,
-                                               Command& command,
-                                               ListService& listService,
-                                               ListItemService& listItemService)
+CommandAutoCompleteUseCase::CommandAutoCompleteUseCase(IOService& ioService,
+                                                       CommandService& commandService,
+                                                       ListService& listService,
+                                                       ListItemService& listItemService)
   : ioService(ioService)
   , commandService(commandService)
-  , command(command)
   , listService(listService)
   , listItemService(listItemService)
 {
 }
 
 bool
-CLIAutocompleteService::getCompletion()
+CommandAutoCompleteUseCase::execute(Command& command)
 {
     if (!CommandService::isCommand(command, "commands")) {
         return false;
@@ -25,7 +23,7 @@ CLIAutocompleteService::getCompletion()
     if (!command.getOptions().empty()) {
         if (command.hasOption("list") && !listService.isListExist(command.getOption("list"))) {
             try {
-                autocompleteOptionList();
+                autocompleteOptionList(command);
             } catch (std::exception& e) {
                 return true;
             }
@@ -69,7 +67,7 @@ CLIAutocompleteService::getCompletion()
 
     Command firstSubCommand = commandService.getSubCommand(command);
     std::string firstSubCommandName = CommandService::getCommandName(firstSubCommand.getName());
-    if (!commandService.isValid(firstSubCommandName) && !commandService.hasSubCommand(firstSubCommand) &&
+    if (!commandService.isValid(command) && !commandService.hasSubCommand(firstSubCommand) &&
         commandService.isBeginningOfCommand(firstSubCommand)) {
         autocompleteBase();
         return true;
@@ -208,7 +206,7 @@ CLIAutocompleteService::getCompletion()
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "list")) {
         try {
-            autocompleteListActions(firstSubCommand);
+            autocompleteListActions(firstSubCommand, command);
         } catch (std::exception& e) {
             return true;
         }
@@ -239,7 +237,7 @@ CLIAutocompleteService::getCompletion()
 }
 
 void
-CLIAutocompleteService::getAllLists(std::string& listString)
+CommandAutoCompleteUseCase::getAllLists(std::string& listString)
 {
     std::vector<ListEntity> lists = listService.get();
     int i = 0;
@@ -255,7 +253,7 @@ CLIAutocompleteService::getAllLists(std::string& listString)
 }
 
 void
-CLIAutocompleteService::autocompleteOptionList()
+CommandAutoCompleteUseCase::autocompleteOptionList(Command& command)
 {
     std::string listString;
     getAllLists(listString);
@@ -270,13 +268,13 @@ CLIAutocompleteService::autocompleteOptionList()
 }
 
 void
-CLIAutocompleteService::autocompleteBase()
+CommandAutoCompleteUseCase::autocompleteBase()
 {
     ioService.print(commandService.getMainCommandListAsString());
 }
 
 void
-CLIAutocompleteService::autocompletePriority(const Command& firstSubCommand, std::vector<ListName>& listNames)
+CommandAutoCompleteUseCase::autocompletePriority(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     std::string priorityList = listItemService.priority().getNamesAsString();
 
@@ -293,7 +291,7 @@ CLIAutocompleteService::autocompletePriority(const Command& firstSubCommand, std
 }
 
 void
-CLIAutocompleteService::autocompleteStatus(const Command& firstSubCommand, std::vector<ListName>& listNames)
+CommandAutoCompleteUseCase::autocompleteStatus(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     std::string statusList = listItemService.status().getCommandNamesAsString();
 
@@ -310,7 +308,7 @@ CLIAutocompleteService::autocompleteStatus(const Command& firstSubCommand, std::
 }
 
 void
-CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand, std::vector<ListName>& listNames)
+CommandAutoCompleteUseCase::autocompleteMoveList(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     std::string listString;
     getAllLists(listString);
@@ -332,7 +330,7 @@ CLIAutocompleteService::autocompleteMoveList(const Command& firstSubCommand, std
 }
 
 void
-CLIAutocompleteService::autocompleteListActions(const Command& firstSubCommand)
+CommandAutoCompleteUseCase::autocompleteListActions(const Command& firstSubCommand, Command& command)
 {
     std::string listActions = "add rename remove show copy";
 
@@ -369,7 +367,7 @@ CLIAutocompleteService::autocompleteListActions(const Command& firstSubCommand)
 }
 
 void
-CLIAutocompleteService::autocompleteListIndefinitely(const Command& firstSubCommand)
+CommandAutoCompleteUseCase::autocompleteListIndefinitely(const Command& firstSubCommand)
 {
     std::string listString;
     getAllLists(listString);
@@ -377,7 +375,7 @@ CLIAutocompleteService::autocompleteListIndefinitely(const Command& firstSubComm
 }
 
 void
-CLIAutocompleteService::autocompleteUseList(const Command& firstSubCommand)
+CommandAutoCompleteUseCase::autocompleteUseList(const Command& firstSubCommand)
 {
     Command secondSubCommand = commandService.getSubCommand(firstSubCommand);
     std::string listString;
@@ -388,7 +386,7 @@ CLIAutocompleteService::autocompleteUseList(const Command& firstSubCommand)
 }
 
 void
-CLIAutocompleteService::showListItemId(std::vector<ListName>& listNames)
+CommandAutoCompleteUseCase::showListItemId(std::vector<ListName>& listNames)
 {
     std::string listItemIds;
     for (auto listName : listNames) {
@@ -407,7 +405,7 @@ CLIAutocompleteService::showListItemId(std::vector<ListName>& listNames)
 }
 
 bool
-CLIAutocompleteService::isValidListItemId(std::string id, ListName& listName)
+CommandAutoCompleteUseCase::isValidListItemId(std::string id, ListName& listName)
 {
     try {
         ListItemEntity listItemEntity = listItemService.find(id, listName);
@@ -421,7 +419,7 @@ CLIAutocompleteService::isValidListItemId(std::string id, ListName& listName)
 }
 
 void
-CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, std::vector<ListName>& listNames)
+CommandAutoCompleteUseCase::autocompleteId(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     if (commandService.hasSubCommand(firstSubCommand)) {
         Command subSubCommand = commandService.getSubCommand(firstSubCommand);
@@ -435,7 +433,7 @@ CLIAutocompleteService::autocompleteId(const Command& firstSubCommand, std::vect
 }
 
 void
-CLIAutocompleteService::autocompleteIdIndefinitely(const Command& firstSubCommand, std::vector<ListName>& listNames)
+CommandAutoCompleteUseCase::autocompleteIdIndefinitely(const Command& firstSubCommand, std::vector<ListName>& listNames)
 {
     if (commandService.hasSubCommand(firstSubCommand)) {
         Command subSubCommand = commandService.getSubCommand(firstSubCommand);
@@ -450,7 +448,7 @@ CLIAutocompleteService::autocompleteIdIndefinitely(const Command& firstSubComman
 }
 
 bool
-CLIAutocompleteService::isStartOfCommand(std::string listOfCommandNames, std::string partialCommandName)
+CommandAutoCompleteUseCase::isStartOfCommand(std::string listOfCommandNames, std::string partialCommandName)
 {
     std::vector<std::string> commandNames = StringHelpers::split(listOfCommandNames, ' ');
     for (const std::string& commandName : commandNames) {
@@ -462,7 +460,7 @@ CLIAutocompleteService::isStartOfCommand(std::string listOfCommandNames, std::st
 }
 
 std::string
-CLIAutocompleteService::getDeadline()
+CommandAutoCompleteUseCase::getDeadline()
 {
     return "today tomorrow monday tuesday wednesday thursday friday saturday sunday next-week next-month next-year "
            "reset";

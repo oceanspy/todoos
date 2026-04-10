@@ -23,10 +23,18 @@ add_executable(todoos main.cpp
         src/IOService/IOService.h
         src/IOService/IOCliService/IOCliService.cpp
         src/IOService/IOCliService/IOCliService.h
+        src/List/ListItems/ListItemEntity.cpp
+        src/List/ListItems/ListItemEntity.h
+        src/List/ListItems/PriorityEntity.cpp
+        src/List/ListItems/PriorityEntity.h
+        src/List/ListItems/StatusEntity.cpp
+        src/List/ListItems/StatusEntity.h
         src/List/ListItems/PriorityService.cpp
         src/List/ListItems/PriorityService.h
         src/List/ListItems/StatusService.cpp
         src/List/ListItems/StatusService.h
+        src/List/ListEntity.cpp
+        src/List/ListEntity.h
         src/List/ListService.cpp
         src/List/ListService.h
         src/List/ListName.cpp
@@ -37,12 +45,8 @@ add_executable(todoos main.cpp
         src/Init/Installation.h
         src/Exception/ListNotFoundException.cpp
         src/Exception/ListNotFoundException.h
-        src/Entities/ConfigEntity.cpp
-        src/Entities/ConfigEntity.h
-        src/Entities/ListEntity.cpp
-        src/Entities/ListEntity.h
-        src/Entities/ListItemEntity.cpp
-        src/Entities/ListItemEntity.h
+        src/Config/ConfigEntity.cpp
+        src/Config/ConfigEntity.h
         src/Config/ConfigService.cpp
         src/Config/ConfigService.h
         src/FileStorage/FileStorageService.cpp
@@ -80,8 +84,8 @@ add_executable(todoos main.cpp
         src/Command/CommandShortcut.cpp
         src/Command/CommandShortcut.h
         src/Helpers/BashStyle.h
-        src/CLIAutocomplete/CLIAutocompleteService.cpp
-        src/CLIAutocomplete/CLIAutocompleteService.h
+        src/UseCase/CommandAutoCompleteUseCase.cpp
+        src/UseCase/CommandAutoCompleteUseCase.h
         src/CLIThemes/MobileTheme.cpp
         src/CLIThemes/MobileTheme.h
         src/CLIThemes/ThemeAbstract.h
@@ -108,10 +112,6 @@ add_executable(todoos main.cpp
         src/Actions/Stats/Stats.h
         src/CLIThemes/CLIThemeService.cpp
         src/CLIThemes/CLIThemeService.h
-        src/Entities/PriorityEntity.cpp
-        src/Entities/PriorityEntity.h
-        src/Entities/StatusEntity.cpp
-        src/Entities/StatusEntity.h
         src/Helpers/BashStyle.cpp
         src/UseCase/ShowUseCase.cpp
         src/UseCase/ShowUseCase.h
@@ -133,8 +133,8 @@ add_executable(todoos main.cpp
         src/UseCase/RestoreUseCase.h
         src/UseCase/ListUseCase.cpp
         src/UseCase/ListUseCase.h
-        src/UseCase/UseUseCase.cpp
-        src/UseCase/UseUseCase.h
+        src/UseCase/SwitchListUseCase.cpp
+        src/UseCase/SwitchListUseCase.h
         src/UseCase/StatsUseCase.cpp
         src/UseCase/StatsUseCase.h
         src/UseCase/MoveUseCase.cpp

@@ -1,9 +1,9 @@
-#include "../../CLIAutocomplete/CLIAutocompleteService.h"
 #include "../../FileDataStorage/ConfService.h"
 #include "../../FileDataStorage/JSONService.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
+#include "../../UseCase/CommandAutoCompleteUseCase.h"
 #include "../Mock/MockInit.h"
 #include "../Mock/MockInstallation.h"
 #include <catch2/catch_test_macros.hpp>
@@ -11,14 +11,14 @@
 #include <iostream>
 
 std::string
-captureGetCompletionOutput(CLIAutocompleteService& autocompleteService)
+captureGetCompletionOutput(CommandAutoCompleteUseCase& autocompleteService, Command& command)
 {
     std::ostringstream oss;
     std::streambuf* coutBuffer = std::cout.rdbuf();
     std::cout.rdbuf(oss.rdbuf());
 
-    // Call getCompletion()
-    autocompleteService.getCompletion();
+    // Call execute()
+    autocompleteService.execute(command);
 
     // Restore cout buffer
     std::cout.rdbuf(coutBuffer);
@@ -64,13 +64,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = commandService.getMainCommandListAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
@@ -91,13 +91,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -118,13 +118,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -145,13 +145,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -172,13 +172,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = priorityService.getNamesAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
@@ -199,13 +199,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -226,13 +226,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = statusService.getCommandNamesAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
@@ -253,13 +253,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = statusService.getCommandNamesAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
@@ -280,13 +280,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -308,13 +308,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -336,13 +336,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -366,13 +366,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -393,13 +393,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = commandService.getMainCommandListAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
@@ -420,13 +420,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -447,13 +447,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -474,13 +474,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -501,13 +501,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "\"test\\ 1\"\n";
         REQUIRE(printedString == expectedString);
     }
@@ -528,13 +528,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "\"test\\ 1\"\n";
         REQUIRE(printedString == expectedString);
     }
@@ -555,13 +555,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -582,13 +582,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -609,13 +609,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -636,13 +636,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "add rename remove show copy\n";
         REQUIRE(printedString == expectedString);
     }
@@ -663,13 +663,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -690,13 +690,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -718,13 +718,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -748,13 +748,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -775,13 +775,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -802,13 +802,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -829,13 +829,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -856,13 +856,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -883,13 +883,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -910,13 +910,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -937,13 +937,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -964,13 +964,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -991,13 +991,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1018,13 +1018,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1045,13 +1045,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1072,13 +1072,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1099,13 +1099,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1126,13 +1126,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1153,13 +1153,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1180,13 +1180,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1207,13 +1207,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1234,13 +1234,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1261,13 +1261,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1288,13 +1288,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1315,13 +1315,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -1342,13 +1342,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1369,13 +1369,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
@@ -1396,13 +1396,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1423,13 +1423,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "today tomorrow monday tuesday wednesday thursday friday saturday sunday "
                                      "next-week next-month next-year reset\n";
         REQUIRE(printedString == expectedString);
@@ -1451,13 +1451,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1478,13 +1478,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1506,13 +1506,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1533,13 +1533,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "tempList2Name tempListName\n";
         REQUIRE(printedString == expectedString);
     }
@@ -1564,13 +1564,13 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListService listService(ioService, configService, listRepository, bus);
 
         // Create an instance of CLIAutocompleteService
-        CLIAutocompleteService autocompleteService(ioService, commandService, command, listService, listItemService);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.getCompletion());
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
 
         // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService);
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }

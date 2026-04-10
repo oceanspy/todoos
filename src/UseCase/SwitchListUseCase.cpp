@@ -1,17 +1,17 @@
-#include "UseUseCase.h"
+#include "SwitchListUseCase.h"
 #include "../Actions/ListActions/ListActions.h"
 #include "../Actions/Show/Show.h"
-#include "../Entities/ListItemEntity.h"
+#include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
-UseUseCase::UseUseCase(IOService& ioService,
-                        Command& command,
-                        CommandService& commandService,
-                        ListService& listService,
-                        ListItemService& listItemService,
-                        FileStorageService& fileStorageService,
-                        ConfigService& configService,
-                        CLIThemeService& cliThemeService)
+SwitchListUseCase::SwitchListUseCase(IOService& ioService,
+                                     Command& command,
+                                     CommandService& commandService,
+                                     ListService& listService,
+                                     ListItemService& listItemService,
+                                     FileStorageService& fileStorageService,
+                                     ConfigService& configService,
+                                     CLIThemeService& cliThemeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)
@@ -24,7 +24,7 @@ UseUseCase::UseUseCase(IOService& ioService,
 }
 
 void
-UseUseCase::execute()
+SwitchListUseCase::execute()
 {
     ListActions list(ioService,
                      command,

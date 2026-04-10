@@ -1,5 +1,5 @@
-#ifndef CLIAUTOCOMPLETESERVICE_H
-#define CLIAUTOCOMPLETESERVICE_H
+#ifndef COMMANDAUTOCOMPLETESERVICE_H
+#define COMMANDAUTOCOMPLETESERVICE_H
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Helpers/DateHelpers.h"
@@ -8,22 +8,21 @@
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
 
-class CLIAutocompleteService
+class CommandAutoCompleteUseCase
 {
   public:
-    CLIAutocompleteService(IOService& ioService,
-                           CommandService& commandService,
-                           Command& command,
-                           ListService& listService,
-                           ListItemService& listItemService);
-    bool getCompletion();
+    CommandAutoCompleteUseCase(IOService& ioService,
+                               CommandService& commandService,
+                               ListService& listService,
+                               ListItemService& listItemService);
+    bool execute(Command& command);
 
   protected:
-    void autocompleteOptionList();
+    void autocompleteOptionList(Command& command);
     void autocompleteBase();
     void autocompletePriority(const Command& firstSubCommand, std::vector<ListName>& listNames);
     void autocompleteStatus(const Command& firstSubCommand, std::vector<ListName>& listNames);
-    void autocompleteListActions(const Command& firstSubCommand);
+    void autocompleteListActions(const Command& firstSubCommand, Command& command);
     void autocompleteListIndefinitely(const Command& firstSubCommand);
     void autocompleteUseList(const Command& firstSubCommand);
     void autocompleteMoveList(const Command& firstSubCommand, std::vector<ListName>& listNames);
@@ -37,10 +36,9 @@ class CLIAutocompleteService
   private:
     IOService& ioService;
     CommandService& commandService;
-    Command& command;
     ListService& listService;
     ListItemService& listItemService;
     bool isStartOfCommand(std::string listOfCommandNames, std::string partialCommandName);
 };
 
-#endif // CLIAUTOCOMPLETESERVICE_H
+#endif // COMMANDAUTOCOMPLETESERVICE_H
