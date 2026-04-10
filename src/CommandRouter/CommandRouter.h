@@ -1,5 +1,5 @@
-#ifndef CLISERVICE_H
-#define CLISERVICE_H
+#ifndef COMMANDROUTER_H
+#define COMMANDROUTER_H
 
 #include <filesystem>
 
@@ -15,48 +15,30 @@
 #include "../List/ListName.h"
 #include "../List/ListService.h"
 
-class CLIController
+class CommandRouter
 {
   public:
-    CLIController(IOService& ioService,
+    CommandRouter(IOService& ioService,
                   Help& help,
                   CommandService& commandService,
-                  Command& command,
                   ConfigService& configService,
                   FileStorageService& fileStorageService,
                   ListService& listService,
                   ListItemService& listItemService,
                   CLIThemeService& cliThemeService);
 
-    void actions();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
     Help& help;
     CommandService& commandService;
-    Command& command;
     ConfigService& configService;
     std::filesystem::path currentListFilePath;
     FileStorageService& fileStorageService;
     ListService& listService;
     ListItemService& listItemService;
     CLIThemeService& cliThemeService;
-    void filterListItemsWithOptions(std::vector<ListItemEntity>* listItems);
-    void show();
-    void listItemActions();
-    void find();
-    void priority(std::string action = "set");
-    void reset();
-    void status(int statusNumber = -1);
-    void remove();
-    void archive();
-    void restore();
-    void list();
-    void use();
-    void stats();
-    void move();
-    void empty();
-    void clean();
 };
 
-#endif // CLISERVICE_H
+#endif // COMMANDROUTER_H

@@ -82,10 +82,36 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
         CLIController/CLIControllerTest.cpp
-        ../CLIController/Remove/Remove.cpp
-        ../CLIController/Status/Status.cpp
-        ../CLIController/Priority/Priority.cpp
-        ../CLIController/ListItemActions/ListItemActions.cpp
+        ../Actions/Remove/Remove.cpp
+        ../Actions/Status/Status.cpp
+        ../Actions/Priority/Priority.cpp
+        ../Actions/ListItemActions/ListItemActions.cpp
+        ../Actions/Show/Show.cpp
+        ../Actions/Config/Config.cpp
+        ../Actions/ListActions/ListActions.cpp
+        ../Actions/Move/Move.cpp
+        ../Actions/Stats/Stats.cpp
+        ../CLIThemes/CLIThemeService.cpp
+        ../CLIThemes/ThemeAbstract.cpp
+        ../CLIThemes/DefaultTheme.cpp
+        ../CLIThemes/MobileTheme.cpp
+        ../FileStorage/FileStorageService.cpp
+        ../UseCase/ShowUseCase.cpp
+        ../UseCase/ListItemActionsUseCase.cpp
+        ../UseCase/FindUseCase.cpp
+        ../UseCase/PriorityUseCase.cpp
+        ../UseCase/ResetUseCase.cpp
+        ../UseCase/StatusUseCase.cpp
+        ../UseCase/RemoveUseCase.cpp
+        ../UseCase/ArchiveUseCase.cpp
+        ../UseCase/RestoreUseCase.cpp
+        ../UseCase/ListUseCase.cpp
+        ../UseCase/UseUseCase.cpp
+        ../UseCase/StatsUseCase.cpp
+        ../UseCase/MoveUseCase.cpp
+        ../UseCase/EmptyUseCase.cpp
+        ../UseCase/CleanUseCase.cpp
+        UseCase/UseCaseTest.cpp
         TestMain.cpp
 )
 

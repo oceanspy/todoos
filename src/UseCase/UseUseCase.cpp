@@ -1,0 +1,53 @@
+#include "UseUseCase.h"
+#include "../Actions/ListActions/ListActions.h"
+#include "../Actions/Show/Show.h"
+#include "../Entities/ListItemEntity.h"
+#include "../List/ListName.h"
+
+UseUseCase::UseUseCase(IOService& ioService,
+                        Command& command,
+                        CommandService& commandService,
+                        ListService& listService,
+                        ListItemService& listItemService,
+                        FileStorageService& fileStorageService,
+                        ConfigService& configService,
+                        CLIThemeService& cliThemeService)
+  : ioService(ioService)
+  , command(command)
+  , commandService(commandService)
+  , listService(listService)
+  , listItemService(listItemService)
+  , fileStorageService(fileStorageService)
+  , configService(configService)
+  , cliThemeService(cliThemeService)
+{
+}
+
+void
+UseUseCase::execute()
+{
+    ListActions list(ioService,
+                     command,
+                     commandService,
+                     listService,
+                     listItemService,
+                     fileStorageService,
+                     configService,
+                     cliThemeService);
+
+    list.use();
+
+    ListName listName =
+        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
+    Show show(ioService, listService, listItemService, cliThemeService);
+
+    std::vector<ListItemEntity> listItems = listItemService.get(listName);
+
+    try {
+        show.print(listItems, listName);
+    } catch (std::exception& e) {
+        ioService.br();
+        ioService.error(e.what());
+        ioService.br();
+    }
+}
