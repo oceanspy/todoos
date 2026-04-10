@@ -23,6 +23,8 @@ main(int argc, const char* argv[])
 {
     std::setlocale(LC_CTYPE, "");
 
+    // ----
+    // Configuration initialization
     std::string channel = "cli";
     IOService ioService = IOService(channel);
     Help help = Help(ioService);
@@ -30,6 +32,8 @@ main(int argc, const char* argv[])
     JSONService jsonService = JSONService(ioService);
     CSVService csvService = CSVService(ioService);
 
+    // ----
+    // Input validation
     CommandOption commandOption = CommandOption();
     CommandValidation commandValidation(commandOption, argc, argv);
     try {
@@ -43,6 +47,8 @@ main(int argc, const char* argv[])
         return 1;
     }
 
+    // ----
+    // Program installation
     Init init = Init(ioService);
     Installation installation = Installation(ioService, jsonService, csvService, confService, init);
     if (installation.isNew()) {
@@ -54,21 +60,25 @@ main(int argc, const char* argv[])
         ioService.br();
     }
 
+    // ----
+    // Dealing with command
     Command command(commandValidation.getCommandName(),
                     commandValidation.getCommandArguments(),
                     commandValidation.getCommandOptions(),
                     commandValidation.getRawCommand());
     CommandList commandList = CommandList();
     auto commandService = CommandService(commandList, commandOption);
-
-    // Autocorrect command for common mistakes
-    SmartCommand smartCommand = SmartCommand(command);
+    SmartCommand smartCommand = SmartCommand(command); // Autocorrect command for common mistakes
     command = smartCommand.apply();
 
+    // ----
+    // Configuration
     ConfigRepository configRepository = ConfigRepository(&confService, init.getConfigFilePath());
     ConfigRepository cacheRepository = ConfigRepository(&confService, init.getCacheFilePath());
     ConfigService configService = ConfigService(ioService, init, configRepository, cacheRepository, command);
 
+    // ----
+    // Storage initialization
     FileStorageService fileStorageService = FileStorageService(ioService, configService);
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr;
     if (configService.getFileDataStorageType() == "csv") {
@@ -80,6 +90,8 @@ main(int argc, const char* argv[])
         return 1;
     }
 
+    // ----
+    // Dependencies initialization
     std::unique_ptr<FileDataServiceInterface> jsonFileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
     EventBus bus = EventBus();
     PriorityService priorityService = PriorityService();
@@ -91,32 +103,37 @@ main(int argc, const char* argv[])
     ListRepository listRepository = ListRepository(configService, jsonFileDataStorageServicePtr.get());
     ListService listService = ListService(ioService, configService, listRepository, bus);
 
-    bool autocomplete = false;
-    try {
-        CLIAutocompleteService cliAutocompleteService =
-            CLIAutocompleteService(ioService, commandService, command, listService, listItemService);
-        autocomplete = cliAutocompleteService.getCompletion();
-    } catch (const std::exception& e) {
-        // Just Quit
-        return 1;
+    // ----
+    // Dealing with command autocomplete
+    if (CommandService::isCommand(command, "commands")) {
+        try {
+            CLIAutocompleteService cliAutocompleteService =
+                CLIAutocompleteService(ioService, commandService, command, listService, listItemService);
+            cliAutocompleteService.getCompletion();
+            return 1;
+        } catch (const std::exception& e) {
+            // Just Quit
+            return 1;
+        }
     }
 
-    if (autocomplete) {
-        return 1;
-    }
-
+    // ----
+    // Initializing cli frontend
     CLIThemeService cliThemeService = CLIThemeService(ioService, configService, listService, listItemService);
-    CLIController cliService = CLIController(ioService,
-                                             help,
-                                             commandService,
-                                             command,
-                                             configService,
-                                             fileStorageService,
-                                             listService,
-                                             listItemService,
-                                             cliThemeService);
+    CLIController cliController = CLIController(ioService,
+                                                help,
+                                                commandService,
+                                                command,
+                                                configService,
+                                                fileStorageService,
+                                                listService,
+                                                listItemService,
+                                                cliThemeService);
+
+    // ----
+    // Do the actions and print
     try {
-        cliService.actions();
+        cliController.actions();
     } catch (ListNotFoundException& e) {
         help.listNotFound(e.getName());
         return 1;
@@ -125,6 +142,8 @@ main(int argc, const char* argv[])
         return 1;
     }
 
+    // ----
+    // Keep the program opens until a button is pressed
     if (command.hasOption("no-quit")) {
         ioService.br();
         ioService.ask("Press any key to quit");

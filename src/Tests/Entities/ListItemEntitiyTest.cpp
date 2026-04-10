@@ -19,6 +19,11 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
     std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfService>(ioService);
     MockInit init(ioService, "_todoos_ListItemRepositoryTest");
+
+    MockInstallation installation(ioService, jsonService, confService, init);
+    installation.wipe();
+    installation.make();
+
     Command command = Command("", {}, {}, "");
     ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
     ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
