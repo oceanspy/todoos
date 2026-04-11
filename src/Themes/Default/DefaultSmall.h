@@ -18,6 +18,9 @@ class DefaultSmall : public ThemeAbstract
     std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
     std::string buildTitle() override;
     ~DefaultSmall() override = default;
+
+  private:
+    std::string buildListTitle(std::vector<ListName>& listNames);
 };
 
 #endif // TODOOS_DEFAULTSMALL_H

@@ -57,6 +57,7 @@ add_executable(todoos main.cpp
         src/Actions/ListItemActions/ListItemActions.h
         src/List/ListItemService.cpp
         src/List/ListItemService.h
+        src/List/ListCountSummary.h
         src/FileDataStorageRepositories/ListItemRepository.cpp
         src/FileDataStorageRepositories/ListItemRepository.h
         src/FileDataStorage/CSVService.cpp

@@ -12,8 +12,8 @@ DefaultSmall::DefaultSmall(IOService& ioService,
     statsPercentageLength = 8;
 }
 
-void
-DefaultSmall::printListName(std::vector<ListName>& listNames)
+std::string
+DefaultSmall::buildListTitle(std::vector<ListName>& listNames)
 {
     std::string titleListName = "";
     for (auto listName : listNames) {
@@ -21,32 +21,27 @@ DefaultSmall::printListName(std::vector<ListName>& listNames)
     }
     titleListName.pop_back();
 
-    // Left side: total + archived
-    int totalCount = 0;
-    for (auto listName : listNames) {
-        totalCount += listItemService.count(listName);
+    if (currentListVariant == "archive") {
+        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
+    } else if (currentListVariant == "delete") {
+        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
     }
-    int archivedCount = 0;
-    for (auto listName : listNames) {
-        ListName listNameArchive = ListName::createVariant(listName, "archive");
-        archivedCount += listItemService.count(listNameArchive);
-    }
-    std::string leftSide = "📈 " + std::to_string(totalCount) + "  🚀 " + std::to_string(archivedCount);
+    return StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
+}
+
+void
+DefaultSmall::printListName(std::vector<ListName>& listNames)
+{
+    ListCountSummary summary = listItemService.getCountSummary(listNames);
+
+    std::string titleListName = buildListTitle(listNames);
+    std::string leftSide = "📈 " + std::to_string(summary.total) + "  ⚡ " + std::to_string(summary.archived);
     int leftLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(leftSide));
 
     int separator = consoleRowLength - leftLen;
     if (separator < 1)
         separator = 1;
     std::string showCount = leftSide + StringHelpers::adjustStringLength("", separator);
-
-    // List name title
-    if (currentListVariant == "archive") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
-    } else if (currentListVariant == "delete") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
-    } else {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
-    }
 
     int listNameLength = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(titleListName));
     int paddingLength = (consoleRowLength - listNameLength) / 2;

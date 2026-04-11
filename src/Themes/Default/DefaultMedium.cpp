@@ -12,8 +12,8 @@ DefaultMedium::DefaultMedium(IOService& ioService,
     statsPercentageLength = 8;
 }
 
-void
-DefaultMedium::printListName(std::vector<ListName>& listNames)
+std::string
+DefaultMedium::buildListTitle(std::vector<ListName>& listNames)
 {
     std::string titleListName = "";
     for (auto listName : listNames) {
@@ -21,53 +21,39 @@ DefaultMedium::printListName(std::vector<ListName>& listNames)
     }
     titleListName.pop_back();
 
-    // Left side: total + archived
-    int totalCount = 0;
-    for (auto listName : listNames) {
-        totalCount += listItemService.count(listName);
+    if (currentListVariant == "archive") {
+        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
+    } else if (currentListVariant == "delete") {
+        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
     }
-    int archivedCount = 0;
-    for (auto listName : listNames) {
-        ListName listNameArchive = ListName::createVariant(listName, "archive");
-        archivedCount += listItemService.count(listNameArchive);
-    }
-    std::string leftSide = "📈 " + std::to_string(totalCount) + "  🚀 " + std::to_string(archivedCount);
+    return StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
+}
+
+std::string
+DefaultMedium::buildPriorityCounts(const ListCountSummary& summary)
+{
+    return StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " " +
+           StringHelpers::colorize("● ", RED) + std::to_string(summary.getPriority(PriorityService::URGENT)) + " " +
+           StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " " +
+           StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) +
+           " " + StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW));
+}
+
+void
+DefaultMedium::printListName(std::vector<ListName>& listNames)
+{
+    ListCountSummary summary = listItemService.getCountSummary(listNames);
+
+    std::string titleListName = buildListTitle(listNames);
+    std::string leftSide = "📈 " + std::to_string(summary.total) + "  ⚡ " + std::to_string(summary.archived);
     int leftLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(leftSide));
-
-    // Right side: priority counts
-    auto countPriority = [&](std::vector<int> priorities) {
-        int n = 0;
-        for (auto listName : listNames) {
-            n += listItemService.countWithPriority(listName, priorities);
-        }
-        return n;
-    };
-    std::string criticalStr =
-        StringHelpers::colorize("■ ", WHITE) + std::to_string(countPriority({ PriorityService::CRITICAL })) + " ";
-    std::string urgentStr =
-        StringHelpers::colorize("● ", RED) + std::to_string(countPriority({ PriorityService::URGENT })) + " ";
-    std::string highStr =
-        StringHelpers::colorize("● ", ORANGE) + std::to_string(countPriority({ PriorityService::HIGH })) + " ";
-    std::string mediumStr =
-        StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(countPriority({ PriorityService::MEDIUM })) + " ";
-    std::string lowStr = StringHelpers::colorize("◌ ", GREEN) + std::to_string(countPriority({ PriorityService::LOW }));
-
-    std::string rightSide = criticalStr + urgentStr + highStr + mediumStr + lowStr;
+    std::string rightSide = buildPriorityCounts(summary);
     int rightLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(rightSide));
 
     int separator = consoleRowLength - leftLen - rightLen;
     if (separator < 1)
         separator = 1;
     std::string showCount = leftSide + StringHelpers::adjustStringLength("", separator) + rightSide;
-
-    // List name title
-    if (currentListVariant == "archive") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
-    } else if (currentListVariant == "delete") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
-    } else {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
-    }
 
     int listNameLength = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(titleListName));
     int paddingLength = (consoleRowLength - listNameLength) / 2;

@@ -13,6 +13,165 @@ Default::Default(IOService& ioService,
     statsPercentageLength = 8;
 }
 
+void
+Default::printListName(std::vector<ListName>& listNames)
+{
+    ListCountSummary summary = listItemService.getCountSummary(listNames);
+
+    std::string titleListName = "";
+    for (auto listName : listNames) {
+        titleListName += listName.getName() + " ";
+    }
+    titleListName.pop_back();
+
+    std::string totalStr = std::to_string(summary.total);
+    int totalCharLength = 3 + static_cast<int>(totalStr.length());
+    totalStr = "📈 " + totalStr;
+
+    std::string todoStr = std::to_string(summary.getStatus(StatusService::TO_DO));
+    int todoCharLength = 6 + static_cast<int>(todoStr.length());
+    todoStr = "   ⏳ " + todoStr;
+
+    std::string startedStr = std::to_string(summary.getStatus(StatusService::STARTED));
+    int startedCharLength = 4 + static_cast<int>(startedStr.length());
+    startedStr = " 🏃 " + startedStr;
+
+    std::string underReviewStr = std::to_string(summary.getStatus(StatusService::REVIEWING));
+    int underReviewCharLength = 4 + static_cast<int>(underReviewStr.length());
+    underReviewStr = " 🔍 " + underReviewStr;
+
+    std::string pauseStr = std::to_string(summary.getStatus(StatusService::PAUSED));
+    int pauseCharLength = 4 + static_cast<int>(pauseStr.length());
+    pauseStr = " 💤 " + pauseStr;
+
+    std::string blockedStr = std::to_string(summary.getStatus(StatusService::BLOCKED));
+    int blockedCharLength = 4 + static_cast<int>(blockedStr.length());
+    blockedStr = " 🚫 " + blockedStr;
+
+    std::string completedStr = std::to_string(summary.getStatus(StatusService::COMPLETED));
+    int completedCharLength = 4 + static_cast<int>(completedStr.length());
+    completedStr = " ✅ " + completedStr;
+
+    std::string archivedStr = std::to_string(summary.archived);
+    int archivedCharLength = 6 + static_cast<int>(archivedStr.length());
+    archivedStr = "   ⚡ " + archivedStr;
+
+    std::string deliveredStr = std::to_string(summary.delivered);
+    int deliveredCharLength = 6 + static_cast<int>(deliveredStr.length());
+    deliveredStr = " / 🚀 " + deliveredStr;
+
+    std::string cancelledStr = std::to_string(summary.cancelled);
+    int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
+    cancelledStr = " ✖️ " + cancelledStr;
+
+    std::string deletedStr = std::to_string(summary.deleted);
+    int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
+    deletedStr = " 🧹 " + deletedStr;
+
+    std::string statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + blockedStr +
+                                   completedStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
+    int statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength + blockedCharLength +
+                            completedCharLength + underReviewCharLength + archivedCharLength + deliveredCharLength +
+                            cancelledCharLength + deletedCharLength;
+
+    std::string criticalStr =
+        StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " ";
+    int criticalCharLength =
+        2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::CRITICAL)).length()) + 1;
+
+    std::string urgentStr =
+        StringHelpers::colorize("● ", RED) + std::to_string(summary.getPriority(PriorityService::URGENT)) + " ";
+    int urgentCharLength =
+        2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::URGENT)).length()) + 1;
+
+    std::string highStr =
+        StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " ";
+    int highCharLength = 2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::HIGH)).length()) + 1;
+
+    std::string mediumStr =
+        StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) + " ";
+    int mediumCharLength =
+        2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::MEDIUM)).length()) + 1;
+
+    std::string lowStr =
+        StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW)) + " ";
+    int lowCharLength = 2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::LOW)).length()) + 1;
+
+    std::string priorityPrintCount = criticalStr + urgentStr + highStr + mediumStr + lowStr;
+    int priorityCountLength = criticalCharLength + urgentCharLength + highCharLength + mediumCharLength + lowCharLength;
+
+    int listTitleLength = consoleRowLength;
+    int separator = listTitleLength - (statusCountLength + priorityCountLength);
+    if (separator <= 10) {
+        listTitleLength += STATUS_LENGTH;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + deliveredStr + deletedStr;
+        statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength +
+                            underReviewCharLength + deliveredCharLength + deletedCharLength;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr;
+        statusCountLength =
+            totalCharLength + todoCharLength + startedCharLength + pauseCharLength + underReviewCharLength;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        statusPrintCount = totalStr + deliveredStr;
+        statusCountLength = totalCharLength + deliveredCharLength;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        statusPrintCount = totalStr;
+        statusCountLength = totalCharLength;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        priorityPrintCount = criticalStr + urgentStr;
+        priorityCountLength = criticalCharLength + urgentCharLength;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        priorityPrintCount = "";
+        priorityCountLength = 0;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+
+    std::string showCount = statusPrintCount + StringHelpers::adjustStringLength("", separator) + priorityPrintCount;
+
+    if (currentListVariant == "archive") {
+        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
+    } else if (currentListVariant == "delete") {
+        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
+    } else {
+        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
+    }
+
+    int listNameLength = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(titleListName));
+    int paddingLength = (listTitleLength - listNameLength) / 2;
+    std::string paddingLeft =
+        StringHelpers::colorize(StringHelpers::adjustStringLengthWithString("", paddingLength, "─"), GRAY);
+    std::string paddingRight =
+        StringHelpers::colorize(StringHelpers::adjustStringLengthWithString("", paddingLength, "─"), GRAY);
+
+    if ((listTitleLength - listNameLength) % 2 != 0) {
+        titleListName += StringHelpers::colorize("─", GRAY);
+    }
+
+    std::string line1 = " ╔═══" + StringHelpers::adjustStringLengthWithString("═", listTitleLength, "═") + "═══╗";
+    std::string line2 = " ║   " + paddingLeft + titleListName + paddingRight + "   ║";
+    std::string line3 = " ║   " + showCount + "   ║";
+    std::string line4 = " ╚═══" + StringHelpers::adjustStringLengthWithString("═", listTitleLength, "═") + "═══╝";
+
+    ioService.print(StringHelpers::colorize(line1, WHITE));
+    ioService.print(line2);
+    ioService.print(line3);
+    ioService.print(StringHelpers::colorize(line4, WHITE));
+    ioService.br();
+}
+
 std::string
 Default::buildTitle()
 {

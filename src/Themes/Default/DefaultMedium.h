@@ -18,6 +18,10 @@ class DefaultMedium : public ThemeAbstract
     std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
     std::string buildTitle() override;
     ~DefaultMedium() override = default;
+
+  private:
+    std::string buildListTitle(std::vector<ListName>& listNames);
+    std::string buildPriorityCounts(const ListCountSummary& summary);
 };
 
 #endif // TODOOS_DEFAULTMEDIUM_H

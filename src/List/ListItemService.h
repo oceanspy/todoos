@@ -6,6 +6,7 @@
 #include "../Helpers/DateHelpers.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
+#include "ListCountSummary.h"
 #include "ListName.h"
 
 class ListItemService
@@ -56,6 +57,7 @@ class ListItemService
     long countWithPriority(ListName& listName, const std::vector<int>& priorities);
     long countCreatedBetween(ListName& listName, time_t from, time_t to);
     long countClosedBetween(ListName& listName, time_t from, time_t to);
+    ListCountSummary getCountSummary(const std::vector<ListName>& listNames);
     void filterPriorityAbove(std::vector<ListItemEntity>& listItems, const int priority);
     void filterStatus(std::vector<ListItemEntity>& listItems, const std::vector<int>& statuses);
     void filterDeadlineBefore(std::vector<ListItemEntity>& listItems, const time_t timestamp);
