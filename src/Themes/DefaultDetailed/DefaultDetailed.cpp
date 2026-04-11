@@ -1,4 +1,4 @@
-#include "Default.h"
+#include "DefaultDetailed.h"
 #include <string>
 
 Default::Default(IOService& ioService,
@@ -24,6 +24,30 @@ Default::printListTitle(ListName& listName)
     int totalCharLength = 3 + static_cast<int>(totalStr.length());
     totalStr = "📈 " + totalStr;
 
+    std::string todoStr = std::to_string(summary.getStatus(StatusService::TO_DO));
+    int todoCharLength = 6 + static_cast<int>(todoStr.length());
+    todoStr = "   ⏳ " + todoStr;
+
+    std::string startedStr = std::to_string(summary.getStatus(StatusService::STARTED));
+    int startedCharLength = 4 + static_cast<int>(startedStr.length());
+    startedStr = " 🏃 " + startedStr;
+
+    std::string underReviewStr = std::to_string(summary.getStatus(StatusService::REVIEWING));
+    int underReviewCharLength = 4 + static_cast<int>(underReviewStr.length());
+    underReviewStr = " 🔍 " + underReviewStr;
+
+    std::string pauseStr = std::to_string(summary.getStatus(StatusService::PAUSED));
+    int pauseCharLength = 4 + static_cast<int>(pauseStr.length());
+    pauseStr = " 💤 " + pauseStr;
+
+    std::string blockedStr = std::to_string(summary.getStatus(StatusService::BLOCKED));
+    int blockedCharLength = 4 + static_cast<int>(blockedStr.length());
+    blockedStr = " 🚫 " + blockedStr;
+
+    std::string completedStr = std::to_string(summary.getStatus(StatusService::COMPLETED));
+    int completedCharLength = 4 + static_cast<int>(completedStr.length());
+    completedStr = " ✅ " + completedStr;
+
     std::string archivedStr = std::to_string(summary.archived);
     int archivedCharLength = 6 + static_cast<int>(archivedStr.length());
     archivedStr = "   ⚡ " + archivedStr;
@@ -40,9 +64,11 @@ Default::printListTitle(ListName& listName)
     int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
     deletedStr = " 🧹 " + deletedStr;
 
-    std::string statusPrintCount = totalStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
-    int statusCountLength =
-        totalCharLength + archivedCharLength + deliveredCharLength + cancelledCharLength + deletedCharLength;
+    std::string statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + blockedStr +
+                                   completedStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
+    int statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength + blockedCharLength +
+                            completedCharLength + underReviewCharLength + archivedCharLength + deliveredCharLength +
+                            cancelledCharLength + deletedCharLength;
 
     std::string criticalStr =
         StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " ";
@@ -74,6 +100,18 @@ Default::printListTitle(ListName& listName)
     int separator = listTitleLength - (statusCountLength + priorityCountLength);
     if (separator <= 10) {
         listTitleLength += STATUS_LENGTH;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + deliveredStr + deletedStr;
+        statusCountLength = totalCharLength + todoCharLength + startedCharLength + pauseCharLength +
+                            underReviewCharLength + deliveredCharLength + deletedCharLength;
+        separator = listTitleLength - (statusCountLength + priorityCountLength);
+    }
+    if (separator <= 10) {
+        statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr;
+        statusCountLength =
+            totalCharLength + todoCharLength + startedCharLength + pauseCharLength + underReviewCharLength;
         separator = listTitleLength - (statusCountLength + priorityCountLength);
     }
     if (separator <= 10) {
