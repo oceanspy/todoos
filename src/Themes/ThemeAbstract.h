@@ -32,7 +32,6 @@ class ThemeAbstract
     void printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems);
     void printAList(std::vector<std::string> lines);
     void printFullLine(std::string color = GRAY);
-    std::string listNameRendered(ListName& listName);
     std::string buildId(const ListItemEntity& listItemEntity);
     std::string buildStatus(const ListItemEntity& listItemEntity);
     std::string buildPriority(const ListItemEntity& listItemEntity);

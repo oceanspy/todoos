@@ -12,6 +12,72 @@ DefaultMedium::DefaultMedium(IOService& ioService,
     statsPercentageLength = 8;
 }
 
+void
+DefaultMedium::printListTitle(ListName& listName)
+{
+    ListCountSummary summary = listItemService.getCountSummary({ listName });
+
+    std::string totalStr = std::to_string(summary.total);
+    int totalCharLength = 3 + static_cast<int>(totalStr.length());
+    totalStr = "📈 " + totalStr;
+
+    std::string archivedStr = std::to_string(summary.archived);
+    int archivedCharLength = 6 + static_cast<int>(archivedStr.length());
+    archivedStr = "   ⚡ " + archivedStr;
+
+    std::string deliveredStr = std::to_string(summary.delivered);
+    int deliveredCharLength = 6 + static_cast<int>(deliveredStr.length());
+    deliveredStr = " / 🚀 " + deliveredStr;
+
+    std::string cancelledStr = std::to_string(summary.cancelled);
+    int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
+    cancelledStr = " ✖️ " + cancelledStr;
+
+    std::string deletedStr = std::to_string(summary.deleted);
+    int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
+    deletedStr = " 🧹 " + deletedStr;
+
+    std::string statusPrintCount = totalStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
+    int statusCountLength =
+        totalCharLength + archivedCharLength + deliveredCharLength + cancelledCharLength + deletedCharLength;
+
+    std::string line1 = " > " + buildListTitle(listName);
+    std::string line2 = "   " + buildListLastUpdate(summary.getLastUpdate());
+    std::string line3 = "   " + StringHelpers::colorize("──────────────────────────────", GRAY);
+    std::string line4 = "   " + statusPrintCount;
+
+    ioService.print(line1);
+    ioService.print(line2);
+    ioService.print(line3);
+    ioService.print(line4);
+    ioService.br();
+    ioService.br();
+}
+
+std::string
+DefaultMedium::buildListTitle(ListName& listName)
+{
+    std::string title;
+    title = StringHelpers::toUpper(listName.getName());
+    title = StringHelpers::colorize(title, BOLD);
+
+    if (listName.getVariant() == "delete") {
+        title += StringHelpers::colorize(" (deleted items)", YELLOW);
+    } else if (listName.getVariant() == "archive") {
+        title += StringHelpers::colorize(" (archived items)", CYAN);
+    }
+
+    return title;
+}
+
+std::string
+DefaultMedium::buildListLastUpdate(const time_t& time)
+{
+    std::string updatedAt = StringHelpers::colorize(
+        StringHelpers::colorize("Updated at:" + DateHelpers::formatTimestampToHumanDate(time), GRAY), ITALIC);
+    return updatedAt;
+}
+
 std::string
 DefaultMedium::buildPriorityCounts(const ListCountSummary& summary)
 {
@@ -20,45 +86,6 @@ DefaultMedium::buildPriorityCounts(const ListCountSummary& summary)
            StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " " +
            StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) +
            " " + StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW));
-}
-
-void
-DefaultMedium::printListTitle(ListName& listName)
-{
-    ListCountSummary summary = listItemService.getCountSummary({ listName });
-
-    std::string titleListName = listNameRendered(listName);
-    std::string leftSide = "📈 " + std::to_string(summary.total) + "  ⚡ " + std::to_string(summary.archived);
-    int leftLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(leftSide));
-    std::string rightSide = buildPriorityCounts(summary);
-    int rightLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(rightSide));
-
-    int separator = consoleRowLength - leftLen - rightLen;
-    if (separator < 1)
-        separator = 1;
-    std::string showCount = leftSide + StringHelpers::adjustStringLength("", separator) + rightSide;
-
-    int listNameLength = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(titleListName));
-    int paddingLength = (consoleRowLength - listNameLength) / 2;
-    std::string paddingLeft =
-        StringHelpers::colorize(StringHelpers::adjustStringLengthWithString("", paddingLength, "─"), GRAY);
-    std::string paddingRight =
-        StringHelpers::colorize(StringHelpers::adjustStringLengthWithString("", paddingLength, "─"), GRAY);
-
-    if ((consoleRowLength - listNameLength) % 2 != 0) {
-        titleListName += StringHelpers::colorize("─", GRAY);
-    }
-
-    std::string line1 = " ╔═══" + StringHelpers::adjustStringLengthWithString("═", consoleRowLength, "═") + "═══╗";
-    std::string line2 = " ║   " + paddingLeft + titleListName + paddingRight + "   ║";
-    std::string line3 = " ║   " + showCount + "   ║";
-    std::string line4 = " ╚═══" + StringHelpers::adjustStringLengthWithString("═", consoleRowLength, "═") + "═══╝";
-
-    ioService.print(StringHelpers::colorize(line1, WHITE));
-    ioService.print(line2);
-    ioService.print(line3);
-    ioService.print(StringHelpers::colorize(line4, WHITE));
-    ioService.br();
 }
 
 std::string

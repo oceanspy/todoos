@@ -609,7 +609,7 @@ ListItemService::getCountSummary(const std::vector<ListName>& listNames)
 {
     ListCountSummary summary;
     for (auto listName : listNames) {
-        // Active items — one pass for total, statuses, priorities, delivered, cancelled
+        // Active items — one pass for total, statuses, priorities, delivered, cancelled, lastUpdate
         for (const auto& item : listItemRepository.get(listName)) {
             summary.total++;
             int statusId = *(*item.status()).getId();
@@ -620,8 +620,10 @@ ListItemService::getCountSummary(const std::vector<ListName>& listNames)
                 summary.delivered++;
             if (statusId == StatusService::CANCELLED)
                 summary.cancelled++;
+            if (*item.getUpdatedAt() > summary.lastUpdate)
+                summary.lastUpdate = *item.getUpdatedAt();
         }
-        // Archive items — one pass for archived count, delivered, cancelled
+        // Archive items — one pass for archived count, delivered, cancelled, lastUpdate
         ListName archiveName = ListName::createVariant(listName, "archive");
         for (const auto& item : listItemRepository.get(archiveName)) {
             summary.archived++;
@@ -630,10 +632,16 @@ ListItemService::getCountSummary(const std::vector<ListName>& listNames)
                 summary.delivered++;
             if (statusId == StatusService::CANCELLED)
                 summary.cancelled++;
+            if (*item.getUpdatedAt() > summary.lastUpdate)
+                summary.lastUpdate = *item.getUpdatedAt();
         }
-        // Deleted items — count all
+        // Deleted items — count all, track lastUpdate
         ListName deleteName = ListName::createVariant(listName, "delete");
-        summary.deleted += static_cast<long>(listItemRepository.get(deleteName).size());
+        for (const auto& item : listItemRepository.get(deleteName)) {
+            summary.deleted++;
+            if (*item.getUpdatedAt() > summary.lastUpdate)
+                summary.lastUpdate = *item.getUpdatedAt();
+        }
     }
     return summary;
 }

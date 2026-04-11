@@ -20,6 +20,8 @@ class DefaultMedium : public ThemeAbstract
     ~DefaultMedium() override = default;
 
   private:
+    std::string buildListTitle(ListName& listName);
+    std::string buildListLastUpdate(const time_t& time);
     std::string buildPriorityCounts(const ListCountSummary& summary);
 };
 

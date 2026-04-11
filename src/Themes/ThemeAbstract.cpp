@@ -156,18 +156,6 @@ ThemeAbstract::buildDate(const ListItemEntity& listItemEntity)
     }
 }
 
-std::string
-ThemeAbstract::listNameRendered(ListName& listName)
-{
-    std::string titleListName = listName.getName();
-    if (listName.getVariant() == "archive") {
-        return StringHelpers::colorize(StringHelpers::toUpper(titleListName) + " (archived)", LIGHT_YELLOW);
-    } else if (listName.getVariant() == "delete") {
-        return StringHelpers::colorize(StringHelpers::toUpper(titleListName) + " (deleted)", LIGHT_RED);
-    }
-    return StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
-}
-
 void
 ThemeAbstract::printFullLine(std::string color)
 {

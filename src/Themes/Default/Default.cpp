@@ -18,8 +18,6 @@ Default::printListTitle(ListName& listName)
 {
     ListCountSummary summary = listItemService.getCountSummary({ listName });
 
-    std::string titleListName = listNameRendered(listName);
-
     std::string totalStr = std::to_string(summary.total);
     int totalCharLength = 3 + static_cast<int>(totalStr.length());
     totalStr = "📈 " + totalStr;
@@ -44,82 +42,51 @@ Default::printListTitle(ListName& listName)
     int statusCountLength =
         totalCharLength + archivedCharLength + deliveredCharLength + cancelledCharLength + deletedCharLength;
 
-    std::string criticalStr =
-        StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " ";
-    int criticalCharLength =
-        2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::CRITICAL)).length()) + 1;
+    std::string line1 = " > " + buildListTitle(listName);
+    std::string line2 = "   " + buildListLastUpdate(summary.getLastUpdate());
+    std::string line3 = "   " + StringHelpers::colorize("──────────────────────────────", GRAY);
+    std::string line4 = "   " + statusPrintCount;
 
-    std::string urgentStr =
-        StringHelpers::colorize("● ", RED) + std::to_string(summary.getPriority(PriorityService::URGENT)) + " ";
-    int urgentCharLength =
-        2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::URGENT)).length()) + 1;
-
-    std::string highStr =
-        StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " ";
-    int highCharLength = 2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::HIGH)).length()) + 1;
-
-    std::string mediumStr =
-        StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) + " ";
-    int mediumCharLength =
-        2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::MEDIUM)).length()) + 1;
-
-    std::string lowStr =
-        StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW)) + " ";
-    int lowCharLength = 2 + static_cast<int>(std::to_string(summary.getPriority(PriorityService::LOW)).length()) + 1;
-
-    std::string priorityPrintCount = criticalStr + urgentStr + highStr + mediumStr + lowStr;
-    int priorityCountLength = criticalCharLength + urgentCharLength + highCharLength + mediumCharLength + lowCharLength;
-
-    int listTitleLength = consoleRowLength;
-    int separator = listTitleLength - (statusCountLength + priorityCountLength);
-    if (separator <= 10) {
-        listTitleLength += STATUS_LENGTH;
-        separator = listTitleLength - (statusCountLength + priorityCountLength);
-    }
-    if (separator <= 10) {
-        statusPrintCount = totalStr + deliveredStr;
-        statusCountLength = totalCharLength + deliveredCharLength;
-        separator = listTitleLength - (statusCountLength + priorityCountLength);
-    }
-    if (separator <= 10) {
-        statusPrintCount = totalStr;
-        statusCountLength = totalCharLength;
-        separator = listTitleLength - (statusCountLength + priorityCountLength);
-    }
-    if (separator <= 10) {
-        priorityPrintCount = criticalStr + urgentStr;
-        priorityCountLength = criticalCharLength + urgentCharLength;
-        separator = listTitleLength - (statusCountLength + priorityCountLength);
-    }
-    if (separator <= 10) {
-        priorityPrintCount = "";
-        priorityCountLength = 0;
-        separator = listTitleLength - (statusCountLength + priorityCountLength);
-    }
-
-    std::string showCount = statusPrintCount + StringHelpers::adjustStringLength("", separator) + priorityPrintCount;
-
-    int listNameLength = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(titleListName));
-    int paddingLength = (listTitleLength - listNameLength) / 2;
-    std::string paddingLeft =
-        StringHelpers::colorize(StringHelpers::adjustStringLengthWithString("", paddingLength, "─"), GRAY);
-    std::string paddingRight =
-        StringHelpers::colorize(StringHelpers::adjustStringLengthWithString("", paddingLength, "─"), GRAY);
-
-    if ((listTitleLength - listNameLength) % 2 != 0) {
-        titleListName += StringHelpers::colorize("─", GRAY);
-    }
-
-    std::string line1 = " ╔═══" + StringHelpers::adjustStringLengthWithString("═", listTitleLength, "═") + "═══╗";
-    std::string line2 = " ║   " + paddingLeft + titleListName + paddingRight + "   ║";
-    std::string line3 = " ║   " + showCount + "   ║";
-    std::string line4 = " ╚═══" + StringHelpers::adjustStringLengthWithString("═", listTitleLength, "═") + "═══╝";
-
-    ioService.print(StringHelpers::colorize(line1, WHITE));
+    ioService.print(line1);
     ioService.print(line2);
     ioService.print(line3);
-    ioService.print(StringHelpers::colorize(line4, WHITE));
+    ioService.print(line4);
     ioService.br();
+    ioService.br();
+}
+
+std::string
+Default::buildListTitle(ListName& listName)
+{
+    std::string title;
+    title = StringHelpers::toUpper(listName.getName());
+    title = StringHelpers::colorize(title, BOLD);
+
+    if (listName.getVariant() == "delete") {
+        title += StringHelpers::colorize(" (deleted items)", YELLOW);
+    } else if (listName.getVariant() == "archive") {
+        title += StringHelpers::colorize(" (archived items)", CYAN);
+    }
+
+    return title;
+}
+
+std::string
+Default::buildListLastUpdate(const time_t& time)
+{
+    std::string updatedAt = StringHelpers::colorize(
+        StringHelpers::colorize("Updated at:" + DateHelpers::formatTimestampToHumanDate(time), GRAY), ITALIC);
+    return updatedAt;
+}
+
+std::string
+Default::buildPriorityCounts(const ListCountSummary& summary)
+{
+    return StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " " +
+           StringHelpers::colorize("● ", RED) + std::to_string(summary.getPriority(PriorityService::URGENT)) + " " +
+           StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " " +
+           StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) +
+           " " + StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW));
 }
 
 std::string
