@@ -1,7 +1,7 @@
 #ifndef TODOOS_PRIORITYSERVICE_H
 #define TODOOS_PRIORITYSERVICE_H
 
-#include "../../Entities/PriorityEntity.h"
+#include "PriorityEntity.h"
 #include <stdexcept>
 #include <string>
 #include <vector>

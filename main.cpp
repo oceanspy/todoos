@@ -1,8 +1,7 @@
-#include "src/CLIAutocomplete/CLIAutocompleteService.h"
-#include "src/CLIController/CLIController.h"
 #include "src/Command/Command.h"
 #include "src/Command/CommandService.h"
 #include "src/Command/CommandValidation.h"
+#include "src/CommandRouter/CommandRouter.h"
 #include "src/Config/ConfigService.h"
 #include "src/FileDataStorage/CSVService.h"
 #include "src/FileDataStorage/ConfService.h"
@@ -16,6 +15,7 @@
 #include "src/Init/Installation.h"
 #include "src/List/ListItemService.h"
 #include "src/List/ListService.h"
+#include "src/UseCase/CommandAutoCompleteUseCase.h"
 #include <clocale>
 
 int
@@ -33,7 +33,7 @@ main(int argc, const char* argv[])
     CSVService csvService = CSVService(ioService);
 
     // ----
-    // Input validation
+    // Input sanitization ACL
     CommandOption commandOption = CommandOption();
     CommandValidation commandValidation(commandOption, argc, argv);
     try {
@@ -46,9 +46,32 @@ main(int argc, const char* argv[])
         help.commandNotFound();
         return 1;
     }
+    Command command(commandValidation.getCommandName(),
+                    commandValidation.getCommandArguments(),
+                    commandValidation.getCommandOptions(),
+                    commandValidation.getRawCommand());
+    CommandList commandList = CommandList();
+    auto commandService = CommandService(commandList, commandOption);
 
     // ----
-    // Program installation
+    // Autocorrect command for common mistakes or allowed shortcuts
+    SmartCommand smartCommand = SmartCommand(command);
+    command = smartCommand.apply();
+
+    // ----
+    // Verify command is valid
+    if (!commandService.isValid(command)) {
+        help.commandNotFoundSkipCommandAutocomplete(command);
+        return 1;
+    }
+
+    if (!CommandService::isCommandValidWithOption(command)) {
+        help.commandOptionNotSupportedSkipCommandAutocomplete(command);
+        return 1;
+    }
+
+    // ----
+    // Program initialization and first launch
     Init init = Init(ioService);
     Installation installation = Installation(ioService, jsonService, csvService, confService, init);
     if (installation.isNew()) {
@@ -61,18 +84,7 @@ main(int argc, const char* argv[])
     }
 
     // ----
-    // Dealing with command
-    Command command(commandValidation.getCommandName(),
-                    commandValidation.getCommandArguments(),
-                    commandValidation.getCommandOptions(),
-                    commandValidation.getRawCommand());
-    CommandList commandList = CommandList();
-    auto commandService = CommandService(commandList, commandOption);
-    SmartCommand smartCommand = SmartCommand(command); // Autocorrect command for common mistakes
-    command = smartCommand.apply();
-
-    // ----
-    // Configuration
+    // Configuration initialization
     ConfigRepository configRepository = ConfigRepository(&confService, init.getConfigFilePath());
     ConfigRepository cacheRepository = ConfigRepository(&confService, init.getCacheFilePath());
     ConfigService configService = ConfigService(ioService, init, configRepository, cacheRepository, command);
@@ -107,9 +119,7 @@ main(int argc, const char* argv[])
     // Dealing with command autocomplete
     if (CommandService::isCommand(command, "commands")) {
         try {
-            CLIAutocompleteService cliAutocompleteService =
-                CLIAutocompleteService(ioService, commandService, command, listService, listItemService);
-            cliAutocompleteService.getCompletion();
+            CommandAutoCompleteUseCase(ioService, commandService, listService, listItemService).execute(command);
             return 1;
         } catch (const std::exception& e) {
             // Just Quit
@@ -118,22 +128,15 @@ main(int argc, const char* argv[])
     }
 
     // ----
-    // Initializing cli frontend
-    CLIThemeService cliThemeService = CLIThemeService(ioService, configService, listService, listItemService);
-    CLIController cliController = CLIController(ioService,
-                                                help,
-                                                commandService,
-                                                command,
-                                                configService,
-                                                fileStorageService,
-                                                listService,
-                                                listItemService,
-                                                cliThemeService);
+    // Initializing cli actions and frontend
+    ThemeService themeService = ThemeService(ioService, configService, listService, listItemService);
+    CommandRouter commandRouter = CommandRouter(
+        ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
 
     // ----
     // Do the actions and print
     try {
-        cliController.actions();
+        commandRouter.execute(command);
     } catch (ListNotFoundException& e) {
         help.listNotFound(e.getName());
         return 1;

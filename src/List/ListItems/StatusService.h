@@ -1,7 +1,7 @@
 #ifndef TODOOS_STATUSSERVICE_H
 #define TODOOS_STATUSSERVICE_H
 
-#include "../../Entities/StatusEntity.h"
+#include "StatusEntity.h"
 #include <algorithm>
 #include <stdexcept>
 #include <string>

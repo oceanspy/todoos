@@ -1,4 +1,5 @@
 #include "Help.h"
+#include "version.h"
 
 Help::Help(IOService& ioService)
   : ioService(ioService)
@@ -30,10 +31,30 @@ Help::commandNotFound()
 }
 
 void
+Help::commandNotFoundSkipCommandAutocomplete(Command& command)
+{
+    if (command.isAutocompletion()) {
+        return;
+    }
+
+    Help::commandNotFound();
+}
+
+void
 Help::commandOptionNotSupported()
 {
     ioService.error("The arguments of the command do not match. Aborting.");
     ioService.info("Type '-h/--help' for help");
+}
+
+void
+Help::commandOptionNotSupportedSkipCommandAutocomplete(Command& command)
+{
+    if (command.isAutocompletion()) {
+        return;
+    }
+
+    Help::commandOptionNotSupported();
 }
 
 std::vector<std::string>
@@ -133,5 +154,5 @@ Help::helpListForCli()
 std::string
 Help::getVersion()
 {
-    return "Version 0.2.11";
+    return "Version " APP_VERSION;
 }

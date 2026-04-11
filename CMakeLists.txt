@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(todoos)
+project(todoos VERSION 0.4.0)
 
 include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
@@ -23,10 +23,18 @@ add_executable(todoos main.cpp
         src/IOService/IOService.h
         src/IOService/IOCliService/IOCliService.cpp
         src/IOService/IOCliService/IOCliService.h
+        src/List/ListItems/ListItemEntity.cpp
+        src/List/ListItems/ListItemEntity.h
+        src/List/ListItems/PriorityEntity.cpp
+        src/List/ListItems/PriorityEntity.h
+        src/List/ListItems/StatusEntity.cpp
+        src/List/ListItems/StatusEntity.h
         src/List/ListItems/PriorityService.cpp
         src/List/ListItems/PriorityService.h
         src/List/ListItems/StatusService.cpp
         src/List/ListItems/StatusService.h
+        src/List/ListEntity.cpp
+        src/List/ListEntity.h
         src/List/ListService.cpp
         src/List/ListService.h
         src/List/ListName.cpp
@@ -37,42 +45,38 @@ add_executable(todoos main.cpp
         src/Init/Installation.h
         src/Exception/ListNotFoundException.cpp
         src/Exception/ListNotFoundException.h
-        src/Entities/ConfigEntity.cpp
-        src/Entities/ConfigEntity.h
-        src/Entities/ListEntity.cpp
-        src/Entities/ListEntity.h
-        src/Entities/ListItemEntity.cpp
-        src/Entities/ListItemEntity.h
+        src/Config/ConfigEntity.cpp
+        src/Config/ConfigEntity.h
         src/Config/ConfigService.cpp
         src/Config/ConfigService.h
         src/FileStorage/FileStorageService.cpp
         src/FileStorage/FileStorageService.h
         src/FileDataStorageRepositories/ConfigRepository.cpp
         src/FileDataStorageRepositories/ConfigRepository.h
-        src/CLIController/ListItemActions/ListItemActions.cpp
-        src/CLIController/ListItemActions/ListItemActions.h
+        src/Actions/ListItemActions/ListItemActions.cpp
+        src/Actions/ListItemActions/ListItemActions.h
         src/List/ListItemService.cpp
         src/List/ListItemService.h
         src/FileDataStorageRepositories/ListItemRepository.cpp
         src/FileDataStorageRepositories/ListItemRepository.h
         src/FileDataStorage/CSVService.cpp
         src/FileDataStorage/CSVService.h
-        src/CLIController/Show/Show.cpp
-        src/CLIController/Show/Show.h
-        src/CLIController/CLIController.cpp
-        src/CLIController/CLIController.h
-        src/CLIController/Remove/Remove.cpp
-        src/CLIController/Remove/Remove.h
-        src/CLIController/Status/Status.cpp
-        src/CLIController/Status/Status.h
-        src/CLIController/Priority/Priority.cpp
-        src/CLIController/Priority/Priority.h
+        src/Actions/Show/Show.cpp
+        src/Actions/Show/Show.h
+        src/CommandRouter/CommandRouter.cpp
+        src/CommandRouter/CommandRouter.h
+        src/Actions/Remove/Remove.cpp
+        src/Actions/Remove/Remove.h
+        src/Actions/Status/Status.cpp
+        src/Actions/Status/Status.h
+        src/Actions/Priority/Priority.cpp
+        src/Actions/Priority/Priority.h
         src/FileDataStorage/JSONService.cpp
         src/FileDataStorage/JSONService.h
-        src/CLIController/Config/Config.cpp
-        src/CLIController/Config/Config.h
-        src/CLIController/ListActions/ListActions.cpp
-        src/CLIController/ListActions/ListActions.h
+        src/Actions/Config/Config.cpp
+        src/Actions/Config/Config.h
+        src/Actions/ListActions/ListActions.cpp
+        src/Actions/ListActions/ListActions.h
         src/Command/SmartCommand.cpp
         src/Command/SmartCommand.h
         src/FileDataStorageRepositories/ListRepository.cpp
@@ -80,14 +84,14 @@ add_executable(todoos main.cpp
         src/Command/CommandShortcut.cpp
         src/Command/CommandShortcut.h
         src/Helpers/BashStyle.h
-        src/CLIAutocomplete/CLIAutocompleteService.cpp
-        src/CLIAutocomplete/CLIAutocompleteService.h
-        src/CLIThemes/MobileTheme.cpp
-        src/CLIThemes/MobileTheme.h
-        src/CLIThemes/ThemeAbstract.h
-        src/CLIThemes/ThemeAbstract.cpp
-        src/CLIController/Move/Move.cpp
-        src/CLIController/Move/Move.h
+        src/UseCase/CommandAutoCompleteUseCase.cpp
+        src/UseCase/CommandAutoCompleteUseCase.h
+        src/Themes/MobileTheme.cpp
+        src/Themes/MobileTheme.h
+        src/Themes/ThemeAbstract.h
+        src/Themes/ThemeAbstract.cpp
+        src/Actions/Move/Move.cpp
+        src/Actions/Move/Move.h
         src/Events/Event.cpp
         src/Events/Event.h
         src/Events/EventBus.cpp
@@ -102,18 +106,47 @@ add_executable(todoos main.cpp
         src/Helpers/StringHelpers.h
         src/FileDataStorage/ConfService.cpp
         src/FileDataStorage/ConfService.h
-        src/CLIThemes/DefaultTheme.cpp
-        src/CLIThemes/DefaultTheme.h
-        src/CLIController/Stats/Stats.cpp
-        src/CLIController/Stats/Stats.h
-        src/CLIThemes/CLIThemeService.cpp
-        src/CLIThemes/CLIThemeService.h
-        src/Entities/PriorityEntity.cpp
-        src/Entities/PriorityEntity.h
-        src/Entities/StatusEntity.cpp
-        src/Entities/StatusEntity.h
+        src/Themes/DefaultTheme.cpp
+        src/Themes/DefaultTheme.h
+        src/Actions/Stats/Stats.cpp
+        src/Actions/Stats/Stats.h
+        src/Themes/ThemeService.cpp
+        src/Themes/ThemeService.h
         src/Helpers/BashStyle.cpp
+        src/UseCase/ShowUseCase.cpp
+        src/UseCase/ShowUseCase.h
+        src/UseCase/ListItemActionsUseCase.cpp
+        src/UseCase/ListItemActionsUseCase.h
+        src/UseCase/FindUseCase.cpp
+        src/UseCase/FindUseCase.h
+        src/UseCase/PriorityUseCase.cpp
+        src/UseCase/PriorityUseCase.h
+        src/UseCase/ResetUseCase.cpp
+        src/UseCase/ResetUseCase.h
+        src/UseCase/StatusUseCase.cpp
+        src/UseCase/StatusUseCase.h
+        src/UseCase/RemoveUseCase.cpp
+        src/UseCase/RemoveUseCase.h
+        src/UseCase/ArchiveUseCase.cpp
+        src/UseCase/ArchiveUseCase.h
+        src/UseCase/RestoreUseCase.cpp
+        src/UseCase/RestoreUseCase.h
+        src/UseCase/ListUseCase.cpp
+        src/UseCase/ListUseCase.h
+        src/UseCase/SwitchListUseCase.cpp
+        src/UseCase/SwitchListUseCase.h
+        src/UseCase/StatsUseCase.cpp
+        src/UseCase/StatsUseCase.h
+        src/UseCase/MoveUseCase.cpp
+        src/UseCase/MoveUseCase.h
+        src/UseCase/EmptyUseCase.cpp
+        src/UseCase/EmptyUseCase.h
+        src/UseCase/CleanUseCase.cpp
+        src/UseCase/CleanUseCase.h
 )
+
+configure_file(src/version.h.in src/version.h)
+target_include_directories(todoos PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 target_link_libraries(todoos PRIVATE nlohmann_json::nlohmann_json)
 

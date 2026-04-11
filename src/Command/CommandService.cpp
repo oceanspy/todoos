@@ -7,9 +7,9 @@ CommandService::CommandService(CommandList& commandList, CommandOption& commandO
 }
 
 bool
-CommandService::isValid(std::string& commandName)
+CommandService::isValid(Command& command)
 {
-    return commandList.isValid(commandName);
+    return commandList.isValid(CommandService::getCommandName(command.getName()));
 }
 
 bool
@@ -42,9 +42,9 @@ CommandService::isBeginningOfCommand(Command command)
 }
 
 bool
-CommandService::isCommandValidWithOption(std::string commandName, std::map<std::string, std::string> options)
+CommandService::isCommandValidWithOption(Command& command)
 {
-    return CommandList::isCommandValidWithOptions(commandName, options);
+    return CommandList::isCommandValidWithOptions(command.getName(), command.getOptions());
 }
 
 std::vector<std::string>

@@ -12,6 +12,8 @@ SmartCommand::apply()
 {
     std::string name = command.getName();
 
+    // "add list <args>" → "list add <args>"
+    // Allows shorthand like "add list foo" instead of "list add foo"
     if (CommandService::isCommand(command, "add")) {
         if (command.getArguments().empty()) {
             return command;
@@ -26,6 +28,8 @@ SmartCommand::apply()
             Command adaptatedCommand = Command("list", arguments, command.getOptions());
             return adaptatedCommand;
         }
+        // "remove list <args>" → "list remove <args>"
+        // Allows shorthand like "remove list foo" instead of "list remove foo"
     } else if (CommandService::isCommand(command, "remove")) {
         if (command.getArguments().empty()) {
             return command;
@@ -40,8 +44,12 @@ SmartCommand::apply()
             Command adaptatedCommand = Command("list", arguments, command.getOptions());
             return adaptatedCommand;
         }
+        // "current" → "list current"
+        // Shorthand to show the current list without typing the full "list current"
     } else if (CommandService::isCommand(command, "current")) {
         return Command("list", { "current" }, command.getOptions());
+        // "all" → "show all"
+        // Shorthand to display all todos without typing "show all"
     } else if (CommandService::isCommand(command, "all")) {
         if (command.getArguments().empty()) {
             std::vector<std::string> arguments = command.getArguments();

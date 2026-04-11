@@ -15,11 +15,11 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../IOService/IOService.cpp
         ../IOService/IOCliService/IOCliService.cpp
         ../Exception/ListNotFoundException.cpp
-        ../Entities/ConfigEntity.cpp
-        ../Entities/ListEntity.cpp
-        ../Entities/ListItemEntity.cpp
-        ../Entities/PriorityEntity.cpp
-        ../Entities/StatusEntity.cpp
+        ../Config/ConfigEntity.cpp
+        ../List/ListEntity.cpp
+        ../List/ListItems/ListItemEntity.cpp
+        ../List/ListItems/PriorityEntity.cpp
+        ../List/ListItems/StatusEntity.cpp
         ../FileDataStorage/ConfService.cpp
         ../FileDataStorage/JSONService.cpp
         ../FileDataStorage/CSVService.cpp
@@ -31,7 +31,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Command/CommandService.cpp
         ../Command/SmartCommand.cpp
         ../Command/CommandShortcut.cpp
-        ../CLIAutocomplete/CLIAutocompleteService.cpp
+        ../UseCase/CommandAutoCompleteUseCase.cpp
         ../List/ListItems/PriorityService.cpp
         ../List/ListItems/StatusService.cpp
         ../List/ListService.cpp
@@ -51,16 +51,16 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Help/HelpTest.cpp
         FileDataStorage/JSONServiceTest.cpp
         FileDataStorage/CSVServiceTest.cpp
-        Entities/ConfigEntityTest.cpp
-        Entities/ListItemEntitiyTest.cpp
-        Entities/ListEntityTest.cpp
+        Config/ConfigEntityTest.cpp
+        List/ListItems/ListItemEntityTest.cpp
+        List/ListEntityTest.cpp
         Command/CommandTest.cpp
         Command/CommandListTest.cpp
         Command/CommandValidationTest.cpp
         Command/CommandServiceTest.cpp
         Command/SmartCommandTest.cpp
         Command/CommandShortcutServiceTest.cpp
-        CLIAutocomplete/CLIAutocompleteServiceTest.cpp
+        CommandAutocomplete/CommandAutocompleteServiceTest.cpp
         Mock/MockInstallation.cpp
         Mock/MockInstallation.h
         Mock/MockInit.cpp
@@ -76,18 +76,46 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         FileStorage/FileStorageTest.cpp
         Command/CommandOptionTest.cpp
         Events/EventTest.cpp
-        Entities/StatusEntityTest.cpp
-        Entities/PriorityEntityTest.cpp
+        List/ListItems/StatusEntityTest.cpp
+        List/ListItems/PriorityEntityTest.cpp
         Helpers/BashStyleTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
-        CLIController/CLIControllerTest.cpp
-        ../CLIController/Remove/Remove.cpp
-        ../CLIController/Status/Status.cpp
-        ../CLIController/Priority/Priority.cpp
-        ../CLIController/ListItemActions/ListItemActions.cpp
+        Actions/ActionsTest.cpp
+        ../Actions/Remove/Remove.cpp
+        ../Actions/Status/Status.cpp
+        ../Actions/Priority/Priority.cpp
+        ../Actions/ListItemActions/ListItemActions.cpp
+        ../Actions/Show/Show.cpp
+        ../Actions/Config/Config.cpp
+        ../Actions/ListActions/ListActions.cpp
+        ../Actions/Move/Move.cpp
+        ../Actions/Stats/Stats.cpp
+        ../Themes/ThemeService.cpp
+        ../Themes/ThemeAbstract.cpp
+        ../Themes/DefaultTheme.cpp
+        ../Themes/MobileTheme.cpp
+        ../FileStorage/FileStorageService.cpp
+        ../UseCase/ShowUseCase.cpp
+        ../UseCase/ListItemActionsUseCase.cpp
+        ../UseCase/FindUseCase.cpp
+        ../UseCase/PriorityUseCase.cpp
+        ../UseCase/ResetUseCase.cpp
+        ../UseCase/StatusUseCase.cpp
+        ../UseCase/RemoveUseCase.cpp
+        ../UseCase/ArchiveUseCase.cpp
+        ../UseCase/RestoreUseCase.cpp
+        ../UseCase/ListUseCase.cpp
+        ../UseCase/SwitchListUseCase.cpp
+        ../UseCase/StatsUseCase.cpp
+        ../UseCase/MoveUseCase.cpp
+        ../UseCase/EmptyUseCase.cpp
+        ../UseCase/CleanUseCase.cpp
+        UseCase/UseCaseTest.cpp
         TestMain.cpp
 )
+
+target_include_directories(TestsRun PRIVATE ${CMAKE_BINARY_DIR}/src)
 
 target_link_libraries(TestsRun PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(TestsRun PRIVATE Catch2::Catch2WithMain)

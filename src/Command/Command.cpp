@@ -73,3 +73,9 @@ Command::hasOption(const std::string& optionName)
         return false;
     });
 }
+
+bool
+Command::isAutocompletion()
+{
+    return Command::getName() == "commands";
+}
