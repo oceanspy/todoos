@@ -28,13 +28,9 @@ ConfigRepository::get()
 ConfigEntity
 ConfigRepository::find(const std::string& key)
 {
-    fileDataService->load(filePath);
-
-    std::vector<std::vector<std::string>> data = fileDataService->read(0);
-
-    for (std::vector item : data) {
-        if (item[0] == key) {
-            return ConfigEntity::setFromVector(item);
+    for (const ConfigEntity& item : get()) {
+        if (*item.getKey() == key) {
+            return item;
         }
     }
 

@@ -44,7 +44,7 @@ ConfigService::isTrue(const std::string& key)
 ConfigEntity
 ConfigService::find(const std::string& key)
 {
-    ConfigRepository repository = getRepository(key);
+    ConfigRepository& repository = getRepository(key);
     std::vector<ConfigEntity> configs = repository.get();
     for (ConfigEntity configEntity : configs) {
         if (*configEntity.getKey() == key) {
@@ -60,7 +60,7 @@ ConfigService::add(std::string key, std::string value)
     ConfigEntity configEntity = ConfigEntity();
     configEntity.setKey(std::move(key));
     configEntity.setValue(std::move(value));
-    ConfigRepository repository = getRepository(key);
+    ConfigRepository& repository = getRepository(key);
     repository.create(configEntity);
 }
 
@@ -69,7 +69,7 @@ ConfigService::edit(const std::string& key, std::string value)
 {
     ConfigEntity configEntity = find(key);
     configEntity.setValue(std::move(value));
-    ConfigRepository repository = getRepository(key);
+    ConfigRepository& repository = getRepository(key);
     repository.update(key, configEntity);
 }
 
@@ -79,18 +79,18 @@ ConfigService::editCurrentList(std::string value)
     std::string key = "currentList";
     ConfigEntity cacheEntity = find(key);
     cacheEntity.setValue(std::move(value));
-    ConfigRepository repository = getRepository(key);
+    ConfigRepository& repository = getRepository(key);
     repository.update(key, cacheEntity);
 }
 
 void
 ConfigService::remove(std::string& key)
 {
-    ConfigRepository repository = getRepository(key);
+    ConfigRepository& repository = getRepository(key);
     repository.remove(key);
 }
 
-ConfigRepository
+ConfigRepository&
 ConfigService::getRepository(const std::string& key)
 {
     if (key == "currentList") {

@@ -44,7 +44,7 @@ class ConfigService
     ConfigRepository& configRepository;
     ConfigRepository& cacheRepository;
     Command& command;
-    ConfigRepository getRepository(const std::string& key);
+    ConfigRepository& getRepository(const std::string& key);
 };
 
 #endif // CONFIGSERVICE_H

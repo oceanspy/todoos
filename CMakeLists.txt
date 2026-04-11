@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.28)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
 project(todoos VERSION 0.4.0)
 
 include(FetchContent)
