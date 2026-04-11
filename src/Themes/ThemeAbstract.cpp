@@ -6,8 +6,7 @@ ThemeAbstract::print(ListName& listName, std::vector<ListItemEntity> listItems, 
 {
     bool hideListNameInLine = false;
     if (showListName) {
-        std::vector<ListName> listNames = { listName };
-        printListName(listNames);
+        printListTitle(listName);
         hideListNameInLine = true;
     }
 
@@ -31,8 +30,6 @@ ThemeAbstract::print(ListName& listName, std::vector<ListItemEntity> listItems, 
 void
 ThemeAbstract::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems)
 {
-    printListName(listNames);
-
     std::string title = buildTitle();
     ioService.print(title);
     printFullLine(GRAY);
@@ -157,6 +154,18 @@ ThemeAbstract::buildDate(const ListItemEntity& listItemEntity)
                 DATE_LENGTH),
             GRAY);
     }
+}
+
+std::string
+ThemeAbstract::listNameRendered(ListName& listName)
+{
+    std::string titleListName = listName.getName();
+    if (listName.getVariant() == "archive") {
+        return StringHelpers::colorize(StringHelpers::toUpper(titleListName) + " (archived)", LIGHT_YELLOW);
+    } else if (listName.getVariant() == "delete") {
+        return StringHelpers::colorize(StringHelpers::toUpper(titleListName) + " (deleted)", LIGHT_RED);
+    }
+    return StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
 }
 
 void

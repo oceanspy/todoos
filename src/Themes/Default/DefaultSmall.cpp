@@ -12,29 +12,12 @@ DefaultSmall::DefaultSmall(IOService& ioService,
     statsPercentageLength = 8;
 }
 
-std::string
-DefaultSmall::buildListTitle(std::vector<ListName>& listNames)
-{
-    std::string titleListName = "";
-    for (auto listName : listNames) {
-        titleListName += listName.getName() + " ";
-    }
-    titleListName.pop_back();
-
-    if (currentListVariant == "archive") {
-        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
-    } else if (currentListVariant == "delete") {
-        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
-    }
-    return StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
-}
-
 void
-DefaultSmall::printListName(std::vector<ListName>& listNames)
+DefaultSmall::printListTitle(ListName& listName)
 {
-    ListCountSummary summary = listItemService.getCountSummary(listNames);
+    ListCountSummary summary = listItemService.getCountSummary({ listName });
 
-    std::string titleListName = buildListTitle(listNames);
+    std::string titleListName = listNameRendered(listName);
     std::string leftSide = "📈 " + std::to_string(summary.total) + "  ⚡ " + std::to_string(summary.archived);
     int leftLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(leftSide));
 

@@ -13,23 +13,6 @@ DefaultMedium::DefaultMedium(IOService& ioService,
 }
 
 std::string
-DefaultMedium::buildListTitle(std::vector<ListName>& listNames)
-{
-    std::string titleListName = "";
-    for (auto listName : listNames) {
-        titleListName += listName.getName() + " ";
-    }
-    titleListName.pop_back();
-
-    if (currentListVariant == "archive") {
-        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
-    } else if (currentListVariant == "delete") {
-        return StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
-    }
-    return StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
-}
-
-std::string
 DefaultMedium::buildPriorityCounts(const ListCountSummary& summary)
 {
     return StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " " +
@@ -40,11 +23,11 @@ DefaultMedium::buildPriorityCounts(const ListCountSummary& summary)
 }
 
 void
-DefaultMedium::printListName(std::vector<ListName>& listNames)
+DefaultMedium::printListTitle(ListName& listName)
 {
-    ListCountSummary summary = listItemService.getCountSummary(listNames);
+    ListCountSummary summary = listItemService.getCountSummary({ listName });
 
-    std::string titleListName = buildListTitle(listNames);
+    std::string titleListName = listNameRendered(listName);
     std::string leftSide = "📈 " + std::to_string(summary.total) + "  ⚡ " + std::to_string(summary.archived);
     int leftLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(leftSide));
     std::string rightSide = buildPriorityCounts(summary);

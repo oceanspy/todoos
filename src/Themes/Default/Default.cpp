@@ -14,15 +14,11 @@ Default::Default(IOService& ioService,
 }
 
 void
-Default::printListName(std::vector<ListName>& listNames)
+Default::printListTitle(ListName& listName)
 {
-    ListCountSummary summary = listItemService.getCountSummary(listNames);
+    ListCountSummary summary = listItemService.getCountSummary({ listName });
 
-    std::string titleListName = "";
-    for (auto listName : listNames) {
-        titleListName += listName.getName() + " ";
-    }
-    titleListName.pop_back();
+    std::string titleListName = listNameRendered(listName);
 
     std::string totalStr = std::to_string(summary.total);
     int totalCharLength = 3 + static_cast<int>(totalStr.length());
@@ -140,14 +136,6 @@ Default::printListName(std::vector<ListName>& listNames)
     }
 
     std::string showCount = statusPrintCount + StringHelpers::adjustStringLength("", separator) + priorityPrintCount;
-
-    if (currentListVariant == "archive") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
-    } else if (currentListVariant == "delete") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
-    } else {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
-    }
 
     int listNameLength = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(titleListName));
     int paddingLength = (listTitleLength - listNameLength) / 2;

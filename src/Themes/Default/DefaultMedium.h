@@ -12,7 +12,7 @@ class DefaultMedium : public ThemeAbstract
                   ListItemService& listItemService,
                   int consoleWidth,
                   int consoleRowMaxLength);
-    void printListName(std::vector<ListName>& listNames) override;
+    void printListTitle(ListName& listName) override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printStats(ListName& listName) override;
     std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
@@ -20,7 +20,6 @@ class DefaultMedium : public ThemeAbstract
     ~DefaultMedium() override = default;
 
   private:
-    std::string buildListTitle(std::vector<ListName>& listNames);
     std::string buildPriorityCounts(const ListCountSummary& summary);
 };
 
