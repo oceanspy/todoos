@@ -1,18 +1,15 @@
 #ifndef SHOW_H
 #define SHOW_H
-#include "../../CLIThemes/CLIThemeService.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListName.h"
 #include "../../List/ListService.h"
+#include "../../Themes/ThemeService.h"
 
 class Show
 {
   public:
-    Show(IOService& ioService,
-         ListService& listService,
-         ListItemService& listItemService,
-         CLIThemeService& cliThemeService);
+    Show(IOService& ioService, ListService& listService, ListItemService& listItemService, ThemeService& themeService);
     void print(std::vector<ListItemEntity>& listItems,
                ListName& listName,
                bool showListName = true,
@@ -23,7 +20,7 @@ class Show
     IOService& ioService;
     ListService& listService;
     ListItemService& listItemService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
 };
 
 #endif // SHOW_H

@@ -11,7 +11,7 @@ SwitchListUseCase::SwitchListUseCase(IOService& ioService,
                                      ListItemService& listItemService,
                                      FileStorageService& fileStorageService,
                                      ConfigService& configService,
-                                     CLIThemeService& cliThemeService)
+                                     ThemeService& themeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)
@@ -19,7 +19,7 @@ SwitchListUseCase::SwitchListUseCase(IOService& ioService,
   , listItemService(listItemService)
   , fileStorageService(fileStorageService)
   , configService(configService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
 {
 }
 
@@ -33,13 +33,13 @@ SwitchListUseCase::execute()
                      listItemService,
                      fileStorageService,
                      configService,
-                     cliThemeService);
+                     themeService);
 
     list.use();
 
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    Show show(ioService, listService, listItemService, cliThemeService);
+    Show show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
 

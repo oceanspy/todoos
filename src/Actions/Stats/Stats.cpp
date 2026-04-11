@@ -1,17 +1,17 @@
 #include "Stats.h"
-#include "../../CLIThemes/ThemeAbstract.h"
+#include "../../Themes/ThemeAbstract.h"
 
 Stats::Stats(IOService& ioService,
              ConfigService& configService,
              Command& command,
              ListItemService& listItemService,
-             CLIThemeService& cliThemeService,
+             ThemeService& themeService,
              ListName& listName)
   : ioService(ioService)
   , configService(configService)
   , command(command)
   , listItemService(listItemService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
   , listName(listName)
 {
 }
@@ -19,7 +19,7 @@ Stats::Stats(IOService& ioService,
 void
 Stats::print()
 {
-    ThemeAbstract* theme = cliThemeService.getTheme();
+    auto theme = themeService.getTheme();
     theme->printATitle("Statistics", "List: " + listName.getName());
     theme->printStats(listName);
 }

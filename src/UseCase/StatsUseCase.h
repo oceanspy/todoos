@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../CLIThemes/CLIThemeService.h"
 #include "../Command/Command.h"
 #include "../Config/ConfigService.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
+#include "../Themes/ThemeService.h"
 
 class StatsUseCase
 {
@@ -14,7 +14,7 @@ class StatsUseCase
                  Command& command,
                  ConfigService& configService,
                  ListItemService& listItemService,
-                 CLIThemeService& cliThemeService,
+                 ThemeService& themeService,
                  ListService& listService);
     void execute();
 
@@ -23,6 +23,6 @@ class StatsUseCase
     Command& command;
     ConfigService& configService;
     ListItemService& listItemService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
     ListService& listService;
 };

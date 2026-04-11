@@ -9,14 +9,14 @@ PriorityUseCase::PriorityUseCase(IOService& ioService,
                                  ListItemService& listItemService,
                                  ListService& listService,
                                  ConfigService& configService,
-                                 CLIThemeService& cliThemeService,
+                                 ThemeService& themeService,
                                  std::string action)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
   , action(std::move(action))
 {
 }
@@ -36,7 +36,7 @@ PriorityUseCase::execute()
         priority.decrease(listName);
     }
 
-    Show show(ioService, listService, listItemService, cliThemeService);
+    Show show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {

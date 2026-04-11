@@ -6,13 +6,13 @@ StatsUseCase::StatsUseCase(IOService& ioService,
                            Command& command,
                            ConfigService& configService,
                            ListItemService& listItemService,
-                           CLIThemeService& cliThemeService,
+                           ThemeService& themeService,
                            ListService& listService)
   : ioService(ioService)
   , command(command)
   , configService(configService)
   , listItemService(listItemService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
   , listService(listService)
 {
 }
@@ -22,6 +22,6 @@ StatsUseCase::execute()
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    Stats stats(ioService, configService, command, listItemService, cliThemeService, listName);
+    Stats stats(ioService, configService, command, listItemService, themeService, listName);
     stats.print();
 }

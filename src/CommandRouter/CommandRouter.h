@@ -3,7 +3,6 @@
 
 #include <filesystem>
 
-#include "../CLIThemes/CLIThemeService.h"
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Command/SmartCommand.h"
@@ -14,6 +13,7 @@
 #include "../List/ListItemService.h"
 #include "../List/ListName.h"
 #include "../List/ListService.h"
+#include "../Themes/ThemeService.h"
 
 class CommandRouter
 {
@@ -25,7 +25,7 @@ class CommandRouter
                   FileStorageService& fileStorageService,
                   ListService& listService,
                   ListItemService& listItemService,
-                  CLIThemeService& cliThemeService);
+                  ThemeService& themeService);
 
     void execute(Command& command);
 
@@ -38,7 +38,7 @@ class CommandRouter
     FileStorageService& fileStorageService;
     ListService& listService;
     ListItemService& listItemService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
 };
 
 #endif // COMMANDROUTER_H

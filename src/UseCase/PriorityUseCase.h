@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../CLIThemes/CLIThemeService.h"
 #include "../Command/Command.h"
 #include "../Config/ConfigService.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
+#include "../Themes/ThemeService.h"
 #include <string>
 
 class PriorityUseCase
@@ -16,7 +16,7 @@ class PriorityUseCase
                     ListItemService& listItemService,
                     ListService& listService,
                     ConfigService& configService,
-                    CLIThemeService& cliThemeService,
+                    ThemeService& themeService,
                     std::string action);
     void execute();
 
@@ -26,6 +26,6 @@ class PriorityUseCase
     ListItemService& listItemService;
     ListService& listService;
     ConfigService& configService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
     std::string action;
 };

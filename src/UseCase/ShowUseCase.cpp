@@ -12,7 +12,7 @@ ShowUseCase::ShowUseCase(IOService& ioService,
                          ConfigService& configService,
                          ListService& listService,
                          ListItemService& listItemService,
-                         CLIThemeService& cliThemeService)
+                         ThemeService& themeService)
   : ioService(ioService)
   , help(help)
   , commandService(commandService)
@@ -20,7 +20,7 @@ ShowUseCase::ShowUseCase(IOService& ioService,
   , configService(configService)
   , listService(listService)
   , listItemService(listItemService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
 {
 }
 
@@ -83,7 +83,7 @@ ShowUseCase::execute()
             }
         }
 
-        Show show(ioService, listService, listItemService, cliThemeService);
+        Show show(ioService, listService, listItemService, themeService);
         try {
             show.printMultipleList(allListItems, listNames);
         } catch (std::exception& e) {
@@ -131,7 +131,7 @@ ShowUseCase::execute()
             }
         }
 
-        Show show(ioService, listService, listItemService, cliThemeService);
+        Show show(ioService, listService, listItemService, themeService);
 
         try {
             if (listNames.size() > 1) {
@@ -162,7 +162,7 @@ ShowUseCase::execute()
 
     std::string listNameStr = configService.getUsedListNameStr();
     ListName listName = listService.createListName(listNameStr, configService.getUsedListVariantStr());
-    Show show(ioService, listService, listItemService, cliThemeService);
+    Show show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     filterListItemsWithOptions(&listItems);

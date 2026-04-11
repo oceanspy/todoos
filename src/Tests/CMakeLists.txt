@@ -60,7 +60,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Command/CommandServiceTest.cpp
         Command/SmartCommandTest.cpp
         Command/CommandShortcutServiceTest.cpp
-        CLIAutocomplete/CLIAutocompleteServiceTest.cpp
+        CommandAutocomplete/CommandAutocompleteServiceTest.cpp
         Mock/MockInstallation.cpp
         Mock/MockInstallation.h
         Mock/MockInit.cpp
@@ -81,7 +81,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Helpers/BashStyleTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
-        CLIController/CLIControllerTest.cpp
+        Actions/ActionsTest.cpp
         ../Actions/Remove/Remove.cpp
         ../Actions/Status/Status.cpp
         ../Actions/Priority/Priority.cpp
@@ -91,10 +91,10 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/ListActions/ListActions.cpp
         ../Actions/Move/Move.cpp
         ../Actions/Stats/Stats.cpp
-        ../CLIThemes/CLIThemeService.cpp
-        ../CLIThemes/ThemeAbstract.cpp
-        ../CLIThemes/DefaultTheme.cpp
-        ../CLIThemes/MobileTheme.cpp
+        ../Themes/ThemeService.cpp
+        ../Themes/ThemeAbstract.cpp
+        ../Themes/DefaultTheme.cpp
+        ../Themes/MobileTheme.cpp
         ../FileStorage/FileStorageService.cpp
         ../UseCase/ShowUseCase.cpp
         ../UseCase/ListItemActionsUseCase.cpp
@@ -114,6 +114,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         UseCase/UseCaseTest.cpp
         TestMain.cpp
 )
+
+target_include_directories(TestsRun PRIVATE ${CMAKE_BINARY_DIR}/src)
 
 target_link_libraries(TestsRun PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(TestsRun PRIVATE Catch2::Catch2WithMain)

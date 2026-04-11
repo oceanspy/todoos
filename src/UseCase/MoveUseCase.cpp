@@ -10,14 +10,14 @@ MoveUseCase::MoveUseCase(IOService& ioService,
                          ListService& listService,
                          ListItemService& listItemService,
                          ConfigService& configService,
-                         CLIThemeService& cliThemeService)
+                         ThemeService& themeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)
   , listService(listService)
   , listItemService(listItemService)
   , configService(configService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
 {
 }
 
@@ -31,7 +31,7 @@ MoveUseCase::execute()
     std::string newListNameStr = move.make(listName);
     if (!newListNameStr.empty()) {
         ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());
-        Show show(ioService, listService, listItemService, cliThemeService);
+        Show show(ioService, listService, listItemService, themeService);
 
         std::vector<ListItemEntity> listItems = listItemService.get(newListName);
         try {

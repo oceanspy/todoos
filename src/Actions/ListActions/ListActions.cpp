@@ -1,6 +1,6 @@
 #include "ListActions.h"
-#include "../../CLIThemes/ThemeAbstract.h"
 #include "../../Helpers/BashStyle.h"
+#include "../../Themes/ThemeAbstract.h"
 
 ListActions::ListActions(IOService& ioService,
                          Command& command,
@@ -9,7 +9,7 @@ ListActions::ListActions(IOService& ioService,
                          ListItemService& listItemService,
                          FileStorageService& fileStorageService,
                          ConfigService& configService,
-                         CLIThemeService& cliThemeService)
+                         ThemeService& themeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)
@@ -17,7 +17,7 @@ ListActions::ListActions(IOService& ioService,
   , listItemService(listItemService)
   , fileStorageService(fileStorageService)
   , configService(configService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
 {
 }
 
@@ -83,7 +83,7 @@ ListActions::make()
 void
 ListActions::showList()
 {
-    ThemeAbstract* theme = cliThemeService.getTheme();
+    auto theme = themeService.getTheme();
     ioService.br();
     ioService.title("Lists available");
 

@@ -10,7 +10,7 @@
 #include "../Mock/MockInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("Remove controller", "[CLIController][Remove]")
+TEST_CASE("Remove controller", "[CommandRouter][Remove]")
 {
     IOService ioService("cli");
     ConfService confService = ConfService(ioService);
@@ -18,7 +18,7 @@ TEST_CASE("Remove controller", "[CLIController][Remove]")
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CLIControllerTest");
+    MockInit init(ioService, "_todoos_CommandRouterTest");
     MockInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
@@ -119,7 +119,7 @@ TEST_CASE("Remove controller", "[CLIController][Remove]")
     }
 }
 
-TEST_CASE("Status controller", "[CLIController][Status]")
+TEST_CASE("Status controller", "[CommandRouter][Status]")
 {
     IOService ioService("cli");
     ConfService confService = ConfService(ioService);
@@ -127,7 +127,7 @@ TEST_CASE("Status controller", "[CLIController][Status]")
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CLIControllerTest2");
+    MockInit init(ioService, "_todoos_CommandRouterTest2");
     MockInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
@@ -214,7 +214,7 @@ TEST_CASE("Status controller", "[CLIController][Status]")
     }
 }
 
-TEST_CASE("Priority controller", "[CLIController][Priority]")
+TEST_CASE("Priority controller", "[CommandRouter][Priority]")
 {
     IOService ioService("cli");
     ConfService confService = ConfService(ioService);
@@ -222,7 +222,7 @@ TEST_CASE("Priority controller", "[CLIController][Priority]")
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CLIControllerTest3");
+    MockInit init(ioService, "_todoos_CommandRouterTest3");
     MockInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
@@ -308,7 +308,7 @@ TEST_CASE("Priority controller", "[CLIController][Priority]")
     }
 }
 
-TEST_CASE("ListItemActions controller", "[CLIController][ListItemActions]")
+TEST_CASE("ListItemActions controller", "[CommandRouter][ListItemActions]")
 {
     IOService ioService("cli");
     ConfService confService = ConfService(ioService);
@@ -316,7 +316,7 @@ TEST_CASE("ListItemActions controller", "[CLIController][ListItemActions]")
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CLIControllerTest4");
+    MockInit init(ioService, "_todoos_CommandRouterTest4");
     MockInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();

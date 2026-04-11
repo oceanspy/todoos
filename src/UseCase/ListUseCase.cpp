@@ -8,7 +8,7 @@ ListUseCase::ListUseCase(IOService& ioService,
                          ListItemService& listItemService,
                          FileStorageService& fileStorageService,
                          ConfigService& configService,
-                         CLIThemeService& cliThemeService)
+                         ThemeService& themeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)
@@ -16,7 +16,7 @@ ListUseCase::ListUseCase(IOService& ioService,
   , listItemService(listItemService)
   , fileStorageService(fileStorageService)
   , configService(configService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
 {
 }
 
@@ -30,6 +30,6 @@ ListUseCase::execute()
                      listItemService,
                      fileStorageService,
                      configService,
-                     cliThemeService);
+                     themeService);
     list.make();
 }

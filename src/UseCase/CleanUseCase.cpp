@@ -10,13 +10,13 @@ CleanUseCase::CleanUseCase(IOService& ioService,
                            ListItemService& listItemService,
                            ListService& listService,
                            ConfigService& configService,
-                           CLIThemeService& cliThemeService)
+                           ThemeService& themeService)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
 {
 }
 
@@ -37,7 +37,7 @@ CleanUseCase::execute()
         ioService.success("List cleaned.");
         ioService.br();
 
-        Show show(ioService, listService, listItemService, cliThemeService);
+        Show show(ioService, listService, listItemService, themeService);
 
         std::vector<ListItemEntity> listItems = listItemService.get(listName);
 

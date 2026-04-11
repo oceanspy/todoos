@@ -119,9 +119,7 @@ main(int argc, const char* argv[])
     // Dealing with command autocomplete
     if (CommandService::isCommand(command, "commands")) {
         try {
-            CommandAutoCompleteUseCase cliAutocompleteService =
-                CommandAutoCompleteUseCase(ioService, commandService, listService, listItemService);
-            cliAutocompleteService.execute(command);
+            CommandAutoCompleteUseCase(ioService, commandService, listService, listItemService).execute(command);
             return 1;
         } catch (const std::exception& e) {
             // Just Quit
@@ -131,15 +129,9 @@ main(int argc, const char* argv[])
 
     // ----
     // Initializing cli actions and frontend
-    CLIThemeService cliThemeService = CLIThemeService(ioService, configService, listService, listItemService);
-    CommandRouter commandRouter = CommandRouter(ioService,
-                                                help,
-                                                commandService,
-                                                configService,
-                                                fileStorageService,
-                                                listService,
-                                                listItemService,
-                                                cliThemeService);
+    ThemeService themeService = ThemeService(ioService, configService, listService, listItemService);
+    CommandRouter commandRouter = CommandRouter(
+        ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
 
     // ----
     // Do the actions and print

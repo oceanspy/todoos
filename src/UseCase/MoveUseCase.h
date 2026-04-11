@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../CLIThemes/CLIThemeService.h"
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Config/ConfigService.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
+#include "../Themes/ThemeService.h"
 
 class MoveUseCase
 {
@@ -17,7 +17,7 @@ class MoveUseCase
                 ListService& listService,
                 ListItemService& listItemService,
                 ConfigService& configService,
-                CLIThemeService& cliThemeService);
+                ThemeService& themeService);
     void execute();
 
   private:
@@ -27,5 +27,5 @@ class MoveUseCase
     ListService& listService;
     ListItemService& listItemService;
     ConfigService& configService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
 };

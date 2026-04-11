@@ -7,7 +7,6 @@
 #include "../Mock/MockInit.h"
 #include "../Mock/MockInstallation.h"
 #include <catch2/catch_test_macros.hpp>
-#include <fstream>
 #include <iostream>
 
 std::string
@@ -27,7 +26,7 @@ captureGetCompletionOutput(CommandAutoCompleteUseCase& autocompleteService, Comm
     return oss.str();
 }
 
-TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
+TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
 {
     // Create mock objects
     std::string channel = "cli";
@@ -37,7 +36,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
     std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
     std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CLIAutocompleteServiceTest");
+    MockInit init(ioService, "_todoos_CommandAutocompleteServiceTest");
     MockInstallation installation(ioService, jsonService, confService, init);
     std::string tempListName = "tempListName";
     std::string tempList2Name = "tempList2Name";
@@ -63,7 +62,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -90,7 +89,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -117,7 +116,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -144,7 +143,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -171,7 +170,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -198,7 +197,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -225,7 +224,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -252,7 +251,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -279,7 +278,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -307,7 +306,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -335,7 +334,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -365,7 +364,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -392,7 +391,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -419,7 +418,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -446,7 +445,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -473,7 +472,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -500,7 +499,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -527,7 +526,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -554,7 +553,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -581,7 +580,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -608,7 +607,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -635,7 +634,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -662,7 +661,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -689,7 +688,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -717,7 +716,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -747,7 +746,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -774,7 +773,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -801,7 +800,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -828,7 +827,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -855,7 +854,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -882,7 +881,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -909,7 +908,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -936,7 +935,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -963,7 +962,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -990,7 +989,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1017,7 +1016,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1044,7 +1043,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1071,7 +1070,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1098,7 +1097,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1125,7 +1124,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1152,7 +1151,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1179,7 +1178,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1206,7 +1205,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1233,7 +1232,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1260,7 +1259,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1287,7 +1286,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1314,7 +1313,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1341,7 +1340,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1368,7 +1367,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1395,7 +1394,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1422,7 +1421,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1450,7 +1449,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1477,7 +1476,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1505,7 +1504,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1532,7 +1531,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function
@@ -1563,7 +1562,7 @@ TEST_CASE("CLIAutocompleteService Tests", "[CLIAutocompleteService]")
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        // Create an instance of CLIAutocompleteService
+        // Create an instance of CommandAutocompleteService
         CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
 
         // Test getCompletion function

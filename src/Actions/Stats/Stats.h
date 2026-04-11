@@ -1,11 +1,11 @@
 #ifndef TODOOS_STATS_H
 #define TODOOS_STATS_H
 
-#include "../../CLIThemes/CLIThemeService.h"
 #include "../../Command/Command.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListName.h"
+#include "../../Themes/ThemeService.h"
 
 class Stats
 {
@@ -14,7 +14,7 @@ class Stats
           ConfigService& configService,
           Command& command,
           ListItemService& listItemService,
-          CLIThemeService& cliThemeService,
+          ThemeService& themeService,
           ListName& listName);
     void print();
 
@@ -23,7 +23,7 @@ class Stats
     ConfigService& configService;
     Command& command;
     ListItemService& listItemService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
     ListName& listName;
 };
 

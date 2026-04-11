@@ -1,13 +1,13 @@
 #ifndef LISTACTIONS_H
 #define LISTACTIONS_H
 
-#include "../../CLIThemes/CLIThemeService.h"
 #include "../../Command/Command.h"
 #include "../../Command/CommandService.h"
 #include "../../FileStorage/FileStorageService.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
+#include "../../Themes/ThemeService.h"
 
 class ListActions
 {
@@ -19,7 +19,7 @@ class ListActions
                 ListItemService& listItemService,
                 FileStorageService& fileStorageService,
                 ConfigService& configService,
-                CLIThemeService& cliThemeService);
+                ThemeService& themeService);
     void make();
     void use();
 
@@ -31,7 +31,7 @@ class ListActions
     ListItemService& listItemService;
     FileStorageService& fileStorageService;
     ConfigService& configService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
     void showList();
     void addList(Command subCommand);
     void removeList(Command subCommand);

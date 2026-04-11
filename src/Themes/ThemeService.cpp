@@ -1,11 +1,11 @@
-#include "CLIThemeService.h"
+#include "ThemeService.h"
 #include "DefaultTheme.h"
 #include "MobileTheme.h"
 
-CLIThemeService::CLIThemeService(IOService& ioService,
-                                 ConfigService& configService,
-                                 ListService& listService,
-                                 ListItemService& listItemService)
+ThemeService::ThemeService(IOService& ioService,
+                           ConfigService& configService,
+                           ListService& listService,
+                           ListItemService& listItemService)
   : ioService(ioService)
   , configService(configService)
   , listService(listService)
@@ -17,26 +17,17 @@ CLIThemeService::CLIThemeService(IOService& ioService,
     getConsoleRowMaxLengthAndThemeType();
 }
 
-ThemeAbstract*
-CLIThemeService::getTheme()
+std::unique_ptr<ThemeAbstract>
+ThemeService::getTheme()
 {
-    std::string theme = configService.getValue("theme");
-    if (theme == "default" && typeOfTheme == "mobile") {
-        return new MobileTheme(ioService, listService, listItemService, consoleWidth, consoleRowLength);
-    } else if (theme == "default" && typeOfTheme == "default") {
-        return new DefaultTheme(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    if (typeOfTheme == "mobile") {
+        return std::make_unique<MobileTheme>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
     }
 
-    throw std::invalid_argument("Theme not found -- Please fix your config file. [default theme: default]");
-}
-
-ThemeAbstract*
-CLIThemeService::getLightTheme()
-{
-    return new MobileTheme(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    return std::make_unique<DefaultTheme>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
 }
 void
-CLIThemeService::getConsoleRowMaxLengthAndThemeType()
+ThemeService::getConsoleRowMaxLengthAndThemeType()
 {
     consoleRowLength = CONST_WIDTH_DEFAULT_VALUE;
 
@@ -66,8 +57,8 @@ CLIThemeService::getConsoleRowMaxLengthAndThemeType()
     }
 }
 
-CLIThemeService
-CLIThemeService::adaptConsoleRowLengthWithMaxItemValueLength(const std::vector<ListItemEntity>& listItems)
+ThemeService
+ThemeService::adaptConsoleRowLengthWithMaxItemValueLength(const std::vector<ListItemEntity>& listItems)
 {
     getConsoleRowMaxLengthAndThemeType();
 
@@ -98,8 +89,8 @@ CLIThemeService::adaptConsoleRowLengthWithMaxItemValueLength(const std::vector<L
     return *this;
 }
 
-CLIThemeService
-CLIThemeService::substractConsoleRowLength(const int substract)
+ThemeService
+ThemeService::substractConsoleRowLength(const int substract)
 {
     getConsoleRowMaxLengthAndThemeType();
 

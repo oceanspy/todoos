@@ -9,14 +9,14 @@ StatusUseCase::StatusUseCase(IOService& ioService,
                              ListItemService& listItemService,
                              ListService& listService,
                              ConfigService& configService,
-                             CLIThemeService& cliThemeService,
+                             ThemeService& themeService,
                              int statusNumber)
   : ioService(ioService)
   , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
   , statusNumber(statusNumber)
 {
 }
@@ -33,7 +33,7 @@ StatusUseCase::execute()
         status.markAs(listName, statusNumber);
     }
 
-    Show show(ioService, listService, listItemService, cliThemeService);
+    Show show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {

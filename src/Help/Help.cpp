@@ -1,4 +1,5 @@
 #include "Help.h"
+#include "version.h"
 
 Help::Help(IOService& ioService)
   : ioService(ioService)
@@ -32,7 +33,7 @@ Help::commandNotFound()
 void
 Help::commandNotFoundSkipCommandAutocomplete(Command& command)
 {
-    if (command.getName() == "commands") {
+    if (command.isAutocompletion()) {
         return;
     }
 
@@ -49,7 +50,7 @@ Help::commandOptionNotSupported()
 void
 Help::commandOptionNotSupportedSkipCommandAutocomplete(Command& command)
 {
-    if (command.getName() == "commands") {
+    if (command.isAutocompletion()) {
         return;
     }
 
@@ -153,5 +154,5 @@ Help::helpListForCli()
 std::string
 Help::getVersion()
 {
-    return "Version 0.4.0";
+    return "Version " APP_VERSION;
 }

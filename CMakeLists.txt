@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(todoos)
+project(todoos VERSION 0.4.0)
 
 include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
@@ -86,10 +86,10 @@ add_executable(todoos main.cpp
         src/Helpers/BashStyle.h
         src/UseCase/CommandAutoCompleteUseCase.cpp
         src/UseCase/CommandAutoCompleteUseCase.h
-        src/CLIThemes/MobileTheme.cpp
-        src/CLIThemes/MobileTheme.h
-        src/CLIThemes/ThemeAbstract.h
-        src/CLIThemes/ThemeAbstract.cpp
+        src/Themes/MobileTheme.cpp
+        src/Themes/MobileTheme.h
+        src/Themes/ThemeAbstract.h
+        src/Themes/ThemeAbstract.cpp
         src/Actions/Move/Move.cpp
         src/Actions/Move/Move.h
         src/Events/Event.cpp
@@ -106,12 +106,12 @@ add_executable(todoos main.cpp
         src/Helpers/StringHelpers.h
         src/FileDataStorage/ConfService.cpp
         src/FileDataStorage/ConfService.h
-        src/CLIThemes/DefaultTheme.cpp
-        src/CLIThemes/DefaultTheme.h
+        src/Themes/DefaultTheme.cpp
+        src/Themes/DefaultTheme.h
         src/Actions/Stats/Stats.cpp
         src/Actions/Stats/Stats.h
-        src/CLIThemes/CLIThemeService.cpp
-        src/CLIThemes/CLIThemeService.h
+        src/Themes/ThemeService.cpp
+        src/Themes/ThemeService.h
         src/Helpers/BashStyle.cpp
         src/UseCase/ShowUseCase.cpp
         src/UseCase/ShowUseCase.h
@@ -144,6 +144,9 @@ add_executable(todoos main.cpp
         src/UseCase/CleanUseCase.cpp
         src/UseCase/CleanUseCase.h
 )
+
+configure_file(src/version.h.in src/version.h)
+target_include_directories(todoos PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 target_link_libraries(todoos PRIVATE nlohmann_json::nlohmann_json)
 

@@ -8,13 +8,13 @@ FindUseCase::FindUseCase(IOService& ioService,
                          ConfigService& configService,
                          ListService& listService,
                          ListItemService& listItemService,
-                         CLIThemeService& cliThemeService)
+                         ThemeService& themeService)
   : ioService(ioService)
   , command(command)
   , configService(configService)
   , listService(listService)
   , listItemService(listItemService)
-  , cliThemeService(cliThemeService)
+  , themeService(themeService)
 {
 }
 
@@ -25,7 +25,7 @@ FindUseCase::execute()
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");
-    Show show(ioService, listService, listItemService, cliThemeService);
+    Show show(ioService, listService, listItemService, themeService);
 
     std::string stringSearch;
     for (const std::string& argument : command.getArguments()) {

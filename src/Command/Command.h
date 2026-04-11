@@ -20,6 +20,7 @@ class Command
     bool hasOption(const std::string& optionName);
     std::string getRawCommand();
     std::string getLastCommandInput();
+    bool isAutocompletion();
 
   private:
     std::string command;

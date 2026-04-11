@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../CLIThemes/CLIThemeService.h"
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Config/ConfigService.h"
@@ -9,6 +8,7 @@
 #include "../List/ListItemService.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListService.h"
+#include "../Themes/ThemeService.h"
 #include <vector>
 
 class ShowUseCase
@@ -21,7 +21,7 @@ class ShowUseCase
                 ConfigService& configService,
                 ListService& listService,
                 ListItemService& listItemService,
-                CLIThemeService& cliThemeService);
+                ThemeService& themeService);
     void execute();
 
   private:
@@ -32,6 +32,6 @@ class ShowUseCase
     ConfigService& configService;
     ListService& listService;
     ListItemService& listItemService;
-    CLIThemeService& cliThemeService;
+    ThemeService& themeService;
     void filterListItemsWithOptions(std::vector<ListItemEntity>* listItems);
 };
