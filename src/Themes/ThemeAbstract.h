@@ -30,9 +30,9 @@ class ThemeAbstract
     // Concrete — identical across themes
     void print(ListName& listName, std::vector<ListItemEntity> listItems, bool showListName, bool showTitle);
     void printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems);
-    virtual void printListName(std::vector<ListName>& listNames);
     void printAList(std::vector<std::string> lines);
     void printFullLine(std::string color = GRAY);
+    std::string listNameRendered(ListName& listName);
     std::string buildId(const ListItemEntity& listItemEntity);
     std::string buildStatus(const ListItemEntity& listItemEntity);
     std::string buildPriority(const ListItemEntity& listItemEntity);
@@ -40,6 +40,7 @@ class ThemeAbstract
     std::string buildDate(const ListItemEntity& listItemEntity);
 
     // Pure virtual — theme-specific
+    virtual void printListTitle(ListName& listName) = 0;
     virtual void printATitle(std::string titleLine1, std::string titleLine2) = 0;
     virtual void printStats(ListName& listName) = 0;
     virtual std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) = 0;

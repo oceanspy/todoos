@@ -604,6 +604,40 @@ ListItemService::countClosedBetween(ListName& listName, time_t from, time_t to)
     return count;
 }
 
+ListCountSummary
+ListItemService::getCountSummary(const std::vector<ListName>& listNames)
+{
+    ListCountSummary summary;
+    for (auto listName : listNames) {
+        // Active items — one pass for total, statuses, priorities, delivered, cancelled
+        for (const auto& item : listItemRepository.get(listName)) {
+            summary.total++;
+            int statusId = *(*item.status()).getId();
+            int priorityId = *(*item.priority()).getId();
+            summary.addStatus(statusId);
+            summary.addPriority(priorityId);
+            if (statusId == StatusService::COMPLETED)
+                summary.delivered++;
+            if (statusId == StatusService::CANCELLED)
+                summary.cancelled++;
+        }
+        // Archive items — one pass for archived count, delivered, cancelled
+        ListName archiveName = ListName::createVariant(listName, "archive");
+        for (const auto& item : listItemRepository.get(archiveName)) {
+            summary.archived++;
+            int statusId = *(*item.status()).getId();
+            if (statusId == StatusService::COMPLETED)
+                summary.delivered++;
+            if (statusId == StatusService::CANCELLED)
+                summary.cancelled++;
+        }
+        // Deleted items — count all
+        ListName deleteName = ListName::createVariant(listName, "delete");
+        summary.deleted += static_cast<long>(listItemRepository.get(deleteName).size());
+    }
+    return summary;
+}
+
 std::vector<ListItemEntity>
 ListItemService::sort(std::vector<ListItemEntity> listItems)
 {

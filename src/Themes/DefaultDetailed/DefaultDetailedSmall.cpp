@@ -1,10 +1,10 @@
-#include "MobileTheme.h"
+#include "DefaultDetailedSmall.h"
 
-MobileTheme::MobileTheme(IOService& ioService,
-                         ListService& listService,
-                         ListItemService& listItemService,
-                         int consoleWidth,
-                         int consoleRowMaxLength)
+DefaultDetailedSmall::DefaultDetailedSmall(IOService& ioService,
+                                           ListService& listService,
+                                           ListItemService& listItemService,
+                                           int consoleWidth,
+                                           int consoleRowMaxLength)
   : ThemeAbstract(ioService, listService, listItemService, consoleWidth, consoleRowMaxLength - 10)
 {
     statsWhenLength = 18;
@@ -13,61 +13,18 @@ MobileTheme::MobileTheme(IOService& ioService,
 }
 
 void
-MobileTheme::printListName(std::vector<ListName>& listNames)
+DefaultDetailedSmall::printListTitle(ListName& listName)
 {
-    std::string titleListName = "";
-    for (auto listName : listNames) {
-        titleListName += listName.getName() + " ";
-    }
-    titleListName.pop_back();
+    ListCountSummary summary = listItemService.getCountSummary({ listName });
 
-    // Left side: total + archived
-    int totalCount = 0;
-    for (auto listName : listNames) {
-        totalCount += listItemService.count(listName);
-    }
-    int archivedCount = 0;
-    for (auto listName : listNames) {
-        ListName listNameArchive = ListName::createVariant(listName, "archive");
-        archivedCount += listItemService.count(listNameArchive);
-    }
-    std::string leftSide = "📈 " + std::to_string(totalCount) + "  🚀 " + std::to_string(archivedCount);
+    std::string titleListName = listNameRendered(listName);
+    std::string leftSide = "📈 " + std::to_string(summary.total) + "  ⚡ " + std::to_string(summary.archived);
     int leftLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(leftSide));
 
-    // Right side: priority counts
-    auto countPriority = [&](std::vector<int> priorities) {
-        int n = 0;
-        for (auto listName : listNames) {
-            n += listItemService.countWithPriority(listName, priorities);
-        }
-        return n;
-    };
-    std::string criticalStr =
-        StringHelpers::colorize("■ ", WHITE) + std::to_string(countPriority({ PriorityService::CRITICAL })) + " ";
-    std::string urgentStr =
-        StringHelpers::colorize("● ", RED) + std::to_string(countPriority({ PriorityService::URGENT })) + " ";
-    std::string highStr =
-        StringHelpers::colorize("● ", ORANGE) + std::to_string(countPriority({ PriorityService::HIGH })) + " ";
-    std::string mediumStr =
-        StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(countPriority({ PriorityService::MEDIUM })) + " ";
-    std::string lowStr = StringHelpers::colorize("◌ ", GREEN) + std::to_string(countPriority({ PriorityService::LOW }));
-
-    std::string rightSide = criticalStr + urgentStr + highStr + mediumStr + lowStr;
-    int rightLen = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(rightSide));
-
-    int separator = consoleRowLength - leftLen - rightLen;
+    int separator = consoleRowLength - leftLen;
     if (separator < 1)
         separator = 1;
-    std::string showCount = leftSide + StringHelpers::adjustStringLength("", separator) + rightSide;
-
-    // List name title
-    if (currentListVariant == "archive") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " archived"), LIGHT_YELLOW);
-    } else if (currentListVariant == "delete") {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName + " deleted"), LIGHT_RED);
-    } else {
-        titleListName = StringHelpers::colorize(StringHelpers::toUpper(titleListName), WHITE);
-    }
+    std::string showCount = leftSide + StringHelpers::adjustStringLength("", separator);
 
     int listNameLength = static_cast<int>(StringHelpers::countCharsWithoutBashCodes(titleListName));
     int paddingLength = (consoleRowLength - listNameLength) / 2;
@@ -93,7 +50,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
 }
 
 std::string
-MobileTheme::buildTitle()
+DefaultDetailedSmall::buildTitle()
 {
     std::string line = "";
     // ID
@@ -106,7 +63,7 @@ MobileTheme::buildTitle()
 }
 
 std::string
-MobileTheme::buildLine(const ListItemEntity& listItemEntity, bool hideListNameInLine)
+DefaultDetailedSmall::buildLine(const ListItemEntity& listItemEntity, bool hideListNameInLine)
 {
     int listNameLeftOffset = 0;
     std::string line = "";
@@ -125,7 +82,7 @@ MobileTheme::buildLine(const ListItemEntity& listItemEntity, bool hideListNameIn
 }
 
 void
-MobileTheme::printATitle(std::string titleLine1, std::string titleLine2)
+DefaultDetailedSmall::printATitle(std::string titleLine1, std::string titleLine2)
 {
     int paddingLengthLine1 = (consoleRowLength - static_cast<int>(titleLine1.length())) / 2;
     int paddingLengthLine2 = (consoleRowLength - static_cast<int>(titleLine2.length())) / 2;
@@ -160,7 +117,7 @@ MobileTheme::printATitle(std::string titleLine1, std::string titleLine2)
 }
 
 void
-MobileTheme::printStats(ListName& listName)
+DefaultDetailedSmall::printStats(ListName& listName)
 {
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");

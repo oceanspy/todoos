@@ -68,6 +68,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Config/ConfigRepositoryTest.cpp
         List/ListRepositoryTest.cpp
         List/ListItemServiceTest.cpp
+        List/ListCountSummaryTest.cpp
+        List/ListItemServiceCountSummaryTest.cpp
         List/ListServiceTest.cpp
         List/ListNameTest.cpp
         List/ListItemRepositoryTest.cpp
@@ -93,8 +95,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/Stats/Stats.cpp
         ../Themes/ThemeService.cpp
         ../Themes/ThemeAbstract.cpp
-        ../Themes/DefaultTheme.cpp
-        ../Themes/MobileTheme.cpp
+        ../Themes/Default/Default.cpp
+        ../Themes/Default/DefaultMedium.cpp
+        ../Themes/Default/DefaultSmall.cpp
         ../FileStorage/FileStorageService.cpp
         ../UseCase/ShowUseCase.cpp
         ../UseCase/ListItemActionsUseCase.cpp

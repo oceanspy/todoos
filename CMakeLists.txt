@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.28)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
 project(todoos VERSION 0.4.0)
 
 include(FetchContent)
@@ -57,6 +62,7 @@ add_executable(todoos main.cpp
         src/Actions/ListItemActions/ListItemActions.h
         src/List/ListItemService.cpp
         src/List/ListItemService.h
+        src/List/ListCountSummary.h
         src/FileDataStorageRepositories/ListItemRepository.cpp
         src/FileDataStorageRepositories/ListItemRepository.h
         src/FileDataStorage/CSVService.cpp
@@ -86,8 +92,12 @@ add_executable(todoos main.cpp
         src/Helpers/BashStyle.h
         src/UseCase/CommandAutoCompleteUseCase.cpp
         src/UseCase/CommandAutoCompleteUseCase.h
-        src/Themes/MobileTheme.cpp
-        src/Themes/MobileTheme.h
+        src/Themes/Default/Default.cpp
+        src/Themes/Default/Default.h
+        src/Themes/Default/DefaultMedium.cpp
+        src/Themes/Default/DefaultMedium.h
+        src/Themes/Default/DefaultSmall.cpp
+        src/Themes/Default/DefaultSmall.h
         src/Themes/ThemeAbstract.h
         src/Themes/ThemeAbstract.cpp
         src/Actions/Move/Move.cpp
@@ -106,8 +116,6 @@ add_executable(todoos main.cpp
         src/Helpers/StringHelpers.h
         src/FileDataStorage/ConfService.cpp
         src/FileDataStorage/ConfService.h
-        src/Themes/DefaultTheme.cpp
-        src/Themes/DefaultTheme.h
         src/Actions/Stats/Stats.cpp
         src/Actions/Stats/Stats.h
         src/Themes/ThemeService.cpp

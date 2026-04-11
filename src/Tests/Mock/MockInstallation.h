@@ -18,6 +18,7 @@ class MockInstallation : public InstallationInterface
     void make() override;
     void populate() override;
     bool wipe() override;
+    void createListFile(const std::string& listName);
 
   private:
     IOService& ioService;
@@ -28,7 +29,6 @@ class MockInstallation : public InstallationInterface
     void createConfigFile();
     void createCacheFile();
     void createListOfListFile();
-    void createListFile(const std::string& listName);
     void populateNewListFile(std::ofstream& outfile);
 };
 
