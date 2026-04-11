@@ -1,10 +1,10 @@
-#include "MobileTheme.h"
+#include "DefaultMedium.h"
 
-MobileTheme::MobileTheme(IOService& ioService,
-                         ListService& listService,
-                         ListItemService& listItemService,
-                         int consoleWidth,
-                         int consoleRowMaxLength)
+DefaultMedium::DefaultMedium(IOService& ioService,
+                             ListService& listService,
+                             ListItemService& listItemService,
+                             int consoleWidth,
+                             int consoleRowMaxLength)
   : ThemeAbstract(ioService, listService, listItemService, consoleWidth, consoleRowMaxLength - 10)
 {
     statsWhenLength = 18;
@@ -13,7 +13,7 @@ MobileTheme::MobileTheme(IOService& ioService,
 }
 
 void
-MobileTheme::printListName(std::vector<ListName>& listNames)
+DefaultMedium::printListName(std::vector<ListName>& listNames)
 {
     std::string titleListName = "";
     for (auto listName : listNames) {
@@ -93,7 +93,7 @@ MobileTheme::printListName(std::vector<ListName>& listNames)
 }
 
 std::string
-MobileTheme::buildTitle()
+DefaultMedium::buildTitle()
 {
     std::string line = "";
     // ID
@@ -106,7 +106,7 @@ MobileTheme::buildTitle()
 }
 
 std::string
-MobileTheme::buildLine(const ListItemEntity& listItemEntity, bool hideListNameInLine)
+DefaultMedium::buildLine(const ListItemEntity& listItemEntity, bool hideListNameInLine)
 {
     int listNameLeftOffset = 0;
     std::string line = "";
@@ -125,7 +125,7 @@ MobileTheme::buildLine(const ListItemEntity& listItemEntity, bool hideListNameIn
 }
 
 void
-MobileTheme::printATitle(std::string titleLine1, std::string titleLine2)
+DefaultMedium::printATitle(std::string titleLine1, std::string titleLine2)
 {
     int paddingLengthLine1 = (consoleRowLength - static_cast<int>(titleLine1.length())) / 2;
     int paddingLengthLine2 = (consoleRowLength - static_cast<int>(titleLine2.length())) / 2;
@@ -160,7 +160,7 @@ MobileTheme::printATitle(std::string titleLine1, std::string titleLine2)
 }
 
 void
-MobileTheme::printStats(ListName& listName)
+DefaultMedium::printStats(ListName& listName)
 {
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");

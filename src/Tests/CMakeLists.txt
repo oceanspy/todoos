@@ -93,8 +93,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/Stats/Stats.cpp
         ../Themes/ThemeService.cpp
         ../Themes/ThemeAbstract.cpp
-        ../Themes/DefaultTheme.cpp
-        ../Themes/MobileTheme.cpp
+        ../Themes/Default/Default.cpp
+        ../Themes/Default/DefaultMedium.cpp
+        ../Themes/Default/DefaultSmall.cpp
         ../FileStorage/FileStorageService.cpp
         ../UseCase/ShowUseCase.cpp
         ../UseCase/ListItemActionsUseCase.cpp

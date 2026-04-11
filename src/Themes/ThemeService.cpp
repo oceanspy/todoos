@@ -1,6 +1,7 @@
 #include "ThemeService.h"
-#include "DefaultTheme.h"
-#include "MobileTheme.h"
+#include "Default/Default.h"
+#include "Default/DefaultMedium.h"
+#include "Default/DefaultSmall.h"
 
 ThemeService::ThemeService(IOService& ioService,
                            ConfigService& configService,
@@ -20,11 +21,13 @@ ThemeService::ThemeService(IOService& ioService,
 std::unique_ptr<ThemeAbstract>
 ThemeService::getTheme()
 {
-    if (typeOfTheme == "mobile") {
-        return std::make_unique<MobileTheme>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    if (typeOfTheme == "small") {
+        return std::make_unique<DefaultSmall>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    } else if (typeOfTheme == "medium") {
+        return std::make_unique<DefaultMedium>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
     }
 
-    return std::make_unique<DefaultTheme>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    return std::make_unique<Default>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
 }
 void
 ThemeService::getConsoleRowMaxLengthAndThemeType()
@@ -47,8 +50,10 @@ ThemeService::getConsoleRowMaxLengthAndThemeType()
     }
 
     // If console width is too small => mobile version
-    if (consoleRowLength <= 120) {
-        typeOfTheme = "mobile";
+    if (consoleRowLength <= 120 && consoleRowLength > 50) {
+        typeOfTheme = "medium";
+    } else if (consoleRowLength <= 50) {
+        typeOfTheme = "small";
     }
 
     // consoleRowMaxLength have to be even:

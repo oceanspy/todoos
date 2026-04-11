@@ -86,8 +86,12 @@ add_executable(todoos main.cpp
         src/Helpers/BashStyle.h
         src/UseCase/CommandAutoCompleteUseCase.cpp
         src/UseCase/CommandAutoCompleteUseCase.h
-        src/Themes/MobileTheme.cpp
-        src/Themes/MobileTheme.h
+        src/Themes/Default/Default.cpp
+        src/Themes/Default/Default.h
+        src/Themes/Default/DefaultMedium.cpp
+        src/Themes/Default/DefaultMedium.h
+        src/Themes/Default/DefaultSmall.cpp
+        src/Themes/Default/DefaultSmall.h
         src/Themes/ThemeAbstract.h
         src/Themes/ThemeAbstract.cpp
         src/Actions/Move/Move.cpp
@@ -106,8 +110,6 @@ add_executable(todoos main.cpp
         src/Helpers/StringHelpers.h
         src/FileDataStorage/ConfService.cpp
         src/FileDataStorage/ConfService.h
-        src/Themes/DefaultTheme.cpp
-        src/Themes/DefaultTheme.h
         src/Actions/Stats/Stats.cpp
         src/Actions/Stats/Stats.h
         src/Themes/ThemeService.cpp
