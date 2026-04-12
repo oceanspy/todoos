@@ -27,7 +27,7 @@ PriorityEntity::getIcon() const
 std::string
 PriorityEntity::getColor() const
 {
-    return BashStyle::getBashCode(color);
+    return TerminalStyle::getBashCode(color);
 }
 
 void

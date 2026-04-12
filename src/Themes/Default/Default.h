@@ -1,10 +1,11 @@
 #ifndef TODOOS_DEFAULT_H
 #define TODOOS_DEFAULT_H
 
-#include "../ThemeAbstract.h"
+#include "../Theme.h"
+#include <ctime>
 #include <utility>
 
-class Default : public ThemeAbstract
+class Default : public Theme
 {
   public:
     Default(IOService& ioService,
@@ -15,9 +16,14 @@ class Default : public ThemeAbstract
     void printListTitle(ListName& listNames) override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printStats(ListName& listName) override;
-    std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
-    std::string buildTitle() override;
+    std::string printListRow(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
+    std::string printListTitleRow() override;
     ~Default() override = default;
+
+  private:
+    int consoleRowMaxLength;
+    std::string buildListTitle(ListName& listName);
+    std::string buildListLastUpdate(const time_t& time);
 };
 
 #endif // TODOOS_DEFAULT_H

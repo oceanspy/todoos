@@ -1,7 +1,7 @@
 #include "CleanUseCase.h"
-#include "../Actions/Show/Show.h"
-#include "../Helpers/BashStyle.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../Helpers/StringHelpers.h"
+#include "../Helpers/TerminalStyle.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -37,7 +37,7 @@ CleanUseCase::execute()
         ioService.success("List cleaned.");
         ioService.br();
 
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
 
         std::vector<ListItemEntity> listItems = listItemService.get(listName);
 

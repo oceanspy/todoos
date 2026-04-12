@@ -1,27 +1,27 @@
-#include "../../List/ListItemService.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../IOService/IOService.h"
+#include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
-// Seeded items in the default list (from MockInstallation):
+// Seeded items in the default list (from MockAppInstallation):
 // "aaaa" — HIGH priority, TO_DO status
 // "bbbb" — MEDIUM priority, STARTED status
 
 TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
 {
     IOService ioService("cli");
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_getCountSummaryTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_getCountSummaryTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
     installation.make();
@@ -40,9 +40,9 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
 
-    ListName listName        = listService.createUsedListName();
+    ListName listName = listService.createUsedListName();
     ListName listNameArchive = ListName::createVariant(listName, "archive");
-    ListName listNameDelete  = ListName::createVariant(listName, "delete");
+    ListName listNameDelete = ListName::createVariant(listName, "delete");
 
     SECTION("single list — baseline active items only")
     {
@@ -108,7 +108,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
 
         REQUIRE(summary.archived == 1);
         REQUIRE(summary.delivered == 1);
-        REQUIRE(summary.getStatus(StatusService::COMPLETED) == 0);  // not in active statusCounts
+        REQUIRE(summary.getStatus(StatusService::COMPLETED) == 0); // not in active statusCounts
     }
 
     SECTION("CANCELLED active items contribute to cancelled and statusCounts")
@@ -136,7 +136,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
 
         REQUIRE(summary.archived == 1);
         REQUIRE(summary.cancelled == 1);
-        REQUIRE(summary.getStatus(StatusService::CANCELLED) == 0);  // not in active statusCounts
+        REQUIRE(summary.getStatus(StatusService::CANCELLED) == 0); // not in active statusCounts
     }
 
     SECTION("soft-deleted items are counted in deleted, not in total")
@@ -158,17 +158,17 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         listService.add("secondList", "default", "default");
         ListName secondListName = listService.createListName("secondList");
 
-        const std::string lowPriority      = "low";
+        const std::string lowPriority = "low";
         const std::string criticalPriority = "critical";
-        const std::string todoStatus       = "to-do";
+        const std::string todoStatus = "to-do";
         listItemService.add(secondListName, "extra item 1", &lowPriority, &todoStatus);
         listItemService.add(secondListName, "extra item 2", &criticalPriority, &todoStatus);
 
         ListCountSummary summary = listItemService.getCountSummary({ listName, secondListName });
 
         REQUIRE(summary.total == 4);
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 3);    // 1 from list + 2 from secondList
-        REQUIRE(summary.getStatus(StatusService::STARTED) == 1);  // 1 from list
+        REQUIRE(summary.getStatus(StatusService::TO_DO) == 3);   // 1 from list + 2 from secondList
+        REQUIRE(summary.getStatus(StatusService::STARTED) == 1); // 1 from list
         REQUIRE(summary.getPriority(PriorityService::LOW) == 1);
         REQUIRE(summary.getPriority(PriorityService::CRITICAL) == 1);
         REQUIRE(summary.getPriority(PriorityService::HIGH) == 1);

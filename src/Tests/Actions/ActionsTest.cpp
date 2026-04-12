@@ -1,25 +1,25 @@
-#include "../../Actions/ListItemActions/ListItemActions.h"
-#include "../../Actions/Priority/Priority.h"
-#include "../../Actions/Remove/Remove.h"
-#include "../../Actions/Status/Status.h"
+#include "../../Actions/ListItemAction/ListItemAction.h"
+#include "../../Actions/PriorityAction/PriorityAction.h"
+#include "../../Actions/RemoveAction/RemoveAction.h"
+#include "../../Actions/StatusAction/StatusAction.h"
 #include "../../CommandRouter/CommandRouter.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Remove controller", "[CommandRouter][Remove]")
 {
     IOService ioService("cli");
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CommandRouterTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_CommandRouterTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
     installation.make();
@@ -43,7 +43,7 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         std::vector<ListItemEntity> itemsBefore = listItemService.get(listName);
         REQUIRE(itemsBefore.size() == 2);
 
-        Remove remove(ioService, command, listItemService);
+        RemoveAction remove(ioService, command, listItemService);
         REQUIRE_NOTHROW(remove.remove(listName));
 
         std::vector<ListItemEntity> itemsAfter = listItemService.get(listName);
@@ -57,7 +57,7 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     SECTION("remove with empty arguments does not throw")
     {
         Command emptyCommand = Command("remove", {}, {}, "remove");
-        Remove remove(ioService, emptyCommand, listItemService);
+        RemoveAction remove(ioService, emptyCommand, listItemService);
         REQUIRE_NOTHROW(remove.remove(listName));
 
         // No items removed
@@ -69,7 +69,7 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     {
         std::map<std::string, std::string> options = { { "force", "" } };
         Command forceCommand = Command("remove", { "aaaa" }, options, "remove -f aaaa");
-        Remove remove(ioService, forceCommand, listItemService);
+        RemoveAction remove(ioService, forceCommand, listItemService);
         REQUIRE_NOTHROW(remove.remove(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -87,7 +87,7 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     SECTION("archive with valid ID archives item")
     {
         Command archiveCommand = Command("archive", { "aaaa" }, {}, "archive aaaa");
-        Remove remove(ioService, archiveCommand, listItemService);
+        RemoveAction remove(ioService, archiveCommand, listItemService);
         REQUIRE_NOTHROW(remove.archive(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -108,7 +108,7 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         listItemService.archive("aaaa", listName);
 
         Command restoreCommand = Command("restore", { "aaaa" }, {}, "restore aaaa");
-        Remove remove(ioService, restoreCommand, listItemService);
+        RemoveAction remove(ioService, restoreCommand, listItemService);
         REQUIRE_NOTHROW(remove.restore(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -122,13 +122,13 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
 TEST_CASE("Status controller", "[CommandRouter][Status]")
 {
     IOService ioService("cli");
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CommandRouterTest2");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_CommandRouterTest2");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
     installation.make();
@@ -149,7 +149,7 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
 
     SECTION("markAs changes item status")
     {
-        Status status(ioService, command, listItemService);
+        StatusAction status(ioService, command, listItemService);
         REQUIRE_NOTHROW(status.markAs(listName, StatusService::STARTED));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -162,14 +162,14 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     SECTION("markAs with empty arguments does not throw")
     {
         Command emptyCommand = Command("start", {}, {}, "start");
-        Status status(ioService, emptyCommand, listItemService);
+        StatusAction status(ioService, emptyCommand, listItemService);
         REQUIRE_NOTHROW(status.markAs(listName, StatusService::STARTED));
     }
 
     SECTION("set with valid status and ID changes status")
     {
         Command setCommand = Command("status", { "paused", "aaaa" }, {}, "status paused aaaa");
-        Status status(ioService, setCommand, listItemService);
+        StatusAction status(ioService, setCommand, listItemService);
         REQUIRE_NOTHROW(status.set(listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -182,18 +182,18 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     SECTION("set with invalid status does not throw")
     {
         Command badCommand = Command("status", { "invalidstatus", "aaaa" }, {}, "status invalidstatus aaaa");
-        Status status(ioService, badCommand, listItemService);
+        StatusAction status(ioService, badCommand, listItemService);
         REQUIRE_NOTHROW(status.set(listName));
     }
 
     SECTION("set with missing arguments does not throw")
     {
         Command noArgsCommand = Command("status", {}, {}, "status");
-        Status status(ioService, noArgsCommand, listItemService);
+        StatusAction status(ioService, noArgsCommand, listItemService);
         REQUIRE_NOTHROW(status.set(listName));
 
         Command oneArgCommand = Command("status", { "paused" }, {}, "status paused");
-        Status status2(ioService, oneArgCommand, listItemService);
+        StatusAction status2(ioService, oneArgCommand, listItemService);
         REQUIRE_NOTHROW(status2.set(listName));
     }
 
@@ -203,7 +203,7 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
         listItemService.editStatus("aaaa", listName, new int(StatusService::STARTED));
 
         Command resetCommand = Command("reset", { "aaaa" }, {}, "reset aaaa");
-        Status status(ioService, resetCommand, listItemService);
+        StatusAction status(ioService, resetCommand, listItemService);
         REQUIRE_NOTHROW(status.reset(listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -217,13 +217,13 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
 TEST_CASE("Priority controller", "[CommandRouter][Priority]")
 {
     IOService ioService("cli");
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CommandRouterTest3");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_CommandRouterTest3");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
     installation.make();
@@ -244,7 +244,7 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
 
     SECTION("increase priority")
     {
-        Priority priority(ioService, command, listItemService);
+        PriorityAction priority(ioService, command, listItemService);
         REQUIRE_NOTHROW(priority.increase(listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -257,7 +257,7 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("decrease priority")
     {
         Command decCommand = Command("decrease", { "aaaa" }, {}, "decrease aaaa");
-        Priority priority(ioService, decCommand, listItemService);
+        PriorityAction priority(ioService, decCommand, listItemService);
         REQUIRE_NOTHROW(priority.decrease(listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -270,7 +270,7 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("increase with multiplier")
     {
         Command multiCommand = Command("increase", { "2", "aaaa" }, {}, "increase 2 aaaa");
-        Priority priority(ioService, multiCommand, listItemService);
+        PriorityAction priority(ioService, multiCommand, listItemService);
         REQUIRE_NOTHROW(priority.increase(listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -283,7 +283,7 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("set priority")
     {
         Command setCommand = Command("priority", { "low", "aaaa" }, {}, "priority low aaaa");
-        Priority priority(ioService, setCommand, listItemService);
+        PriorityAction priority(ioService, setCommand, listItemService);
         REQUIRE_NOTHROW(priority.set(listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -296,28 +296,28 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("set with empty arguments does not throw")
     {
         Command emptyCommand = Command("priority", {}, {}, "priority");
-        Priority priority(ioService, emptyCommand, listItemService);
+        PriorityAction priority(ioService, emptyCommand, listItemService);
         REQUIRE_NOTHROW(priority.set(listName));
     }
 
     SECTION("set with missing ID does not throw")
     {
         Command oneArgCommand = Command("priority", { "high" }, {}, "priority high");
-        Priority priority(ioService, oneArgCommand, listItemService);
+        PriorityAction priority(ioService, oneArgCommand, listItemService);
         REQUIRE_NOTHROW(priority.set(listName));
     }
 }
 
-TEST_CASE("ListItemActions controller", "[CommandRouter][ListItemActions]")
+TEST_CASE("ListItemAction controller", "[CommandRouter][ListItemAction]")
 {
     IOService ioService("cli");
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CommandRouterTest4");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_CommandRouterTest4");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
 
     installation.wipe();
     installation.make();
@@ -327,11 +327,11 @@ TEST_CASE("ListItemActions controller", "[CommandRouter][ListItemActions]")
 
     PriorityService priorityService;
     StatusService statusService;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
 
-    SECTION("add via ListItemActions")
+    SECTION("add via ListItemAction")
     {
         Command addCommand = Command("add", { "new", "test", "item" }, {}, "add new test item");
         ConfigService configService(ioService, init, configRepository, cacheRepository, addCommand);
@@ -342,7 +342,7 @@ TEST_CASE("ListItemActions controller", "[CommandRouter][ListItemActions]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemActions actions(ioService, addCommand, commandService, listItemService);
+        ListItemAction actions(ioService, addCommand, commandService, listItemService);
         REQUIRE_NOTHROW(actions.make(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -373,7 +373,7 @@ TEST_CASE("ListItemActions controller", "[CommandRouter][ListItemActions]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemActions actions(ioService, emptyAddCommand, commandService, listItemService);
+        ListItemAction actions(ioService, emptyAddCommand, commandService, listItemService);
         REQUIRE_NOTHROW(actions.make(listName));
 
         // No item should have been added
@@ -393,7 +393,7 @@ TEST_CASE("ListItemActions controller", "[CommandRouter][ListItemActions]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemActions actions(ioService, addWithPrio, commandService, listItemService);
+        ListItemAction actions(ioService, addWithPrio, commandService, listItemService);
         REQUIRE_NOTHROW(actions.make(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -415,7 +415,7 @@ TEST_CASE("ListItemActions controller", "[CommandRouter][ListItemActions]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemActions actions(ioService, addCommand, commandService, listItemService);
+        ListItemAction actions(ioService, addCommand, commandService, listItemService);
         REQUIRE_NOTHROW(actions.make(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);

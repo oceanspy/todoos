@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "../../IOService/IOService.h"
-#include "../../IOService/IOCliService/IOCliService.h"
+#include "../../IOService/CliIOChannel/CliIOChannel.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("IOService CLI channel tests", "[IOService][CLI]")

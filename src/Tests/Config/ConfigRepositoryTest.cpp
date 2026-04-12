@@ -1,9 +1,9 @@
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
 #include "../../IOService/IOService.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
 #include <fstream>
@@ -13,13 +13,13 @@ TEST_CASE("ConfigRepositoryTest", "[ConfigRepository]")
 {
     // Create mock objects
     IOService ioService("cli");
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_ConfigRepositoryTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_ConfigRepositoryTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     std::string tempListName = "tempListName";
     std::string tempList2Name = "tempList2Name";
     installation.wipe();

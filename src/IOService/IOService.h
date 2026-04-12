@@ -17,6 +17,7 @@ class IOService
     void error(std::string message);
     void info(std::string message);
     void br();
+    void brOrSkip();
     void title(const std::string& title);
     void show(const std::vector<std::string>& messages);
     std::string ask(const std::string& message);
@@ -24,6 +25,7 @@ class IOService
 
   protected:
     const std::string& channel;
+    std::string lastOutput = "";
 };
 
 #endif // IOSERVICE_H

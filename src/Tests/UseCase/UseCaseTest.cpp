@@ -1,13 +1,13 @@
-#include "../../Command/CommandList.h"
 #include "../../Command/CommandOption.h"
+#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
 #include "../../Events/EventBus.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../FileStorage/FileStorageService.h"
-#include "../../Help/Help.h"
+#include "../../Help/HelpPrinter.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../Themes/ThemeService.h"
 #include "../../UseCase/ArchiveUseCase.h"
 #include "../../UseCase/CleanUseCase.h"
@@ -24,8 +24,8 @@
 #include "../../UseCase/StatsUseCase.h"
 #include "../../UseCase/StatusUseCase.h"
 #include "../../UseCase/SwitchListUseCase.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 // ---------------------------------------------------------------------------
@@ -35,20 +35,20 @@
 TEST_CASE("ShowUseCase", "[UseCase][Show]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseShow");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseShow");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
-    Help help(ioService);
+    HelpPrinter help(ioService);
     Command command("show", {}, {}, "show");
     ConfigRepository configRepository(configStoragePtr.get(), init.getConfigFilePath());
     ConfigRepository cacheRepository(configStoragePtr.get(), init.getCacheFilePath());
@@ -89,17 +89,17 @@ TEST_CASE("ShowUseCase", "[UseCase][Show]")
 TEST_CASE("ListItemActionsUseCase", "[UseCase][ListItemActions]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseListItemActions");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseListItemActions");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
 
@@ -162,12 +162,12 @@ TEST_CASE("ListItemActionsUseCase", "[UseCase][ListItemActions]")
 TEST_CASE("FindUseCase", "[UseCase][Find]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseFind");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseFind");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -217,12 +217,12 @@ TEST_CASE("FindUseCase", "[UseCase][Find]")
 TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCasePriority");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCasePriority");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -299,12 +299,12 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
 TEST_CASE("ResetUseCase", "[UseCase][Reset]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseReset");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseReset");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -335,12 +335,12 @@ TEST_CASE("ResetUseCase", "[UseCase][Reset]")
 TEST_CASE("StatusUseCase", "[UseCase][Status]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseStatus");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseStatus");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -407,12 +407,12 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
 TEST_CASE("RemoveUseCase", "[UseCase][Remove]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseRemove");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseRemove");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -462,12 +462,12 @@ TEST_CASE("RemoveUseCase", "[UseCase][Remove]")
 TEST_CASE("ArchiveUseCase", "[UseCase][Archive]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseArchive");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseArchive");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -510,12 +510,12 @@ TEST_CASE("ArchiveUseCase", "[UseCase][Archive]")
 TEST_CASE("RestoreUseCase", "[UseCase][Restore]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseRestore");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseRestore");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -555,17 +555,17 @@ TEST_CASE("RestoreUseCase", "[UseCase][Restore]")
 TEST_CASE("ListUseCase", "[UseCase][List]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseList");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseList");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
     Command command("list", {}, {}, "list");
@@ -602,17 +602,17 @@ TEST_CASE("ListUseCase", "[UseCase][List]")
 TEST_CASE("SwitchListUseCase", "[UseCase][Use]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseUse");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseUse");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
     Command command("use", { "tempList2Name" }, {}, "use tempList2Name");
@@ -649,12 +649,12 @@ TEST_CASE("SwitchListUseCase", "[UseCase][Use]")
 TEST_CASE("StatsUseCase", "[UseCase][Stats]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseStats");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseStats");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -685,17 +685,17 @@ TEST_CASE("StatsUseCase", "[UseCase][Stats]")
 TEST_CASE("MoveUseCase", "[UseCase][Move]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseMove");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseMove");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
     Command command("move-to", { "tempList2Name", "aaaa" }, {}, "move-to tempList2Name aaaa");
@@ -737,12 +737,12 @@ TEST_CASE("MoveUseCase", "[UseCase][Move]")
 TEST_CASE("EmptyUseCase", "[UseCase][Empty]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseEmpty");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseEmpty");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -771,12 +771,12 @@ TEST_CASE("EmptyUseCase", "[UseCase][Empty]")
 TEST_CASE("CleanUseCase", "[UseCase][Clean]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_UseCaseClean");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_UseCaseClean");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 

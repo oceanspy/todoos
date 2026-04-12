@@ -2,9 +2,9 @@
 #define LISTREPOSITORY_H
 
 #include "../Config/ConfigService.h"
-#include "../FileDataStorage/FileDataServiceInterface.h"
 #include "../IOService/IOService.h"
 #include "../List/ListEntity.h"
+#include "../Serializers/DataSerializerInterface.h"
 #include <filesystem>
 #include <fstream>
 #include <string>
@@ -13,7 +13,7 @@
 class ListRepository
 {
   public:
-    ListRepository(ConfigService& configService, FileDataServiceInterface* fileDataService);
+    ListRepository(ConfigService& configService, DataSerializerInterface* fileDataService);
     std::vector<ListEntity> get();
     ListEntity find(const std::string& key);
     void create(const ListEntity& item);
@@ -23,7 +23,7 @@ class ListRepository
 
   private:
     ConfigService& configService;
-    FileDataServiceInterface* fileDataService{};
+    DataSerializerInterface* fileDataService{};
     std::string listName;
     std::filesystem::path path;
     std::vector<ListEntity> cacheItems = {};

@@ -8,7 +8,7 @@
 #include "../Command/SmartCommand.h"
 #include "../Config/ConfigService.h"
 #include "../FileStorage/FileStorageService.h"
-#include "../Help/Help.h"
+#include "../Help/HelpPrinter.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListName.h"
@@ -19,7 +19,7 @@ class CommandRouter
 {
   public:
     CommandRouter(IOService& ioService,
-                  Help& help,
+                  HelpPrinter& help,
                   CommandService& commandService,
                   ConfigService& configService,
                   FileStorageService& fileStorageService,
@@ -31,7 +31,7 @@ class CommandRouter
 
   private:
     IOService& ioService;
-    Help& help;
+    HelpPrinter& help;
     CommandService& commandService;
     ConfigService& configService;
     std::filesystem::path currentListFilePath;

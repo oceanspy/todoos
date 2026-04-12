@@ -1,5 +1,5 @@
 #include "StatsUseCase.h"
-#include "../Actions/Stats/Stats.h"
+#include "../Actions/StatsAction/StatsAction.h"
 #include "../List/ListName.h"
 
 StatsUseCase::StatsUseCase(IOService& ioService,
@@ -22,6 +22,6 @@ StatsUseCase::execute()
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    Stats stats(ioService, configService, command, listItemService, themeService, listName);
+    StatsAction stats(ioService, configService, command, listItemService, themeService, listName);
     stats.print();
 }

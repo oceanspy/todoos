@@ -1,6 +1,6 @@
 #include "MoveUseCase.h"
-#include "../Actions/Move/Move.h"
-#include "../Actions/Show/Show.h"
+#include "../Actions/MoveAction/MoveAction.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -24,14 +24,14 @@ MoveUseCase::MoveUseCase(IOService& ioService,
 void
 MoveUseCase::execute()
 {
-    Move move(ioService, command, commandService, listService, listItemService);
+    MoveAction move(ioService, command, commandService, listService, listItemService);
 
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    std::string newListNameStr = move.make(listName);
+    std::string newListNameStr = move.execute(listName);
     if (!newListNameStr.empty()) {
         ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
 
         std::vector<ListItemEntity> listItems = listItemService.get(newListName);
         try {

@@ -1,12 +1,12 @@
 #include "ShowUseCase.h"
-#include "../Actions/Config/Config.h"
-#include "../Actions/Show/Show.h"
+#include "../Actions/ConfigAction/ConfigAction.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../Helpers/DateHelpers.h"
 #include "../List/ListEntity.h"
 #include "../List/ListName.h"
 
 ShowUseCase::ShowUseCase(IOService& ioService,
-                         Help& help,
+                         HelpPrinter& help,
                          CommandService& commandService,
                          Command& command,
                          ConfigService& configService,
@@ -83,7 +83,7 @@ ShowUseCase::execute()
             }
         }
 
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
         try {
             show.printMultipleList(allListItems, listNames);
         } catch (std::exception& e) {
@@ -131,7 +131,7 @@ ShowUseCase::execute()
             }
         }
 
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
 
         try {
             if (listNames.size() > 1) {
@@ -152,17 +152,17 @@ ShowUseCase::execute()
         help.show();
         return;
     } else if (command.hasOption("version")) {
-        ioService.message(Help::getVersion());
+        ioService.message(HelpPrinter::getVersion());
         return;
     } else if (command.hasOption("config")) {
-        Config config(ioService, command, commandService, configService, listService);
-        config.make();
+        ConfigAction config(ioService, command, commandService, configService, listService);
+        config.execute();
         return;
     }
 
     std::string listNameStr = configService.getUsedListNameStr();
     ListName listName = listService.createListName(listNameStr, configService.getUsedListVariantStr());
-    Show show(ioService, listService, listItemService, themeService);
+    ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     filterListItemsWithOptions(&listItems);

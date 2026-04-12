@@ -1,6 +1,6 @@
 #include "IOService.h"
 
-#include "IOCliService/IOCliService.h"
+#include "CliIOChannel/CliIOChannel.h"
 
 IOService::IOService(const std::string& channel)
   : channel(channel)
@@ -11,24 +11,30 @@ void
 IOService::print(const std::string& message)
 {
     if (channel == "cli") {
-        IOCliService::print(message);
+        CliIOChannel::print(message);
     }
+
+    lastOutput = "print";
 }
 
 void
 IOService::message(const std::string& message)
 {
     if (channel == "cli") {
-        IOCliService::print(" " + message);
+        CliIOChannel::print(" " + message);
     }
+
+    lastOutput = "print";
 }
 
 void
 IOService::printWithoutLineBreak(const std::string& message)
 {
     if (channel == "cli") {
-        IOCliService::printWithoutLineBreak(message);
+        CliIOChannel::printWithoutLineBreak(message);
     }
+
+    lastOutput = "printWithoutLineBreak";
 }
 
 void
@@ -36,8 +42,10 @@ IOService::success(std::string message)
 {
     message = " ✅ " + message;
     if (channel == "cli") {
-        IOCliService::error(message);
+        CliIOChannel::print(message);
     }
+
+    lastOutput = "print";
 }
 
 void
@@ -45,8 +53,10 @@ IOService::error(std::string message)
 {
     message = " ❌ " + message;
     if (channel == "cli") {
-        IOCliService::error(message);
+        CliIOChannel::error(message);
     }
+
+    lastOutput = "print";
 }
 
 void
@@ -54,16 +64,34 @@ IOService::info(std::string message)
 {
     message = " ℹ️  " + message;
     if (channel == "cli") {
-        IOCliService::error(message);
+        CliIOChannel::print(message);
     }
+
+    lastOutput = "print";
 }
 
 void
 IOService::br()
 {
     if (channel == "cli") {
-        IOCliService::br();
+        CliIOChannel::br();
     }
+
+    lastOutput = "br";
+}
+
+void
+IOService::brOrSkip()
+{
+    if (lastOutput == "br") {
+        return;
+    }
+
+    if (channel == "cli") {
+        CliIOChannel::br();
+    }
+
+    lastOutput = "br";
 }
 
 void
@@ -71,25 +99,31 @@ IOService::show(const std::vector<std::string>& messages)
 {
     if (channel == "cli") {
         for (const std::string& message : messages) {
-            IOCliService::print(message);
+            CliIOChannel::print(message);
         }
     }
+
+    lastOutput = "print";
 }
 
 void
 IOService::title(const std::string& title)
 {
     if (channel == "cli") {
-        IOCliService::print(" # " + title);
+        CliIOChannel::print(" # " + title);
     }
+
+    lastOutput = "print";
 }
 
 std::string
 IOService::ask(const std::string& message)
 {
     if (channel == "cli") {
-        return IOCliService::ask(" " + message);
+        return CliIOChannel::ask(" " + message);
     }
+
+    lastOutput = "ask";
 
     return "";
 }

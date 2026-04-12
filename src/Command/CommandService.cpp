@@ -1,6 +1,6 @@
 #include "CommandService.h"
 
-CommandService::CommandService(CommandList& commandList, CommandOption& commandOption)
+CommandService::CommandService(CommandRegistry& commandList, CommandOption& commandOption)
   : commandList(commandList)
   , commandOption(commandOption)
 {
@@ -44,7 +44,7 @@ CommandService::isBeginningOfCommand(Command command)
 bool
 CommandService::isCommandValidWithOption(Command& command)
 {
-    return CommandList::isCommandValidWithOptions(command.getName(), command.getOptions());
+    return CommandRegistry::isCommandValidWithOptions(command.getName(), command.getOptions());
 }
 
 std::vector<std::string>
@@ -69,7 +69,7 @@ CommandService::getMainCommandListAsString()
     return baseCommandsString;
 }
 
-CommandList&
+CommandRegistry&
 CommandService::list()
 {
     return commandList;

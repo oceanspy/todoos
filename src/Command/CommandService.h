@@ -2,14 +2,14 @@
 #define COMMANDSERVICE_H
 
 #include "Command.h"
-#include "CommandList.h"
 #include "CommandOption.h"
+#include "CommandRegistry.h"
 #include "CommandShortcut.h"
 
 class CommandService
 {
   public:
-    explicit CommandService(CommandList& commandList, CommandOption& commandOption);
+    explicit CommandService(CommandRegistry& commandList, CommandOption& commandOption);
     std::vector<std::string> getBaseCommandList();
     std::string getMainCommandListAsString();
     bool isValid(Command& command);
@@ -18,12 +18,12 @@ class CommandService
     bool hasSubCommand(Command command);
     static std::string getCommandName(const std::string& shortcut);
     Command getSubCommand(Command command);
-    CommandList& list();
+    CommandRegistry& list();
     CommandOption& options();
     static bool isCommandValidWithOption(Command& command);
 
   private:
-    CommandList& commandList;
+    CommandRegistry& commandList;
     CommandOption& commandOption;
 };
 

@@ -2,8 +2,8 @@
 #define CONFIGREPOSITORY_H
 
 #include "../Config/ConfigEntity.h"
-#include "../FileDataStorage/FileDataServiceInterface.h"
 #include "../IOService/IOService.h"
+#include "../Serializers/DataSerializerInterface.h"
 #include <filesystem>
 #include <fstream>
 #include <string>
@@ -13,7 +13,7 @@
 class ConfigRepository
 {
   public:
-    explicit ConfigRepository(FileDataServiceInterface* fileDataService, std::filesystem::path filePath);
+    explicit ConfigRepository(DataSerializerInterface* fileDataService, std::filesystem::path filePath);
     ConfigRepository& loadPath(const std::filesystem::path& configFilePath);
     std::vector<ConfigEntity> get();
     ConfigEntity find(const std::string& key);
@@ -24,7 +24,7 @@ class ConfigRepository
 
   private:
     std::filesystem::path filePath;
-    FileDataServiceInterface* fileDataService;
+    DataSerializerInterface* fileDataService;
     std::vector<ConfigEntity> cacheItems;
 };
 

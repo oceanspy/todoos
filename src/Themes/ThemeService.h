@@ -2,7 +2,7 @@
 #define TODOOS_THEMESERVICE_H
 
 #include "../Config/ConfigService.h"
-#include "ThemeAbstract.h"
+#include "Theme.h"
 #include <memory>
 #include <vector>
 
@@ -18,14 +18,13 @@ class ThemeService
     void getConsoleRowMaxLengthAndThemeType();
     ThemeService adaptConsoleRowLengthWithMaxItemValueLength(const std::vector<ListItemEntity>& listItems);
     ThemeService substractConsoleRowLength(const int substract = 0);
-    std::unique_ptr<ThemeAbstract> getTheme();
+    std::unique_ptr<Theme> getTheme();
 
   private:
     IOService& ioService;
     ConfigService& configService;
     ListService& listService;
     ListItemService& listItemService;
-    std::string typeOfTheme;
     int consoleWidth;
     int consoleRowLength;
 };

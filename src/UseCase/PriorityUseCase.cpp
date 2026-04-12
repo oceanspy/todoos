@@ -1,6 +1,6 @@
 #include "PriorityUseCase.h"
-#include "../Actions/Priority/Priority.h"
-#include "../Actions/Show/Show.h"
+#include "../Actions/PriorityAction/PriorityAction.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -26,7 +26,7 @@ PriorityUseCase::execute()
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    Priority priority(ioService, command, listItemService);
+    PriorityAction priority(ioService, command, listItemService);
 
     if (action == "set") {
         priority.set(listName);
@@ -36,7 +36,7 @@ PriorityUseCase::execute()
         priority.decrease(listName);
     }
 
-    Show show(ioService, listService, listItemService, themeService);
+    ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {

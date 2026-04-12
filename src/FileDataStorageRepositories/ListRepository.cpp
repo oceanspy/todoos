@@ -1,6 +1,6 @@
 #include "ListRepository.h"
 
-ListRepository::ListRepository(ConfigService& configService, FileDataServiceInterface* fileDataService)
+ListRepository::ListRepository(ConfigService& configService, DataSerializerInterface* fileDataService)
   : configService(configService)
   , fileDataService(fileDataService)
 {

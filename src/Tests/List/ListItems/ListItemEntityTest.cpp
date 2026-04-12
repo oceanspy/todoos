@@ -1,26 +1,26 @@
 #define CATCH_CONFIG_MAIN
 #include "../../../List/ListItems/ListItemEntity.h"
-#include "../../../FileDataStorage/ConfService.h"
-#include "../../../FileDataStorage/JSONService.h"
 #include "../../../FileDataStorageRepositories/ListRepository.h"
 #include "../../../IOService/IOService.h"
 #include "../../../List/ListService.h"
-#include "../../Mock/MockInit.h"
-#include "../../Mock/MockInstallation.h"
+#include "../../../Serializers/ConfSerializer.h"
+#include "../../../Serializers/JsonSerializer.h"
+#include "../../Mock/MockAppInitialization.h"
+#include "../../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
 {
     // Create mock objects
     IOService ioService("cli");
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_ListItemRepositoryTest");
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_ListItemRepositoryTest");
 
-    MockInstallation installation(ioService, jsonService, confService, init);
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 

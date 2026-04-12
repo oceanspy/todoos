@@ -1,6 +1,6 @@
 #include "ListItemActionsUseCase.h"
-#include "../Actions/ListItemActions/ListItemActions.h"
-#include "../Actions/Show/Show.h"
+#include "../Actions/ListItemAction/ListItemAction.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -26,10 +26,10 @@ ListItemActionsUseCase::execute()
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    ListItemActions listItemActions(ioService, command, commandService, listItemService);
+    ListItemAction listItemActions(ioService, command, commandService, listItemService);
     listItemActions.make(listName);
 
-    Show show(ioService, listService, listItemService, themeService);
+    ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {

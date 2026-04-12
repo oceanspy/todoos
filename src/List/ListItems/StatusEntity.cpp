@@ -33,13 +33,13 @@ StatusEntity::getIcon() const
 std::string
 StatusEntity::getColor() const
 {
-    return BashStyle::getBashCode(color);
+    return TerminalStyle::getBashCode(color);
 }
 
 std::string
 StatusEntity::getStyle() const
 {
-    return BashStyle::getBashCode(style);
+    return TerminalStyle::getBashCode(style);
 }
 
 const bool*
