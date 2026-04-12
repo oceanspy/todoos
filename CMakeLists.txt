@@ -58,8 +58,16 @@ add_executable(todoos main.cpp
         src/FileStorage/FileStorageService.h
         src/FileDataStorageRepositories/ConfigRepository.cpp
         src/FileDataStorageRepositories/ConfigRepository.h
-        src/Actions/ListItemAction/ListItemAction.cpp
-        src/Actions/ListItemAction/ListItemAction.h
+        src/Actions/ListItemAction/AddItemAction.cpp
+        src/Actions/ListItemAction/AddItemAction.h
+        src/Actions/ListItemAction/AppendItemAction.cpp
+        src/Actions/ListItemAction/AppendItemAction.h
+        src/Actions/ListItemAction/DeadlineItemAction.cpp
+        src/Actions/ListItemAction/DeadlineItemAction.h
+        src/Actions/ListItemAction/EditItemAction.cpp
+        src/Actions/ListItemAction/EditItemAction.h
+        src/Actions/ListItemAction/PrependItemAction.cpp
+        src/Actions/ListItemAction/PrependItemAction.h
         src/List/ListItemService.cpp
         src/List/ListItemService.h
         src/List/ListCountSummary.h

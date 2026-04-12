@@ -33,6 +33,7 @@ class StringHelpers
     static std::vector<std::string> split(const std::string& basicString, char i);
     static bool isAlnum(const std::string& str);
     static std::string escapeChar(const std::string& str, char charToReplace = ' ');
+    static std::string vectorToString(std::vector<std::string> arguments);
 };
 
 #endif // TODOOS_STRINGHELPERS_H

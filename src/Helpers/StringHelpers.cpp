@@ -256,3 +256,17 @@ StringHelpers::escapeChar(const std::string& str, char charToReplace)
     }
     return escaped;
 }
+
+std::string
+StringHelpers::vectorToString(std::vector<std::string> arguments)
+{
+    std::string value;
+    for (int i = 0; i < arguments.size(); i++) {
+        if (i == 0) {
+            value += arguments.at(i);
+            continue;
+        }
+        value += " " + arguments.at(i);
+    }
+    return value;
+}

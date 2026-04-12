@@ -1,5 +1,9 @@
 #include "ListItemActionsUseCase.h"
-#include "../Actions/ListItemAction/ListItemAction.h"
+#include "../Actions/ListItemAction/AddItemAction.h"
+#include "../Actions/ListItemAction/AppendItemAction.h"
+#include "../Actions/ListItemAction/DeadlineItemAction.h"
+#include "../Actions/ListItemAction/EditItemAction.h"
+#include "../Actions/ListItemAction/PrependItemAction.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
@@ -26,8 +30,23 @@ ListItemActionsUseCase::execute()
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    ListItemAction listItemActions(ioService, command, commandService, listItemService);
-    listItemActions.make(listName);
+
+    if (CommandService::isCommand(command, "add")) {
+        AddItemAction itemAction(ioService, commandService, listItemService);
+        itemAction.execute(command, listName);
+    } else if (CommandService::isCommand(command, "edit")) {
+        EditItemAction itemAction(ioService, commandService, listItemService);
+        itemAction.execute(command, listName);
+    } else if (CommandService::isCommand(command, "append")) {
+        AppendItemAction itemAction(ioService, commandService, listItemService);
+        itemAction.execute(command, listName);
+    } else if (CommandService::isCommand(command, "prepend")) {
+        PrependItemAction itemAction(ioService, commandService, listItemService);
+        itemAction.execute(command, listName);
+    } else if (CommandService::isCommand(command, "deadline")) {
+        DeadlineItemAction itemAction(ioService, commandService, listItemService);
+        itemAction.execute(command, listName);
+    }
 
     ShowAction show(ioService, listService, listItemService, themeService);
 
