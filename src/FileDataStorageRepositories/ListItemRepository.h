@@ -2,13 +2,13 @@
 #define LISTITEMREPOSITORY_H
 
 #include "../Config/ConfigService.h"
-#include "../Serializers/DataSerializerInterface.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListItems/PriorityService.h"
 #include "../List/ListItems/StatusService.h"
 #include "../List/ListName.h"
+#include "../Serializers/DataSerializerInterface.h"
 #include <filesystem>
 #include <fstream>
 #include <string>

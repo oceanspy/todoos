@@ -1,9 +1,9 @@
 #include "MockAppInstallation.h"
 
 MockAppInstallation::MockAppInstallation(IOService& ioService,
-                                   DataSerializerInterface& storageService,
-                                   DataSerializerInterface& configStorageService,
-                                   AppInitializationInterface& init)
+                                         DataSerializerInterface& storageService,
+                                         DataSerializerInterface& configStorageService,
+                                         AppInitializationInterface& init)
   : ioService(ioService)
   , storageService(storageService)
   , configStorageService(configStorageService)

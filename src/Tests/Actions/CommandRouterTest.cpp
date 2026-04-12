@@ -1,11 +1,9 @@
 #include "../../CommandRouter/CommandRouter.h"
-#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandOption.h"
+#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
-#include "../../Serializers/ConfSerializer.h"
-#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
@@ -15,6 +13,8 @@
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../Themes/ThemeService.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
@@ -59,7 +59,14 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        CommandRouter router(ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        CommandRouter router(ioService,
+                             help,
+                             commandService,
+                             configService,
+                             fileStorageService,
+                             listService,
+                             listItemService,
+                             themeService);
         REQUIRE_NOTHROW(router.execute(command));
     }
 
@@ -78,7 +85,14 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        CommandRouter router(ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        CommandRouter router(ioService,
+                             help,
+                             commandService,
+                             configService,
+                             fileStorageService,
+                             listService,
+                             listItemService,
+                             themeService);
         REQUIRE_NOTHROW(router.execute(command));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -103,7 +117,14 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        CommandRouter router(ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        CommandRouter router(ioService,
+                             help,
+                             commandService,
+                             configService,
+                             fileStorageService,
+                             listService,
+                             listItemService,
+                             themeService);
         REQUIRE_NOTHROW(router.execute(command));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -128,7 +149,14 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        CommandRouter router(ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        CommandRouter router(ioService,
+                             help,
+                             commandService,
+                             configService,
+                             fileStorageService,
+                             listService,
+                             listItemService,
+                             themeService);
         REQUIRE_NOTHROW(router.execute(command));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -153,7 +181,14 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        CommandRouter router(ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        CommandRouter router(ioService,
+                             help,
+                             commandService,
+                             configService,
+                             fileStorageService,
+                             listService,
+                             listItemService,
+                             themeService);
         REQUIRE_NOTHROW(router.execute(command));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -177,7 +212,14 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        CommandRouter router(ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        CommandRouter router(ioService,
+                             help,
+                             commandService,
+                             configService,
+                             fileStorageService,
+                             listService,
+                             listItemService,
+                             themeService);
         REQUIRE_NOTHROW(router.execute(command));
     }
 
@@ -196,7 +238,14 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        CommandRouter router(ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        CommandRouter router(ioService,
+                             help,
+                             commandService,
+                             configService,
+                             fileStorageService,
+                             listService,
+                             listItemService,
+                             themeService);
         REQUIRE_THROWS_AS(router.execute(command), std::invalid_argument);
     }
 }

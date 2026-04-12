@@ -27,13 +27,13 @@ void
 SwitchListUseCase::execute()
 {
     ListAction list(ioService,
-                     command,
-                     commandService,
-                     listService,
-                     listItemService,
-                     fileStorageService,
-                     configService,
-                     themeService);
+                    command,
+                    commandService,
+                    listService,
+                    listItemService,
+                    fileStorageService,
+                    configService,
+                    themeService);
 
     list.use();
 

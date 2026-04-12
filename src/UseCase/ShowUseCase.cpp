@@ -156,7 +156,7 @@ ShowUseCase::execute()
         return;
     } else if (command.hasOption("config")) {
         ConfigAction config(ioService, command, commandService, configService, listService);
-        config.make();
+        config.execute();
         return;
     }
 

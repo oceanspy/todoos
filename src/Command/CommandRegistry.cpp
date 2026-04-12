@@ -177,7 +177,8 @@ CommandRegistry::getMainCommandNames(bool showOnlyAutocomplete)
 }
 
 bool
-CommandRegistry::isCommandValidWithOptions(const std::string commandName, const std::map<std::string, std::string> options)
+CommandRegistry::isCommandValidWithOptions(const std::string commandName,
+                                           const std::map<std::string, std::string> options)
 {
     if (options.empty() || commandName == "show") {
         return true;

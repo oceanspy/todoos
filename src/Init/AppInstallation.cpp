@@ -1,10 +1,10 @@
 #include "AppInstallation.h"
 
 AppInstallation::AppInstallation(IOService& ioService,
-                           DataSerializerInterface& storageJsonService,
-                           DataSerializerInterface& storageCsvService,
-                           DataSerializerInterface& configStorageService,
-                           AppInitializationInterface& init)
+                                 DataSerializerInterface& storageJsonService,
+                                 DataSerializerInterface& storageCsvService,
+                                 DataSerializerInterface& configStorageService,
+                                 AppInitializationInterface& init)
   : ioService(ioService)
   , storageJsonService(storageJsonService)
   , storageCsvService(storageCsvService)

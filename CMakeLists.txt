@@ -4,7 +4,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-project(todoos VERSION 0.4.0)
+project(todoos VERSION 0.4.1)
 
 include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
@@ -153,6 +153,10 @@ configure_file(src/version.h.in src/version.h)
 target_include_directories(todoos PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 target_link_libraries(todoos PRIVATE nlohmann_json::nlohmann_json)
+
+# Improve binary by removing unused code from libraries
+target_compile_options(todoos PRIVATE -flto)
+target_link_options(todoos PRIVATE -flto)
 
 option(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)

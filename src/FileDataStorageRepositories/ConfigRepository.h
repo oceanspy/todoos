@@ -2,8 +2,8 @@
 #define CONFIGREPOSITORY_H
 
 #include "../Config/ConfigEntity.h"
-#include "../Serializers/DataSerializerInterface.h"
 #include "../IOService/IOService.h"
+#include "../Serializers/DataSerializerInterface.h"
 #include <filesystem>
 #include <fstream>
 #include <string>

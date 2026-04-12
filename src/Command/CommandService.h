@@ -2,8 +2,8 @@
 #define COMMANDSERVICE_H
 
 #include "Command.h"
-#include "CommandRegistry.h"
 #include "CommandOption.h"
+#include "CommandRegistry.h"
 #include "CommandShortcut.h"
 
 class CommandService

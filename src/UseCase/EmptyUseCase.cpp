@@ -1,6 +1,6 @@
 #include "EmptyUseCase.h"
-#include "../Helpers/TerminalStyle.h"
 #include "../Helpers/StringHelpers.h"
+#include "../Helpers/TerminalStyle.h"
 #include "../List/ListName.h"
 
 EmptyUseCase::EmptyUseCase(IOService& ioService,

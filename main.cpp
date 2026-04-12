@@ -3,9 +3,6 @@
 #include "src/Command/CommandValidation.h"
 #include "src/CommandRouter/CommandRouter.h"
 #include "src/Config/ConfigService.h"
-#include "src/Serializers/CsvSerializer.h"
-#include "src/Serializers/ConfSerializer.h"
-#include "src/Serializers/JsonSerializer.h"
 #include "src/FileDataStorageRepositories/ConfigRepository.h"
 #include "src/FileDataStorageRepositories/ListItemRepository.h"
 #include "src/FileDataStorageRepositories/ListRepository.h"
@@ -15,6 +12,9 @@
 #include "src/Init/AppInstallation.h"
 #include "src/List/ListItemService.h"
 #include "src/List/ListService.h"
+#include "src/Serializers/ConfSerializer.h"
+#include "src/Serializers/CsvSerializer.h"
+#include "src/Serializers/JsonSerializer.h"
 #include "src/UseCase/CommandAutoCompleteUseCase.h"
 #include <clocale>
 

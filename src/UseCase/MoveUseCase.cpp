@@ -28,7 +28,7 @@ MoveUseCase::execute()
 
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    std::string newListNameStr = move.make(listName);
+    std::string newListNameStr = move.execute(listName);
     if (!newListNameStr.empty()) {
         ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());
         ShowAction show(ioService, listService, listItemService, themeService);

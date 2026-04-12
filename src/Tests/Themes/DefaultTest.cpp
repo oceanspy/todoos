@@ -1,48 +1,50 @@
-#include "../../Helpers/TerminalStyle.h"
-#include "../../Helpers/StringHelpers.h"
-#include "../../List/ListItems/ListItemEntity.h"
-#include "../../List/ListItems/PriorityService.h"
-#include "../../List/ListItems/StatusService.h"
 #include "../../Themes/Default/Default.h"
-#include "../../Serializers/ConfSerializer.h"
-#include "../../Serializers/JsonSerializer.h"
+#include "../../Command/Command.h"
+#include "../../Config/ConfigService.h"
+#include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
-#include "../../Config/ConfigService.h"
+#include "../../Helpers/StringHelpers.h"
+#include "../../Helpers/TerminalStyle.h"
 #include "../../List/ListItemService.h"
+#include "../../List/ListItems/ListItemEntity.h"
+#include "../../List/ListItems/PriorityService.h"
+#include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
-#include "../../Events/EventBus.h"
-#include "../../Command/Command.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
-static ListItemEntity buildOpenItem(const std::string& id,
-                                    const std::string& value,
-                                    const std::string& priority,
-                                    const std::string& status,
-                                    ListName& listName,
-                                    time_t createdAt = 1704067200,
-                                    time_t dueAt     = 0)
+static ListItemEntity
+buildOpenItem(const std::string& id,
+              const std::string& value,
+              const std::string& priority,
+              const std::string& status,
+              ListName& listName,
+              time_t createdAt = 1704067200,
+              time_t dueAt = 0)
 {
     PriorityService priorityService;
     StatusService statusService;
     PriorityEntity priorityEntity = priorityService.getPriorityFromName(priority);
-    StatusEntity statusEntity     = statusService.getStatusFromName(status);
+    StatusEntity statusEntity = statusService.getStatusFromName(status);
     return ListItemEntity::set(id, value, priorityEntity, statusEntity, dueAt, 0, createdAt, createdAt, listName);
 }
 
-static ListItemEntity buildClosedItem(const std::string& id,
-                                      const std::string& value,
-                                      ListName& listName,
-                                      time_t createdAt = 1704067200,
-                                      time_t updatedAt = 1704844800)
+static ListItemEntity
+buildClosedItem(const std::string& id,
+                const std::string& value,
+                ListName& listName,
+                time_t createdAt = 1704067200,
+                time_t updatedAt = 1704844800)
 {
     PriorityService priorityService;
     StatusService statusService;
     PriorityEntity priorityEntity = priorityService.getPriorityFromName("high");
-    StatusEntity statusEntity     = statusService.getStatusFromName("completed");
+    StatusEntity statusEntity = statusService.getStatusFromName("completed");
     return ListItemEntity::set(id, value, priorityEntity, statusEntity, 0, updatedAt, createdAt, updatedAt, listName);
 }
 
@@ -51,8 +53,7 @@ TEST_CASE("Default theme", "[Default]")
     IOService ioService("cli");
     ConfSerializer confService(ioService);
     JsonSerializer jsonService(ioService);
-    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr =
-        std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
     std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfSerializer>(ioService);
 
@@ -119,16 +120,16 @@ TEST_CASE("Default theme", "[Default]")
     SECTION("printListRow — wide row is longer than narrow row")
     {
         ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
-        std::size_t wideLen   = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListRow(item, true));
+        std::size_t wideLen = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListRow(item, true));
         std::size_t narrowLen = StringHelpers::countCharsWithoutBashCodes(narrowTheme.printListRow(item, true));
         REQUIRE(wideLen > narrowLen);
     }
 
     SECTION("printListRow — narrow row visible length does not include status/date")
     {
-        ListItemEntity item   = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
         std::size_t narrowLen = StringHelpers::countCharsWithoutBashCodes(narrowTheme.printListRow(item, true));
-        std::size_t wideLen   = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListRow(item, true));
+        std::size_t wideLen = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListRow(item, true));
         // STATUS_LENGTH=20, DATE_LENGTH=25 — wide must be at least 45 chars wider
         REQUIRE(wideLen >= narrowLen + 45);
     }
@@ -137,8 +138,8 @@ TEST_CASE("Default theme", "[Default]")
     {
         // When hideListNameInLine=false the list name column occupies LISTNAME_LENGTH
         // chars that shrink the value column, so the two strings must differ.
-        ListItemEntity item      = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
-        std::string withName    = wideTheme.printListRow(item, false);
+        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
+        std::string withName = wideTheme.printListRow(item, false);
         std::string withoutName = wideTheme.printListRow(item, true);
         REQUIRE(withName != withoutName);
     }
@@ -146,14 +147,14 @@ TEST_CASE("Default theme", "[Default]")
     SECTION("printListRow — ID appears in output")
     {
         ListItemEntity item = buildOpenItem("zzzz", "task value", "high", "to-do", listName);
-        std::string result  = wideTheme.printListRow(item, true);
+        std::string result = wideTheme.printListRow(item, true);
         REQUIRE(result.find("zzzz") != std::string::npos);
     }
 
     SECTION("printListRow — value text appears in output")
     {
         ListItemEntity item = buildOpenItem("aaaa", "unique task content", "high", "to-do", listName);
-        std::string result  = wideTheme.printListRow(item, true);
+        std::string result = wideTheme.printListRow(item, true);
         REQUIRE(result.find("unique task content") != std::string::npos);
     }
 

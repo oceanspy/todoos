@@ -1,11 +1,9 @@
 #include "../../Actions/MoveAction/MoveAction.h"
-#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandOption.h"
+#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
-#include "../../Serializers/ConfSerializer.h"
-#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
@@ -13,6 +11,8 @@
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
@@ -55,7 +55,7 @@ TEST_CASE("Move action", "[Move]")
         ListName listName = listService.createUsedListName();
 
         MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.make(listName));
+        REQUIRE_NOTHROW(move.execute(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -77,7 +77,7 @@ TEST_CASE("Move action", "[Move]")
         ListName listName = listService.createUsedListName();
 
         MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.make(listName));
+        REQUIRE_NOTHROW(move.execute(listName));
     }
 
     SECTION("make — empty arguments does not throw")
@@ -92,7 +92,7 @@ TEST_CASE("Move action", "[Move]")
         ListName listName = listService.createUsedListName();
 
         MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.make(listName));
+        REQUIRE_NOTHROW(move.execute(listName));
     }
 
     // ---- make() — duplicate ----------------------------------------------------
@@ -109,7 +109,7 @@ TEST_CASE("Move action", "[Move]")
         ListName listName = listService.createUsedListName();
 
         MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.make(listName));
+        REQUIRE_NOTHROW(move.execute(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 3);

@@ -9,7 +9,10 @@
 class ShowAction
 {
   public:
-    ShowAction(IOService& ioService, ListService& listService, ListItemService& listItemService, ThemeService& themeService);
+    ShowAction(IOService& ioService,
+               ListService& listService,
+               ListItemService& listItemService,
+               ThemeService& themeService);
     void print(std::vector<ListItemEntity>& listItems,
                ListName& listName,
                bool showListName = true,

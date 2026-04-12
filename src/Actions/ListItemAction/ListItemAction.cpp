@@ -1,9 +1,9 @@
 #include "ListItemAction.h"
 
 ListItemAction::ListItemAction(IOService& ioService,
-                                 Command& command,
-                                 CommandService& commandService,
-                                 ListItemService& listItemService)
+                               Command& command,
+                               CommandService& commandService,
+                               ListItemService& listItemService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)

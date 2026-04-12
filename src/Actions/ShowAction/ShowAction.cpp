@@ -1,6 +1,9 @@
 #include "ShowAction.h"
 
-ShowAction::ShowAction(IOService& ioService, ListService& listService, ListItemService& listItemService, ThemeService& themeService)
+ShowAction::ShowAction(IOService& ioService,
+                       ListService& listService,
+                       ListItemService& listItemService,
+                       ThemeService& themeService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)

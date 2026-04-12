@@ -1,11 +1,9 @@
 #include "../../Actions/ListAction/ListAction.h"
-#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandOption.h"
+#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
-#include "../../Serializers/ConfSerializer.h"
-#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
@@ -14,6 +12,8 @@
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../Themes/ThemeService.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
@@ -57,8 +57,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
     }
 
@@ -78,8 +84,14 @@ TEST_CASE("ListAction action", "[ListAction]")
 
         std::size_t countBefore = listService.get().size();
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
 
         std::size_t countAfter = listService.get().size();
@@ -101,8 +113,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
     }
 
@@ -122,8 +140,14 @@ TEST_CASE("ListAction action", "[ListAction]")
 
         std::size_t countBefore = listService.get().size();
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
 
         std::size_t countAfter = listService.get().size();
@@ -145,8 +169,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
     }
 
@@ -154,7 +184,8 @@ TEST_CASE("ListAction action", "[ListAction]")
 
     SECTION("make — move-to renames a list")
     {
-        Command command("list", { "move-to", "tempListName", "renamedList" }, {}, "list move-to tempListName renamedList");
+        Command command(
+            "list", { "move-to", "tempListName", "renamedList" }, {}, "list move-to tempListName renamedList");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
@@ -164,8 +195,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
 
         bool found = false;
@@ -193,8 +230,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
     }
 
@@ -212,8 +255,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.make());
     }
 
@@ -231,8 +280,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_THROWS_AS(actions.make(), std::invalid_argument);
     }
 
@@ -250,8 +305,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.use());
     }
 
@@ -267,8 +328,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.use());
     }
 
@@ -284,8 +351,14 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(
-            ioService, command, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        ListAction actions(ioService,
+                           command,
+                           commandService,
+                           listService,
+                           listItemService,
+                           fileStorageService,
+                           configService,
+                           themeService);
         REQUIRE_NOTHROW(actions.use());
     }
 }

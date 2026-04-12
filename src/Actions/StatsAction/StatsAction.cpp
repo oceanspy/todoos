@@ -2,11 +2,11 @@
 #include "../../Themes/Theme.h"
 
 StatsAction::StatsAction(IOService& ioService,
-             ConfigService& configService,
-             Command& command,
-             ListItemService& listItemService,
-             ThemeService& themeService,
-             ListName& listName)
+                         ConfigService& configService,
+                         Command& command,
+                         ListItemService& listItemService,
+                         ThemeService& themeService,
+                         ListName& listName)
   : ioService(ioService)
   , configService(configService)
   , command(command)

@@ -1,28 +1,29 @@
-#include "../../Helpers/StringHelpers.h"
-#include "../../List/ListItems/ListItemEntity.h"
-#include "../../List/ListItems/PriorityService.h"
-#include "../../List/ListItems/StatusService.h"
 #include "../../Themes/ThemeService.h"
-#include "../../Serializers/ConfSerializer.h"
-#include "../../Serializers/JsonSerializer.h"
+#include "../../Command/Command.h"
+#include "../../Config/ConfigService.h"
+#include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
-#include "../../Config/ConfigService.h"
+#include "../../Helpers/StringHelpers.h"
 #include "../../List/ListItemService.h"
+#include "../../List/ListItems/ListItemEntity.h"
+#include "../../List/ListItems/PriorityService.h"
+#include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
-#include "../../Events/EventBus.h"
-#include "../../Command/Command.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
-static ListItemEntity buildItem(const std::string& value, ListName& listName)
+static ListItemEntity
+buildItem(const std::string& value, ListName& listName)
 {
     PriorityService priorityService;
     StatusService statusService;
     PriorityEntity priorityEntity = priorityService.getPriorityFromName("high");
-    StatusEntity statusEntity     = statusService.getStatusFromName("to-do");
+    StatusEntity statusEntity = statusService.getStatusFromName("to-do");
     return ListItemEntity::set("aaaa", value, priorityEntity, statusEntity, 0, 0, 0, 0, listName);
 }
 
@@ -31,8 +32,7 @@ TEST_CASE("ThemeService", "[ThemeService]")
     IOService ioService("cli");
     ConfSerializer confService(ioService);
     JsonSerializer jsonService(ioService);
-    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr =
-        std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
     std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
         std::make_unique<ConfSerializer>(ioService);
 
@@ -92,7 +92,7 @@ TEST_CASE("ThemeService", "[ThemeService]")
     {
         ThemeService service(ioService, configService, listService, listItemService);
         auto themeNoSub = service.getTheme();
-        auto themeSub0  = service.substractConsoleRowLength(0).getTheme();
+        auto themeSub0 = service.substractConsoleRowLength(0).getTheme();
         REQUIRE(themeNoSub->printListTitleRow() == themeSub0->printListTitleRow());
     }
 

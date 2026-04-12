@@ -11,11 +11,11 @@ class StatsAction
 {
   public:
     StatsAction(IOService& ioService,
-          ConfigService& configService,
-          Command& command,
-          ListItemService& listItemService,
-          ThemeService& themeService,
-          ListName& listName);
+                ConfigService& configService,
+                Command& command,
+                ListItemService& listItemService,
+                ThemeService& themeService,
+                ListName& listName);
     void print();
 
   private:

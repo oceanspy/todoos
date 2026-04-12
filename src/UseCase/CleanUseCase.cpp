@@ -1,7 +1,7 @@
 #include "CleanUseCase.h"
 #include "../Actions/ShowAction/ShowAction.h"
-#include "../Helpers/TerminalStyle.h"
 #include "../Helpers/StringHelpers.h"
+#include "../Helpers/TerminalStyle.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 

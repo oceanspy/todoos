@@ -1,10 +1,10 @@
 #include "ConfigAction.h"
 
 ConfigAction::ConfigAction(IOService& ioService,
-               Command& command,
-               CommandService& commandService,
-               ConfigService& configService,
-               ListService& listService)
+                           Command& command,
+                           CommandService& commandService,
+                           ConfigService& configService,
+                           ListService& listService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)
@@ -14,7 +14,7 @@ ConfigAction::ConfigAction(IOService& ioService,
 }
 
 void
-ConfigAction::make()
+ConfigAction::execute()
 {
     Command subCommand = commandService.getSubCommand(command);
     if (CommandService::isCommand(subCommand, "config") || subCommand.getName().empty()) {

@@ -1,10 +1,10 @@
 #include "../../Config/ConfigService.h"
-#include "../../Serializers/ConfSerializer.h"
 #include "../../FileStorage/FileStorageService.h"
 #include "../../Help/HelpPrinter.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
+#include "../../Serializers/ConfSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>

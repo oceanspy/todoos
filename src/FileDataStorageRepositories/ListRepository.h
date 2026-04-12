@@ -2,9 +2,9 @@
 #define LISTREPOSITORY_H
 
 #include "../Config/ConfigService.h"
-#include "../Serializers/DataSerializerInterface.h"
 #include "../IOService/IOService.h"
 #include "../List/ListEntity.h"
+#include "../Serializers/DataSerializerInterface.h"
 #include <filesystem>
 #include <fstream>
 #include <string>

@@ -3,9 +3,9 @@
 #include "../../Actions/RemoveAction/RemoveAction.h"
 #include "../../Actions/StatusAction/StatusAction.h"
 #include "../../CommandRouter/CommandRouter.h"
+#include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
-#include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>

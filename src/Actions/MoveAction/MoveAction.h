@@ -11,11 +11,11 @@ class MoveAction
 {
   public:
     MoveAction(IOService& ioService,
-         Command& command,
-         CommandService& commandService,
-         ListService& listService,
-         ListItemService& listItemService);
-    std::string make(ListName& listName);
+               Command& command,
+               CommandService& commandService,
+               ListService& listService,
+               ListItemService& listItemService);
+    std::string execute(ListName& listName);
 
   private:
     IOService& ioService;

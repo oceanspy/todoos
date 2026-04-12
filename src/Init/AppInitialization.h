@@ -1,9 +1,9 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include "../Serializers/JsonSerializer.h"
 #include "../IOService/IOService.h"
 #include "../List/ListEntity.h"
+#include "../Serializers/JsonSerializer.h"
 #include "AppInitializationInterface.h"
 #include <filesystem>
 

@@ -34,7 +34,8 @@ ListItemRepository::get(ListName& listName)
             } catch (std::invalid_argument& e) {
                 std::string invalidValue = StringHelpers::colorize("Invalid item -- please check storage", RED);
                 std::vector<std::string> invalidItem = { "xxxx", invalidValue, "0", "0", "0", "0", "0", "0" };
-                listItems.push_back(ListItemEntity::setFromVector(priorityService, statusService, invalidItem, listName));
+                listItems.push_back(
+                    ListItemEntity::setFromVector(priorityService, statusService, invalidItem, listName));
             }
         }
     }

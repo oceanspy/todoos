@@ -3,13 +3,13 @@
 #include "../../Themes/Theme.h"
 
 ListAction::ListAction(IOService& ioService,
-                         Command& command,
-                         CommandService& commandService,
-                         ListService& listService,
-                         ListItemService& listItemService,
-                         FileStorageService& fileStorageService,
-                         ConfigService& configService,
-                         ThemeService& themeService)
+                       Command& command,
+                       CommandService& commandService,
+                       ListService& listService,
+                       ListItemService& listItemService,
+                       FileStorageService& fileStorageService,
+                       ConfigService& configService,
+                       ThemeService& themeService)
   : ioService(ioService)
   , command(command)
   , commandService(commandService)

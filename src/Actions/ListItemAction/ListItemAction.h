@@ -12,9 +12,9 @@ class ListItemAction
 {
   public:
     ListItemAction(IOService& ioService,
-                    Command& command,
-                    CommandService& commandService,
-                    ListItemService& listItemService);
+                   Command& command,
+                   CommandService& commandService,
+                   ListItemService& listItemService);
     void make(ListName& listName);
 
   private:

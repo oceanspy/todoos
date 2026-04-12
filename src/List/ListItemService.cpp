@@ -107,13 +107,16 @@ ListItemService::isIdAvailable(const std::string& id, ListName& listName)
     ListName listNameDelete = ListName::createVariant(listName, "delete");
 
     for (const ListItemEntity& item : listItemRepository.get(listName)) {
-        if (*item.getId() == id) return false;
+        if (*item.getId() == id)
+            return false;
     }
     for (const ListItemEntity& item : listItemRepository.get(listNameArchive)) {
-        if (*item.getId() == id) return false;
+        if (*item.getId() == id)
+            return false;
     }
     for (const ListItemEntity& item : listItemRepository.get(listNameDelete)) {
-        if (*item.getId() == id) return false;
+        if (*item.getId() == id)
+            return false;
     }
 
     return true;

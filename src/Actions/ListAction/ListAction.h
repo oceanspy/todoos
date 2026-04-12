@@ -13,13 +13,13 @@ class ListAction
 {
   public:
     ListAction(IOService& ioService,
-                Command& command,
-                CommandService& commandService,
-                ListService& listService,
-                ListItemService& listItemService,
-                FileStorageService& fileStorageService,
-                ConfigService& configService,
-                ThemeService& themeService);
+               Command& command,
+               CommandService& commandService,
+               ListService& listService,
+               ListItemService& listItemService,
+               FileStorageService& fileStorageService,
+               ConfigService& configService,
+               ThemeService& themeService);
     void make();
     void use();
 
