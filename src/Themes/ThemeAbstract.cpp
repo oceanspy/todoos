@@ -11,7 +11,7 @@ ThemeAbstract::print(ListName& listName, std::vector<ListItemEntity> listItems, 
     }
 
     if (showTitle) {
-        std::string title = buildTitle();
+        std::string title = printListTitleRow();
         ioService.print(title);
         printFullLine(GRAY);
     }
@@ -22,7 +22,7 @@ ThemeAbstract::print(ListName& listName, std::vector<ListItemEntity> listItems, 
     }
 
     for (const ListItemEntity& listItemEntity : listItems) {
-        std::string line = buildLine(listItemEntity, hideListNameInLine);
+        std::string line = printListRow(listItemEntity, hideListNameInLine);
         ioService.print(line);
     }
 }
@@ -30,7 +30,7 @@ ThemeAbstract::print(ListName& listName, std::vector<ListItemEntity> listItems, 
 void
 ThemeAbstract::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems)
 {
-    std::string title = buildTitle();
+    std::string title = printListTitleRow();
     ioService.print(title);
     printFullLine(GRAY);
 
@@ -40,7 +40,7 @@ ThemeAbstract::printMultipleList(std::vector<ListName>& listNames, std::vector<L
     }
 
     for (const ListItemEntity& listItemEntity : listItems) {
-        std::string line = buildLine(listItemEntity, false);
+        std::string line = printListRow(listItemEntity, false);
         ioService.print(line);
     }
 }

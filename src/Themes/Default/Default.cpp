@@ -47,11 +47,11 @@ Default::printListTitle(ListName& listName)
     std::string line3 = "   " + StringHelpers::colorize("──────────────────────────────", GRAY);
     std::string line4 = "   " + statusPrintCount;
 
+    ioService.brOrSkip();
     ioService.print(line1);
     ioService.print(line2);
     ioService.print(line3);
     ioService.print(line4);
-    ioService.br();
     ioService.br();
 }
 
@@ -90,7 +90,7 @@ Default::buildPriorityCounts(const ListCountSummary& summary)
 }
 
 std::string
-Default::buildTitle()
+Default::printListTitleRow()
 {
     std::string line = "";
     // ID
@@ -107,7 +107,7 @@ Default::buildTitle()
 }
 
 std::string
-Default::buildLine(const ListItemEntity& listItemEntity, bool hideListNameInLine)
+Default::printListRow(const ListItemEntity& listItemEntity, bool hideListNameInLine)
 {
     int listNameLeftOffset = 0;
     std::string line = "";

@@ -15,8 +15,8 @@ class DefaultSmall : public ThemeAbstract
     void printListTitle(ListName& listName) override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printStats(ListName& listName) override;
-    std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
-    std::string buildTitle() override;
+    std::string printListRow(const ListItemEntity& listItemEntity, bool printListNameInLine) override;
+    std::string printListTitleRow() override;
     ~DefaultSmall() override = default;
 
   private:

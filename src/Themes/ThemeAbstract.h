@@ -42,12 +42,10 @@ class ThemeAbstract
     virtual void printListTitle(ListName& listName) = 0;
     virtual void printATitle(std::string titleLine1, std::string titleLine2) = 0;
     virtual void printStats(ListName& listName) = 0;
-    virtual std::string buildLine(const ListItemEntity& listItemEntity, bool printListNameInLine) = 0;
-    virtual std::string buildTitle() = 0;
+    virtual std::string printListRow(const ListItemEntity& listItemEntity, bool printListNameInLine) = 0;
+    virtual std::string printListTitleRow() = 0;
 
     virtual ~ThemeAbstract() = default;
-    std::string currentList;
-    std::string currentListVariant;
 
   protected:
     IOService ioService;

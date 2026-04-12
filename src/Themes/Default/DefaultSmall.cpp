@@ -46,6 +46,7 @@ DefaultSmall::printListTitle(ListName& listName)
     std::string line3 = "   " + StringHelpers::colorize("──────────────────────────────", GRAY);
     std::string line4 = "   " + statusPrintCount;
 
+    ioService.brOrSkip();
     ioService.print(line1);
     ioService.print(line2);
     ioService.print(line3);
@@ -79,7 +80,7 @@ DefaultSmall::buildListLastUpdate(const time_t& time)
 }
 
 std::string
-DefaultSmall::buildTitle()
+DefaultSmall::printListTitleRow()
 {
     std::string line = "";
     // ID
@@ -92,7 +93,7 @@ DefaultSmall::buildTitle()
 }
 
 std::string
-DefaultSmall::buildLine(const ListItemEntity& listItemEntity, bool hideListNameInLine)
+DefaultSmall::printListRow(const ListItemEntity& listItemEntity, bool hideListNameInLine)
 {
     int listNameLeftOffset = 0;
     std::string line = "";
