@@ -84,6 +84,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
         Actions/ActionsTest.cpp
+        Themes/ThemeAbstractTest.cpp
         ../Actions/Remove/Remove.cpp
         ../Actions/Status/Status.cpp
         ../Actions/Priority/Priority.cpp
