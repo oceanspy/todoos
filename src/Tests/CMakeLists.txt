@@ -10,22 +10,22 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         IOService/IOServiceTest.cpp
         ../Helpers/DateHelpers.cpp
         ../Helpers/StringHelpers.cpp
-        ../Helpers/BashStyle.cpp
-        ../Help/Help.cpp
+        ../Helpers/TerminalStyle.cpp
+        ../Help/HelpPrinter.cpp
         ../IOService/IOService.cpp
-        ../IOService/IOCliService/IOCliService.cpp
+        ../IOService/CliIOChannel/CliIOChannel.cpp
         ../Exception/ListNotFoundException.cpp
         ../Config/ConfigEntity.cpp
         ../List/ListEntity.cpp
         ../List/ListItems/ListItemEntity.cpp
         ../List/ListItems/PriorityEntity.cpp
         ../List/ListItems/StatusEntity.cpp
-        ../FileDataStorage/ConfService.cpp
-        ../FileDataStorage/JSONService.cpp
-        ../FileDataStorage/CSVService.cpp
+        ../Serializers/ConfSerializer.cpp
+        ../Serializers/JsonSerializer.cpp
+        ../Serializers/CsvSerializer.cpp
         ../FileStorage/FileStorageService.cpp
         ../Command/Command.cpp
-        ../Command/CommandList.cpp
+        ../Command/CommandRegistry.cpp
         ../Command/CommandOption.cpp
         ../Command/CommandValidation.cpp
         ../Command/CommandService.cpp
@@ -47,24 +47,24 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Events/Event.h
         ../Events/EventBus.cpp
         ../Events/EventBus.h
-        ../Init/InstallationInterface.h
-        Help/HelpTest.cpp
-        FileDataStorage/JSONServiceTest.cpp
-        FileDataStorage/CSVServiceTest.cpp
+        ../Init/AppInstallationInterface.h
+        Help/HelpPrinterTest.cpp
+        Serializers/JsonSerializerTest.cpp
+        Serializers/CsvSerializerTest.cpp
         Config/ConfigEntityTest.cpp
         List/ListItems/ListItemEntityTest.cpp
         List/ListEntityTest.cpp
         Command/CommandTest.cpp
-        Command/CommandListTest.cpp
+        Command/CommandRegistryTest.cpp
         Command/CommandValidationTest.cpp
         Command/CommandServiceTest.cpp
         Command/SmartCommandTest.cpp
         Command/CommandShortcutServiceTest.cpp
         CommandAutocomplete/CommandAutocompleteServiceTest.cpp
-        Mock/MockInstallation.cpp
-        Mock/MockInstallation.h
-        Mock/MockInit.cpp
-        Mock/MockInit.h
+        Mock/MockAppInstallation.cpp
+        Mock/MockAppInstallation.h
+        Mock/MockAppInitialization.cpp
+        Mock/MockAppInitialization.h
         Config/ConfigRepositoryTest.cpp
         List/ListRepositoryTest.cpp
         List/ListItemServiceTest.cpp
@@ -73,14 +73,14 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         List/ListServiceTest.cpp
         List/ListNameTest.cpp
         List/ListItemRepositoryTest.cpp
-        Init/InstallationTest.cpp
-        FileDataStorage/ConfServiceTest.cpp
+        Init/AppInstallationTest.cpp
+        Serializers/ConfSerializerTest.cpp
         FileStorage/FileStorageTest.cpp
         Command/CommandOptionTest.cpp
         Events/EventTest.cpp
         List/ListItems/StatusEntityTest.cpp
         List/ListItems/PriorityEntityTest.cpp
-        Helpers/BashStyleTest.cpp
+        Helpers/TerminalStyleTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
         Actions/ActionsTest.cpp
@@ -88,21 +88,21 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Actions/ShowTest.cpp
         Actions/StatsTest.cpp
         Actions/MoveTest.cpp
-        Actions/ListActionsTest.cpp
+        Actions/ListActionTest.cpp
         Actions/CommandRouterTest.cpp
         Themes/ThemeTest.cpp
         Themes/DefaultTest.cpp
         Themes/ThemeServiceTest.cpp
         ../CommandRouter/CommandRouter.cpp
-        ../Actions/Remove/Remove.cpp
-        ../Actions/Status/Status.cpp
-        ../Actions/Priority/Priority.cpp
-        ../Actions/ListItemActions/ListItemActions.cpp
-        ../Actions/Show/Show.cpp
-        ../Actions/Config/Config.cpp
-        ../Actions/ListActions/ListActions.cpp
-        ../Actions/Move/Move.cpp
-        ../Actions/Stats/Stats.cpp
+        ../Actions/RemoveAction/RemoveAction.cpp
+        ../Actions/StatusAction/StatusAction.cpp
+        ../Actions/PriorityAction/PriorityAction.cpp
+        ../Actions/ListItemAction/ListItemAction.cpp
+        ../Actions/ShowAction/ShowAction.cpp
+        ../Actions/ConfigAction/ConfigAction.cpp
+        ../Actions/ListAction/ListAction.cpp
+        ../Actions/MoveAction/MoveAction.cpp
+        ../Actions/StatsAction/StatsAction.cpp
         ../Themes/ThemeService.cpp
         ../Themes/Theme.cpp
         ../Themes/Default/Default.cpp

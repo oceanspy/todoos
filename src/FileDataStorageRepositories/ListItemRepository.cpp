@@ -1,7 +1,7 @@
 #include "ListItemRepository.h"
 
 ListItemRepository::ListItemRepository(ConfigService& configService,
-                                       FileDataServiceInterface* fileDataService,
+                                       DataSerializerInterface* fileDataService,
                                        PriorityService& priorityService,
                                        StatusService& statusService)
   : configService(configService)

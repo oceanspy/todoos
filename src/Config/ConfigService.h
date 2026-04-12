@@ -4,7 +4,7 @@
 #include "../Command/Command.h"
 #include "../FileDataStorageRepositories/ConfigRepository.h"
 #include "../IOService/IOService.h"
-#include "../Init/InitInterface.h"
+#include "../Init/AppInitializationInterface.h"
 #include <string>
 #include <vector>
 
@@ -12,7 +12,7 @@ class ConfigService
 {
   public:
     ConfigService(IOService& ioService,
-                  InitInterface& init,
+                  AppInitializationInterface& init,
                   ConfigRepository& configRepository,
                   ConfigRepository& cacheRepository,
                   Command& command);
@@ -40,7 +40,7 @@ class ConfigService
 
   private:
     IOService& ioService;
-    InitInterface& init;
+    AppInitializationInterface& init;
     ConfigRepository& configRepository;
     ConfigRepository& cacheRepository;
     Command& command;

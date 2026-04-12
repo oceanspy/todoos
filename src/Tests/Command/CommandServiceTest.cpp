@@ -5,7 +5,7 @@ TEST_CASE("CommandService Tests", "[CommandService]")
 {
     SECTION("Check if command has subcommand")
     {
-        CommandList commandList;
+        CommandRegistry commandList;
         CommandShortcut commandShortcutService = CommandShortcut();
         CommandOption commandOption = CommandOption();
         auto commandService = CommandService(commandList, commandOption);
@@ -17,7 +17,7 @@ TEST_CASE("CommandService Tests", "[CommandService]")
 
     SECTION("Get subcommand")
     {
-        CommandList commandList;
+        CommandRegistry commandList;
         CommandShortcut commandShortcutService = CommandShortcut();
         CommandOption commandOption = CommandOption();
         auto commandService = CommandService(commandList, commandOption);

@@ -16,7 +16,7 @@
 #include "../UseCase/SwitchListUseCase.h"
 
 CommandRouter::CommandRouter(IOService& ioService,
-                             Help& help,
+                             HelpPrinter& help,
                              CommandService& commandService,
                              ConfigService& configService,
                              FileStorageService& fileStorageService,
@@ -38,95 +38,95 @@ void
 CommandRouter::execute(Command& command)
 {
     switch (commandService.list().getCommandId(CommandService::getCommandName(command.getName()))) {
-        case CommandList::SHOW:
+        case CommandRegistry::SHOW:
             ShowUseCase(
                 ioService, help, commandService, command, configService, listService, listItemService, themeService)
                 .execute();
             return;
-        case CommandList::ADD:
-        case CommandList::EDIT:
-        case CommandList::APPEND:
-        case CommandList::PREPEND:
-        case CommandList::DEADLINE:
+        case CommandRegistry::ADD:
+        case CommandRegistry::EDIT:
+        case CommandRegistry::APPEND:
+        case CommandRegistry::PREPEND:
+        case CommandRegistry::DEADLINE:
             ListItemActionsUseCase(
                 ioService, command, commandService, listItemService, listService, configService, themeService)
                 .execute();
             return;
-        case CommandList::FIND:
+        case CommandRegistry::FIND:
             FindUseCase(ioService, command, configService, listService, listItemService, themeService).execute();
             return;
-        case CommandList::PRIORITY:
+        case CommandRegistry::PRIORITY:
             PriorityUseCase(ioService, command, listItemService, listService, configService, themeService, "set")
                 .execute();
             return;
-        case CommandList::INCREASE:
+        case CommandRegistry::INCREASE:
             PriorityUseCase(ioService, command, listItemService, listService, configService, themeService, "increase")
                 .execute();
             return;
-        case CommandList::DECREASE:
+        case CommandRegistry::DECREASE:
             PriorityUseCase(ioService, command, listItemService, listService, configService, themeService, "decrease")
                 .execute();
             return;
-        case CommandList::STATUS:
+        case CommandRegistry::STATUS:
             StatusUseCase(ioService, command, listItemService, listService, configService, themeService, -1).execute();
             return;
-        case CommandList::TO_DO:
+        case CommandRegistry::TO_DO:
             StatusUseCase(
                 ioService, command, listItemService, listService, configService, themeService, StatusService::TO_DO)
                 .execute();
             return;
-        case CommandList::START:
+        case CommandRegistry::START:
             StatusUseCase(
                 ioService, command, listItemService, listService, configService, themeService, StatusService::STARTED)
                 .execute();
             return;
-        case CommandList::REVIEW:
+        case CommandRegistry::REVIEW:
             StatusUseCase(
                 ioService, command, listItemService, listService, configService, themeService, StatusService::REVIEWING)
                 .execute();
             return;
-        case CommandList::PAUSE:
+        case CommandRegistry::PAUSE:
             StatusUseCase(
                 ioService, command, listItemService, listService, configService, themeService, StatusService::PAUSED)
                 .execute();
             return;
-        case CommandList::BLOCKED:
+        case CommandRegistry::BLOCKED:
             StatusUseCase(
                 ioService, command, listItemService, listService, configService, themeService, StatusService::BLOCKED)
                 .execute();
             return;
-        case CommandList::COMPLETE:
+        case CommandRegistry::COMPLETE:
             StatusUseCase(
                 ioService, command, listItemService, listService, configService, themeService, StatusService::COMPLETED)
                 .execute();
             return;
-        case CommandList::CANCEL:
+        case CommandRegistry::CANCEL:
             StatusUseCase(
                 ioService, command, listItemService, listService, configService, themeService, StatusService::CANCELLED)
                 .execute();
             return;
-        case CommandList::REMOVE:
+        case CommandRegistry::REMOVE:
             RemoveUseCase(ioService, command, listItemService, listService, configService, themeService).execute();
             return;
-        case CommandList::ARCHIVE:
+        case CommandRegistry::ARCHIVE:
             ArchiveUseCase(ioService, command, listItemService, listService, configService, themeService).execute();
             return;
-        case CommandList::RESTORE:
+        case CommandRegistry::RESTORE:
             RestoreUseCase(ioService, command, listItemService, listService, configService, themeService).execute();
             return;
-        case CommandList::MOVE:
-        case CommandList::COPY:
-        case CommandList::DUPLICATE:
+        case CommandRegistry::MOVE:
+        case CommandRegistry::COPY:
+        case CommandRegistry::DUPLICATE:
             MoveUseCase(ioService, command, commandService, listService, listItemService, configService, themeService)
                 .execute();
             return;
-        case CommandList::EMPTY:
+        case CommandRegistry::EMPTY:
             EmptyUseCase(ioService, command, listItemService, listService, configService).execute();
             return;
-        case CommandList::CLEAN:
+        case CommandRegistry::CLEAN:
             CleanUseCase(ioService, command, listItemService, listService, configService, themeService).execute();
             return;
-        case CommandList::LIST:
+        case CommandRegistry::LIST:
             ListUseCase(ioService,
                         command,
                         commandService,
@@ -137,7 +137,7 @@ CommandRouter::execute(Command& command)
                         themeService)
                 .execute();
             return;
-        case CommandList::USE:
+        case CommandRegistry::USE:
             SwitchListUseCase(ioService,
                               command,
                               commandService,
@@ -148,10 +148,10 @@ CommandRouter::execute(Command& command)
                               themeService)
                 .execute();
             return;
-        case CommandList::STATS:
+        case CommandRegistry::STATS:
             StatsUseCase(ioService, command, configService, listItemService, themeService, listService).execute();
             return;
-        case CommandList::RESET:
+        case CommandRegistry::RESET:
             ResetUseCase(ioService, command, listItemService, listService, configService, themeService).execute();
             return;
         default:

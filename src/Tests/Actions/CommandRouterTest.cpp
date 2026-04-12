@@ -1,43 +1,43 @@
 #include "../../CommandRouter/CommandRouter.h"
-#include "../../Command/CommandList.h"
+#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../FileStorage/FileStorageService.h"
-#include "../../Help/Help.h"
+#include "../../Help/HelpPrinter.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
 #include "../../Themes/ThemeService.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("CommandRouter", "[CommandRouter]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
 
-    MockInit init(ioService, "_todoos_CommandRouterRouteTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    MockAppInitialization init(ioService, "_todoos_CommandRouterRouteTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
-    Help help(ioService);
+    HelpPrinter help(ioService);
 
     ConfigRepository configRepository(configStoragePtr.get(), init.getConfigFilePath());
     ConfigRepository cacheRepository(configStoragePtr.get(), init.getCacheFilePath());
@@ -53,7 +53,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
@@ -71,7 +71,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
@@ -96,7 +96,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
@@ -121,7 +121,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
@@ -146,7 +146,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
@@ -171,7 +171,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
@@ -185,12 +185,12 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
 
     SECTION("unknown command throws std::invalid_argument")
     {
-        // CommandList::getCommandId throws for unregistered command names
+        // CommandRegistry::getCommandId throws for unregistered command names
         Command command("unknowncommandxyz", {}, {}, "unknowncommandxyz");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);

@@ -1,5 +1,5 @@
 #include "FindUseCase.h"
-#include "../Actions/Show/Show.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -25,7 +25,7 @@ FindUseCase::execute()
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");
-    Show show(ioService, listService, listItemService, themeService);
+    ShowAction show(ioService, listService, listItemService, themeService);
 
     std::string stringSearch;
     for (const std::string& argument : command.getArguments()) {

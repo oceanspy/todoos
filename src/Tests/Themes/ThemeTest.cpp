@@ -1,12 +1,12 @@
-#include "../../Helpers/BashStyle.h"
+#include "../../Helpers/TerminalStyle.h"
 #include "../../Helpers/StringHelpers.h"
 #include "../../List/ListCountSummary.h"
 #include "../../List/ListItems/ListItemEntity.h"
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
 #include "../../Themes/Default/Default.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
@@ -15,8 +15,8 @@
 #include "../../List/ListService.h"
 #include "../../Events/EventBus.h"
 #include "../../Command/Command.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 static ListItemEntity buildOpenItem(const std::string& id,
@@ -50,15 +50,15 @@ static ListItemEntity buildClosedItem(const std::string& id,
 TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr =
-        std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr =
+        std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
 
-    MockInit init(ioService, "_todoos_ThemeAbstractTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    MockAppInitialization init(ioService, "_todoos_ThemeAbstractTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -72,8 +72,8 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-    std::unique_ptr<FileDataServiceInterface> jsonFileDataStorageServicePtr =
-        std::make_unique<JSONService>(ioService);
+    std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr =
+        std::make_unique<JsonSerializer>(ioService);
     ListRepository listRepository(configService, jsonFileDataStorageServicePtr.get());
     EventBus bus;
     ListService listService(ioService, configService, listRepository, bus);

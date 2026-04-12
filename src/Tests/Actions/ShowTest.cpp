@@ -1,8 +1,8 @@
-#include "../../Actions/Show/Show.h"
+#include "../../Actions/ShowAction/ShowAction.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
@@ -11,20 +11,20 @@
 #include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
 #include "../../Themes/ThemeService.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Show action", "[Show]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
 
-    MockInit init(ioService, "_todoos_ShowActionTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    MockAppInitialization init(ioService, "_todoos_ShowActionTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
@@ -38,7 +38,7 @@ TEST_CASE("Show action", "[Show]")
     StatusService statusService;
     ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
     ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-    std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+    std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
     ListRepository listRepository(configService, listStoragePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ThemeService themeService(ioService, configService, listService, listItemService);
@@ -50,28 +50,28 @@ TEST_CASE("Show action", "[Show]")
     SECTION("print — with populated items does not throw")
     {
         std::vector<ListItemEntity> items = listItemService.get(listName);
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
         REQUIRE_NOTHROW(show.print(items, listName));
     }
 
     SECTION("print — with empty items does not throw")
     {
         std::vector<ListItemEntity> items;
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
         REQUIRE_NOTHROW(show.print(items, listName));
     }
 
     SECTION("print — showListName=false does not throw")
     {
         std::vector<ListItemEntity> items = listItemService.get(listName);
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
         REQUIRE_NOTHROW(show.print(items, listName, false));
     }
 
     SECTION("print — showTitle=false does not throw")
     {
         std::vector<ListItemEntity> items = listItemService.get(listName);
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
         REQUIRE_NOTHROW(show.print(items, listName, true, false));
     }
 
@@ -81,7 +81,7 @@ TEST_CASE("Show action", "[Show]")
     {
         std::vector<ListItemEntity> items = listItemService.get(listName);
         std::vector<ListName> listNames = { listName };
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
         REQUIRE_NOTHROW(show.printMultipleList(items, listNames));
     }
 
@@ -89,7 +89,7 @@ TEST_CASE("Show action", "[Show]")
     {
         std::vector<ListItemEntity> items;
         std::vector<ListName> listNames;
-        Show show(ioService, listService, listItemService, themeService);
+        ShowAction show(ioService, listService, listItemService, themeService);
         REQUIRE_NOTHROW(show.printMultipleList(items, listNames));
     }
 }

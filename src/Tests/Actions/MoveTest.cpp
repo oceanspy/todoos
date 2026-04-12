@@ -1,11 +1,11 @@
-#include "../../Actions/Move/Move.h"
-#include "../../Command/CommandList.h"
+#include "../../Actions/MoveAction/MoveAction.h"
+#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
@@ -13,25 +13,25 @@
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
 #include "../../List/ListService.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Move action", "[Move]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
 
-    MockInit init(ioService, "_todoos_MoveActionTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    MockAppInitialization init(ioService, "_todoos_MoveActionTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
 
@@ -49,12 +49,12 @@ TEST_CASE("Move action", "[Move]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        Move move(ioService, command, commandService, listService, listItemService);
+        MoveAction move(ioService, command, commandService, listService, listItemService);
         REQUIRE_NOTHROW(move.make(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -71,12 +71,12 @@ TEST_CASE("Move action", "[Move]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        Move move(ioService, command, commandService, listService, listItemService);
+        MoveAction move(ioService, command, commandService, listService, listItemService);
         REQUIRE_NOTHROW(move.make(listName));
     }
 
@@ -86,12 +86,12 @@ TEST_CASE("Move action", "[Move]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        Move move(ioService, command, commandService, listService, listItemService);
+        MoveAction move(ioService, command, commandService, listService, listItemService);
         REQUIRE_NOTHROW(move.make(listName));
     }
 
@@ -103,12 +103,12 @@ TEST_CASE("Move action", "[Move]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        Move move(ioService, command, commandService, listService, listItemService);
+        MoveAction move(ioService, command, commandService, listService, listItemService);
         REQUIRE_NOTHROW(move.make(listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);

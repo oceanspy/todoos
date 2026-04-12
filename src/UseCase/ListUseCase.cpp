@@ -1,5 +1,5 @@
 #include "ListUseCase.h"
-#include "../Actions/ListActions/ListActions.h"
+#include "../Actions/ListAction/ListAction.h"
 
 ListUseCase::ListUseCase(IOService& ioService,
                          Command& command,
@@ -23,7 +23,7 @@ ListUseCase::ListUseCase(IOService& ioService,
 void
 ListUseCase::execute()
 {
-    ListActions list(ioService,
+    ListAction list(ioService,
                      command,
                      commandService,
                      listService,

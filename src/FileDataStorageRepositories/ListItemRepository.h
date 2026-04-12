@@ -2,7 +2,7 @@
 #define LISTITEMREPOSITORY_H
 
 #include "../Config/ConfigService.h"
-#include "../FileDataStorage/FileDataServiceInterface.h"
+#include "../Serializers/DataSerializerInterface.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItems/ListItemEntity.h"
@@ -19,7 +19,7 @@ class ListItemRepository
 {
   public:
     explicit ListItemRepository(ConfigService& configService,
-                                FileDataServiceInterface* fileDataService,
+                                DataSerializerInterface* fileDataService,
                                 PriorityService& priorityService,
                                 StatusService& statusService);
     std::vector<ListItemEntity> get(ListName& listName);
@@ -31,7 +31,7 @@ class ListItemRepository
 
   private:
     ConfigService& configService;
-    FileDataServiceInterface* fileDataService{};
+    DataSerializerInterface* fileDataService{};
     PriorityService& priorityService;
     StatusService& statusService;
     std::vector<ListItemEntity> cacheItems = {};

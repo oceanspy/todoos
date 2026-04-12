@@ -3,7 +3,7 @@
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Config/ConfigService.h"
-#include "../Help/Help.h"
+#include "../Help/HelpPrinter.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListItems/ListItemEntity.h"
@@ -15,7 +15,7 @@ class ShowUseCase
 {
   public:
     ShowUseCase(IOService& ioService,
-                Help& help,
+                HelpPrinter& help,
                 CommandService& commandService,
                 Command& command,
                 ConfigService& configService,
@@ -26,7 +26,7 @@ class ShowUseCase
 
   private:
     IOService& ioService;
-    Help& help;
+    HelpPrinter& help;
     CommandService& commandService;
     Command& command;
     ConfigService& configService;

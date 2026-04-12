@@ -1,5 +1,5 @@
 #include "EmptyUseCase.h"
-#include "../Helpers/BashStyle.h"
+#include "../Helpers/TerminalStyle.h"
 #include "../Helpers/StringHelpers.h"
 #include "../List/ListName.h"
 

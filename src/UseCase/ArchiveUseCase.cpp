@@ -1,6 +1,6 @@
 #include "ArchiveUseCase.h"
-#include "../Actions/Remove/Remove.h"
-#include "../Actions/Show/Show.h"
+#include "../Actions/RemoveAction/RemoveAction.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -24,10 +24,10 @@ ArchiveUseCase::execute()
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    Remove remove(ioService, command, listItemService);
+    RemoveAction remove(ioService, command, listItemService);
     remove.archive(listName);
 
-    Show show(ioService, listService, listItemService, themeService);
+    ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {

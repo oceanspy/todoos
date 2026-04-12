@@ -1,11 +1,11 @@
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 #include "../../UseCase/CommandAutoCompleteUseCase.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
@@ -31,18 +31,18 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
     // Create mock objects
     std::string channel = "cli";
     IOService ioService(channel);
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> fileDataConfigStorageServicePtr =
-        std::make_unique<ConfService>(ioService);
-    MockInit init(ioService, "_todoos_CommandAutocompleteServiceTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_CommandAutocompleteServiceTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     std::string tempListName = "tempListName";
     std::string tempList2Name = "tempList2Name";
     installation.make();
     EventBus bus = EventBus();
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandShortcut commandShortcutService = CommandShortcut();
     CommandOption commandOption = CommandOption();
     auto commandService = CommandService(commandList, commandOption);

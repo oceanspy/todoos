@@ -3,16 +3,16 @@
 #include "src/Command/CommandValidation.h"
 #include "src/CommandRouter/CommandRouter.h"
 #include "src/Config/ConfigService.h"
-#include "src/FileDataStorage/CSVService.h"
-#include "src/FileDataStorage/ConfService.h"
-#include "src/FileDataStorage/JSONService.h"
+#include "src/Serializers/CsvSerializer.h"
+#include "src/Serializers/ConfSerializer.h"
+#include "src/Serializers/JsonSerializer.h"
 #include "src/FileDataStorageRepositories/ConfigRepository.h"
 #include "src/FileDataStorageRepositories/ListItemRepository.h"
 #include "src/FileDataStorageRepositories/ListRepository.h"
-#include "src/Help/Help.h"
+#include "src/Help/HelpPrinter.h"
 #include "src/IOService/IOService.h"
-#include "src/Init/Init.h"
-#include "src/Init/Installation.h"
+#include "src/Init/AppInitialization.h"
+#include "src/Init/AppInstallation.h"
 #include "src/List/ListItemService.h"
 #include "src/List/ListService.h"
 #include "src/UseCase/CommandAutoCompleteUseCase.h"
@@ -27,10 +27,10 @@ main(int argc, const char* argv[])
     // Configuration initialization
     std::string channel = "cli";
     IOService ioService = IOService(channel);
-    Help help = Help(ioService);
-    ConfService confService = ConfService(ioService);
-    JSONService jsonService = JSONService(ioService);
-    CSVService csvService = CSVService(ioService);
+    HelpPrinter help = HelpPrinter(ioService);
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    CsvSerializer csvService = CsvSerializer(ioService);
 
     // ----
     // Input sanitization ACL
@@ -50,7 +50,7 @@ main(int argc, const char* argv[])
                     commandValidation.getCommandArguments(),
                     commandValidation.getCommandOptions(),
                     commandValidation.getRawCommand());
-    CommandList commandList = CommandList();
+    CommandRegistry commandList = CommandRegistry();
     auto commandService = CommandService(commandList, commandOption);
 
     // ----
@@ -72,8 +72,8 @@ main(int argc, const char* argv[])
 
     // ----
     // Program initialization and first launch
-    Init init = Init(ioService);
-    Installation installation = Installation(ioService, jsonService, csvService, confService, init);
+    AppInitialization init = AppInitialization(ioService);
+    AppInstallation installation = AppInstallation(ioService, jsonService, csvService, confService, init);
     if (installation.isNew()) {
         if (commandValidation.getCommandName() == "commands") {
             return 0;
@@ -92,11 +92,11 @@ main(int argc, const char* argv[])
     // ----
     // Storage initialization
     FileStorageService fileStorageService = FileStorageService(ioService, configService);
-    std::unique_ptr<FileDataServiceInterface> fileDataStorageServicePtr;
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr;
     if (configService.getFileDataStorageType() == "csv") {
-        fileDataStorageServicePtr = std::make_unique<CSVService>(ioService);
+        fileDataStorageServicePtr = std::make_unique<CsvSerializer>(ioService);
     } else if (configService.getFileDataStorageType() == "json") {
-        fileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
+        fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
     } else {
         ioService.error("File data storage type not supported.");
         return 1;
@@ -104,7 +104,7 @@ main(int argc, const char* argv[])
 
     // ----
     // Dependencies initialization
-    std::unique_ptr<FileDataServiceInterface> jsonFileDataStorageServicePtr = std::make_unique<JSONService>(ioService);
+    std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
     EventBus bus = EventBus();
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();

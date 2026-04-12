@@ -2,7 +2,7 @@
 
 #include <utility>
 
-ConfigRepository::ConfigRepository(FileDataServiceInterface* fileDataService, const std::filesystem::path filePath)
+ConfigRepository::ConfigRepository(DataSerializerInterface* fileDataService, const std::filesystem::path filePath)
   : fileDataService(fileDataService)
   , filePath(filePath)
 {

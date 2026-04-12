@@ -1,6 +1,6 @@
 #include "SwitchListUseCase.h"
-#include "../Actions/ListActions/ListActions.h"
-#include "../Actions/Show/Show.h"
+#include "../Actions/ListAction/ListAction.h"
+#include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -26,7 +26,7 @@ SwitchListUseCase::SwitchListUseCase(IOService& ioService,
 void
 SwitchListUseCase::execute()
 {
-    ListActions list(ioService,
+    ListAction list(ioService,
                      command,
                      commandService,
                      listService,
@@ -39,7 +39,7 @@ SwitchListUseCase::execute()
 
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    Show show(ioService, listService, listItemService, themeService);
+    ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
 

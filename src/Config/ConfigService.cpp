@@ -4,7 +4,7 @@
 #include <utility>
 
 ConfigService::ConfigService(IOService& ioService,
-                             InitInterface& init,
+                             AppInitializationInterface& init,
                              ConfigRepository& configRepository,
                              ConfigRepository& cacheRepository,
                              Command& command)

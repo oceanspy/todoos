@@ -1,6 +1,6 @@
 #include "StatusUseCase.h"
-#include "../Actions/Show/Show.h"
-#include "../Actions/Status/Status.h"
+#include "../Actions/ShowAction/ShowAction.h"
+#include "../Actions/StatusAction/StatusAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -26,14 +26,14 @@ StatusUseCase::execute()
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    Status status(ioService, command, listItemService);
+    StatusAction status(ioService, command, listItemService);
     if (statusNumber == -1) {
         status.set(listName);
     } else {
         status.markAs(listName, statusNumber);
     }
 
-    Show show(ioService, listService, listItemService, themeService);
+    ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {

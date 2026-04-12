@@ -13,21 +13,21 @@ FetchContent_MakeAvailable(json)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(todoos main.cpp
-        src/FileDataStorage/FileDataServiceInterface.h
+        src/Serializers/DataSerializerInterface.h
         src/Command/CommandValidation.cpp
         src/Command/CommandValidation.h
-        src/Help/Help.cpp
-        src/Help/Help.h
+        src/Help/HelpPrinter.cpp
+        src/Help/HelpPrinter.h
         src/Command/Command.cpp
         src/Command/Command.h
-        src/Command/CommandList.cpp
-        src/Command/CommandList.h
+        src/Command/CommandRegistry.cpp
+        src/Command/CommandRegistry.h
         src/Command/CommandService.cpp
         src/Command/CommandService.h
         src/IOService/IOService.cpp
         src/IOService/IOService.h
-        src/IOService/IOCliService/IOCliService.cpp
-        src/IOService/IOCliService/IOCliService.h
+        src/IOService/CliIOChannel/CliIOChannel.cpp
+        src/IOService/CliIOChannel/CliIOChannel.h
         src/List/ListItems/ListItemEntity.cpp
         src/List/ListItems/ListItemEntity.h
         src/List/ListItems/PriorityEntity.cpp
@@ -44,10 +44,10 @@ add_executable(todoos main.cpp
         src/List/ListService.h
         src/List/ListName.cpp
         src/List/ListName.h
-        src/Init/Init.cpp
-        src/Init/Init.h
-        src/Init/Installation.cpp
-        src/Init/Installation.h
+        src/Init/AppInitialization.cpp
+        src/Init/AppInitialization.h
+        src/Init/AppInstallation.cpp
+        src/Init/AppInstallation.h
         src/Exception/ListNotFoundException.cpp
         src/Exception/ListNotFoundException.h
         src/Config/ConfigEntity.cpp
@@ -58,65 +58,65 @@ add_executable(todoos main.cpp
         src/FileStorage/FileStorageService.h
         src/FileDataStorageRepositories/ConfigRepository.cpp
         src/FileDataStorageRepositories/ConfigRepository.h
-        src/Actions/ListItemActions/ListItemActions.cpp
-        src/Actions/ListItemActions/ListItemActions.h
+        src/Actions/ListItemAction/ListItemAction.cpp
+        src/Actions/ListItemAction/ListItemAction.h
         src/List/ListItemService.cpp
         src/List/ListItemService.h
         src/List/ListCountSummary.h
         src/FileDataStorageRepositories/ListItemRepository.cpp
         src/FileDataStorageRepositories/ListItemRepository.h
-        src/FileDataStorage/CSVService.cpp
-        src/FileDataStorage/CSVService.h
-        src/Actions/Show/Show.cpp
-        src/Actions/Show/Show.h
+        src/Serializers/CsvSerializer.cpp
+        src/Serializers/CsvSerializer.h
+        src/Actions/ShowAction/ShowAction.cpp
+        src/Actions/ShowAction/ShowAction.h
         src/CommandRouter/CommandRouter.cpp
         src/CommandRouter/CommandRouter.h
-        src/Actions/Remove/Remove.cpp
-        src/Actions/Remove/Remove.h
-        src/Actions/Status/Status.cpp
-        src/Actions/Status/Status.h
-        src/Actions/Priority/Priority.cpp
-        src/Actions/Priority/Priority.h
-        src/FileDataStorage/JSONService.cpp
-        src/FileDataStorage/JSONService.h
-        src/Actions/Config/Config.cpp
-        src/Actions/Config/Config.h
-        src/Actions/ListActions/ListActions.cpp
-        src/Actions/ListActions/ListActions.h
+        src/Actions/RemoveAction/RemoveAction.cpp
+        src/Actions/RemoveAction/RemoveAction.h
+        src/Actions/StatusAction/StatusAction.cpp
+        src/Actions/StatusAction/StatusAction.h
+        src/Actions/PriorityAction/PriorityAction.cpp
+        src/Actions/PriorityAction/PriorityAction.h
+        src/Serializers/JsonSerializer.cpp
+        src/Serializers/JsonSerializer.h
+        src/Actions/ConfigAction/ConfigAction.cpp
+        src/Actions/ConfigAction/ConfigAction.h
+        src/Actions/ListAction/ListAction.cpp
+        src/Actions/ListAction/ListAction.h
         src/Command/SmartCommand.cpp
         src/Command/SmartCommand.h
         src/FileDataStorageRepositories/ListRepository.cpp
         src/FileDataStorageRepositories/ListRepository.h
         src/Command/CommandShortcut.cpp
         src/Command/CommandShortcut.h
-        src/Helpers/BashStyle.h
+        src/Helpers/TerminalStyle.h
         src/UseCase/CommandAutoCompleteUseCase.cpp
         src/UseCase/CommandAutoCompleteUseCase.h
         src/Themes/Default/Default.cpp
         src/Themes/Default/Default.h
         src/Themes/Theme.h
         src/Themes/Theme.cpp
-        src/Actions/Move/Move.cpp
-        src/Actions/Move/Move.h
+        src/Actions/MoveAction/MoveAction.cpp
+        src/Actions/MoveAction/MoveAction.h
         src/Events/Event.cpp
         src/Events/Event.h
         src/Events/EventBus.cpp
         src/Events/EventBus.h
-        src/Init/InitInterface.h
-        src/Init/InstallationInterface.h
+        src/Init/AppInitializationInterface.h
+        src/Init/AppInstallationInterface.h
         src/Command/CommandOption.cpp
         src/Command/CommandOption.h
         src/Helpers/DateHelpers.cpp
         src/Helpers/DateHelpers.h
         src/Helpers/StringHelpers.cpp
         src/Helpers/StringHelpers.h
-        src/FileDataStorage/ConfService.cpp
-        src/FileDataStorage/ConfService.h
-        src/Actions/Stats/Stats.cpp
-        src/Actions/Stats/Stats.h
+        src/Serializers/ConfSerializer.cpp
+        src/Serializers/ConfSerializer.h
+        src/Actions/StatsAction/StatsAction.cpp
+        src/Actions/StatsAction/StatsAction.h
         src/Themes/ThemeService.cpp
         src/Themes/ThemeService.h
-        src/Helpers/BashStyle.cpp
+        src/Helpers/TerminalStyle.cpp
         src/UseCase/ShowUseCase.cpp
         src/UseCase/ShowUseCase.h
         src/UseCase/ListItemActionsUseCase.cpp

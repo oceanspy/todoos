@@ -1,33 +1,33 @@
-#include "../../Actions/Config/Config.h"
-#include "../../Command/CommandList.h"
+#include "../../Actions/ConfigAction/ConfigAction.h"
+#include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
-#include "../../FileDataStorage/ConfService.h"
-#include "../../FileDataStorage/JSONService.h"
+#include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/JsonSerializer.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../List/ListService.h"
-#include "../Mock/MockInit.h"
-#include "../Mock/MockInstallation.h"
+#include "../Mock/MockAppInitialization.h"
+#include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Config action", "[Config]")
 {
     IOService ioService("cli");
-    ConfService confService(ioService);
-    JSONService jsonService(ioService);
-    std::unique_ptr<FileDataServiceInterface> storagePtr = std::make_unique<JSONService>(ioService);
-    std::unique_ptr<FileDataServiceInterface> configStoragePtr = std::make_unique<ConfService>(ioService);
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> storagePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> configStoragePtr = std::make_unique<ConfSerializer>(ioService);
 
-    MockInit init(ioService, "_todoos_ConfigActionTest");
-    MockInstallation installation(ioService, jsonService, confService, init);
+    MockAppInitialization init(ioService, "_todoos_ConfigActionTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
     installation.wipe();
     installation.make();
 
     EventBus bus;
-    CommandList commandList;
+    CommandRegistry commandList;
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
 
@@ -40,11 +40,11 @@ TEST_CASE("Config action", "[Config]")
     {
         Command command("config", {}, {}, "config");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_NOTHROW(config.make());
     }
 
@@ -54,11 +54,11 @@ TEST_CASE("Config action", "[Config]")
     {
         Command command("config", { "edit", "defaultList", "tempListName" }, {}, "config edit defaultList tempListName");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_NOTHROW(config.make());
         REQUIRE(configService.getValue("defaultList") == "tempListName");
     }
@@ -70,11 +70,11 @@ TEST_CASE("Config action", "[Config]")
                         {},
                         "config edit defaultList nonExistentList");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_NOTHROW(config.make());
     }
 
@@ -84,11 +84,11 @@ TEST_CASE("Config action", "[Config]")
     {
         Command command("config", { "edit", "theme", "default" }, {}, "config edit theme default");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_NOTHROW(config.make());
     }
 
@@ -96,11 +96,11 @@ TEST_CASE("Config action", "[Config]")
     {
         Command command("config", { "edit", "theme", "badTheme" }, {}, "config edit theme badTheme");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_NOTHROW(config.make());
     }
 
@@ -110,11 +110,11 @@ TEST_CASE("Config action", "[Config]")
     {
         Command command("config", { "edit", "unknownKey", "value" }, {}, "config edit unknownKey value");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_NOTHROW(config.make());
     }
 
@@ -122,11 +122,11 @@ TEST_CASE("Config action", "[Config]")
     {
         Command command("config", { "edit" }, {}, "config edit");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_NOTHROW(config.make());
     }
 
@@ -136,11 +136,11 @@ TEST_CASE("Config action", "[Config]")
     {
         Command command("config", { "badsubcmd" }, {}, "config badsubcmd");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        std::unique_ptr<FileDataServiceInterface> listStoragePtr = std::make_unique<JSONService>(ioService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        Config config(ioService, command, commandService, configService, listService);
+        ConfigAction config(ioService, command, commandService, configService, listService);
         REQUIRE_THROWS_AS(config.make(), std::invalid_argument);
     }
 }
