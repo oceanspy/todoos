@@ -1,5 +1,6 @@
 #include "../../Helpers/BashStyle.h"
 #include "../../Helpers/StringHelpers.h"
+#include "../../List/ListCountSummary.h"
 #include "../../List/ListItems/ListItemEntity.h"
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
@@ -46,7 +47,7 @@ static ListItemEntity buildClosedItem(const std::string& id,
     return ListItemEntity::set(id, value, priorityEntity, statusEntity, 0, updatedAt, createdAt, updatedAt, listName);
 }
 
-TEST_CASE("ThemeAbstract non-virtual functions", "[ThemeAbstract]")
+TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 {
     IOService ioService("cli");
     ConfService confService(ioService);
@@ -196,6 +197,98 @@ TEST_CASE("ThemeAbstract non-virtual functions", "[ThemeAbstract]")
         REQUIRE(result.find(BG_RED) != std::string::npos);
     }
 
+    SECTION("buildDate — open item due in 2 days shows LIGHT_RED deadline")
+    {
+        time_t due2Days = time(nullptr) + 60 * 60 * 24 * 2;
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, due2Days);
+        std::string result  = theme.buildDate(item);
+
+        REQUIRE(result.find("Deadl.:") != std::string::npos);
+        REQUIRE(result.find(LIGHT_RED) != std::string::npos);
+    }
+
+    SECTION("buildDate — open item due in 5 days shows LIGHT_YELLOW deadline")
+    {
+        time_t due5Days = time(nullptr) + 60 * 60 * 24 * 5;
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, due5Days);
+        std::string result  = theme.buildDate(item);
+
+        REQUIRE(result.find("Deadl.:") != std::string::npos);
+        REQUIRE(result.find(LIGHT_YELLOW) != std::string::npos);
+    }
+
+    SECTION("buildDate — open item created today shows 'Today at'")
+    {
+        time_t todayTs = time(nullptr) - 1800;  // 30 minutes ago
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, todayTs);
+        std::string result  = theme.buildDate(item);
+
+        REQUIRE(result.find("Today") != std::string::npos);
+        REQUIRE(static_cast<int>(StringHelpers::countCharsWithoutBashCodes(result)) == 25);
+    }
+
+    SECTION("buildDate — open item created yesterday shows 'Yesterday at'")
+    {
+        time_t yesterdayTs = time(nullptr) - 90000;  // 25 hours ago
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, yesterdayTs);
+        std::string result  = theme.buildDate(item);
+
+        REQUIRE(result.find("Yesterday") != std::string::npos);
+        REQUIRE(static_cast<int>(StringHelpers::countCharsWithoutBashCodes(result)) == 25);
+    }
+
+    SECTION("buildDate — passive status with near-overdue due date uses status color not BG_RED")
+    {
+        // "paused" is passive — overrides time-based coloring regardless of urgency
+        time_t overdue = time(nullptr) - 60 * 60 * 24;
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "paused", listName, 1704067200, overdue);
+        std::string result  = theme.buildDate(item);
+
+        REQUIRE(result.find("Deadl.:") != std::string::npos);
+        REQUIRE(result.find(BG_RED) == std::string::npos);
+    }
+
+    SECTION("buildStatus — different statuses produce different output")
+    {
+        ListItemEntity todoItem     = buildOpenItem("aaaa", "test", "high", "to-do", listName);
+        ListItemEntity startedItem  = buildOpenItem("aaaa", "test", "high", "started", listName);
+        ListItemEntity reviewItem   = buildOpenItem("aaaa", "test", "high", "reviewing", listName);
+
+        REQUIRE(theme.buildStatus(todoItem) != theme.buildStatus(startedItem));
+        REQUIRE(theme.buildStatus(todoItem) != theme.buildStatus(reviewItem));
+        REQUIRE(theme.buildStatus(startedItem) != theme.buildStatus(reviewItem));
+    }
+
+    SECTION("buildStatus — closed item has same length as open item")
+    {
+        ListItemEntity openItem   = buildOpenItem("aaaa", "test", "high", "to-do", listName);
+        ListItemEntity closedItem = buildClosedItem("aaaa", "test", listName);
+
+        REQUIRE(StringHelpers::countCharsWithoutBashCodes(theme.buildStatus(openItem)) ==
+                StringHelpers::countCharsWithoutBashCodes(theme.buildStatus(closedItem)));
+    }
+
+    // ---- buildValue (additional) ------------------------------------------------
+
+    SECTION("buildValue — closed item has different styling than open item")
+    {
+        ListItemEntity openItem   = buildOpenItem("aaaa", "same text", "high", "to-do", listName);
+        ListItemEntity closedItem = buildClosedItem("aaaa", "same text", listName);
+
+        REQUIRE(theme.buildValue(openItem, 0) != theme.buildValue(closedItem, 0));
+    }
+
+    SECTION("buildValue — leftOffset reduces wrap threshold")
+    {
+        std::string longValue;
+        for (int i = 0; i < 30; i++) longValue += "word" + std::to_string(i) + " ";
+        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "to-do", listName);
+
+        std::string noOffset   = theme.buildValue(item, 0);
+        std::string withOffset = theme.buildValue(item, 12);
+        REQUIRE(noOffset != withOffset);
+    }
+
     // ---- I/O smoke tests --------------------------------------------------------
 
     SECTION("printFullLine — does not throw")
@@ -225,5 +318,76 @@ TEST_CASE("ThemeAbstract non-virtual functions", "[ThemeAbstract]")
         std::vector<ListName> listNames    = { listName };
         std::vector<ListItemEntity> emptyItems;
         REQUIRE_NOTHROW(theme.printMultipleList(listNames, emptyItems));
+    }
+
+    SECTION("print — with items does not throw")
+    {
+        std::vector<ListItemEntity> items = {
+            buildOpenItem("aaaa", "first task", "high", "to-do", listName),
+            buildOpenItem("bbbb", "second task", "medium", "started", listName),
+        };
+        REQUIRE_NOTHROW(theme.print(listName, items, false, true));
+    }
+
+    SECTION("print — showListName=true does not throw")
+    {
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task", "high", "to-do", listName) };
+        REQUIRE_NOTHROW(theme.print(listName, items, true, true));
+    }
+
+    SECTION("print — showTitle=false does not throw")
+    {
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task", "high", "to-do", listName) };
+        REQUIRE_NOTHROW(theme.print(listName, items, false, false));
+    }
+
+    SECTION("printMultipleList — with items does not throw")
+    {
+        std::vector<ListName> listNames = { listName };
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task one", "high", "to-do", listName) };
+        REQUIRE_NOTHROW(theme.printMultipleList(listNames, items));
+    }
+
+    // ---- buildPriorityCounts ----------------------------------------------------
+
+    SECTION("buildPriorityCounts — counts appear in output")
+    {
+        ListCountSummary summary;
+        summary.addPriority(PriorityService::CRITICAL);
+        summary.addPriority(PriorityService::CRITICAL);
+        summary.addPriority(PriorityService::URGENT);
+        summary.addPriority(PriorityService::HIGH);
+        summary.addPriority(PriorityService::HIGH);
+        summary.addPriority(PriorityService::HIGH);
+        summary.addPriority(PriorityService::MEDIUM);
+        summary.addPriority(PriorityService::LOW);
+
+        std::string result = theme.buildPriorityCounts(summary);
+
+        // raw string contains the digit counts (bash codes don't contain digits)
+        REQUIRE(result.find("2") != std::string::npos); // critical = 2
+        REQUIRE(result.find("1") != std::string::npos); // urgent = 1
+        REQUIRE(result.find("3") != std::string::npos); // high = 3
+    }
+
+    SECTION("buildPriorityCounts — empty summary shows zeros for all priority levels")
+    {
+        ListCountSummary summary;
+        std::string result = theme.buildPriorityCounts(summary);
+
+        // count values are followed by a space separator; bash codes never have '0' followed by ' '
+        int zeroCount = 0;
+        for (std::string::size_type pos = 0; (pos = result.find("0 ", pos)) != std::string::npos; pos++) {
+            zeroCount++;
+        }
+        // four "0 " separators (critical urgent high medium) + last "0" without trailing space
+        REQUIRE(zeroCount == 4);
+        REQUIRE(result.rfind('0') != std::string::npos); // last priority (low) also zero
+    }
+
+    SECTION("buildPriorityCounts — output is not empty")
+    {
+        ListCountSummary summary;
+        REQUIRE_FALSE(theme.buildPriorityCounts(summary).empty());
     }
 }

@@ -1,6 +1,6 @@
 #include "ListActions.h"
 #include "../../Helpers/BashStyle.h"
-#include "../../Themes/ThemeAbstract.h"
+#include "../../Themes/Theme.h"
 
 ListActions::ListActions(IOService& ioService,
                          Command& command,

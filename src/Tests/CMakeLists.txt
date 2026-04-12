@@ -84,7 +84,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
         Actions/ActionsTest.cpp
-        Themes/ThemeAbstractTest.cpp
+        Themes/ThemeTest.cpp
+        Themes/DefaultTest.cpp
+        Themes/ThemeServiceTest.cpp
         ../Actions/Remove/Remove.cpp
         ../Actions/Status/Status.cpp
         ../Actions/Priority/Priority.cpp
@@ -95,10 +97,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/Move/Move.cpp
         ../Actions/Stats/Stats.cpp
         ../Themes/ThemeService.cpp
-        ../Themes/ThemeAbstract.cpp
+        ../Themes/Theme.cpp
         ../Themes/Default/Default.cpp
-        ../Themes/Default/DefaultMedium.cpp
-        ../Themes/Default/DefaultSmall.cpp
         ../FileStorage/FileStorageService.cpp
         ../UseCase/ShowUseCase.cpp
         ../UseCase/ListItemActionsUseCase.cpp

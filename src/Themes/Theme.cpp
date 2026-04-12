@@ -1,8 +1,8 @@
-#include "ThemeAbstract.h"
+#include "Theme.h"
 #include <cmath>
 
 void
-ThemeAbstract::print(ListName& listName, std::vector<ListItemEntity> listItems, bool showListName, bool showTitle)
+Theme::print(ListName& listName, std::vector<ListItemEntity> listItems, bool showListName, bool showTitle)
 {
     bool hideListNameInLine = false;
     if (showListName) {
@@ -28,7 +28,7 @@ ThemeAbstract::print(ListName& listName, std::vector<ListItemEntity> listItems, 
 }
 
 void
-ThemeAbstract::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems)
+Theme::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems)
 {
     std::string title = printListTitleRow();
     ioService.print(title);
@@ -46,7 +46,7 @@ ThemeAbstract::printMultipleList(std::vector<ListName>& listNames, std::vector<L
 }
 
 std::string
-ThemeAbstract::buildId(const ListItemEntity& listItemEntity)
+Theme::buildId(const ListItemEntity& listItemEntity)
 {
     if (*(*listItemEntity.status()).isClosed()) {
         return StringHelpers::colorize(" " + *listItemEntity.getId() + " ", GRAY);
@@ -55,7 +55,7 @@ ThemeAbstract::buildId(const ListItemEntity& listItemEntity)
 }
 
 std::string
-ThemeAbstract::buildStatus(const ListItemEntity& listItemEntity)
+Theme::buildStatus(const ListItemEntity& listItemEntity)
 {
     std::string render;
     std::string icon = *(*listItemEntity.status()).getIcon() + " ";
@@ -70,7 +70,7 @@ ThemeAbstract::buildStatus(const ListItemEntity& listItemEntity)
 }
 
 std::string
-ThemeAbstract::buildPriority(const ListItemEntity& listItemEntity)
+Theme::buildPriority(const ListItemEntity& listItemEntity)
 {
     if (*(*listItemEntity.status()).isClosed()) {
         return StringHelpers::colorize(" " + *(*listItemEntity.priority()).getIcon() + "  ", GRAY);
@@ -81,7 +81,7 @@ ThemeAbstract::buildPriority(const ListItemEntity& listItemEntity)
 }
 
 std::string
-ThemeAbstract::buildValue(const ListItemEntity& listItemEntity, const int leftOffset)
+Theme::buildValue(const ListItemEntity& listItemEntity, const int leftOffset)
 {
     std::string value = *listItemEntity.getValue();
     value = autoLineBreak(value, consoleRowLength - leftOffset, ID_LENGTH + PRIORITY_LENGTH + leftOffset);
@@ -91,7 +91,7 @@ ThemeAbstract::buildValue(const ListItemEntity& listItemEntity, const int leftOf
 }
 
 std::string
-ThemeAbstract::buildDate(const ListItemEntity& listItemEntity)
+Theme::buildDate(const ListItemEntity& listItemEntity)
 {
     if (!*(*listItemEntity.status()).isClosed() && *listItemEntity.getDueAt() > 0) {
         if (*(*listItemEntity.status()).isPassive()) {
@@ -157,7 +157,7 @@ ThemeAbstract::buildDate(const ListItemEntity& listItemEntity)
 }
 
 void
-ThemeAbstract::printFullLine(std::string color)
+Theme::printFullLine(std::string color)
 {
     if (color.empty()) {
         color = GRAY;
@@ -169,7 +169,7 @@ ThemeAbstract::printFullLine(std::string color)
 }
 
 void
-ThemeAbstract::printAList(std::vector<std::string> lines)
+Theme::printAList(std::vector<std::string> lines)
 {
     for (const std::string& line : lines) {
         ioService.print(line);
@@ -177,7 +177,7 @@ ThemeAbstract::printAList(std::vector<std::string> lines)
 }
 
 void
-ThemeAbstract::renderListStatLine(ListName& listName, time_t from, time_t to, std::string name)
+Theme::renderListStatLine(ListName& listName, time_t from, time_t to, std::string name)
 {
     long created = listItemService.countCreatedBetween(listName, from, to);
     long completed = listItemService.countClosedBetween(listName, from, to);
@@ -205,7 +205,7 @@ ThemeAbstract::renderListStatLine(ListName& listName, time_t from, time_t to, st
 }
 
 std::string
-ThemeAbstract::autoLineBreak(const std::string& value, const int& length, const int leadingSpaces)
+Theme::autoLineBreak(const std::string& value, const int& length, const int leadingSpaces)
 {
     std::string br = "\n";
     br += StringHelpers::adjustStringLength("", leadingSpaces);
@@ -253,8 +253,18 @@ ThemeAbstract::autoLineBreak(const std::string& value, const int& length, const 
     return result;
 }
 
+std::string
+Theme::buildPriorityCounts(const ListCountSummary& summary)
+{
+    return StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " " +
+           StringHelpers::colorize("● ", RED) + std::to_string(summary.getPriority(PriorityService::URGENT)) + " " +
+           StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " " +
+           StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) +
+           " " + StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW));
+}
+
 std::vector<std::string>
-ThemeAbstract::splitString(const std::string& str)
+Theme::splitString(const std::string& str)
 {
     std::istringstream iss(str);
     std::vector<std::string> tokens;

@@ -94,12 +94,8 @@ add_executable(todoos main.cpp
         src/UseCase/CommandAutoCompleteUseCase.h
         src/Themes/Default/Default.cpp
         src/Themes/Default/Default.h
-        src/Themes/Default/DefaultMedium.cpp
-        src/Themes/Default/DefaultMedium.h
-        src/Themes/Default/DefaultSmall.cpp
-        src/Themes/Default/DefaultSmall.h
-        src/Themes/ThemeAbstract.h
-        src/Themes/ThemeAbstract.cpp
+        src/Themes/Theme.h
+        src/Themes/Theme.cpp
         src/Actions/Move/Move.cpp
         src/Actions/Move/Move.h
         src/Events/Event.cpp

@@ -6,10 +6,20 @@ Default::Default(IOService& ioService,
                  ListItemService& listItemService,
                  int consoleWidth,
                  int consoleRowMaxLength)
-  : ThemeAbstract(ioService, listService, listItemService, consoleWidth, consoleRowMaxLength - 56)
+  : Theme(ioService,
+                  listService,
+                  listItemService,
+                  consoleWidth,
+                  consoleRowMaxLength > 120 ? consoleRowMaxLength - 56 : consoleRowMaxLength - 10)
+  , consoleRowMaxLength(consoleRowMaxLength)
 {
-    statsWhenLength = 26;
-    statsCreatedCompletedLength = 20;
+    if (consoleRowMaxLength > 120) {
+        statsWhenLength             = 26;
+        statsCreatedCompletedLength = 20;
+    } else {
+        statsWhenLength             = 18;
+        statsCreatedCompletedLength = 10;
+    }
     statsPercentageLength = 8;
 }
 
@@ -79,30 +89,18 @@ Default::buildListLastUpdate(const time_t& time)
     return updatedAt;
 }
 
-std::string
-Default::buildPriorityCounts(const ListCountSummary& summary)
-{
-    return StringHelpers::colorize("■ ", WHITE) + std::to_string(summary.getPriority(PriorityService::CRITICAL)) + " " +
-           StringHelpers::colorize("● ", RED) + std::to_string(summary.getPriority(PriorityService::URGENT)) + " " +
-           StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " " +
-           StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) +
-           " " + StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW));
-}
 
 std::string
 Default::printListTitleRow()
 {
     std::string line = "";
-    // ID
     line += StringHelpers::adjustStringLength(" ID", ID_LENGTH);
-    // Spacing
     line += StringHelpers::adjustStringLength("", PRIORITY_LENGTH);
-    // Value
     line += StringHelpers::adjustStringLength("TITLE", consoleRowLength);
-    // Status
-    line += StringHelpers::adjustStringLength("STATUS", STATUS_LENGTH);
-    // Date
-    line += StringHelpers::adjustStringLength("DATE", DATE_LENGTH);
+    if (consoleRowMaxLength > 120) {
+        line += StringHelpers::adjustStringLength("STATUS", STATUS_LENGTH);
+        line += StringHelpers::adjustStringLength("DATE", DATE_LENGTH);
+    }
     return line;
 }
 
@@ -112,21 +110,17 @@ Default::printListRow(const ListItemEntity& listItemEntity, bool hideListNameInL
     int listNameLeftOffset = 0;
     std::string line = "";
 
-    // ID
     line += buildId(listItemEntity);
-    // Priority
     line += buildPriority(listItemEntity);
-    // Value
     if (!hideListNameInLine) {
         listNameLeftOffset = 12;
-        std::string listName = line +=
-            StringHelpers::adjustStringLength((*listItemEntity.getListName()).getName() + " ", LISTNAME_LENGTH);
+        line += StringHelpers::adjustStringLength((*listItemEntity.getListName()).getName() + " ", LISTNAME_LENGTH);
     }
     line += buildValue(listItemEntity, listNameLeftOffset);
-    // Status
-    line += buildStatus(listItemEntity);
-    // Date
-    line += buildDate(listItemEntity);
+    if (consoleRowMaxLength > 120) {
+        line += buildStatus(listItemEntity);
+        line += buildDate(listItemEntity);
+    }
     return line;
 }
 
@@ -175,83 +169,125 @@ void
 Default::printStats(ListName& listName)
 {
     ListName listNameArchive = ListName::createVariant(listName, "archive");
-    ListName listNameDelete = ListName::createVariant(listName, "delete");
+    ListName listNameDelete  = ListName::createVariant(listName, "delete");
 
-    std::string totalEmoji = " 📈 Total: ";
-    std::string total = std::to_string(listItemService.count(listName));
-    total = totalEmoji + total;
-
-    std::string todoEmoji = " ⏳ To-Do: ";
     std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::TO_DO }));
-    todoCount = todoEmoji + todoCount;
+    todoCount             = " ⏳ To-Do: " + todoCount;
 
-    std::string startedEmoji = " 🏃 Started: ";
     std::string startedCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
-    startedCount = startedEmoji + startedCount;
+    startedCount             = " 🏃 Started: " + startedCount;
 
-    std::string underReviewEmoji = " 🔍 Reviewing: ";
     std::string underReviewCount =
         std::to_string(listItemService.countWithStatus(listName, { StatusService::REVIEWING }));
-    underReviewCount = underReviewEmoji + underReviewCount;
+    underReviewCount = " 🔍 Reviewing: " + underReviewCount;
 
-    std::string pauseEmoji = " 💤 Paused: ";
-    std::string pauseCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
-    pauseCount = pauseEmoji + pauseCount;
-
-    std::string archivedEmoji = " 🚀 Delivered: ";
-    int archivedCount = listItemService.countWithStatus(listName, { StatusService::COMPLETED });
-    archivedCount += listItemService.countWithStatus(listNameArchive, { StatusService::COMPLETED });
-    std::string archivedCountStr = archivedEmoji + std::to_string(archivedCount);
-
-    std::string cancelEmoji = " ✖️ Cancelled: ";
-    int cancelCount = listItemService.countWithStatus(listName, { StatusService::CANCELLED });
-    cancelCount += listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED });
-    std::string cancelCountStr = cancelEmoji + std::to_string(cancelCount);
-
-    std::string deletedEmoji = "  🧹 Deleted: ";
     std::string deletedCount = std::to_string(listItemService.count(listNameDelete));
-    deletedCount = deletedEmoji + deletedCount;
+    deletedCount             = "  🧹 Deleted: " + deletedCount;
 
-    std::string criticalEmoji = StringHelpers::colorize(" ■ ", WHITE) + "Critical: ";
     std::string criticalCount =
+        StringHelpers::colorize(" ■ ", WHITE) + "Critical: " +
         std::to_string(listItemService.countWithPriority(listName, { PriorityService::CRITICAL })) + " ";
-    criticalCount = criticalEmoji + criticalCount;
 
-    std::string urgentEmoji = StringHelpers::colorize(" ● ", RED) + "Urgent: ";
-    std::string urgentCount =
-        std::to_string(listItemService.countWithPriority(listName, { PriorityService::URGENT })) + " ";
-    urgentCount = urgentEmoji + urgentCount;
+    if (consoleRowMaxLength > 120) {
+        std::string total = " 📈 Total: " + std::to_string(listItemService.count(listName));
 
-    std::string highEmoji = StringHelpers::colorize(" ● ", ORANGE) + "High: ";
-    std::string highCount =
-        std::to_string(listItemService.countWithPriority(listName, { PriorityService::HIGH })) + " ";
-    highCount = highEmoji + highCount;
+        std::string pauseCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
+        pauseCount             = " 💤 Paused: " + pauseCount;
 
-    std::string mediumEmoji = StringHelpers::colorize(" ● ", LIGHT_GREEN) + "Medium: ";
-    std::string mediumCount =
-        std::to_string(listItemService.countWithPriority(listName, { PriorityService::MEDIUM })) + " ";
-    mediumCount = mediumEmoji + mediumCount;
+        int archivedCount = listItemService.countWithStatus(listName, { StatusService::COMPLETED });
+        archivedCount += listItemService.countWithStatus(listNameArchive, { StatusService::COMPLETED });
+        std::string archivedCountStr = " 🚀 Delivered: " + std::to_string(archivedCount);
 
-    std::string lowEmoji = StringHelpers::colorize(" ◌ ", GREEN) + "Low: ";
-    std::string lowCount = std::to_string(listItemService.countWithPriority(listName, { PriorityService::LOW }));
-    lowCount = lowEmoji + lowCount;
+        int cancelCount = listItemService.countWithStatus(listName, { StatusService::CANCELLED });
+        cancelCount += listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED });
+        std::string cancelCountStr = " ✖️ Cancelled: " + std::to_string(cancelCount);
 
-    ioService.printWithoutLineBreak(total);
-    ioService.printWithoutLineBreak(todoCount);
-    ioService.printWithoutLineBreak(startedCount);
-    ioService.printWithoutLineBreak(underReviewCount);
-    ioService.printWithoutLineBreak(pauseCount);
-    ioService.br();
-    ioService.printWithoutLineBreak(archivedCountStr);
-    ioService.printWithoutLineBreak(cancelCountStr);
-    ioService.printWithoutLineBreak(deletedCount);
-    ioService.br();
-    ioService.printWithoutLineBreak(criticalCount);
-    ioService.printWithoutLineBreak(urgentCount);
-    ioService.printWithoutLineBreak(highCount);
-    ioService.printWithoutLineBreak(mediumCount);
-    ioService.printWithoutLineBreak(lowCount);
-    ioService.br();
+        std::string urgentCount =
+            StringHelpers::colorize(" ● ", RED) + "Urgent: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::URGENT })) + " ";
+        std::string highCount =
+            StringHelpers::colorize(" ● ", ORANGE) + "High: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::HIGH })) + " ";
+        std::string mediumCount =
+            StringHelpers::colorize(" ● ", LIGHT_GREEN) + "Medium: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::MEDIUM })) + " ";
+        std::string lowCount =
+            StringHelpers::colorize(" ◌ ", GREEN) + "Low: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::LOW }));
+
+        ioService.printWithoutLineBreak(total);
+        ioService.printWithoutLineBreak(todoCount);
+        ioService.printWithoutLineBreak(startedCount);
+        ioService.printWithoutLineBreak(underReviewCount);
+        ioService.printWithoutLineBreak(pauseCount);
+        ioService.br();
+        ioService.printWithoutLineBreak(archivedCountStr);
+        ioService.printWithoutLineBreak(cancelCountStr);
+        ioService.printWithoutLineBreak(deletedCount);
+        ioService.br();
+        ioService.printWithoutLineBreak(criticalCount);
+        ioService.printWithoutLineBreak(urgentCount);
+        ioService.printWithoutLineBreak(highCount);
+        ioService.printWithoutLineBreak(mediumCount);
+        ioService.printWithoutLineBreak(lowCount);
+        ioService.br();
+    } else {
+        std::string total = " 📄 Total: " + std::to_string(listItemService.count(listName));
+
+        std::string pauseCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
+        pauseCount             = " 🚧 Paused: " + pauseCount;
+
+        std::string completedCount =
+            " ✅ Completed: " +
+            std::to_string(listItemService.countWithStatus(listName, { StatusService::COMPLETED }));
+
+        std::string cancelCount =
+            " 🪧 Cancelled: " +
+            std::to_string(listItemService.countWithStatus(listName, { StatusService::CANCELLED }));
+
+        std::string archivedCount = " 🚀 Archived: " + std::to_string(listItemService.count(listNameArchive));
+
+        std::string cancelledArchivedCount =
+            "  🚫 Cancelled: " +
+            std::to_string(listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED }));
+
+        std::string urgentCount =
+            StringHelpers::colorize(" ▲ ", RED) + "Urgent: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::URGENT })) + " ";
+        std::string highCount =
+            StringHelpers::colorize(" ▶ ", ORANGE) + "High: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::HIGH })) + " ";
+        std::string mediumCount =
+            StringHelpers::colorize(" ▼ ", LIGHT_GREEN) + "Medium: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::MEDIUM })) + " ";
+        std::string lowCount =
+            StringHelpers::colorize(" ▽ ", GREEN) + "Low: " +
+            std::to_string(listItemService.countWithPriority(listName, { PriorityService::LOW }));
+
+        ioService.printWithoutLineBreak(total);
+        ioService.printWithoutLineBreak(todoCount);
+        ioService.printWithoutLineBreak(startedCount);
+        ioService.printWithoutLineBreak(underReviewCount);
+        ioService.printWithoutLineBreak(pauseCount);
+        ioService.printWithoutLineBreak(completedCount);
+        ioService.printWithoutLineBreak(cancelCount);
+        ioService.br();
+        ioService.br();
+        ioService.printWithoutLineBreak(archivedCount);
+        ioService.printWithoutLineBreak(cancelledArchivedCount);
+        ioService.printWithoutLineBreak(deletedCount);
+        ioService.br();
+        ioService.br();
+        ioService.printWithoutLineBreak(criticalCount);
+        ioService.printWithoutLineBreak(urgentCount);
+        ioService.printWithoutLineBreak(highCount);
+        ioService.printWithoutLineBreak(mediumCount);
+        ioService.printWithoutLineBreak(lowCount);
+        ioService.br();
+        ioService.br();
+        ioService.br();
+    }
+
     ioService.br();
     ioService.printWithoutLineBreak(StringHelpers::adjustStringLength(" WHEN", statsWhenLength));
     ioService.printWithoutLineBreak(StringHelpers::adjustStringLength("COMPL./CREAT.", statsCreatedCompletedLength));

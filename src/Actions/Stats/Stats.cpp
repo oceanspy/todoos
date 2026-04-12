@@ -1,5 +1,5 @@
 #include "Stats.h"
-#include "../../Themes/ThemeAbstract.h"
+#include "../../Themes/Theme.h"
 
 Stats::Stats(IOService& ioService,
              ConfigService& configService,

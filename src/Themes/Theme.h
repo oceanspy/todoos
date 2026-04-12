@@ -1,5 +1,5 @@
-#ifndef TODOOS_THEMEABSTRACT_H
-#define TODOOS_THEMEABSTRACT_H
+#ifndef TODOOS_THEME_H
+#define TODOOS_THEME_H
 
 #include <iterator>
 #include <sstream>
@@ -9,18 +9,19 @@
 #include "../Helpers/DateHelpers.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
+#include "../List/ListCountSummary.h"
 #include "../List/ListItemService.h"
 #include "../List/ListName.h"
 #include "../List/ListService.h"
 
-class ThemeAbstract
+class Theme
 {
   public:
-    ThemeAbstract(IOService& ioService,
-                  ListService& listService,
-                  ListItemService& listItemService,
-                  int consoleWidth,
-                  int consoleRowLength)
+    Theme(IOService& ioService,
+          ListService& listService,
+          ListItemService& listItemService,
+          int consoleWidth,
+          int consoleRowLength)
       : ioService(ioService)
       , listService(listService)
       , listItemService(listItemService)
@@ -37,6 +38,7 @@ class ThemeAbstract
     std::string buildPriority(const ListItemEntity& listItemEntity);
     std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset);
     std::string buildDate(const ListItemEntity& listItemEntity);
+    std::string buildPriorityCounts(const ListCountSummary& summary);
 
     // Pure virtual — theme-specific
     virtual void printListTitle(ListName& listName) = 0;
@@ -45,10 +47,10 @@ class ThemeAbstract
     virtual std::string printListRow(const ListItemEntity& listItemEntity, bool printListNameInLine) = 0;
     virtual std::string printListTitleRow() = 0;
 
-    virtual ~ThemeAbstract() = default;
+    virtual ~Theme() = default;
 
   protected:
-    IOService ioService;
+    IOService& ioService;
     ListService& listService;
     ListItemService& listItemService;
 
@@ -71,4 +73,4 @@ class ThemeAbstract
     static std::vector<std::string> splitString(const std::string& str);
 };
 
-#endif // TODOOS_THEMEABSTRACT_H
+#endif // TODOOS_THEME_H
