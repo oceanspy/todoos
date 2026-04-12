@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -27,14 +28,14 @@ class ListItemRepository
     void create(const ListItemEntity& item, ListName& listName);
     bool update(const std::string& id, ListName& listName, const ListItemEntity& item);
     bool remove(const std::string& id, ListName& listName);
-    void resetCache();
+    void resetCache(const std::string& filePath = "");
 
   private:
     ConfigService& configService;
     DataSerializerInterface* fileDataService{};
     PriorityService& priorityService;
     StatusService& statusService;
-    std::vector<ListItemEntity> cacheItems = {};
+    std::unordered_map<std::string, std::vector<ListItemEntity>> cacheItems;
     std::string getFilePath(ListName& listName);
 };
 

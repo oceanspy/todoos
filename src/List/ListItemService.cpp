@@ -80,10 +80,11 @@ ListItemService::makeId(ListName& listName)
     bool validId = false;
     std::string id;
     int i = 0;
+    const std::string idType = configService.getValue("idRandomGenerationType");
     while (!validId && i < 50) {
-        if (configService.getValue("idRandomGenerationType") == idLettersLowercase) {
+        if (idType == idLettersLowercase) {
             id = StringHelpers::randomLettersLowercase(idLength);
-        } else if (configService.getValue("idRandomGenerationType") == idLetters) {
+        } else if (idType == idLetters) {
             id = StringHelpers::randomAlNumString(idLength);
         } else {
             id = StringHelpers::randomString(idLength);
@@ -105,26 +106,14 @@ ListItemService::isIdAvailable(const std::string& id, ListName& listName)
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");
 
-    // TODO: Optimize this
-    try {
-        find(id, listName);
-        return false;
-    } catch (std::exception& e) {
-        // id is not in default list
+    for (const ListItemEntity& item : listItemRepository.get(listName)) {
+        if (*item.getId() == id) return false;
     }
-
-    try {
-        find(id, listNameArchive);
-        return false;
-    } catch (std::exception& e) {
-        // id is not in archive list
+    for (const ListItemEntity& item : listItemRepository.get(listNameArchive)) {
+        if (*item.getId() == id) return false;
     }
-
-    try {
-        find(id, listNameDelete);
-        return false;
-    } catch (std::exception& e) {
-        // id is not in delete list
+    for (const ListItemEntity& item : listItemRepository.get(listNameDelete)) {
+        if (*item.getId() == id) return false;
     }
 
     return true;
@@ -531,15 +520,16 @@ ListItemService::count(ListName& listName)
 long
 ListItemService::countWithStatus(ListName& listName, const std::vector<int>& status)
 {
-    long count = 0;
     for (int statusId : status) {
         if (!statusService.isIdValid(statusId)) {
             throw std::invalid_argument("Status does not exists.");
         }
+    }
 
-        // TODO: Optimize this request
-        std::vector<ListItemEntity> listItems = listItemRepository.get(listName);
-        for (ListItemEntity& listItem : listItems) {
+    long count = 0;
+    const std::vector<ListItemEntity> listItems = listItemRepository.get(listName);
+    for (const ListItemEntity& listItem : listItems) {
+        for (int statusId : status) {
             if (*(*listItem.status()).getId() == statusId) {
                 count++;
             }
@@ -552,15 +542,16 @@ ListItemService::countWithStatus(ListName& listName, const std::vector<int>& sta
 long
 ListItemService::countWithPriority(ListName& listName, const std::vector<int>& priorities)
 {
-    long count = 0;
     for (int priorityId : priorities) {
         if (!priorityService.isIdValid(priorityId)) {
             throw std::invalid_argument("Priority does not exists.");
         }
+    }
 
-        // TODO: Optimize this request
-        std::vector<ListItemEntity> listItems = listItemRepository.get(listName);
-        for (ListItemEntity& listItem : listItems) {
+    long count = 0;
+    const std::vector<ListItemEntity> listItems = listItemRepository.get(listName);
+    for (const ListItemEntity& listItem : listItems) {
+        for (int priorityId : priorities) {
             if (*(*listItem.priority()).getId() == priorityId) {
                 count++;
             }

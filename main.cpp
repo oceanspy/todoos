@@ -92,11 +92,11 @@ main(int argc, const char* argv[])
     // ----
     // Storage initialization
     FileStorageService fileStorageService = FileStorageService(ioService, configService);
-    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr;
+    DataSerializerInterface* fileDataStorageServicePtr;
     if (configService.getFileDataStorageType() == "csv") {
-        fileDataStorageServicePtr = std::make_unique<CsvSerializer>(ioService);
+        fileDataStorageServicePtr = &csvService;
     } else if (configService.getFileDataStorageType() == "json") {
-        fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+        fileDataStorageServicePtr = &jsonService;
     } else {
         ioService.error("File data storage type not supported.");
         return 1;
@@ -104,15 +104,14 @@ main(int argc, const char* argv[])
 
     // ----
     // Dependencies initialization
-    std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
     EventBus bus = EventBus();
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
     ListItemRepository listItemRepository =
-        ListItemRepository(configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        ListItemRepository(configService, fileDataStorageServicePtr, priorityService, statusService);
     ListItemService listItemService =
         ListItemService(ioService, configService, listItemRepository, priorityService, statusService);
-    ListRepository listRepository = ListRepository(configService, jsonFileDataStorageServicePtr.get());
+    ListRepository listRepository = ListRepository(configService, &jsonService);
     ListService listService = ListService(ioService, configService, listRepository, bus);
 
     // ----
