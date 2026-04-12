@@ -84,9 +84,16 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Exception/ListNotFoundExceptionTest.cpp
         Config/ConfigServiceTest.cpp
         Actions/ActionsTest.cpp
+        Actions/ConfigTest.cpp
+        Actions/ShowTest.cpp
+        Actions/StatsTest.cpp
+        Actions/MoveTest.cpp
+        Actions/ListActionsTest.cpp
+        Actions/CommandRouterTest.cpp
         Themes/ThemeTest.cpp
         Themes/DefaultTest.cpp
         Themes/ThemeServiceTest.cpp
+        ../CommandRouter/CommandRouter.cpp
         ../Actions/Remove/Remove.cpp
         ../Actions/Status/Status.cpp
         ../Actions/Priority/Priority.cpp
