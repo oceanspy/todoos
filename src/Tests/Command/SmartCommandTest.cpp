@@ -3,6 +3,24 @@
 
 TEST_CASE("SmartCommand Tests", "[SmartCommand]")
 {
+    SECTION("Apply create command")
+    {
+        SmartCommand smartCommand(Command("create", { "item" }, {}));
+        Command result = smartCommand.apply();
+        REQUIRE(result.getName() == "add");
+        REQUIRE(result.getArguments() == std::vector<std::string>{ "item" });
+        REQUIRE(result.getOptions().empty());
+    }
+
+    SECTION("Apply create list command")
+    {
+        SmartCommand smartCommand(Command("create", { "list", "item" }, {}));
+        Command result = smartCommand.apply();
+        REQUIRE(result.getName() == "list");
+        REQUIRE(result.getArguments() == std::vector<std::string>{ "add", "item" });
+        REQUIRE(result.getOptions().empty());
+    }
+
     SECTION("Apply add command")
     {
         SmartCommand smartCommand(Command("add", { "list", "item" }, {}));
