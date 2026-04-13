@@ -7,19 +7,17 @@
 #include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
 
-class MoveAction
+class MoveListAction
 {
   public:
-    MoveAction(IOService& ioService,
-               Command& command,
-               CommandService& commandService,
-               ListService& listService,
-               ListItemService& listItemService);
-    std::string execute(ListName& listName);
+    MoveListAction(IOService& ioService,
+                   CommandService& commandService,
+                   ListService& listService,
+                   ListItemService& listItemService);
+    std::string execute(Command& command, ListName& listName);
 
   private:
     IOService& ioService;
-    Command& command;
     CommandService& commandService;
     ListService& listService;
     ListItemService& listItemService;

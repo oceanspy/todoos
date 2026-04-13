@@ -11,17 +11,15 @@ class StatusUseCase
 {
   public:
     StatusUseCase(IOService& ioService,
-                  Command& command,
                   ListItemService& listItemService,
                   ListService& listService,
                   ConfigService& configService,
                   ThemeService& themeService,
                   int statusNumber);
-    void execute();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     ListItemService& listItemService;
     ListService& listService;
     ConfigService& configService;

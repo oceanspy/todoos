@@ -1,4 +1,8 @@
-#include "../../Actions/ListAction/ListAction.h"
+#include "../../Actions/ListAction/AddListAction.h"
+#include "../../Actions/ListAction/RemoveListAction.h"
+#include "../../Actions/ListAction/RenameListAction.h"
+#include "../../Actions/ListAction/ShowListAction.h"
+#include "../../UseCase/SwitchListUseCase.h"
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
@@ -15,6 +19,13 @@
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
 #include "../../Themes/ThemeService.h"
+#include "../../UseCase/AddListUseCase.h"
+#include "../../UseCase/CopyListUseCase.h"
+#include "../../UseCase/MoveListUseCase.h"
+#include "../../UseCase/RemoveListUseCase.h"
+#include "../../UseCase/RenameListUseCase.h"
+#include "../../UseCase/ShowListUseCase.h"
+#include "../../UseCase/SwitchListUseCase.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
@@ -43,9 +54,9 @@ TEST_CASE("ListAction action", "[ListAction]")
     PriorityService priorityService;
     StatusService statusService;
 
-    // ---- make() — show/empty subcommand ----------------------------------------
+    // ---- ShowListAction — show/empty subcommand ----------------------------------------
 
-    SECTION("make — no subcommand shows list without throwing")
+    SECTION("show — no subcommand shows list without throwing")
     {
         Command command("list", {}, {}, "list");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -54,23 +65,15 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        ShowListAction action(ioService, listService, configService, themeService);
+        REQUIRE_NOTHROW(action.execute(command));
     }
 
-    // ---- make() — add subcommand -----------------------------------------------
+    // ---- AddListAction — add subcommand -----------------------------------------------
 
-    SECTION("make — add with name creates new list")
+    SECTION("add — with name creates new list")
     {
         Command command("list", { "add", "newTestList" }, {}, "list add newTestList");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -80,19 +83,12 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
-        ThemeService themeService(ioService, configService, listService, listItemService);
 
         std::size_t countBefore = listService.get().size();
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        Command subCommand("add", { "newTestList" }, {}, "add newTestList");
+        AddListAction action(ioService, listService, fileStorageService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
 
         std::size_t countAfter = listService.get().size();
         REQUIRE(countAfter == countBefore + 1);
@@ -101,7 +97,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         installation.make();
     }
 
-    SECTION("make — add with no name does not throw")
+    SECTION("add — with no name does not throw")
     {
         Command command("list", { "add" }, {}, "list add");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -111,22 +107,15 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
-        ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        Command subCommand("add", {}, {}, "add");
+        AddListAction action(ioService, listService, fileStorageService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
-    // ---- make() — remove subcommand --------------------------------------------
+    // ---- RemoveListAction — remove subcommand --------------------------------------------
 
-    SECTION("make — remove existing list removes it")
+    SECTION("remove — existing list removes it")
     {
         Command command("list", { "remove", "tempList2Name" }, {}, "list remove tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -136,19 +125,12 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
-        ThemeService themeService(ioService, configService, listService, listItemService);
 
         std::size_t countBefore = listService.get().size();
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        Command subCommand("remove", { "tempList2Name" }, {}, "remove tempList2Name");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
 
         std::size_t countAfter = listService.get().size();
         REQUIRE(countAfter == countBefore - 1);
@@ -157,7 +139,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         installation.make();
     }
 
-    SECTION("make — remove with no name does not throw")
+    SECTION("remove — with no name does not throw")
     {
         Command command("list", { "remove" }, {}, "list remove");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -167,22 +149,15 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
-        ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        Command subCommand("remove", {}, {}, "remove");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
-    // ---- make() — move-to subcommand -------------------------------------------
+    // ---- RenameListAction — move-to subcommand -------------------------------------------
 
-    SECTION("make — move-to renames a list")
+    SECTION("rename — move-to renames a list")
     {
         Command command(
             "list", { "move-to", "tempListName", "renamedList" }, {}, "list move-to tempListName renamedList");
@@ -193,17 +168,10 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
-        ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        Command subCommand("move-to", { "tempListName", "renamedList" }, {}, "move-to tempListName renamedList");
+        RenameListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
 
         bool found = false;
         for (auto& list : listService.get()) {
@@ -218,7 +186,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         installation.make();
     }
 
-    SECTION("make — move-to with too few arguments does not throw")
+    SECTION("rename — move-to with too few arguments does not throw")
     {
         Command command("list", { "move-to", "tempListName" }, {}, "list move-to tempListName");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -228,22 +196,15 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
-        ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        Command subCommand("move-to", { "tempListName" }, {}, "move-to tempListName");
+        RenameListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
-    // ---- make() — current subcommand -------------------------------------------
+    // ---- ListUseCase — current subcommand ---------------------------------------------
 
-    SECTION("make — current does not throw")
+    SECTION("list current — does not throw")
     {
         Command command("list", { "current" }, {}, "list current");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -255,20 +216,13 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.make());
+        ShowListUseCase useCase(ioService, listService, configService, themeService);
+        REQUIRE_NOTHROW(useCase.execute(command));
     }
 
-    // ---- make() — invalid subcommand -------------------------------------------
+    // ---- ListUseCase — invalid subcommand ---------------------------------------------
 
-    SECTION("make — invalid subcommand throws std::invalid_argument")
+    SECTION("list — invalid subcommand shows error without throwing")
     {
         Command command("list", { "badsubcmd" }, {}, "list badsubcmd");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -280,18 +234,12 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_THROWS_AS(actions.make(), std::invalid_argument);
+        SwitchListUseCase useCase(
+            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        REQUIRE_NOTHROW(useCase.execute(command));
     }
 
-    // ---- use() -----------------------------------------------------------------
+    // ---- SwitchListUseCase ---------------------------------------------------------------
 
     SECTION("use — with valid list name switches active list")
     {
@@ -305,15 +253,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.use());
+        SwitchListUseCase useCase(
+            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        REQUIRE_NOTHROW(useCase.execute(command));
     }
 
     SECTION("use — with empty arguments switches to default list")
@@ -328,15 +270,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.use());
+        SwitchListUseCase useCase(
+            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        REQUIRE_NOTHROW(useCase.execute(command));
     }
 
     SECTION("use — with non-existent list does not throw")
@@ -351,14 +287,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        ListAction actions(ioService,
-                           command,
-                           commandService,
-                           listService,
-                           listItemService,
-                           fileStorageService,
-                           configService,
-                           themeService);
-        REQUIRE_NOTHROW(actions.use());
+        SwitchListUseCase useCase(
+            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+        REQUIRE_NOTHROW(useCase.execute(command));
     }
 }

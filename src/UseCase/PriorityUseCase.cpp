@@ -5,14 +5,12 @@
 #include "../List/ListName.h"
 
 PriorityUseCase::PriorityUseCase(IOService& ioService,
-                                 Command& command,
                                  ListItemService& listItemService,
                                  ListService& listService,
                                  ConfigService& configService,
                                  ThemeService& themeService,
                                  std::string action)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
@@ -22,7 +20,7 @@ PriorityUseCase::PriorityUseCase(IOService& ioService,
 }
 
 void
-PriorityUseCase::execute()
+PriorityUseCase::execute(Command& command)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());

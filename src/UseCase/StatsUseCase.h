@@ -11,16 +11,14 @@ class StatsUseCase
 {
   public:
     StatsUseCase(IOService& ioService,
-                 Command& command,
                  ConfigService& configService,
                  ListItemService& listItemService,
                  ThemeService& themeService,
                  ListService& listService);
-    void execute();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     ConfigService& configService;
     ListItemService& listItemService;
     ThemeService& themeService;

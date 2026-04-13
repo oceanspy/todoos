@@ -5,14 +5,12 @@
 #include "../List/ListName.h"
 
 StatusUseCase::StatusUseCase(IOService& ioService,
-                             Command& command,
                              ListItemService& listItemService,
                              ListService& listService,
                              ConfigService& configService,
                              ThemeService& themeService,
                              int statusNumber)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
@@ -22,7 +20,7 @@ StatusUseCase::StatusUseCase(IOService& ioService,
 }
 
 void
-StatusUseCase::execute()
+StatusUseCase::execute(Command& command)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());

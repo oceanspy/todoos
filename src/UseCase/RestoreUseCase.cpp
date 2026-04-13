@@ -5,13 +5,11 @@
 #include "../List/ListName.h"
 
 RestoreUseCase::RestoreUseCase(IOService& ioService,
-                               Command& command,
                                ListItemService& listItemService,
                                ListService& listService,
                                ConfigService& configService,
                                ThemeService& themeService)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
@@ -20,7 +18,7 @@ RestoreUseCase::RestoreUseCase(IOService& ioService,
 }
 
 void
-RestoreUseCase::execute()
+RestoreUseCase::execute(Command& command)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());

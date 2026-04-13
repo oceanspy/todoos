@@ -11,16 +11,14 @@ class FindUseCase
 {
   public:
     FindUseCase(IOService& ioService,
-                Command& command,
                 ConfigService& configService,
                 ListService& listService,
                 ListItemService& listItemService,
                 ThemeService& themeService);
-    void execute();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     ConfigService& configService;
     ListService& listService;
     ListItemService& listItemService;

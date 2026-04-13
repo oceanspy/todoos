@@ -1,18 +1,16 @@
-#include "MoveUseCase.h"
-#include "../Actions/MoveAction/MoveAction.h"
+#include "MoveItemUseCase.h"
+#include "../Actions/MoveAction/MoveItemAction.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
-MoveUseCase::MoveUseCase(IOService& ioService,
-                         Command& command,
-                         CommandService& commandService,
-                         ListService& listService,
-                         ListItemService& listItemService,
-                         ConfigService& configService,
-                         ThemeService& themeService)
+MoveItemUseCase::MoveItemUseCase(IOService& ioService,
+                                 CommandService& commandService,
+                                 ListService& listService,
+                                 ListItemService& listItemService,
+                                 ConfigService& configService,
+                                 ThemeService& themeService)
   : ioService(ioService)
-  , command(command)
   , commandService(commandService)
   , listService(listService)
   , listItemService(listItemService)
@@ -22,13 +20,13 @@ MoveUseCase::MoveUseCase(IOService& ioService,
 }
 
 void
-MoveUseCase::execute()
+MoveItemUseCase::execute(Command& command)
 {
-    MoveAction move(ioService, command, commandService, listService, listItemService);
+    MoveItemAction move(ioService, listService, listItemService);
 
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    std::string newListNameStr = move.execute(listName);
+    std::string newListNameStr = move.execute(command, listName);
     if (!newListNameStr.empty()) {
         ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());
         ShowAction show(ioService, listService, listItemService, themeService);

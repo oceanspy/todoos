@@ -3,13 +3,11 @@
 #include "../List/ListName.h"
 
 StatsUseCase::StatsUseCase(IOService& ioService,
-                           Command& command,
                            ConfigService& configService,
                            ListItemService& listItemService,
                            ThemeService& themeService,
                            ListService& listService)
   : ioService(ioService)
-  , command(command)
   , configService(configService)
   , listItemService(listItemService)
   , themeService(themeService)
@@ -18,7 +16,7 @@ StatsUseCase::StatsUseCase(IOService& ioService,
 }
 
 void
-StatsUseCase::execute()
+StatsUseCase::execute(Command& command)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());

@@ -11,16 +11,14 @@ class CleanUseCase
 {
   public:
     CleanUseCase(IOService& ioService,
-                 Command& command,
                  ListItemService& listItemService,
                  ListService& listService,
                  ConfigService& configService,
                  ThemeService& themeService);
-    void execute();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     ListItemService& listItemService;
     ListService& listService;
     ConfigService& configService;

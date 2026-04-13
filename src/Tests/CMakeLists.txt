@@ -89,26 +89,41 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Actions/StatsTest.cpp
         Actions/MoveTest.cpp
         Actions/ListActionTest.cpp
-        Actions/CommandRouterTest.cpp
+        Command/CommandRouterTest.cpp
         Themes/ThemeTest.cpp
         Themes/DefaultTest.cpp
         Themes/ThemeServiceTest.cpp
-        ../CommandRouter/CommandRouter.cpp
         ../Actions/RemoveAction/RemoveAction.cpp
         ../Actions/StatusAction/StatusAction.cpp
         ../Actions/PriorityAction/PriorityAction.cpp
-        ../Actions/ListItemAction/ListItemAction.cpp
+        ../Actions/ListItemAction/AddItemAction.cpp
+        ../Actions/ListItemAction/AppendItemAction.cpp
+        ../Actions/ListItemAction/DeadlineItemAction.cpp
+        ../Actions/ListItemAction/EditItemAction.cpp
+        ../Actions/ListItemAction/PrependItemAction.cpp
         ../Actions/ShowAction/ShowAction.cpp
         ../Actions/ConfigAction/ConfigAction.cpp
-        ../Actions/ListAction/ListAction.cpp
-        ../Actions/MoveAction/MoveAction.cpp
+        ../Actions/ListAction/ShowListAction.cpp
+        ../Actions/ListAction/AddListAction.cpp
+        ../Actions/ListAction/RemoveListAction.cpp
+        ../Actions/ListAction/RenameListAction.cpp
+        ../Actions/ListAction/CopyListAction.cpp
+        ../Actions/MoveAction/MoveItemAction.cpp
+        ../Actions/MoveAction/CopyItemAction.cpp
+        ../Actions/MoveAction/DuplicateItemAction.cpp
+        ../Actions/ListAction/MoveListAction.cpp
         ../Actions/StatsAction/StatsAction.cpp
+        ../Command/CommandRouter.cpp
         ../Themes/ThemeService.cpp
         ../Themes/Theme.cpp
         ../Themes/Default/Default.cpp
         ../FileStorage/FileStorageService.cpp
         ../UseCase/ShowUseCase.cpp
-        ../UseCase/ListItemActionsUseCase.cpp
+        ../UseCase/AddItemUseCase.cpp
+        ../UseCase/EditItemUseCase.cpp
+        ../UseCase/AppendItemUseCase.cpp
+        ../UseCase/PrependItemUseCase.cpp
+        ../UseCase/DeadlineItemUseCase.cpp
         ../UseCase/FindUseCase.cpp
         ../UseCase/PriorityUseCase.cpp
         ../UseCase/ResetUseCase.cpp
@@ -116,12 +131,25 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/RemoveUseCase.cpp
         ../UseCase/ArchiveUseCase.cpp
         ../UseCase/RestoreUseCase.cpp
-        ../UseCase/ListUseCase.cpp
+        ../UseCase/AddListUseCase.cpp
+        ../UseCase/RemoveListUseCase.cpp
+        ../UseCase/RenameListUseCase.cpp
+        ../UseCase/ShowListUseCase.cpp
         ../UseCase/SwitchListUseCase.cpp
+        ../UseCase/ShowListUseCase.cpp
+        ../UseCase/AddListUseCase.cpp
+        ../UseCase/RemoveListUseCase.cpp
+        ../UseCase/RenameListUseCase.cpp
+        ../UseCase/CopyListUseCase.cpp
+        ../UseCase/SwitchListUseCase.cpp
+        ../UseCase/MoveListUseCase.cpp
         ../UseCase/StatsUseCase.cpp
-        ../UseCase/MoveUseCase.cpp
+        ../UseCase/MoveItemUseCase.cpp
+        ../UseCase/CopyItemUseCase.cpp
+        ../UseCase/DuplicateItemUseCase.cpp
         ../UseCase/EmptyUseCase.cpp
         ../UseCase/CleanUseCase.cpp
+        ../UseCase/CurrentListUseCase.cpp
         UseCase/UseCaseTest.cpp
         TestMain.cpp
 )

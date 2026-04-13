@@ -17,21 +17,19 @@ class ShowUseCase
     ShowUseCase(IOService& ioService,
                 HelpPrinter& help,
                 CommandService& commandService,
-                Command& command,
                 ConfigService& configService,
                 ListService& listService,
                 ListItemService& listItemService,
                 ThemeService& themeService);
-    void execute();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
     HelpPrinter& help;
     CommandService& commandService;
-    Command& command;
     ConfigService& configService;
     ListService& listService;
     ListItemService& listItemService;
     ThemeService& themeService;
-    void filterListItemsWithOptions(std::vector<ListItemEntity>* listItems);
+    void filterListItemsWithOptions(Command& command, std::vector<ListItemEntity>& listItems);
 };

@@ -1,4 +1,5 @@
-#include "../../Actions/MoveAction/MoveAction.h"
+#include "../../Actions/MoveAction/DuplicateItemAction.h"
+#include "../../Actions/MoveAction/MoveItemAction.h"
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
@@ -41,9 +42,9 @@ TEST_CASE("Move action", "[Move]")
     PriorityService priorityService;
     StatusService statusService;
 
-    // ---- make() — move-to ------------------------------------------------------
+    // ---- MoveItemAction — move-to ------------------------------------------------------
 
-    SECTION("make — move-to moves item to target list")
+    SECTION("move-to moves item to target list")
     {
         Command command("move-to", { "tempList2Name", "aaaa" }, {}, "move-to tempList2Name aaaa");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -54,8 +55,8 @@ TEST_CASE("Move action", "[Move]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.execute(listName));
+        MoveItemAction move(ioService, listService, listItemService);
+        REQUIRE_NOTHROW(move.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -65,7 +66,7 @@ TEST_CASE("Move action", "[Move]")
         installation.make();
     }
 
-    SECTION("make — move-to with too few arguments does not throw")
+    SECTION("move-to with too few arguments does not throw")
     {
         Command command("move-to", { "tempList2Name" }, {}, "move-to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -76,11 +77,11 @@ TEST_CASE("Move action", "[Move]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.execute(listName));
+        MoveItemAction move(ioService, listService, listItemService);
+        REQUIRE_NOTHROW(move.execute(command, listName));
     }
 
-    SECTION("make — empty arguments does not throw")
+    SECTION("move-to with empty arguments does not throw")
     {
         Command command("move-to", {}, {}, "move-to");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -91,13 +92,13 @@ TEST_CASE("Move action", "[Move]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.execute(listName));
+        MoveItemAction move(ioService, listService, listItemService);
+        REQUIRE_NOTHROW(move.execute(command, listName));
     }
 
-    // ---- make() — duplicate ----------------------------------------------------
+    // ---- DuplicateItemAction -----------------------------------------------------------
 
-    SECTION("make — duplicate increases item count")
+    SECTION("duplicate increases item count")
     {
         Command command("duplicate", { "aaaa" }, {}, "duplicate aaaa");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
@@ -108,8 +109,8 @@ TEST_CASE("Move action", "[Move]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        MoveAction move(ioService, command, commandService, listService, listItemService);
-        REQUIRE_NOTHROW(move.execute(listName));
+        DuplicateItemAction move(ioService, listService, listItemService);
+        REQUIRE_NOTHROW(move.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 3);

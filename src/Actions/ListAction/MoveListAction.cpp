@@ -1,12 +1,10 @@
-#include "MoveAction.h"
+#include "MoveListAction.h"
 
-MoveAction::MoveAction(IOService& ioService,
-                       Command& command,
-                       CommandService& commandService,
-                       ListService& listService,
-                       ListItemService& listItemService)
+MoveListAction::MoveListAction(IOService& ioService,
+                               CommandService& commandService,
+                               ListService& listService,
+                               ListItemService& listItemService)
   : ioService(ioService)
-  , command(command)
   , commandService(commandService)
   , listService(listService)
   , listItemService(listItemService)
@@ -14,7 +12,7 @@ MoveAction::MoveAction(IOService& ioService,
 }
 
 std::string
-MoveAction::execute(ListName& listName)
+MoveListAction::execute(Command& command, ListName& listName)
 {
     const std::vector<std::string> arguments = command.getArguments();
     std::vector<std::string> adaptedArguments = command.getArguments();

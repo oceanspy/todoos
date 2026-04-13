@@ -8,21 +8,19 @@
 #include "../List/ListService.h"
 #include "../Themes/ThemeService.h"
 
-class ListItemActionsUseCase
+class PrependItemUseCase
 {
   public:
-    ListItemActionsUseCase(IOService& ioService,
-                           Command& command,
-                           CommandService& commandService,
-                           ListItemService& listItemService,
-                           ListService& listService,
-                           ConfigService& configService,
-                           ThemeService& themeService);
-    void execute();
+    PrependItemUseCase(IOService& ioService,
+                       CommandService& commandService,
+                       ListItemService& listItemService,
+                       ListService& listService,
+                       ConfigService& configService,
+                       ThemeService& themeService);
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     CommandService& commandService;
     ListItemService& listItemService;
     ListService& listService;

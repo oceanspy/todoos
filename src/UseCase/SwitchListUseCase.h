@@ -13,18 +13,16 @@ class SwitchListUseCase
 {
   public:
     SwitchListUseCase(IOService& ioService,
-                      Command& command,
                       CommandService& commandService,
                       ListService& listService,
                       ListItemService& listItemService,
                       FileStorageService& fileStorageService,
                       ConfigService& configService,
                       ThemeService& themeService);
-    void execute();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     CommandService& commandService;
     ListService& listService;
     ListItemService& listItemService;

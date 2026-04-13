@@ -5,21 +5,22 @@
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
+#include "../Themes/ThemeService.h"
 
 class EmptyUseCase
 {
   public:
     EmptyUseCase(IOService& ioService,
-                 Command& command,
                  ListItemService& listItemService,
                  ListService& listService,
-                 ConfigService& configService);
-    void execute();
+                 ConfigService& configService,
+                 ThemeService& themeService);
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     ListItemService& listItemService;
     ListService& listService;
     ConfigService& configService;
+    ThemeService& themeService;
 };

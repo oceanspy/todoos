@@ -1,9 +1,10 @@
-#include "../../Actions/ListItemAction/ListItemAction.h"
+#include "../../Actions/ListItemAction/AddItemAction.h"
 #include "../../Actions/PriorityAction/PriorityAction.h"
 #include "../../Actions/RemoveAction/RemoveAction.h"
 #include "../../Actions/StatusAction/StatusAction.h"
-#include "../../CommandRouter/CommandRouter.h"
+#include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
+#include "../../List/ListService.h"
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
@@ -308,7 +309,7 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     }
 }
 
-TEST_CASE("ListItemAction controller", "[CommandRouter][ListItemAction]")
+TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
 {
     IOService ioService("cli");
     ConfSerializer confService = ConfSerializer(ioService);
@@ -331,7 +332,7 @@ TEST_CASE("ListItemAction controller", "[CommandRouter][ListItemAction]")
     CommandOption commandOption;
     CommandService commandService(commandList, commandOption);
 
-    SECTION("add via ListItemAction")
+    SECTION("add via AddItemAction")
     {
         Command addCommand = Command("add", { "new", "test", "item" }, {}, "add new test item");
         ConfigService configService(ioService, init, configRepository, cacheRepository, addCommand);
@@ -342,8 +343,8 @@ TEST_CASE("ListItemAction controller", "[CommandRouter][ListItemAction]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemAction actions(ioService, addCommand, commandService, listItemService);
-        REQUIRE_NOTHROW(actions.make(listName));
+        AddItemAction actions(ioService, commandService, listItemService);
+        REQUIRE_NOTHROW(actions.execute(addCommand, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 3);
@@ -373,8 +374,8 @@ TEST_CASE("ListItemAction controller", "[CommandRouter][ListItemAction]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemAction actions(ioService, emptyAddCommand, commandService, listItemService);
-        REQUIRE_NOTHROW(actions.make(listName));
+        AddItemAction actions(ioService, commandService, listItemService);
+        REQUIRE_NOTHROW(actions.execute(emptyAddCommand, listName));
 
         // No item should have been added
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -393,8 +394,8 @@ TEST_CASE("ListItemAction controller", "[CommandRouter][ListItemAction]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemAction actions(ioService, addWithPrio, commandService, listItemService);
-        REQUIRE_NOTHROW(actions.make(listName));
+        AddItemAction actions(ioService, commandService, listItemService);
+        REQUIRE_NOTHROW(actions.execute(addWithPrio, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 3);
@@ -415,8 +416,8 @@ TEST_CASE("ListItemAction controller", "[CommandRouter][ListItemAction]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        ListItemAction actions(ioService, addCommand, commandService, listItemService);
-        REQUIRE_NOTHROW(actions.make(listName));
+        AddItemAction actions(ioService, commandService, listItemService);
+        REQUIRE_NOTHROW(actions.execute(addCommand, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         bool found = false;

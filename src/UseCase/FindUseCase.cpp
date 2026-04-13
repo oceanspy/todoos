@@ -4,13 +4,11 @@
 #include "../List/ListName.h"
 
 FindUseCase::FindUseCase(IOService& ioService,
-                         Command& command,
                          ConfigService& configService,
                          ListService& listService,
                          ListItemService& listItemService,
                          ThemeService& themeService)
   : ioService(ioService)
-  , command(command)
   , configService(configService)
   , listService(listService)
   , listItemService(listItemService)
@@ -19,7 +17,7 @@ FindUseCase::FindUseCase(IOService& ioService,
 }
 
 void
-FindUseCase::execute()
+FindUseCase::execute(Command& command)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());

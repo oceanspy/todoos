@@ -77,8 +77,8 @@ add_executable(todoos main.cpp
         src/Serializers/CsvSerializer.h
         src/Actions/ShowAction/ShowAction.cpp
         src/Actions/ShowAction/ShowAction.h
-        src/CommandRouter/CommandRouter.cpp
-        src/CommandRouter/CommandRouter.h
+        src/Command/CommandRouter.cpp
+        src/Command/CommandRouter.h
         src/Actions/RemoveAction/RemoveAction.cpp
         src/Actions/RemoveAction/RemoveAction.h
         src/Actions/StatusAction/StatusAction.cpp
@@ -89,8 +89,18 @@ add_executable(todoos main.cpp
         src/Serializers/JsonSerializer.h
         src/Actions/ConfigAction/ConfigAction.cpp
         src/Actions/ConfigAction/ConfigAction.h
-        src/Actions/ListAction/ListAction.cpp
-        src/Actions/ListAction/ListAction.h
+        src/Actions/ListAction/ShowListAction.cpp
+        src/Actions/ListAction/ShowListAction.h
+        src/Actions/ListAction/AddListAction.cpp
+        src/Actions/ListAction/AddListAction.h
+        src/Actions/ListAction/RemoveListAction.cpp
+        src/Actions/ListAction/RemoveListAction.h
+        src/Actions/ListAction/RenameListAction.cpp
+        src/Actions/ListAction/RenameListAction.h
+        src/Actions/ListAction/CopyListAction.cpp
+        src/Actions/ListAction/CopyListAction.h
+        src/Actions/ListAction/MoveListAction.cpp
+        src/Actions/ListAction/MoveListAction.h
         src/Command/SmartCommand.cpp
         src/Command/SmartCommand.h
         src/FileDataStorageRepositories/ListRepository.cpp
@@ -104,8 +114,12 @@ add_executable(todoos main.cpp
         src/Themes/Default/Default.h
         src/Themes/Theme.h
         src/Themes/Theme.cpp
-        src/Actions/MoveAction/MoveAction.cpp
-        src/Actions/MoveAction/MoveAction.h
+        src/Actions/MoveAction/MoveItemAction.cpp
+        src/Actions/MoveAction/MoveItemAction.h
+        src/Actions/MoveAction/CopyItemAction.cpp
+        src/Actions/MoveAction/CopyItemAction.h
+        src/Actions/MoveAction/DuplicateItemAction.cpp
+        src/Actions/MoveAction/DuplicateItemAction.h
         src/Events/Event.cpp
         src/Events/Event.h
         src/Events/EventBus.cpp
@@ -127,8 +141,16 @@ add_executable(todoos main.cpp
         src/Helpers/TerminalStyle.cpp
         src/UseCase/ShowUseCase.cpp
         src/UseCase/ShowUseCase.h
-        src/UseCase/ListItemActionsUseCase.cpp
-        src/UseCase/ListItemActionsUseCase.h
+        src/UseCase/AddItemUseCase.cpp
+        src/UseCase/AddItemUseCase.h
+        src/UseCase/EditItemUseCase.cpp
+        src/UseCase/EditItemUseCase.h
+        src/UseCase/AppendItemUseCase.cpp
+        src/UseCase/AppendItemUseCase.h
+        src/UseCase/PrependItemUseCase.cpp
+        src/UseCase/PrependItemUseCase.h
+        src/UseCase/DeadlineItemUseCase.cpp
+        src/UseCase/DeadlineItemUseCase.h
         src/UseCase/FindUseCase.cpp
         src/UseCase/FindUseCase.h
         src/UseCase/PriorityUseCase.cpp
@@ -143,18 +165,34 @@ add_executable(todoos main.cpp
         src/UseCase/ArchiveUseCase.h
         src/UseCase/RestoreUseCase.cpp
         src/UseCase/RestoreUseCase.h
-        src/UseCase/ListUseCase.cpp
-        src/UseCase/ListUseCase.h
+        src/UseCase/ShowListUseCase.cpp
+        src/UseCase/ShowListUseCase.h
+        src/UseCase/AddListUseCase.cpp
+        src/UseCase/AddListUseCase.h
+        src/UseCase/RemoveListUseCase.cpp
+        src/UseCase/RemoveListUseCase.h
+        src/UseCase/RenameListUseCase.cpp
+        src/UseCase/RenameListUseCase.h
+        src/UseCase/CopyListUseCase.cpp
+        src/UseCase/CopyListUseCase.h
+        src/UseCase/MoveListUseCase.cpp
+        src/UseCase/MoveListUseCase.h
         src/UseCase/SwitchListUseCase.cpp
         src/UseCase/SwitchListUseCase.h
         src/UseCase/StatsUseCase.cpp
         src/UseCase/StatsUseCase.h
-        src/UseCase/MoveUseCase.cpp
-        src/UseCase/MoveUseCase.h
+        src/UseCase/MoveItemUseCase.cpp
+        src/UseCase/MoveItemUseCase.h
+        src/UseCase/CopyItemUseCase.cpp
+        src/UseCase/CopyItemUseCase.h
+        src/UseCase/DuplicateItemUseCase.cpp
+        src/UseCase/DuplicateItemUseCase.h
         src/UseCase/EmptyUseCase.cpp
         src/UseCase/EmptyUseCase.h
         src/UseCase/CleanUseCase.cpp
         src/UseCase/CleanUseCase.h
+        src/UseCase/CurrentListUseCase.cpp
+        src/UseCase/CurrentListUseCase.h
 )
 
 configure_file(src/version.h.in src/version.h)
@@ -163,8 +201,8 @@ target_include_directories(todoos PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
 target_link_libraries(todoos PRIVATE nlohmann_json::nlohmann_json)
 
 # Improve binary by removing unused code from libraries
-target_compile_options(todoos PRIVATE -flto)
-target_link_options(todoos PRIVATE -flto)
+# target_compile_options(todoos PRIVATE -flto)
+# target_link_options(todoos PRIVATE -flto)
 
 option(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)

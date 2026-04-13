@@ -5,13 +5,11 @@
 #include "../List/ListName.h"
 
 ResetUseCase::ResetUseCase(IOService& ioService,
-                           Command& command,
                            ListItemService& listItemService,
                            ListService& listService,
                            ConfigService& configService,
                            ThemeService& themeService)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
@@ -20,7 +18,7 @@ ResetUseCase::ResetUseCase(IOService& ioService,
 }
 
 void
-ResetUseCase::execute()
+ResetUseCase::execute(Command& command)
 {
     std::string answer = ioService.ask("Are you sure you want to reset item(s) to brand new and not mark them "
                                        "as to-do? (y/n) ");

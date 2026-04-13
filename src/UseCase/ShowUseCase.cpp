@@ -8,7 +8,6 @@
 ShowUseCase::ShowUseCase(IOService& ioService,
                          HelpPrinter& help,
                          CommandService& commandService,
-                         Command& command,
                          ConfigService& configService,
                          ListService& listService,
                          ListItemService& listItemService,
@@ -16,7 +15,6 @@ ShowUseCase::ShowUseCase(IOService& ioService,
   : ioService(ioService)
   , help(help)
   , commandService(commandService)
-  , command(command)
   , configService(configService)
   , listService(listService)
   , listItemService(listItemService)
@@ -25,12 +23,12 @@ ShowUseCase::ShowUseCase(IOService& ioService,
 }
 
 void
-ShowUseCase::filterListItemsWithOptions(std::vector<ListItemEntity>* listItems)
+ShowUseCase::filterListItemsWithOptions(Command& command, std::vector<ListItemEntity>& listItems)
 {
     if (command.hasOption("priority")) {
         try {
             int priority = listItemService.priority().getIdFromName(command.getOption("priority"));
-            listItemService.filterPriorityAbove(*listItems, priority);
+            listItemService.filterPriorityAbove(listItems, priority);
         } catch (std::invalid_argument& e) {
             ioService.br();
             ioService.error(e.what());
@@ -41,7 +39,7 @@ ShowUseCase::filterListItemsWithOptions(std::vector<ListItemEntity>* listItems)
     if (command.hasOption("status")) {
         try {
             int status = listItemService.status().getIdFromName(command.getOption("status"));
-            listItemService.filterStatus(*listItems, { status });
+            listItemService.filterStatus(listItems, { status });
         } catch (std::invalid_argument& e) {
             ioService.br();
             ioService.error(e.what());
@@ -51,9 +49,9 @@ ShowUseCase::filterListItemsWithOptions(std::vector<ListItemEntity>* listItems)
     }
     if (command.hasOption("deadline")) {
         try {
-            listItemService.filterDeadlineBefore(*listItems,
+            listItemService.filterDeadlineBefore(listItems,
                                                  DateHelpers::relativeDateToTimestamp(command.getOption("deadline")));
-            listItemService.filterStatus(*listItems, { 0, 1, 2 });
+            listItemService.filterStatus(listItems, { 0, 1, 2 });
         } catch (std::invalid_argument& e) {
             ioService.br();
             ioService.error(e.what());
@@ -64,7 +62,7 @@ ShowUseCase::filterListItemsWithOptions(std::vector<ListItemEntity>* listItems)
 }
 
 void
-ShowUseCase::execute()
+ShowUseCase::execute(Command& command)
 {
     if (commandService.hasSubCommand(command) && commandService.getSubCommand(command).getName() == "all") {
         std::vector<ListName> listNames = {};
@@ -76,7 +74,7 @@ ShowUseCase::execute()
             listNames.push_back(listName);
 
             std::vector<ListItemEntity> listItems = listItemService.get(listName);
-            filterListItemsWithOptions(&listItems);
+            filterListItemsWithOptions(command, listItems);
 
             for (auto listItem : listItems) {
                 allListItems.push_back(listItem);
@@ -124,7 +122,7 @@ ShowUseCase::execute()
 
         for (auto listName : listNames) {
             std::vector<ListItemEntity> listItems = listItemService.get(listName);
-            filterListItemsWithOptions(&listItems);
+            filterListItemsWithOptions(command, listItems);
 
             for (auto listItem : listItems) {
                 allListItems.push_back(listItem);
@@ -165,7 +163,7 @@ ShowUseCase::execute()
     ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
-    filterListItemsWithOptions(&listItems);
+    filterListItemsWithOptions(command, listItems);
 
     try {
         show.print(listItems, listName);

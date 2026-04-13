@@ -6,13 +6,11 @@
 #include "../List/ListName.h"
 
 CleanUseCase::CleanUseCase(IOService& ioService,
-                           Command& command,
                            ListItemService& listItemService,
                            ListService& listService,
                            ConfigService& configService,
                            ThemeService& themeService)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
@@ -21,7 +19,7 @@ CleanUseCase::CleanUseCase(IOService& ioService,
 }
 
 void
-CleanUseCase::execute()
+CleanUseCase::execute(Command& command)
 {
     ioService.br();
     std::string message = "Are you sure you want to archive all completed & cancelled from ";

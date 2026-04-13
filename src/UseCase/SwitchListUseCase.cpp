@@ -1,11 +1,9 @@
 #include "SwitchListUseCase.h"
-#include "../Actions/ListAction/ListAction.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
 SwitchListUseCase::SwitchListUseCase(IOService& ioService,
-                                     Command& command,
                                      CommandService& commandService,
                                      ListService& listService,
                                      ListItemService& listItemService,
@@ -13,7 +11,6 @@ SwitchListUseCase::SwitchListUseCase(IOService& ioService,
                                      ConfigService& configService,
                                      ThemeService& themeService)
   : ioService(ioService)
-  , command(command)
   , commandService(commandService)
   , listService(listService)
   , listItemService(listItemService)
@@ -24,27 +21,30 @@ SwitchListUseCase::SwitchListUseCase(IOService& ioService,
 }
 
 void
-SwitchListUseCase::execute()
+SwitchListUseCase::execute(Command& command)
 {
-    ListAction list(ioService,
-                    command,
-                    commandService,
-                    listService,
-                    listItemService,
-                    fileStorageService,
-                    configService,
-                    themeService);
+    std::string listName =
+        command.getArguments().empty() ? configService.getDefaultList() : command.getArguments().at(0);
 
-    list.use();
+    if (!listService.use(listName)) {
+        ioService.br();
+        ioService.error("List \"" + listName + "\" not found.");
+        ioService.br();
+        return;
+    }
 
-    ListName listName =
+    ioService.br();
+    ioService.success("Now using list: " + listName);
+    ioService.br();
+
+    ListName currentListName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     ShowAction show(ioService, listService, listItemService, themeService);
 
-    std::vector<ListItemEntity> listItems = listItemService.get(listName);
+    std::vector<ListItemEntity> listItems = listItemService.get(currentListName);
 
     try {
-        show.print(listItems, listName);
+        show.print(listItems, currentListName);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

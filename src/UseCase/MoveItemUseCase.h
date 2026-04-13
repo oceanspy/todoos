@@ -8,21 +8,19 @@
 #include "../List/ListService.h"
 #include "../Themes/ThemeService.h"
 
-class MoveUseCase
+class MoveItemUseCase
 {
   public:
-    MoveUseCase(IOService& ioService,
-                Command& command,
-                CommandService& commandService,
-                ListService& listService,
-                ListItemService& listItemService,
-                ConfigService& configService,
-                ThemeService& themeService);
-    void execute();
+    MoveItemUseCase(IOService& ioService,
+                    CommandService& commandService,
+                    ListService& listService,
+                    ListItemService& listItemService,
+                    ConfigService& configService,
+                    ThemeService& themeService);
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     CommandService& commandService;
     ListService& listService;
     ListItemService& listItemService;
