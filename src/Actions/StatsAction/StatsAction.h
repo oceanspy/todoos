@@ -12,19 +12,15 @@ class StatsAction
   public:
     StatsAction(IOService& ioService,
                 ConfigService& configService,
-                Command& command,
                 ListItemService& listItemService,
-                ThemeService& themeService,
-                ListName& listName);
-    void print();
+                ThemeService& themeService);
+    void execute(Command& command, ListName& listName);
 
   private:
     IOService& ioService;
     ConfigService& configService;
-    Command& command;
     ListItemService& listItemService;
     ThemeService& themeService;
-    ListName& listName;
 };
 
 #endif // TODOOS_STATSACTION_H

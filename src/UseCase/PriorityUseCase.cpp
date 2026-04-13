@@ -8,37 +8,27 @@ PriorityUseCase::PriorityUseCase(IOService& ioService,
                                  ListItemService& listItemService,
                                  ListService& listService,
                                  ConfigService& configService,
-                                 ThemeService& themeService,
-                                 std::string action)
+                                 ThemeService& themeService)
   : ioService(ioService)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
   , themeService(themeService)
-  , action(std::move(action))
 {
 }
 
 void
-PriorityUseCase::execute(Command& command)
+PriorityUseCase::execute(Command& command, const std::string& action)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    PriorityAction priority(ioService, command, listItemService);
-
-    if (action == "set") {
-        priority.set(listName);
-    } else if (action == "increase") {
-        priority.increase(listName);
-    } else if (action == "decrease") {
-        priority.decrease(listName);
-    }
+    PriorityAction priority(ioService, listItemService);
+    priority.execute(command, listName, action);
 
     ShowAction show(ioService, listService, listItemService, themeService);
-
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {
-        show.print(listItems, listName);
+        show.execute(listItems, listName);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

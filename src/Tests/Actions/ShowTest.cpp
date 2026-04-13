@@ -51,28 +51,28 @@ TEST_CASE("Show action", "[Show]")
     {
         std::vector<ListItemEntity> items = listItemService.get(listName);
         ShowAction show(ioService, listService, listItemService, themeService);
-        REQUIRE_NOTHROW(show.print(items, listName));
+        REQUIRE_NOTHROW(show.execute(items, listName));
     }
 
     SECTION("print — with empty items does not throw")
     {
         std::vector<ListItemEntity> items;
         ShowAction show(ioService, listService, listItemService, themeService);
-        REQUIRE_NOTHROW(show.print(items, listName));
+        REQUIRE_NOTHROW(show.execute(items, listName));
     }
 
     SECTION("print — showListName=false does not throw")
     {
         std::vector<ListItemEntity> items = listItemService.get(listName);
         ShowAction show(ioService, listService, listItemService, themeService);
-        REQUIRE_NOTHROW(show.print(items, listName, false));
+        REQUIRE_NOTHROW(show.execute(items, listName, false));
     }
 
     SECTION("print — showTitle=false does not throw")
     {
         std::vector<ListItemEntity> items = listItemService.get(listName);
         ShowAction show(ioService, listService, listItemService, themeService);
-        REQUIRE_NOTHROW(show.print(items, listName, true, false));
+        REQUIRE_NOTHROW(show.execute(items, listName, true, false));
     }
 
     // ---- printMultipleList -----------------------------------------------------
@@ -82,7 +82,7 @@ TEST_CASE("Show action", "[Show]")
         std::vector<ListItemEntity> items = listItemService.get(listName);
         std::vector<ListName> listNames = { listName };
         ShowAction show(ioService, listService, listItemService, themeService);
-        REQUIRE_NOTHROW(show.printMultipleList(items, listNames));
+        REQUIRE_NOTHROW(show.executeMultipleList(items, listNames));
     }
 
     SECTION("printMultipleList — with empty lists does not throw")
@@ -90,6 +90,6 @@ TEST_CASE("Show action", "[Show]")
         std::vector<ListItemEntity> items;
         std::vector<ListName> listNames;
         ShowAction show(ioService, listService, listItemService, themeService);
-        REQUIRE_NOTHROW(show.printMultipleList(items, listNames));
+        REQUIRE_NOTHROW(show.executeMultipleList(items, listNames));
     }
 }

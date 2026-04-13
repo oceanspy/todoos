@@ -79,50 +79,47 @@ CommandRouter::execute(Command& command)
             FindUseCase(ioService, configService, listService, listItemService, themeService).execute(command);
             return;
         case CommandRegistry::PRIORITY:
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService, "set")
-                .execute(command);
+            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, "set");
             return;
         case CommandRegistry::INCREASE:
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService, "increase")
-                .execute(command);
+            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, "increase");
             return;
         case CommandRegistry::DECREASE:
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService, "decrease")
-                .execute(command);
+            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, "decrease");
             return;
         case CommandRegistry::STATUS:
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, -1).execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService).execute(command, -1);
             return;
         case CommandRegistry::TO_DO:
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, StatusService::TO_DO)
-                .execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::TO_DO);
             return;
         case CommandRegistry::START:
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, StatusService::STARTED)
-                .execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::STARTED);
             return;
         case CommandRegistry::REVIEW:
-            StatusUseCase(
-                ioService, listItemService, listService, configService, themeService, StatusService::REVIEWING)
-                .execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::REVIEWING);
             return;
         case CommandRegistry::PAUSE:
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, StatusService::PAUSED)
-                .execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::PAUSED);
             return;
         case CommandRegistry::BLOCKED:
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, StatusService::BLOCKED)
-                .execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::BLOCKED);
             return;
         case CommandRegistry::COMPLETE:
-            StatusUseCase(
-                ioService, listItemService, listService, configService, themeService, StatusService::COMPLETED)
-                .execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::COMPLETED);
             return;
         case CommandRegistry::CANCEL:
-            StatusUseCase(
-                ioService, listItemService, listService, configService, themeService, StatusService::CANCELLED)
-                .execute(command);
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::CANCELLED);
             return;
         case CommandRegistry::REMOVE:
             RemoveUseCase(ioService, listItemService, listService, configService, themeService).execute(command);

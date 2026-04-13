@@ -26,14 +26,14 @@ ResetUseCase::execute(Command& command)
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     if (answer == "y" || answer == "yes") {
-        StatusAction status(ioService, command, listItemService);
-        status.reset(listName);
+        StatusAction status(ioService, listItemService);
+        status.executeReset(command, listName);
 
         ShowAction show(ioService, listService, listItemService, themeService);
 
         std::vector<ListItemEntity> listItems = listItemService.get(listName);
         try {
-            show.print(listItems, listName);
+            show.execute(listItems, listName);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error(e.what());

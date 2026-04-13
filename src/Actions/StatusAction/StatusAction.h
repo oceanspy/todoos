@@ -8,14 +8,12 @@
 class StatusAction
 {
   public:
-    StatusAction(IOService& ioService, Command& command, ListItemService& listItemService);
-    void markAs(ListName& listName, int status);
-    void set(ListName& listName);
-    void reset(ListName& listName);
+    StatusAction(IOService& ioService, ListItemService& listItemService);
+    void execute(Command& command, ListName& listName, int statusNumber);
+    void executeReset(Command& command, ListName& listName);
 
   private:
     IOService& ioService;
-    Command& command;
     ListItemService& listItemService;
 };
 

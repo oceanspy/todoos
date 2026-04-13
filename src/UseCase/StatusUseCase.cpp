@@ -8,34 +8,27 @@ StatusUseCase::StatusUseCase(IOService& ioService,
                              ListItemService& listItemService,
                              ListService& listService,
                              ConfigService& configService,
-                             ThemeService& themeService,
-                             int statusNumber)
+                             ThemeService& themeService)
   : ioService(ioService)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
   , themeService(themeService)
-  , statusNumber(statusNumber)
 {
 }
 
 void
-StatusUseCase::execute(Command& command)
+StatusUseCase::execute(Command& command, int statusNumber)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    StatusAction status(ioService, command, listItemService);
-    if (statusNumber == -1) {
-        status.set(listName);
-    } else {
-        status.markAs(listName, statusNumber);
-    }
+    StatusAction status(ioService, listItemService);
+    status.execute(command, listName, statusNumber);
 
     ShowAction show(ioService, listService, listItemService, themeService);
-
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {
-        show.print(listItems, listName);
+        show.execute(listItems, listName);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

@@ -1,14 +1,25 @@
 #include "RemoveAction.h"
 
-RemoveAction::RemoveAction(IOService& ioService, Command& command, ListItemService& listItemService)
+RemoveAction::RemoveAction(IOService& ioService, ListItemService& listItemService)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
 {
 }
 
 void
-RemoveAction::remove(ListName& listName)
+RemoveAction::execute(Command& command, ListName& listName, const std::string& action)
+{
+    if (action == "remove") {
+        remove(command, listName);
+    } else if (action == "restore") {
+        restore(command, listName);
+    } else if (action == "archive") {
+        archive(command, listName);
+    }
+}
+
+void
+RemoveAction::remove(Command& command, ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -42,7 +53,7 @@ RemoveAction::remove(ListName& listName)
 }
 
 void
-RemoveAction::restore(ListName& listName)
+RemoveAction::restore(Command& command, ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -70,7 +81,7 @@ RemoveAction::restore(ListName& listName)
 }
 
 void
-RemoveAction::archive(ListName& listName)
+RemoveAction::archive(Command& command, ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();

@@ -15,9 +15,8 @@ class PriorityUseCase
                     ListItemService& listItemService,
                     ListService& listService,
                     ConfigService& configService,
-                    ThemeService& themeService,
-                    std::string action);
-    void execute(Command& command);
+                    ThemeService& themeService);
+    void execute(Command& command, const std::string& action);
 
   private:
     IOService& ioService;
@@ -25,5 +24,4 @@ class PriorityUseCase
     ListService& listService;
     ConfigService& configService;
     ThemeService& themeService;
-    std::string action;
 };

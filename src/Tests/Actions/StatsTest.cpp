@@ -47,16 +47,16 @@ TEST_CASE("Stats action", "[Stats]")
 
     // ---- print -----------------------------------------------------------------
 
-    SECTION("print — with items does not throw")
+    SECTION("execute — with items does not throw")
     {
-        StatsAction stats(ioService, configService, command, listItemService, themeService, listName);
-        REQUIRE_NOTHROW(stats.print());
+        StatsAction stats(ioService, configService, listItemService, themeService);
+        REQUIRE_NOTHROW(stats.execute(command, listName));
     }
 
-    SECTION("print — archive list variant does not throw")
+    SECTION("execute — archive list variant does not throw")
     {
         ListName archiveName = ListName::createVariant(listName, "archive");
-        StatsAction stats(ioService, configService, command, listItemService, themeService, archiveName);
-        REQUIRE_NOTHROW(stats.print());
+        StatsAction stats(ioService, configService, listItemService, themeService);
+        REQUIRE_NOTHROW(stats.execute(command, archiveName));
     }
 }

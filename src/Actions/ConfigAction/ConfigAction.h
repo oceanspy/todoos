@@ -11,15 +11,13 @@ class ConfigAction
 {
   public:
     ConfigAction(IOService& ioService,
-                 Command& command,
                  CommandService& commandService,
                  ConfigService& configService,
                  ListService& listService);
-    void execute();
+    void execute(Command& command);
 
   private:
     IOService& ioService;
-    Command& command;
     CommandService& commandService;
     ConfigService& configService;
     ListService& listService;

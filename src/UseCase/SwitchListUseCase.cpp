@@ -44,7 +44,7 @@ SwitchListUseCase::execute(Command& command)
     std::vector<ListItemEntity> listItems = listItemService.get(currentListName);
 
     try {
-        show.print(listItems, currentListName);
+        show.execute(listItems, currentListName);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

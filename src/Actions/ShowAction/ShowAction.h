@@ -13,11 +13,11 @@ class ShowAction
                ListService& listService,
                ListItemService& listItemService,
                ThemeService& themeService);
-    void print(std::vector<ListItemEntity>& listItems,
-               ListName& listName,
-               bool showListName = true,
-               bool showTitle = true);
-    void printMultipleList(std::vector<ListItemEntity>& listItems, std::vector<ListName>& listNames);
+    void execute(std::vector<ListItemEntity>& listItems,
+                 ListName& listName,
+                 bool showListName = true,
+                 bool showTitle = true);
+    void executeMultipleList(std::vector<ListItemEntity>& listItems, std::vector<ListName>& listNames);
 
   private:
     IOService& ioService;

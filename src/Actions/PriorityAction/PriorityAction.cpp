@@ -1,14 +1,25 @@
 #include "PriorityAction.h"
 
-PriorityAction::PriorityAction(IOService& ioService, Command& command, ListItemService& listItemService)
+PriorityAction::PriorityAction(IOService& ioService, ListItemService& listItemService)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
 {
 }
 
 void
-PriorityAction::increase(ListName& listName)
+PriorityAction::execute(Command& command, ListName& listName, const std::string& action)
+{
+    if (action == "set") {
+        set(command, listName);
+    } else if (action == "increase") {
+        increase(command, listName);
+    } else if (action == "decrease") {
+        decrease(command, listName);
+    }
+}
+
+void
+PriorityAction::increase(Command& command, ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -49,7 +60,7 @@ PriorityAction::increase(ListName& listName)
 }
 
 void
-PriorityAction::decrease(ListName& listName)
+PriorityAction::decrease(Command& command, ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -90,7 +101,7 @@ PriorityAction::decrease(ListName& listName)
 }
 
 void
-PriorityAction::set(ListName& listName)
+PriorityAction::set(Command& command, ListName& listName)
 {
     const std::vector<std::string> arguments = command.getArguments();
     std::vector<std::string> adaptedArguments = command.getArguments();

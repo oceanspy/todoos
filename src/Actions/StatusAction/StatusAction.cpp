@@ -1,15 +1,59 @@
 #include "StatusAction.h"
 
-StatusAction::StatusAction(IOService& ioService, Command& command, ListItemService& listItemService)
+StatusAction::StatusAction(IOService& ioService, ListItemService& listItemService)
   : ioService(ioService)
-  , command(command)
   , listItemService(listItemService)
 {
 }
 
 void
-StatusAction::markAs(ListName& listName, int status)
+StatusAction::execute(Command& command, ListName& listName, int statusNumber)
 {
+    if (statusNumber == -1) {
+        // Parse status from command arguments
+        std::vector<std::string> adaptedArguments = command.getArguments();
+
+        if (adaptedArguments.empty()) {
+            ioService.br();
+            ioService.error("Please provide the ID of the element to modify.");
+            ioService.br();
+            return;
+        }
+
+        if (adaptedArguments.size() < 2) {
+            ioService.br();
+            ioService.error("Please provide the new status and the ID(s) of the element(s) to modify.");
+            ioService.br();
+            return;
+        }
+        if (!listItemService.status().isNameValid(adaptedArguments.at(0))) {
+            ioService.br();
+            ioService.error("Please provide a valid status.");
+            ioService.br();
+            return;
+        }
+
+        std::string status = adaptedArguments.at(0);
+        adaptedArguments.erase(adaptedArguments.begin());
+
+        std::vector<std::string> ids = adaptedArguments;
+        ids.erase(unique(ids.begin(), ids.end()), ids.end());
+
+        ioService.br();
+        for (const auto& id : ids) {
+            try {
+                listItemService.setStatus(id, listName, &status);
+                ioService.success("Status of: " + id + " correctly updated.");
+            } catch (std::invalid_argument& e) {
+                ioService.error(e.what());
+                continue;
+            }
+        }
+        ioService.br();
+        return;
+    }
+
+    // markAs with specific status number
     if (command.getArguments().empty()) {
         ioService.br();
         ioService.error("Please provide the ID of the element to modify.");
@@ -18,18 +62,17 @@ StatusAction::markAs(ListName& listName, int status)
     }
 
     std::vector<std::string> ids = command.getArguments();
-
-    // clean the double ids
     ids.erase(unique(ids.begin(), ids.end()), ids.end());
 
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.editStatus(id, listName, &status);
+            listItemService.editStatus(id, listName, &statusNumber);
             ioService.success(
                 "Status of: " + id + " correctly updated to " +
                 StringHelpers::colorize(
-                    StringHelpers::colorize(listItemService.status().getNameFromId(status), LIGHT_YELLOW), ITALIC) +
+                    StringHelpers::colorize(listItemService.status().getNameFromId(statusNumber), LIGHT_YELLOW),
+                    ITALIC) +
                 ".");
         } catch (std::invalid_argument& e) {
             ioService.error("Status of: " + id + " couldn't be updated or is already set.");
@@ -40,7 +83,7 @@ StatusAction::markAs(ListName& listName, int status)
 }
 
 void
-StatusAction::reset(ListName& listName)
+StatusAction::executeReset(Command& command, ListName& listName)
 {
     if (command.getArguments().empty()) {
         ioService.br();
@@ -77,8 +120,6 @@ StatusAction::reset(ListName& listName)
     }
 
     std::vector<std::string> ids = command.getArguments();
-
-    // clean the double ids
     ids.erase(unique(ids.begin(), ids.end()), ids.end());
 
     ioService.br();
@@ -88,53 +129,6 @@ StatusAction::reset(ListName& listName)
             ioService.success("Item with id: " + id + " was reset.");
         } catch (std::invalid_argument& e) {
             ioService.error("Item with id: " + id + " was not found.");
-            continue;
-        }
-    }
-    ioService.br();
-}
-
-void
-StatusAction::set(ListName& listName)
-{
-    const std::vector<std::string> arguments = command.getArguments();
-    std::vector<std::string> adaptedArguments = command.getArguments();
-
-    if (adaptedArguments.empty()) {
-        ioService.br();
-        ioService.error("Please provide the ID of the element to modify.");
-        ioService.br();
-        return;
-    }
-
-    if (adaptedArguments.size() < 2) {
-        ioService.br();
-        ioService.error("Please provide the new status and the ID(s) of the element(s) to modify.");
-        ioService.br();
-        return;
-    }
-    if (!listItemService.status().isNameValid(adaptedArguments.at(0))) {
-        ioService.br();
-        ioService.error("Please provide a valid status.");
-        ioService.br();
-        return;
-    }
-
-    std::string status = adaptedArguments.at(0);
-    adaptedArguments.erase(adaptedArguments.begin());
-
-    std::vector<std::string> ids = adaptedArguments;
-
-    // clean the double ids
-    ids.erase(unique(ids.begin(), ids.end()), ids.end());
-
-    ioService.br();
-    for (const auto& id : ids) {
-        try {
-            listItemService.setStatus(id, listName, &status);
-            ioService.success("Status of: " + id + " correctly updated.");
-        } catch (std::invalid_argument& e) {
-            ioService.error(e.what());
             continue;
         }
     }

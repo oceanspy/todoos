@@ -252,8 +252,8 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService, "increase")
-                .execute(command));
+            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, "increase"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "urgent");
@@ -276,8 +276,8 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService, "decrease")
-                .execute(command));
+            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, "decrease"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "medium");
@@ -299,8 +299,8 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(PriorityUseCase(ioService, listItemService, listService, configService, themeService, "set")
-                            .execute(command));
+        REQUIRE_NOTHROW(PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                            .execute(command, "set"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "low");
@@ -322,8 +322,8 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         REQUIRE_NOTHROW(
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService, "increase")
-                .execute(command));
+            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, "increase"));
     }
 }
 
@@ -397,8 +397,8 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, StatusService::STARTED)
-                .execute(command));
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::STARTED));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "started");
@@ -421,7 +421,7 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, -1).execute(command));
+            StatusUseCase(ioService, listItemService, listService, configService, themeService).execute(command, -1));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "paused");
@@ -443,8 +443,8 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         REQUIRE_NOTHROW(
-            StatusUseCase(ioService, listItemService, listService, configService, themeService, StatusService::STARTED)
-                .execute(command));
+            StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                .execute(command, StatusService::STARTED));
     }
 }
 

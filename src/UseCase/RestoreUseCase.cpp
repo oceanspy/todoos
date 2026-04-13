@@ -22,14 +22,14 @@ RestoreUseCase::execute(Command& command)
 {
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    RemoveAction remove(ioService, command, listItemService);
-    remove.restore(listName);
+    RemoveAction remove(ioService, listItemService);
+    remove.execute(command, listName, "restore");
 
     ShowAction show(ioService, listService, listItemService, themeService);
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {
-        show.print(listItems, listName);
+        show.execute(listItems, listName);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

@@ -32,7 +32,7 @@ CopyItemUseCase::execute(Command& command)
 
         std::vector<ListItemEntity> listItems = listItemService.get(newListName);
         try {
-            show.print(listItems, newListName);
+            show.execute(listItems, newListName);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error(e.what());

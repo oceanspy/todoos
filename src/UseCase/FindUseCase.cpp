@@ -39,7 +39,7 @@ FindUseCase::execute(Command& command)
             ioService.info("Searching for " + stringSearch + "in archived items...");
             ioService.br();
 
-            show.print(listItems, listName);
+            show.execute(listItems, listName);
         } else if (command.hasOption("delete")) {
             listItems = listItemService.search(listNameDelete, command.getArguments());
 
@@ -48,7 +48,7 @@ FindUseCase::execute(Command& command)
             ioService.br();
 
             try {
-                show.print(listItems, listName);
+                show.execute(listItems, listName);
             } catch (std::exception& e) {
                 ioService.br();
                 ioService.error(e.what());
@@ -60,7 +60,7 @@ FindUseCase::execute(Command& command)
             ioService.info("Searching for " + stringSearch + "...");
             ioService.br();
             try {
-                show.print(listItems, listName);
+                show.execute(listItems, listName);
             } catch (std::exception& e) {
                 ioService.br();
                 ioService.error(e.what());

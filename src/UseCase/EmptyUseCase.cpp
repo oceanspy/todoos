@@ -40,7 +40,7 @@ EmptyUseCase::execute(Command& command)
         ShowAction show(ioService, listService, listItemService, themeService);
         std::vector<ListItemEntity> listItems = listItemService.get(defaultListName);
         try {
-            show.print(listItems, defaultListName);
+            show.execute(listItems, defaultListName);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error(e.what());

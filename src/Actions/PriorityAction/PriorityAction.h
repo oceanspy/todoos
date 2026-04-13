@@ -8,15 +8,15 @@
 class PriorityAction
 {
   public:
-    PriorityAction(IOService& ioService, Command& command, ListItemService& listItemService);
-    void increase(ListName& listName);
-    void decrease(ListName& listName);
-    void set(ListName& listName);
+    PriorityAction(IOService& ioService, ListItemService& listItemService);
+    void execute(Command& command, ListName& listName, const std::string& action);
 
   private:
     IOService& ioService;
-    Command& command;
     ListItemService& listItemService;
+    void increase(Command& command, ListName& listName);
+    void decrease(Command& command, ListName& listName);
+    void set(Command& command, ListName& listName);
 };
 
 #endif // PRIORITY_H

@@ -44,8 +44,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         std::vector<ListItemEntity> itemsBefore = listItemService.get(listName);
         REQUIRE(itemsBefore.size() == 2);
 
-        RemoveAction remove(ioService, command, listItemService);
-        REQUIRE_NOTHROW(remove.remove(listName));
+        RemoveAction remove(ioService, listItemService);
+        REQUIRE_NOTHROW(remove.execute(command, listName, "remove"));
 
         std::vector<ListItemEntity> itemsAfter = listItemService.get(listName);
         REQUIRE(itemsAfter.size() == 1);
@@ -58,8 +58,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     SECTION("remove with empty arguments does not throw")
     {
         Command emptyCommand = Command("remove", {}, {}, "remove");
-        RemoveAction remove(ioService, emptyCommand, listItemService);
-        REQUIRE_NOTHROW(remove.remove(listName));
+        RemoveAction remove(ioService, listItemService);
+        REQUIRE_NOTHROW(remove.execute(emptyCommand, listName, "remove"));
 
         // No items removed
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -70,8 +70,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     {
         std::map<std::string, std::string> options = { { "force", "" } };
         Command forceCommand = Command("remove", { "aaaa" }, options, "remove -f aaaa");
-        RemoveAction remove(ioService, forceCommand, listItemService);
-        REQUIRE_NOTHROW(remove.remove(listName));
+        RemoveAction remove(ioService, listItemService);
+        REQUIRE_NOTHROW(remove.execute(forceCommand, listName, "remove"));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -88,8 +88,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     SECTION("archive with valid ID archives item")
     {
         Command archiveCommand = Command("archive", { "aaaa" }, {}, "archive aaaa");
-        RemoveAction remove(ioService, archiveCommand, listItemService);
-        REQUIRE_NOTHROW(remove.archive(listName));
+        RemoveAction remove(ioService, listItemService);
+        REQUIRE_NOTHROW(remove.execute(archiveCommand, listName, "archive"));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -109,8 +109,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         listItemService.archive("aaaa", listName);
 
         Command restoreCommand = Command("restore", { "aaaa" }, {}, "restore aaaa");
-        RemoveAction remove(ioService, restoreCommand, listItemService);
-        REQUIRE_NOTHROW(remove.restore(listName));
+        RemoveAction remove(ioService, listItemService);
+        REQUIRE_NOTHROW(remove.execute(restoreCommand, listName, "restore"));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
@@ -150,8 +150,8 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
 
     SECTION("markAs changes item status")
     {
-        StatusAction status(ioService, command, listItemService);
-        REQUIRE_NOTHROW(status.markAs(listName, StatusService::STARTED));
+        StatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(command, listName, StatusService::STARTED));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "started");
@@ -163,15 +163,15 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     SECTION("markAs with empty arguments does not throw")
     {
         Command emptyCommand = Command("start", {}, {}, "start");
-        StatusAction status(ioService, emptyCommand, listItemService);
-        REQUIRE_NOTHROW(status.markAs(listName, StatusService::STARTED));
+        StatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(command, listName, StatusService::STARTED));
     }
 
     SECTION("set with valid status and ID changes status")
     {
         Command setCommand = Command("status", { "paused", "aaaa" }, {}, "status paused aaaa");
-        StatusAction status(ioService, setCommand, listItemService);
-        REQUIRE_NOTHROW(status.set(listName));
+        StatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(setCommand, listName, -1));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "paused");
@@ -183,19 +183,19 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     SECTION("set with invalid status does not throw")
     {
         Command badCommand = Command("status", { "invalidstatus", "aaaa" }, {}, "status invalidstatus aaaa");
-        StatusAction status(ioService, badCommand, listItemService);
-        REQUIRE_NOTHROW(status.set(listName));
+        StatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(badCommand, listName, -1));
     }
 
     SECTION("set with missing arguments does not throw")
     {
         Command noArgsCommand = Command("status", {}, {}, "status");
-        StatusAction status(ioService, noArgsCommand, listItemService);
-        REQUIRE_NOTHROW(status.set(listName));
+        StatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(noArgsCommand, listName, -1));
 
         Command oneArgCommand = Command("status", { "paused" }, {}, "status paused");
-        StatusAction status2(ioService, oneArgCommand, listItemService);
-        REQUIRE_NOTHROW(status2.set(listName));
+        StatusAction status2(ioService, listItemService);
+        REQUIRE_NOTHROW(status2.execute(oneArgCommand, listName, -1));
     }
 
     SECTION("reset with valid ID resets item")
@@ -204,8 +204,8 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
         listItemService.editStatus("aaaa", listName, new int(StatusService::STARTED));
 
         Command resetCommand = Command("reset", { "aaaa" }, {}, "reset aaaa");
-        StatusAction status(ioService, resetCommand, listItemService);
-        REQUIRE_NOTHROW(status.reset(listName));
+        StatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.executeReset(resetCommand, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "to-do");
@@ -245,8 +245,8 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
 
     SECTION("increase priority")
     {
-        PriorityAction priority(ioService, command, listItemService);
-        REQUIRE_NOTHROW(priority.increase(listName));
+        PriorityAction priority(ioService, listItemService);
+        REQUIRE_NOTHROW(priority.execute(command, listName, "increase"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "urgent");
@@ -258,8 +258,8 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("decrease priority")
     {
         Command decCommand = Command("decrease", { "aaaa" }, {}, "decrease aaaa");
-        PriorityAction priority(ioService, decCommand, listItemService);
-        REQUIRE_NOTHROW(priority.decrease(listName));
+        PriorityAction priority(ioService, listItemService);
+        REQUIRE_NOTHROW(priority.execute(decCommand, listName, "decrease"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "medium");
@@ -271,8 +271,8 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("increase with multiplier")
     {
         Command multiCommand = Command("increase", { "2", "aaaa" }, {}, "increase 2 aaaa");
-        PriorityAction priority(ioService, multiCommand, listItemService);
-        REQUIRE_NOTHROW(priority.increase(listName));
+        PriorityAction priority(ioService, listItemService);
+        REQUIRE_NOTHROW(priority.execute(multiCommand, listName, "increase"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "critical");
@@ -284,8 +284,8 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("set priority")
     {
         Command setCommand = Command("priority", { "low", "aaaa" }, {}, "priority low aaaa");
-        PriorityAction priority(ioService, setCommand, listItemService);
-        REQUIRE_NOTHROW(priority.set(listName));
+        PriorityAction priority(ioService, listItemService);
+        REQUIRE_NOTHROW(priority.execute(setCommand, listName, "set"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "low");
@@ -297,15 +297,15 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     SECTION("set with empty arguments does not throw")
     {
         Command emptyCommand = Command("priority", {}, {}, "priority");
-        PriorityAction priority(ioService, emptyCommand, listItemService);
-        REQUIRE_NOTHROW(priority.set(listName));
+        PriorityAction priority(ioService, listItemService);
+        REQUIRE_NOTHROW(priority.execute(emptyCommand, listName, "set"));
     }
 
     SECTION("set with missing ID does not throw")
     {
         Command oneArgCommand = Command("priority", { "high" }, {}, "priority high");
-        PriorityAction priority(ioService, oneArgCommand, listItemService);
-        REQUIRE_NOTHROW(priority.set(listName));
+        PriorityAction priority(ioService, listItemService);
+        REQUIRE_NOTHROW(priority.execute(oneArgCommand, listName, "set"));
     }
 }
 

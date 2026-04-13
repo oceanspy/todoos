@@ -44,8 +44,8 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_NOTHROW(config.execute());
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_NOTHROW(config.execute(command));
     }
 
     // ---- make() — edit defaultList ---------------------------------------------
@@ -59,8 +59,8 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_NOTHROW(config.execute());
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_NOTHROW(config.execute(command));
         REQUIRE(configService.getValue("defaultList") == "tempListName");
     }
 
@@ -73,8 +73,8 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_NOTHROW(config.execute());
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_NOTHROW(config.execute(command));
     }
 
     // ---- make() — edit theme ---------------------------------------------------
@@ -87,8 +87,8 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_NOTHROW(config.execute());
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_NOTHROW(config.execute(command));
     }
 
     SECTION("make — edit theme to invalid value does not throw")
@@ -99,8 +99,8 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_NOTHROW(config.execute());
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_NOTHROW(config.execute(command));
     }
 
     // ---- make() — edit unsupported key -----------------------------------------
@@ -113,8 +113,8 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_NOTHROW(config.execute());
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_NOTHROW(config.execute(command));
     }
 
     SECTION("make — edit with missing value argument does not throw")
@@ -125,8 +125,8 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_NOTHROW(config.execute());
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_NOTHROW(config.execute(command));
     }
 
     // ---- make() — invalid subcommand -------------------------------------------
@@ -139,7 +139,7 @@ TEST_CASE("Config action", "[Config]")
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        REQUIRE_THROWS_AS(config.execute(), std::invalid_argument);
+        ConfigAction config(ioService, commandService, configService, listService);
+        REQUIRE_THROWS_AS(config.execute(command), std::invalid_argument);
     }
 }

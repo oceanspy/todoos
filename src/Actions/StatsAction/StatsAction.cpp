@@ -3,21 +3,17 @@
 
 StatsAction::StatsAction(IOService& ioService,
                          ConfigService& configService,
-                         Command& command,
                          ListItemService& listItemService,
-                         ThemeService& themeService,
-                         ListName& listName)
+                         ThemeService& themeService)
   : ioService(ioService)
   , configService(configService)
-  , command(command)
   , listItemService(listItemService)
   , themeService(themeService)
-  , listName(listName)
 {
 }
 
 void
-StatsAction::print()
+StatsAction::execute(Command& command, ListName& listName)
 {
     auto theme = themeService.getTheme();
     theme->printATitle("Statistics", "List: " + listName.getName());

@@ -8,15 +8,15 @@
 class RemoveAction
 {
   public:
-    RemoveAction(IOService& ioService, Command& command, ListItemService& listItemService);
-    void remove(ListName& listName);
-    void restore(ListName& listName);
-    void archive(ListName& listName);
+    RemoveAction(IOService& ioService, ListItemService& listItemService);
+    void execute(Command& command, ListName& listName, const std::string& action);
 
   private:
     IOService& ioService;
-    Command& command;
     ListItemService& listItemService;
+    void remove(Command& command, ListName& listName);
+    void restore(Command& command, ListName& listName);
+    void archive(Command& command, ListName& listName);
 };
 
 #endif // REMOVE_H

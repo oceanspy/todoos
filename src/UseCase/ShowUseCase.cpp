@@ -83,7 +83,7 @@ ShowUseCase::execute(Command& command)
 
         ShowAction show(ioService, listService, listItemService, themeService);
         try {
-            show.printMultipleList(allListItems, listNames);
+            show.executeMultipleList(allListItems, listNames);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error(e.what());
@@ -133,9 +133,9 @@ ShowUseCase::execute(Command& command)
 
         try {
             if (listNames.size() > 1) {
-                show.printMultipleList(allListItems, listNames);
+                show.executeMultipleList(allListItems, listNames);
             } else {
-                show.print(allListItems, listNames.at(0));
+                show.execute(allListItems, listNames.at(0));
             }
         } catch (std::exception& e) {
             ioService.br();
@@ -153,8 +153,8 @@ ShowUseCase::execute(Command& command)
         ioService.message(HelpPrinter::getVersion());
         return;
     } else if (command.hasOption("config")) {
-        ConfigAction config(ioService, command, commandService, configService, listService);
-        config.execute();
+        ConfigAction config(ioService, commandService, configService, listService);
+        config.execute(command);
         return;
     }
 
@@ -166,7 +166,7 @@ ShowUseCase::execute(Command& command)
     filterListItemsWithOptions(command, listItems);
 
     try {
-        show.print(listItems, listName);
+        show.execute(listItems, listName);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

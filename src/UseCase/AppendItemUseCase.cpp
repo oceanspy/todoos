@@ -32,7 +32,7 @@ AppendItemUseCase::execute(Command& command)
 
     std::vector<ListItemEntity> listItems = listItemService.get(listName);
     try {
-        show.print(listItems, listName);
+        show.execute(listItems, listName);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());
