@@ -39,9 +39,11 @@ class Theme
     std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset);
     std::string buildDate(const ListItemEntity& listItemEntity);
     std::string buildPriorityCounts(const ListCountSummary& summary);
+    std::string buildShortStatsCounts(const ListCountSummary& summary);
 
     // Pure virtual — theme-specific
     virtual void printListTitle(ListName& listName) = 0;
+    virtual void printMultipleListTitles(std::vector<ListName>& listNames) = 0;
     virtual void printATitle(std::string titleLine1, std::string titleLine2) = 0;
     virtual void printStats(ListName& listName) = 0;
     virtual std::string printListRow(const ListItemEntity& listItemEntity, bool printListNameInLine) = 0;

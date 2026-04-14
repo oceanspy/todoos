@@ -30,6 +30,8 @@ Theme::print(ListName& listName, std::vector<ListItemEntity> listItems, bool sho
 void
 Theme::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems)
 {
+    printMultipleListTitles(listNames);
+
     std::string title = printListTitleRow();
     ioService.print(title);
     printFullLine(GRAY);
@@ -261,6 +263,34 @@ Theme::buildPriorityCounts(const ListCountSummary& summary)
            StringHelpers::colorize("● ", ORANGE) + std::to_string(summary.getPriority(PriorityService::HIGH)) + " " +
            StringHelpers::colorize("● ", LIGHT_GREEN) + std::to_string(summary.getPriority(PriorityService::MEDIUM)) +
            " " + StringHelpers::colorize("◌ ", GREEN) + std::to_string(summary.getPriority(PriorityService::LOW));
+}
+
+std::string
+Theme::buildShortStatsCounts(const ListCountSummary& summary)
+{
+    std::string totalStr = std::to_string(summary.total);
+    int totalCharLength = 3 + static_cast<int>(totalStr.length());
+    totalStr = "📈 " + totalStr;
+
+    std::string archivedStr = std::to_string(summary.archived);
+    int archivedCharLength = 6 + static_cast<int>(archivedStr.length());
+    archivedStr = "   ⚡ " + archivedStr;
+
+    std::string deliveredStr = std::to_string(summary.delivered);
+    int deliveredCharLength = 6 + static_cast<int>(deliveredStr.length());
+    deliveredStr = " / 🚀 " + deliveredStr;
+
+    std::string cancelledStr = std::to_string(summary.cancelled);
+    int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
+    cancelledStr = " ✖️ " + cancelledStr;
+
+    std::string deletedStr = std::to_string(summary.deleted);
+    int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
+    deletedStr = " 🧹 " + deletedStr;
+
+    std::string statusPrintCount = totalStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
+
+    return statusPrintCount;
 }
 
 std::vector<std::string>

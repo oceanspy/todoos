@@ -24,38 +24,45 @@ Default::Default(IOService& ioService,
 }
 
 void
+Default::printMultipleListTitles(std::vector<ListName>& listNames)
+{
+    ListCountSummary summary = listItemService.getCountSummary(listNames);
+
+    std::string names = "";
+    std::string variant;
+    for (const auto listName : listNames) {
+        names += listName.getName() + ", ";
+        if (variant.length() == 0) {
+            variant = listName.getVariant();
+        }
+    }
+    names.pop_back();
+    names.pop_back();
+
+    ListName temporaryName = ListName(names, variant);
+
+    std::string line1 = " > " + buildListTitle(temporaryName);
+    std::string line2 = "   " + buildListLastUpdate(summary.getLastUpdate());
+    std::string line3 = "   " + StringHelpers::colorize("──────────────────────────────", GRAY);
+    std::string line4 = "   " + buildShortStatsCounts(summary);
+
+    ioService.brOrSkip();
+    ioService.print(line1);
+    ioService.print(line2);
+    ioService.print(line3);
+    ioService.print(line4);
+    ioService.br();
+}
+
+void
 Default::printListTitle(ListName& listName)
 {
     ListCountSummary summary = listItemService.getCountSummary({ listName });
 
-    std::string totalStr = std::to_string(summary.total);
-    int totalCharLength = 3 + static_cast<int>(totalStr.length());
-    totalStr = "📈 " + totalStr;
-
-    std::string archivedStr = std::to_string(summary.archived);
-    int archivedCharLength = 6 + static_cast<int>(archivedStr.length());
-    archivedStr = "   ⚡ " + archivedStr;
-
-    std::string deliveredStr = std::to_string(summary.delivered);
-    int deliveredCharLength = 6 + static_cast<int>(deliveredStr.length());
-    deliveredStr = " / 🚀 " + deliveredStr;
-
-    std::string cancelledStr = std::to_string(summary.cancelled);
-    int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
-    cancelledStr = " ✖️ " + cancelledStr;
-
-    std::string deletedStr = std::to_string(summary.deleted);
-    int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
-    deletedStr = " 🧹 " + deletedStr;
-
-    std::string statusPrintCount = totalStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
-    int statusCountLength =
-        totalCharLength + archivedCharLength + deliveredCharLength + cancelledCharLength + deletedCharLength;
-
     std::string line1 = " > " + buildListTitle(listName);
     std::string line2 = "   " + buildListLastUpdate(summary.getLastUpdate());
     std::string line3 = "   " + StringHelpers::colorize("──────────────────────────────", GRAY);
-    std::string line4 = "   " + statusPrintCount;
+    std::string line4 = "   " + buildShortStatsCounts(summary);
 
     ioService.brOrSkip();
     ioService.print(line1);

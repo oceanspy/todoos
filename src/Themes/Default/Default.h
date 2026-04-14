@@ -14,6 +14,7 @@ class Default : public Theme
             int consoleWidth,
             int consoleRowMaxLength);
     void printListTitle(ListName& listNames) override;
+    void printMultipleListTitles(std::vector<ListName>& listNames) override;
     void printATitle(std::string titleLine1, std::string titleLine2) override;
     void printStats(ListName& listName) override;
     std::string printListRow(const ListItemEntity& listItemEntity, bool printListNameInLine) override;

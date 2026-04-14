@@ -151,6 +151,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/CleanUseCase.cpp
         ../UseCase/CurrentListUseCase.cpp
         UseCase/UseCaseTest.cpp
+        UseCase/MissingUseCaseTest.cpp
+        Actions/ItemActionsTest.cpp
         TestMain.cpp
 )
 

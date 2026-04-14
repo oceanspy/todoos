@@ -36,8 +36,8 @@ CopyItemAction::execute(Command& command, ListName& listName)
             }
 
             if (!(*listItemEntity.getId()).empty() && !command.hasOption("force")) {
-                std::string answer = ioService.ask("Item " + id + " already exists in list " +
-                                                   newListName.getName() + ". Do you want to overwrite it? (y/n) ");
+                std::string answer = ioService.ask("Item " + id + " already exists in list " + newListName.getName() +
+                                                   ". Do you want to overwrite it? (y/n) ");
                 if (answer != "y" && answer != "yes") {
                     ioService.br();
                     ioService.info("Item " + id + " was not copied from list " + listName.getName() + " to list " +

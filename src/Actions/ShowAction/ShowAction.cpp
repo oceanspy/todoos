@@ -21,6 +21,10 @@ ShowAction::execute(std::vector<ListItemEntity>& listItems, ListName& listName, 
 void
 ShowAction::executeMultipleList(std::vector<ListItemEntity>& listItems, std::vector<ListName>& listNames)
 {
+    if (listNames.empty()) {
+        throw std::invalid_argument("No lists to display");
+    }
+
     auto theme = themeService.adaptConsoleRowLengthWithMaxItemValueLength(listItems).getTheme();
     theme->printMultipleList(listNames, listItems);
 }

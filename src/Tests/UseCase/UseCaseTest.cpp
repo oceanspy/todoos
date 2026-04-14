@@ -24,10 +24,10 @@
 #include "../../UseCase/RenameListUseCase.h"
 #include "../../UseCase/ResetUseCase.h"
 #include "../../UseCase/RestoreUseCase.h"
+#include "../../UseCase/ShowListUseCase.h"
 #include "../../UseCase/ShowUseCase.h"
 #include "../../UseCase/StatsUseCase.h"
 #include "../../UseCase/StatusUseCase.h"
-#include "../../UseCase/ShowListUseCase.h"
 #include "../../UseCase/SwitchListUseCase.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
@@ -251,9 +251,8 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, "increase"));
+        REQUIRE_NOTHROW(PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                            .execute(command, "increase"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "urgent");
@@ -275,9 +274,8 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, "decrease"));
+        REQUIRE_NOTHROW(PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                            .execute(command, "decrease"));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "medium");
@@ -321,9 +319,8 @@ TEST_CASE("PriorityUseCase", "[UseCase][Priority]")
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        REQUIRE_NOTHROW(
-            PriorityUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, "increase"));
+        REQUIRE_NOTHROW(PriorityUseCase(ioService, listItemService, listService, configService, themeService)
+                            .execute(command, "increase"));
     }
 }
 
@@ -396,9 +393,8 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(
-            StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, StatusService::STARTED));
+        REQUIRE_NOTHROW(StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                            .execute(command, StatusService::STARTED));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "started");
@@ -442,9 +438,8 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
-        REQUIRE_NOTHROW(
-            StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, StatusService::STARTED));
+        REQUIRE_NOTHROW(StatusUseCase(ioService, listItemService, listService, configService, themeService)
+                            .execute(command, StatusService::STARTED));
     }
 }
 
@@ -641,8 +636,7 @@ TEST_CASE("ListUseCase", "[UseCase][List]")
 
     SECTION("execute does not throw")
     {
-        REQUIRE_NOTHROW(
-            ShowListUseCase(ioService, listService, configService, themeService).execute(command));
+        REQUIRE_NOTHROW(ShowListUseCase(ioService, listService, configService, themeService).execute(command));
     }
 }
 
@@ -681,9 +675,14 @@ TEST_CASE("SwitchListUseCase", "[UseCase][Use]")
 
     SECTION("execute switches active list without throwing")
     {
-        REQUIRE_NOTHROW(SwitchListUseCase(
-                             ioService, commandService, listService, listItemService, fileStorageService, configService, themeService)
-                             .execute(command));
+        REQUIRE_NOTHROW(SwitchListUseCase(ioService,
+                                          commandService,
+                                          listService,
+                                          listItemService,
+                                          fileStorageService,
+                                          configService,
+                                          themeService)
+                            .execute(command));
     }
 }
 
@@ -759,7 +758,8 @@ TEST_CASE("MoveItemUseCase", "[UseCase][Move]")
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         REQUIRE_NOTHROW(
-            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService).execute(command));
+            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService)
+                .execute(command));
 
         installation.wipe();
         installation.make();
@@ -778,7 +778,8 @@ TEST_CASE("MoveItemUseCase", "[UseCase][Move]")
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         REQUIRE_NOTHROW(
-            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService).execute(command));
+            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService)
+                .execute(command));
     }
 }
 

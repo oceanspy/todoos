@@ -2,7 +2,6 @@
 #include "../../Actions/ListAction/RemoveListAction.h"
 #include "../../Actions/ListAction/RenameListAction.h"
 #include "../../Actions/ListAction/ShowListAction.h"
-#include "../../UseCase/SwitchListUseCase.h"
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"

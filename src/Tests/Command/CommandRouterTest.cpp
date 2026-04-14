@@ -1,6 +1,6 @@
+#include "../../Command/CommandRouter.h"
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandRegistry.h"
-#include "../../Command/CommandRouter.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
