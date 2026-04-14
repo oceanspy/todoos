@@ -54,7 +54,7 @@ ListItemService::add(ListName& listName,
         PriorityEntity priorityEntity = priorityService.getPriorityFromName(*priority);
         listItemEntity.setPriority(priorityEntity);
     } else {
-        PriorityEntity priorityEntity = priorityService.getPriorityFromName("medium");
+        PriorityEntity priorityEntity = priorityService.getPriorityFromName("urgent");
         listItemEntity.setPriority(priorityEntity);
     }
     if (status != nullptr) {
