@@ -43,8 +43,8 @@ MoveItemAction::execute(Command& command, ListName& listName)
             }
 
             if (!(*listItemEntity.getId()).empty() && !command.hasOption("force")) {
-                std::string answer = ioService.ask("Item " + id + " already exists in list " +
-                                                   newListName.getName() + ". Do you want to overwrite it? (y/n) ");
+                std::string answer = ioService.ask("Item " + id + " already exists in list " + newListName.getName() +
+                                                   ". Do you want to overwrite it? (y/n) ");
                 if (answer != "y" && answer != "yes") {
                     ioService.br();
                     ioService.info("Item " + id + " was not moved from list " + listName.getName() + " to list " +
@@ -55,8 +55,8 @@ MoveItemAction::execute(Command& command, ListName& listName)
             }
 
             listItemService.move(id, listName, newListName);
-            ioService.success("Item " + id + " moved from " + listName.getName() + " to list " +
-                              newListName.getName() + ".");
+            ioService.success("Item " + id + " moved from " + listName.getName() + " to list " + newListName.getName() +
+                              ".");
         } catch (std::exception& e) {
             ioService.error("Item " + id + " could not be moved from list " + listName.getName() + " to " +
                             newListName.getName() + ".");

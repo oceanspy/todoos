@@ -1,8 +1,6 @@
 #include "AddListAction.h"
 
-AddListAction::AddListAction(IOService& ioService,
-                             ListService& listService,
-                             FileStorageService& fileStorageService)
+AddListAction::AddListAction(IOService& ioService, ListService& listService, FileStorageService& fileStorageService)
   : ioService(ioService)
   , listService(listService)
   , fileStorageService(fileStorageService)

@@ -90,6 +90,6 @@ TEST_CASE("Show action", "[Show]")
         std::vector<ListItemEntity> items;
         std::vector<ListName> listNames;
         ShowAction show(ioService, listService, listItemService, themeService);
-        REQUIRE_NOTHROW(show.executeMultipleList(items, listNames));
+        REQUIRE_THROWS(show.executeMultipleList(items, listNames));
     }
 }

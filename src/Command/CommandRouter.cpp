@@ -5,8 +5,8 @@
 #include "../UseCase/ArchiveUseCase.h"
 #include "../UseCase/CleanUseCase.h"
 #include "../UseCase/CopyItemUseCase.h"
-#include "../UseCase/CurrentListUseCase.h"
 #include "../UseCase/CopyListUseCase.h"
+#include "../UseCase/CurrentListUseCase.h"
 #include "../UseCase/DeadlineItemUseCase.h"
 #include "../UseCase/DuplicateItemUseCase.h"
 #include "../UseCase/EditItemUseCase.h"
@@ -157,8 +157,13 @@ CommandRouter::execute(Command& command)
                 RemoveListUseCase(ioService, listService, fileStorageService, configService, themeService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "move-to")) {
-                MoveListUseCase(
-                    ioService, commandService, listService, listItemService, fileStorageService, configService, themeService)
+                MoveListUseCase(ioService,
+                                commandService,
+                                listService,
+                                listItemService,
+                                fileStorageService,
+                                configService,
+                                themeService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "copy")) {
                 CopyListUseCase(

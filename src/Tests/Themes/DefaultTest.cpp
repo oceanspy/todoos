@@ -6,7 +6,6 @@
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../Helpers/StringHelpers.h"
-#include "../../Helpers/TerminalStyle.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/ListItemEntity.h"
 #include "../../List/ListItems/PriorityService.h"
@@ -48,6 +47,11 @@ buildClosedItem(const std::string& id,
     return ListItemEntity::set(id, value, priorityEntity, statusEntity, 0, updatedAt, createdAt, updatedAt, listName);
 }
 
+// ---------------------------------------------------------------------------
+// Default — printListTitleRow, printListRow, printListTitle, printATitle,
+//           printStats, printMultipleListTitles, constructor breakpoint
+// ---------------------------------------------------------------------------
+
 TEST_CASE("Default theme", "[Default]")
 {
     IOService ioService("cli");
@@ -79,6 +83,7 @@ TEST_CASE("Default theme", "[Default]")
     ListService listService(ioService, configService, listRepository, bus);
 
     ListName listName = listService.createUsedListName();
+    ListName listName2 = listService.createListName("tempList2Name");
 
     Default wideTheme(ioService, listService, listItemService, 200, 200);
     Default narrowTheme(ioService, listService, listItemService, 100, 100);
@@ -115,6 +120,13 @@ TEST_CASE("Default theme", "[Default]")
         REQUIRE(atBreakpointNarrow.printListTitleRow().find("STATUS") == std::string::npos);
     }
 
+    SECTION("printListTitleRow — wide row is wider than narrow row")
+    {
+        std::size_t wideLen = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListTitleRow());
+        std::size_t narrowLen = StringHelpers::countCharsWithoutBashCodes(narrowTheme.printListTitleRow());
+        REQUIRE(wideLen > narrowLen);
+    }
+
     // ---- printListRow -----------------------------------------------------------
 
     SECTION("printListRow — wide row is longer than narrow row")
@@ -136,8 +148,6 @@ TEST_CASE("Default theme", "[Default]")
 
     SECTION("printListRow — row with list name differs from row without it")
     {
-        // When hideListNameInLine=false the list name column occupies LISTNAME_LENGTH
-        // chars that shrink the value column, so the two strings must differ.
         ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
         std::string withName = wideTheme.printListRow(item, false);
         std::string withoutName = wideTheme.printListRow(item, true);
@@ -209,5 +219,67 @@ TEST_CASE("Default theme", "[Default]")
     SECTION("printStats — narrow mode does not throw")
     {
         REQUIRE_NOTHROW(narrowTheme.printStats(listName));
+    }
+
+    SECTION("printStats — exact narrow breakpoint (120) does not throw")
+    {
+        Default atNarrow(ioService, listService, listItemService, 120, 120);
+        REQUIRE_NOTHROW(atNarrow.printStats(listName));
+    }
+
+    SECTION("printStats — exact wide breakpoint (121) does not throw")
+    {
+        Default atWide(ioService, listService, listItemService, 121, 121);
+        REQUIRE_NOTHROW(atWide.printStats(listName));
+    }
+
+    // ---- printMultipleListTitles ------------------------------------------------
+
+    SECTION("printMultipleListTitles — single list name does not throw")
+    {
+        std::vector<ListName> listNames = { listName };
+        REQUIRE_NOTHROW(wideTheme.printMultipleListTitles(listNames));
+    }
+
+    SECTION("printMultipleListTitles — multiple list names does not throw")
+    {
+        std::vector<ListName> listNames = { listName, listName2 };
+        REQUIRE_NOTHROW(wideTheme.printMultipleListTitles(listNames));
+    }
+
+    SECTION("printMultipleListTitles — narrow mode does not throw")
+    {
+        std::vector<ListName> listNames = { listName };
+        REQUIRE_NOTHROW(narrowTheme.printMultipleListTitles(listNames));
+    }
+
+    SECTION("printMultipleListTitles — archive variant does not throw")
+    {
+        ListName archiveName = ListName::createVariant(listName, "archive");
+        std::vector<ListName> listNames = { archiveName };
+        REQUIRE_NOTHROW(wideTheme.printMultipleListTitles(listNames));
+    }
+
+    SECTION("printMultipleListTitles — delete variant does not throw")
+    {
+        ListName deleteName = ListName::createVariant(listName, "delete");
+        std::vector<ListName> listNames = { deleteName };
+        REQUIRE_NOTHROW(wideTheme.printMultipleListTitles(listNames));
+    }
+
+    // ---- constructor breakpoint — column width derivation -----------------------
+
+    SECTION("consoleRowLength derived correctly for wide (consoleRowMaxLength - 56)")
+    {
+        // wide: consoleRowLength = 200 - 56 = 144 chars for TITLE column
+        std::size_t len = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListTitleRow());
+        REQUIRE(len > 100);
+    }
+
+    SECTION("consoleRowLength derived correctly for narrow (consoleRowMaxLength - 10)")
+    {
+        // narrow: consoleRowLength = 100 - 10 = 90 chars for TITLE column
+        std::size_t len = StringHelpers::countCharsWithoutBashCodes(narrowTheme.printListTitleRow());
+        REQUIRE(len > 50);
     }
 }

@@ -218,6 +218,16 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         REQUIRE(result.find(LIGHT_YELLOW) != std::string::npos);
     }
 
+    SECTION("buildDate — open item due in 11 days shows GREEN deadline")
+    {
+        time_t due11Days = time(nullptr) + 60 * 60 * 24 * 11;
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, due11Days);
+        std::string result = theme.buildDate(item);
+
+        REQUIRE(result.find("Deadl.:") != std::string::npos);
+        REQUIRE(result.find(GREEN) != std::string::npos);
+    }
+
     SECTION("buildDate — open item created today shows 'Today at'")
     {
         time_t todayTs = time(nullptr) - 1800; // 30 minutes ago
@@ -291,6 +301,40 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         REQUIRE(noOffset != withOffset);
     }
 
+    // ---- autoLineBreak edge cases (via buildValue, private) ---------------------
+
+    SECTION("buildValue — single word longer than column width wraps with newline")
+    {
+        Default narrowTheme(ioService, listService, listItemService, 80, 80);
+        std::string longWord(80, 'x');
+        ListItemEntity item = buildOpenItem("aaaa", longWord, "high", "to-do", listName);
+        std::string result = narrowTheme.buildValue(item, 0);
+        REQUIRE(result.find('\n') != std::string::npos);
+    }
+
+    SECTION("buildValue — building item with empty value throws at construction")
+    {
+        REQUIRE_THROWS(buildOpenItem("aaaa", "", "high", "to-do", listName));
+    }
+
+    SECTION("buildValue — single short word does not wrap")
+    {
+        Default narrowTheme(ioService, listService, listItemService, 80, 80);
+        ListItemEntity item = buildOpenItem("aaaa", "hi", "high", "to-do", listName);
+        std::string result = narrowTheme.buildValue(item, 0);
+        REQUIRE(result.find("hi") != std::string::npos);
+    }
+
+    SECTION("buildValue — larger offset produces different wrapping than zero offset")
+    {
+        Default narrowTheme(ioService, listService, listItemService, 80, 80);
+        std::string longValue;
+        for (int i = 0; i < 15; i++)
+            longValue += "word" + std::to_string(i) + " ";
+        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "to-do", listName);
+        REQUIRE(narrowTheme.buildValue(item, 0) != narrowTheme.buildValue(item, 20));
+    }
+
     // ---- I/O smoke tests --------------------------------------------------------
 
     SECTION("printFullLine — does not throw")
@@ -350,6 +394,16 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         REQUIRE_NOTHROW(theme.printMultipleList(listNames, items));
     }
 
+    // ---- printMultipleList with multiple lists ----------------------------------
+
+    SECTION("printMultipleList — two lists with items does not throw")
+    {
+        ListName listName2 = listService.createListName("tempList2Name");
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task one", "high", "to-do", listName) };
+        std::vector<ListName> listNames = { listName, listName2 };
+        REQUIRE_NOTHROW(theme.printMultipleList(listNames, items));
+    }
+
     // ---- buildPriorityCounts ----------------------------------------------------
 
     SECTION("buildPriorityCounts — counts appear in output")
@@ -391,5 +445,79 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     {
         ListCountSummary summary;
         REQUIRE_FALSE(theme.buildPriorityCounts(summary).empty());
+    }
+
+    // ---- buildShortStatsCounts --------------------------------------------------
+
+    SECTION("buildShortStatsCounts — result is not empty")
+    {
+        ListCountSummary summary;
+        REQUIRE_FALSE(theme.buildShortStatsCounts(summary).empty());
+    }
+
+    SECTION("buildShortStatsCounts — all-zero summary does not throw")
+    {
+        ListCountSummary summary;
+        REQUIRE_NOTHROW(theme.buildShortStatsCounts(summary));
+    }
+
+    SECTION("buildShortStatsCounts — total count appears in result")
+    {
+        ListCountSummary summary;
+        summary.total = 42;
+        REQUIRE(theme.buildShortStatsCounts(summary).find("42") != std::string::npos);
+    }
+
+    SECTION("buildShortStatsCounts — archived count appears in result")
+    {
+        ListCountSummary summary;
+        summary.archived = 17;
+        REQUIRE(theme.buildShortStatsCounts(summary).find("17") != std::string::npos);
+    }
+
+    SECTION("buildShortStatsCounts — delivered count appears in result")
+    {
+        ListCountSummary summary;
+        summary.delivered = 99;
+        REQUIRE(theme.buildShortStatsCounts(summary).find("99") != std::string::npos);
+    }
+
+    SECTION("buildShortStatsCounts — cancelled count appears in result")
+    {
+        ListCountSummary summary;
+        summary.cancelled = 7;
+        REQUIRE(theme.buildShortStatsCounts(summary).find("7") != std::string::npos);
+    }
+
+    SECTION("buildShortStatsCounts — deleted count appears in result")
+    {
+        ListCountSummary summary;
+        summary.deleted = 3;
+        REQUIRE(theme.buildShortStatsCounts(summary).find("3") != std::string::npos);
+    }
+
+    SECTION("buildShortStatsCounts — all distinct values appear together")
+    {
+        ListCountSummary summary;
+        summary.total = 100;
+        summary.archived = 200;
+        summary.delivered = 300;
+        summary.cancelled = 400;
+        summary.deleted = 500;
+        std::string result = theme.buildShortStatsCounts(summary);
+        REQUIRE(result.find("100") != std::string::npos);
+        REQUIRE(result.find("200") != std::string::npos);
+        REQUIRE(result.find("300") != std::string::npos);
+        REQUIRE(result.find("400") != std::string::npos);
+        REQUIRE(result.find("500") != std::string::npos);
+    }
+
+    SECTION("buildShortStatsCounts — two different summaries produce different results")
+    {
+        ListCountSummary summaryA;
+        summaryA.total = 5;
+        ListCountSummary summaryB;
+        summaryB.total = 10;
+        REQUIRE(theme.buildShortStatsCounts(summaryA) != theme.buildShortStatsCounts(summaryB));
     }
 }
