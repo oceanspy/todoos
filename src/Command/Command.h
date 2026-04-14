@@ -12,6 +12,9 @@ class Command
             std::vector<std::string> arguments,
             std::map<std::string, std::string> options,
             std::string rawCommand = "");
+    static Command create(std::string command,
+                          std::vector<std::string> arguments,
+                          std::map<std::string, std::string> options);
     std::string getName();
     int countArguments();
     std::vector<std::string> getArguments();

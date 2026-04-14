@@ -8,11 +8,8 @@
 class SmartCommand
 {
   public:
-    explicit SmartCommand(const Command& command);
-    Command apply();
-
-  private:
-    Command command;
+    explicit SmartCommand();
+    Command apply(Command& command);
 };
 
 #endif // SMARTCOMMAND_H

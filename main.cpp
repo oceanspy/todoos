@@ -55,8 +55,8 @@ main(int argc, const char* argv[])
 
     // ----
     // Autocorrect command for common mistakes or allowed shortcuts
-    SmartCommand smartCommand = SmartCommand(command);
-    command = smartCommand.apply();
+    SmartCommand smartCommand = SmartCommand();
+    command = smartCommand.apply(command);
 
     // ----
     // Verify command is valid

@@ -15,6 +15,23 @@ Command::Command(std::string command,
 {
 }
 
+Command
+Command::create(std::string command, std::vector<std::string> arguments, std::map<std::string, std::string> options)
+{
+    std::string rawCommand = command;
+
+    for (const auto& arg : arguments) {
+        rawCommand += " " + arg;
+    }
+
+    for (const auto& [key, value] : options) {
+        rawCommand += " --" + key + " " + value;
+    }
+
+    Command self = Command(command, arguments, options, rawCommand);
+    return self;
+}
+
 std::string
 Command::getName()
 {

@@ -18,7 +18,7 @@ void
 ShowListAction::execute(Command& command)
 {
     auto theme = themeService.getTheme();
-    ioService.br();
+    ioService.brOrSkip();
     ioService.title("Lists available");
 
     std::vector<ListEntity> listItems = listService.get();
