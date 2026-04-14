@@ -1,4 +1,5 @@
 #include "Default.h"
+#include <algorithm>
 #include <string>
 
 Default::Default(IOService& ioService,
@@ -30,7 +31,7 @@ Default::printMultipleListTitles(std::vector<ListName>& listNames)
 
     std::string names = "";
     std::string variant;
-    for (const auto listName : listNames) {
+    for (const auto& listName : listNames) {
         names += listName.getName() + ", ";
         if (variant.length() == 0) {
             variant = listName.getVariant();
@@ -75,8 +76,11 @@ Default::printListTitle(ListName& listName)
 std::string
 Default::buildListTitle(ListName& listName)
 {
+    std::string name = listName.getName();
+    std::ranges::replace_if(name, [](char c) { return c == '_' || c == '.' || c == '-'; }, ' ');
+
     std::string title;
-    title = StringHelpers::toUpper(listName.getName());
+    title = StringHelpers::toUpper(name);
     title = StringHelpers::colorize(title, BOLD);
 
     if (listName.getVariant() == "delete") {

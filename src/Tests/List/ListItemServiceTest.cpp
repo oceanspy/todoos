@@ -114,7 +114,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         std::string id2 = listItemService.add(listName, value);
         ListItemEntity listItemEntity2 = listItemService.find(id2, listName);
         REQUIRE(*listItemEntity2.getId() == id2);
-        REQUIRE(*(*listItemEntity2.priority()).getName() == "medium");
+        REQUIRE(*(*listItemEntity2.priority()).getName() == "urgent");
         REQUIRE(*(*listItemEntity2.status()).getCommandName() == "to-do");
     }
 
