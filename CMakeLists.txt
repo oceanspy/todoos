@@ -110,8 +110,10 @@ add_executable(todoos main.cpp
         src/Helpers/TerminalStyle.h
         src/UseCase/CommandAutoCompleteUseCase.cpp
         src/UseCase/CommandAutoCompleteUseCase.h
-        src/Themes/Default/Default.cpp
-        src/Themes/Default/Default.h
+        src/Themes/Presets/Default.cpp
+        src/Themes/Presets/Default.h
+        src/Themes/Presets/Legacy.cpp
+        src/Themes/Presets/Legacy.h
         src/Themes/Theme.h
         src/Themes/Theme.cpp
         src/Actions/MoveAction/MoveItemAction.cpp

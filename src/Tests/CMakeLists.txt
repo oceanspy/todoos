@@ -116,7 +116,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Command/CommandRouter.cpp
         ../Themes/ThemeService.cpp
         ../Themes/Theme.cpp
-        ../Themes/Default/Default.cpp
+        ../Themes/Presets/Default.cpp
+        ../Themes/Presets/Legacy.cpp
         ../FileStorage/FileStorageService.cpp
         ../UseCase/ShowUseCase.cpp
         ../UseCase/AddItemUseCase.cpp

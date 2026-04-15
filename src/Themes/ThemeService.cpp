@@ -1,5 +1,6 @@
 #include "ThemeService.h"
-#include "Default/Default.h"
+#include "Presets/Default.h"
+#include "Presets/Legacy.h"
 
 ThemeService::ThemeService(IOService& ioService,
                            ConfigService& configService,
@@ -18,8 +19,25 @@ ThemeService::ThemeService(IOService& ioService,
 std::unique_ptr<Theme>
 ThemeService::getTheme()
 {
+    std::string themeName = configService.getValue("theme");
+
+    if (themeName.length() <= 0) {
+        return std::make_unique<Default>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    }
+
+    if (themeName == "default") {
+        return std::make_unique<Default>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    } else if (themeName == "legacy") {
+        return std::make_unique<Legacy>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
+    }
+
+    // Unable to find the theme defined, we show an error and use the default
+    ioService.br();
+    ioService.error("Theme " + themeName + " not found. Using default.");
+    ioService.br();
     return std::make_unique<Default>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
 }
+
 void
 ThemeService::getConsoleRowMaxLengthAndThemeType()
 {
@@ -51,30 +69,21 @@ ThemeService::adaptConsoleRowLengthWithMaxItemValueLength(const std::vector<List
 {
     getConsoleRowMaxLengthAndThemeType();
 
-    int titleMaxLength = 0;
+    int rowValueMaxLength = 0;
     for (const auto& listItem : listItems) {
-        if ((*listItem.getValue()).length() > titleMaxLength) {
-            titleMaxLength = static_cast<int>((*listItem.getValue()).length());
+        if ((*listItem.getValue()).length() > rowValueMaxLength) {
+            rowValueMaxLength = static_cast<int>((*listItem.getValue()).length());
         }
     }
 
-    if (titleMaxLength <= 60) {
+    // row max length is short => we keep the list short
+    if (rowValueMaxLength <= 50) {
         consoleRowLength = CONST_WIDTH_DEFAULT_VALUE > consoleWidth ? consoleWidth : CONST_WIDTH_DEFAULT_VALUE;
-        return *this;
+        // Title max length is high, we use the default wide value
+    } else {
+        consoleRowLength =
+            CONST_WIDTH_DEFAULT_WIDE_VALUE > consoleWidth ? consoleWidth : CONST_WIDTH_DEFAULT_WIDE_VALUE;
     }
-
-    if (consoleRowLength > 150 && titleMaxLength + 82 < consoleRowLength) {
-        if (titleMaxLength <= 80) {
-            consoleRowLength = titleMaxLength + 82;
-        } else {
-            consoleRowLength = titleMaxLength + 72;
-        }
-
-        if (consoleRowLength % 2 != 0) {
-            consoleRowLength += 1;
-        }
-    }
-
     return *this;
 }
 
