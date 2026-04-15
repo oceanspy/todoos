@@ -44,11 +44,17 @@ SmartCommand::apply(Command& command)
     } else if (command.getName() == "lower" || command.getName() == "low") {
         Command adaptatedCommand = Command::create("decrease", command.getArguments(), command.getOptions());
         return adaptatedCommand;
-    }
 
-    // "add list <args>" → "list add <args>"
-    // Allows shorthand like "add list foo" instead of "list add foo"
-    if (CommandService::isCommand(command, "add")) {
+        // "list" → "list show"
+    } else if (CommandService::isCommand(command, "list")) {
+        if (command.getArguments().empty()) {
+            Command adaptatedCommand = Command::create("list", { "show" }, command.getOptions());
+            return adaptatedCommand;
+        }
+
+        // "add list <args>" → "list add <args>"
+        // Allows shorthand like "add list foo" instead of "list add foo"
+    } else if (CommandService::isCommand(command, "add")) {
         if (command.getArguments().empty()) {
             return command;
         }

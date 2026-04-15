@@ -93,13 +93,23 @@ TEST_CASE("SmartCommand Tests", "[SmartCommand]")
         REQUIRE(result.getOptions().empty());
     }
 
-    SECTION("Apply list command without transformation")
+    SECTION("Apply list command with no args -> list show")
     {
         SmartCommand smartCommand;
         Command command("list", {}, {});
         Command result = smartCommand.apply(command);
         REQUIRE(result.getName() == "list");
-        REQUIRE(result.getArguments().empty());
+        REQUIRE(result.getArguments() == std::vector<std::string>{ "show" });
+        REQUIRE(result.getOptions().empty());
+    }
+
+    SECTION("Apply all command -> show all")
+    {
+        SmartCommand smartCommand;
+        Command command("all", {}, {});
+        Command result = smartCommand.apply(command);
+        REQUIRE(result.getName() == "show");
+        REQUIRE(result.getArguments() == std::vector<std::string>{ "all" });
         REQUIRE(result.getOptions().empty());
     }
 

@@ -213,6 +213,9 @@ CommandRegistry::isCommandValidWithOptions(const std::string commandName,
         } else if (option.first == "force") {
             if (commandName == "remove" || commandName == "move-to" || commandName == "copy-to") {
                 return true;
+            } else if (commandName == "list") {
+                // TODO: implement accept only for "remove"
+                return true;
             }
         } else if (option.first == "no-quit") {
             return true;

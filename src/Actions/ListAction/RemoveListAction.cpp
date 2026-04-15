@@ -27,7 +27,11 @@ RemoveListAction::execute(Command& command)
 
     try {
         listService.remove(listName);
-        fileStorageService.moveFileTo(listName, "._backup_del_" + listName);
+        if (command.hasOption("force")) {
+            fileStorageService.removeListFile(listName);
+        } else {
+            fileStorageService.moveFileTo(listName, "._backup_del_" + listName);
+        }
         listService.use(goBackList);
     } catch (std::invalid_argument& e) {
         ioService.br();

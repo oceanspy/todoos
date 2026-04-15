@@ -14,7 +14,7 @@
 #include "../../List/ListService.h"
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
-#include "../../Themes/Default/Default.h"
+#include "../../Themes/Presets/Default.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
