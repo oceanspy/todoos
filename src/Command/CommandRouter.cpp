@@ -93,17 +93,17 @@ CommandRouter::execute(Command& command)
         case CommandRegistry::STATUS:
             StatusUseCase(ioService, listItemService, listService, configService, themeService).execute(command, -1);
             return;
-        case CommandRegistry::TO_DO:
+        case CommandRegistry::QUEUE:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, StatusService::TO_DO);
+                .execute(command, StatusService::QUEUED);
             return;
         case CommandRegistry::START:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
                 .execute(command, StatusService::STARTED);
             return;
-        case CommandRegistry::REVIEW:
+        case CommandRegistry::TRIAGE:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, StatusService::REVIEWING);
+                .execute(command, StatusService::TRIAGED);
             return;
         case CommandRegistry::PAUSE:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)

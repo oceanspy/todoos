@@ -8,16 +8,11 @@ CommandShortcut::getShortcutCommands()
     shortCutCommands["a"] = "add";
     shortCutCommands["rm"] = "remove";
     shortCutCommands["e"] = "edit";
-    shortCutCommands["rename"] = "edit";
     shortCutCommands["inc"] = "increase";
     shortCutCommands["dec"] = "decrease";
-    shortCutCommands["todo"] = "to-do";
-    shortCutCommands["to-do"] = "to-do";
-    shortCutCommands["resume"] = "to-do";
     shortCutCommands["start"] = "start";
     shortCutCommands["pause"] = "pause";
-    shortCutCommands["review"] = "review";
-    shortCutCommands["pending"] = "pend";
+    shortCutCommands["triage"] = "triage";
     shortCutCommands["complete"] = "complete";
     shortCutCommands["done"] = "complete";
     shortCutCommands["dln"] = "deadline";

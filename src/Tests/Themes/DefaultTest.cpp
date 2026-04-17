@@ -131,7 +131,7 @@ TEST_CASE("Default theme", "[Default]")
 
     SECTION("printListRow — wide row is longer than narrow row")
     {
-        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "queued", listName);
         std::size_t wideLen = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListRow(item, true));
         std::size_t narrowLen = StringHelpers::countCharsWithoutBashCodes(narrowTheme.printListRow(item, true));
         REQUIRE(wideLen > narrowLen);
@@ -139,7 +139,7 @@ TEST_CASE("Default theme", "[Default]")
 
     SECTION("printListRow — narrow row visible length does not include status/date")
     {
-        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "queued", listName);
         std::size_t narrowLen = StringHelpers::countCharsWithoutBashCodes(narrowTheme.printListRow(item, true));
         std::size_t wideLen = StringHelpers::countCharsWithoutBashCodes(wideTheme.printListRow(item, true));
         // STATUS_LENGTH=20, DATE_LENGTH=25 — wide must be at least 45 chars wider
@@ -148,7 +148,7 @@ TEST_CASE("Default theme", "[Default]")
 
     SECTION("printListRow — row with list name differs from row without it")
     {
-        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "task value", "high", "queued", listName);
         std::string withName = wideTheme.printListRow(item, false);
         std::string withoutName = wideTheme.printListRow(item, true);
         REQUIRE(withName != withoutName);
@@ -156,14 +156,14 @@ TEST_CASE("Default theme", "[Default]")
 
     SECTION("printListRow — ID appears in output")
     {
-        ListItemEntity item = buildOpenItem("zzzz", "task value", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("zzzz", "task value", "high", "queued", listName);
         std::string result = wideTheme.printListRow(item, true);
         REQUIRE(result.find("zzzz") != std::string::npos);
     }
 
     SECTION("printListRow — value text appears in output")
     {
-        ListItemEntity item = buildOpenItem("aaaa", "unique task content", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "unique task content", "high", "queued", listName);
         std::string result = wideTheme.printListRow(item, true);
         REQUIRE(result.find("unique task content") != std::string::npos);
     }

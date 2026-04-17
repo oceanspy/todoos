@@ -23,7 +23,7 @@ buildItem(const std::string& value, ListName& listName)
     PriorityService priorityService;
     StatusService statusService;
     PriorityEntity priorityEntity = priorityService.getPriorityFromName("high");
-    StatusEntity statusEntity = statusService.getStatusFromName("to-do");
+    StatusEntity statusEntity = statusService.getStatusFromName("queued");
     return ListItemEntity::set("aaaa", value, priorityEntity, statusEntity, 0, 0, 0, 0, listName);
 }
 

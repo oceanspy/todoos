@@ -46,7 +46,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         REQUIRE(*results[0].getId() == "aaaa");
         REQUIRE(*results[0].getValue() == "test 1");
         REQUIRE(*(*results[0].priority()).getName() == "high");
-        REQUIRE(*(*results[0].status()).getCommandName() == "to-do");
+        REQUIRE(*(*results[0].status()).getCommandName() == "queued");
         REQUIRE(*results[0].getCreatedAt() == 1712487259);
         REQUIRE(*results[0].getUpdatedAt() == 1712487259);
         REQUIRE(*results[1].getId() == "bbbb");
@@ -63,7 +63,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         const std::string id = "aaaa";
         const std::string value = "test 1";
         const std::string priority = "high";
-        const std::string status = "to-do";
+        const std::string status = "queued";
         const std::time_t createdAt = 1712487259;
         const std::time_t updatedAt = 1712487259;
 
@@ -86,7 +86,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
 
         const std::string newValue = "test 1 updated";
         const std::string newPriority = "medium";
-        const std::string newStatus = "reviewing";
+        const std::string newStatus = "triaged";
         const std::time_t newCreatedAt = 1712487260;
         const std::time_t newUpdatedAt = 1712487260;
 
@@ -125,7 +125,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         const std::string id = "cccc";
         const std::string newValue = "test 3";
         const std::string newPriority = "medium";
-        const std::string newStatus = "reviewing";
+        const std::string newStatus = "triaged";
         const std::time_t newCreatedAt = 1712487260;
         const std::time_t newUpdatedAt = 1712487260;
 
@@ -156,7 +156,7 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         REQUIRE(*results[0].getId() == "aaaa");
         REQUIRE(*results[0].getValue() == "test 1");
         REQUIRE(*(*results[0].priority()).getName() == "high");
-        REQUIRE(*(*results[0].status()).getCommandName() == "to-do");
+        REQUIRE(*(*results[0].status()).getCommandName() == "queued");
         REQUIRE(*results[0].getCreatedAt() == 1712487259);
         REQUIRE(*results[0].getUpdatedAt() == 1712487259);
         REQUIRE(*results[1].getId() == "bbbb");

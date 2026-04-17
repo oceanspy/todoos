@@ -87,7 +87,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     SECTION("buildId — open item contains the ID")
     {
-        ListItemEntity item = buildOpenItem("aaaa", "test value", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "test value", "high", "queued", listName);
         std::string result = theme.buildId(item);
 
         REQUIRE(result.find("aaaa") != std::string::npos);
@@ -108,7 +108,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     SECTION("buildPriority — open item uses priority color, not gray")
     {
-        ListItemEntity item = buildOpenItem("aaaa", "test value", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "test value", "high", "queued", listName);
         std::string result = theme.buildPriority(item);
 
         REQUIRE(result.find(GRAY) == std::string::npos);
@@ -138,7 +138,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     SECTION("buildValue — value text present in output")
     {
-        ListItemEntity item = buildOpenItem("aaaa", "my task title", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "my task title", "high", "queued", listName);
         std::string result = theme.buildValue(item, 0);
 
         REQUIRE(result.find("my task title") != std::string::npos);
@@ -150,7 +150,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         for (int i = 0; i < 20; i++) {
             longValue += "word" + std::to_string(i) + " ";
         }
-        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "queued", listName);
         std::string result = theme.buildValue(item, 0);
 
         REQUIRE(result.find('\n') != std::string::npos);
@@ -170,7 +170,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item with old created date shows human date")
     {
         // created 2024-01-01 — not today, not yesterday
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, 1704067200);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Today") == std::string::npos);
@@ -182,7 +182,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item with due date far in future shows deadline")
     {
         time_t futureDue = time(nullptr) + 60 * 60 * 24 * 30; // 30 days from now
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, futureDue);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, 1704067200, futureDue);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Deadl.:") != std::string::npos);
@@ -191,7 +191,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item with overdue due date shows red background")
     {
         time_t overdue = time(nullptr) - 60 * 60 * 24; // 1 day ago
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, overdue);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, 1704067200, overdue);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Deadl.:") != std::string::npos);
@@ -201,7 +201,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item due in 2 days shows LIGHT_RED deadline")
     {
         time_t due2Days = time(nullptr) + 60 * 60 * 24 * 2;
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, due2Days);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, 1704067200, due2Days);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Deadl.:") != std::string::npos);
@@ -211,7 +211,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item due in 5 days shows LIGHT_YELLOW deadline")
     {
         time_t due5Days = time(nullptr) + 60 * 60 * 24 * 5;
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, due5Days);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, 1704067200, due5Days);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Deadl.:") != std::string::npos);
@@ -221,7 +221,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item due in 11 days shows GREEN deadline")
     {
         time_t due11Days = time(nullptr) + 60 * 60 * 24 * 11;
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, 1704067200, due11Days);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, 1704067200, due11Days);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Deadl.:") != std::string::npos);
@@ -231,7 +231,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item created today shows 'Today at'")
     {
         time_t todayTs = time(nullptr) - 1800; // 30 minutes ago
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, todayTs);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, todayTs);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Today") != std::string::npos);
@@ -241,7 +241,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("buildDate — open item created yesterday shows 'Yesterday at'")
     {
         time_t yesterdayTs = time(nullptr) - 90000; // 25 hours ago
-        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "to-do", listName, yesterdayTs);
+        ListItemEntity item = buildOpenItem("aaaa", "test", "high", "queued", listName, yesterdayTs);
         std::string result = theme.buildDate(item);
 
         REQUIRE(result.find("Yesterday") != std::string::npos);
@@ -261,9 +261,9 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     SECTION("buildStatus — different statuses produce different output")
     {
-        ListItemEntity todoItem = buildOpenItem("aaaa", "test", "high", "to-do", listName);
+        ListItemEntity todoItem = buildOpenItem("aaaa", "test", "high", "queued", listName);
         ListItemEntity startedItem = buildOpenItem("aaaa", "test", "high", "started", listName);
-        ListItemEntity reviewItem = buildOpenItem("aaaa", "test", "high", "reviewing", listName);
+        ListItemEntity reviewItem = buildOpenItem("aaaa", "test", "high", "triaged", listName);
 
         REQUIRE(theme.buildStatus(todoItem) != theme.buildStatus(startedItem));
         REQUIRE(theme.buildStatus(todoItem) != theme.buildStatus(reviewItem));
@@ -272,7 +272,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     SECTION("buildStatus — closed item has same length as open item")
     {
-        ListItemEntity openItem = buildOpenItem("aaaa", "test", "high", "to-do", listName);
+        ListItemEntity openItem = buildOpenItem("aaaa", "test", "high", "queued", listName);
         ListItemEntity closedItem = buildClosedItem("aaaa", "test", listName);
 
         REQUIRE(StringHelpers::countCharsWithoutBashCodes(theme.buildStatus(openItem)) ==
@@ -283,7 +283,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     SECTION("buildValue — closed item has different styling than open item")
     {
-        ListItemEntity openItem = buildOpenItem("aaaa", "same text", "high", "to-do", listName);
+        ListItemEntity openItem = buildOpenItem("aaaa", "same text", "high", "queued", listName);
         ListItemEntity closedItem = buildClosedItem("aaaa", "same text", listName);
 
         REQUIRE(theme.buildValue(openItem, 0) != theme.buildValue(closedItem, 0));
@@ -294,7 +294,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         std::string longValue;
         for (int i = 0; i < 30; i++)
             longValue += "word" + std::to_string(i) + " ";
-        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "queued", listName);
 
         std::string noOffset = theme.buildValue(item, 0);
         std::string withOffset = theme.buildValue(item, 12);
@@ -307,20 +307,20 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     {
         Default narrowTheme(ioService, listService, listItemService, 80, 80);
         std::string longWord(80, 'x');
-        ListItemEntity item = buildOpenItem("aaaa", longWord, "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", longWord, "high", "queued", listName);
         std::string result = narrowTheme.buildValue(item, 0);
         REQUIRE(result.find('\n') != std::string::npos);
     }
 
     SECTION("buildValue — building item with empty value throws at construction")
     {
-        REQUIRE_THROWS(buildOpenItem("aaaa", "", "high", "to-do", listName));
+        REQUIRE_THROWS(buildOpenItem("aaaa", "", "high", "queued", listName));
     }
 
     SECTION("buildValue — single short word does not wrap")
     {
         Default narrowTheme(ioService, listService, listItemService, 80, 80);
-        ListItemEntity item = buildOpenItem("aaaa", "hi", "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", "hi", "high", "queued", listName);
         std::string result = narrowTheme.buildValue(item, 0);
         REQUIRE(result.find("hi") != std::string::npos);
     }
@@ -331,7 +331,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         std::string longValue;
         for (int i = 0; i < 15; i++)
             longValue += "word" + std::to_string(i) + " ";
-        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "to-do", listName);
+        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "queued", listName);
         REQUIRE(narrowTheme.buildValue(item, 0) != narrowTheme.buildValue(item, 20));
     }
 
@@ -369,7 +369,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("print — with items does not throw")
     {
         std::vector<ListItemEntity> items = {
-            buildOpenItem("aaaa", "first task", "high", "to-do", listName),
+            buildOpenItem("aaaa", "first task", "high", "queued", listName),
             buildOpenItem("bbbb", "second task", "medium", "started", listName),
         };
         REQUIRE_NOTHROW(theme.print(listName, items, false, true));
@@ -377,20 +377,20 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     SECTION("print — showListName=true does not throw")
     {
-        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task", "high", "to-do", listName) };
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task", "high", "queued", listName) };
         REQUIRE_NOTHROW(theme.print(listName, items, true, true));
     }
 
     SECTION("print — showTitle=false does not throw")
     {
-        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task", "high", "to-do", listName) };
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task", "high", "queued", listName) };
         REQUIRE_NOTHROW(theme.print(listName, items, false, false));
     }
 
     SECTION("printMultipleList — with items does not throw")
     {
         std::vector<ListName> listNames = { listName };
-        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task one", "high", "to-do", listName) };
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task one", "high", "queued", listName) };
         REQUIRE_NOTHROW(theme.printMultipleList(listNames, items));
     }
 
@@ -399,7 +399,7 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
     SECTION("printMultipleList — two lists with items does not throw")
     {
         ListName listName2 = listService.createListName("tempList2Name");
-        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task one", "high", "to-do", listName) };
+        std::vector<ListItemEntity> items = { buildOpenItem("aaaa", "task one", "high", "queued", listName) };
         std::vector<ListName> listNames = { listName, listName2 };
         REQUIRE_NOTHROW(theme.printMultipleList(listNames, items));
     }

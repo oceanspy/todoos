@@ -24,7 +24,7 @@ Default::printListTitle(ListName& listName)
     int totalCharLength = 3 + static_cast<int>(totalStr.length());
     totalStr = "📈 " + totalStr;
 
-    std::string todoStr = std::to_string(summary.getStatus(StatusService::TO_DO));
+    std::string todoStr = std::to_string(summary.getStatus(StatusService::QUEUED));
     int todoCharLength = 6 + static_cast<int>(todoStr.length());
     todoStr = "   ⏳ " + todoStr;
 
@@ -32,7 +32,7 @@ Default::printListTitle(ListName& listName)
     int startedCharLength = 4 + static_cast<int>(startedStr.length());
     startedStr = " 🏃 " + startedStr;
 
-    std::string underReviewStr = std::to_string(summary.getStatus(StatusService::REVIEWING));
+    std::string underReviewStr = std::to_string(summary.getStatus(StatusService::TRIAGED));
     int underReviewCharLength = 4 + static_cast<int>(underReviewStr.length());
     underReviewStr = " 🔍 " + underReviewStr;
 
@@ -252,17 +252,17 @@ Default::printStats(ListName& listName)
     std::string total = std::to_string(listItemService.count(listName));
     total = totalEmoji + total;
 
-    std::string todoEmoji = " ⏳ To-Do: ";
-    std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::TO_DO }));
+    std::string todoEmoji = " ⏳ Queued: ";
+    std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
     todoCount = todoEmoji + todoCount;
 
     std::string startedEmoji = " 🏃 Started: ";
     std::string startedCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
     startedCount = startedEmoji + startedCount;
 
-    std::string underReviewEmoji = " 🔍 Reviewing: ";
+    std::string underReviewEmoji = " 🔍 Triaged: ";
     std::string underReviewCount =
-        std::to_string(listItemService.countWithStatus(listName, { StatusService::REVIEWING }));
+        std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
     underReviewCount = underReviewEmoji + underReviewCount;
 
     std::string pauseEmoji = " 💤 Paused: ";

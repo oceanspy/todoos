@@ -20,8 +20,7 @@ ResetUseCase::ResetUseCase(IOService& ioService,
 void
 ResetUseCase::execute(Command& command)
 {
-    std::string answer = ioService.ask("Are you sure you want to reset item(s) to brand new and not mark them "
-                                       "as to-do? (y/n) ");
+    std::string answer = ioService.ask("Are you sure you want to reset item(s) to queued and clear date/deadline? (y/n) ");
 
     ListName listName =
         listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());

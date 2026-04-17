@@ -138,17 +138,17 @@ DefaultDetailedMedium::printStats(ListName& listName)
     std::string total = std::to_string(listItemService.count(listName));
     total = totalEmoji + total;
 
-    std::string todoEmoji = " ⏳ To-Do: ";
-    std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::TO_DO }));
+    std::string todoEmoji = " ⏳ Queued: ";
+    std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
     todoCount = todoEmoji + todoCount;
 
     std::string startedEmoji = " 🏃 Started: ";
     std::string startedCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
     startedCount = startedEmoji + startedCount;
 
-    std::string underReviewEmoji = " 🔍 Reviewing: ";
+    std::string underReviewEmoji = " 🔍 Triaged: ";
     std::string underReviewCount =
-        std::to_string(listItemService.countWithStatus(listName, { StatusService::REVIEWING }));
+        std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
     underReviewCount = underReviewEmoji + underReviewCount;
 
     std::string pauseEmoji = " 🚧 Paused: ";

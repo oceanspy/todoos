@@ -53,7 +53,7 @@ Legacy::renderTitleBox(ListName& displayName, ListCountSummary& summary)
     int totalCharLength = 3 + static_cast<int>(totalStr.length());
     totalStr = "📈 " + totalStr;
 
-    std::string todoStr = std::to_string(summary.getStatus(StatusService::TO_DO));
+    std::string todoStr = std::to_string(summary.getStatus(StatusService::QUEUED));
     int todoCharLength = 6 + static_cast<int>(todoStr.length());
     todoStr = "   ⏳ " + todoStr;
 
@@ -61,7 +61,7 @@ Legacy::renderTitleBox(ListName& displayName, ListCountSummary& summary)
     int startedCharLength = 4 + static_cast<int>(startedStr.length());
     startedStr = " 🏃 " + startedStr;
 
-    std::string underReviewStr = std::to_string(summary.getStatus(StatusService::REVIEWING));
+    std::string underReviewStr = std::to_string(summary.getStatus(StatusService::TRIAGED));
     int underReviewCharLength = 4 + static_cast<int>(underReviewStr.length());
     underReviewStr = " 🔍 " + underReviewStr;
 
@@ -298,11 +298,11 @@ Legacy::printStats(ListName& listName)
     ListName listNameDelete = ListName::createVariant(listName, "delete");
 
     std::string todoCount =
-        " ⏳ To-Do: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::TO_DO }));
+        " ⏳ Queued: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
     std::string startedCount =
         " 🏃 Started: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
     std::string underReviewCount =
-        " 🔍 Reviewing: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::REVIEWING }));
+        " 🔍 Triaged: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
     std::string deletedCount = "  🧹 Deleted: " + std::to_string(listItemService.count(listNameDelete));
 
     std::string criticalCount =

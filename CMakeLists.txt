@@ -4,7 +4,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-project(todoos VERSION 0.4.1)
+project(todoos VERSION 0.5.0)
 
 include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)

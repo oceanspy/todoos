@@ -61,7 +61,7 @@ ListItemService::add(ListName& listName,
         StatusEntity statusEntity = statusService.getStatusFromName(*status);
         listItemEntity.setStatus(statusEntity);
     } else {
-        StatusEntity statusEntity = statusService.getStatusFromName("to-do");
+        StatusEntity statusEntity = statusService.getStatusFromName("queued");
         listItemEntity.setStatus(statusEntity);
     }
 
@@ -191,7 +191,7 @@ ListItemService::reset(const std::string& id, ListName& listName)
 {
     ListItemEntity listItemToUpdate(listName);
     listItemToUpdate = find(id, listName);
-    StatusEntity statusEntity = statusService.getStatusFromName("to-do");
+    StatusEntity statusEntity = statusService.getStatusFromName("queued");
     listItemToUpdate.setStatus(statusEntity);
     listItemToUpdate.setCreatedAt(time(nullptr));
     listItemToUpdate.setUpdatedAt(time(nullptr));

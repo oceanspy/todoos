@@ -181,15 +181,15 @@ Default::printStats(ListName& listName)
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");
 
-    std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::TO_DO }));
-    todoCount = " ⏳ To-Do: " + todoCount;
+    std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
+    todoCount = " ⏳ Queued: " + todoCount;
 
     std::string startedCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
     startedCount = " 🏃 Started: " + startedCount;
 
     std::string underReviewCount =
-        std::to_string(listItemService.countWithStatus(listName, { StatusService::REVIEWING }));
-    underReviewCount = " 🔍 Reviewing: " + underReviewCount;
+        std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
+    underReviewCount = " 🔍 Triaged: " + underReviewCount;
 
     std::string deletedCount = std::to_string(listItemService.count(listNameDelete));
     deletedCount = "  🧹 Deleted: " + deletedCount;

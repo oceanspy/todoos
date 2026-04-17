@@ -265,7 +265,7 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
 
     SECTION("Autocomplete commands: commands add -s to-do")
     {
-        Command command = Command("commands", { "add" }, { { "status", "to-do" } }, "commands add -s to-do");
+        Command command = Command("commands", { "add" }, { { "status", "queued" } }, "commands add -s to-do");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
         ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());

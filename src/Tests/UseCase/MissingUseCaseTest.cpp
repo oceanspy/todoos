@@ -347,7 +347,7 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
 
     SECTION("edit with status option changes status")
     {
-        std::map<std::string, std::string> options = { { "status", "reviewing" } };
+        std::map<std::string, std::string> options = { { "status", "triaged" } };
         Command command("edit", { "aaaa" }, options, "edit aaaa -s reviewing");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService;
@@ -364,7 +364,7 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
                 .execute(command));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
-        REQUIRE(*(*item.status()).getCommandName() == "reviewing");
+        REQUIRE(*(*item.status()).getCommandName() == "triaged");
 
         installation.wipe();
         installation.make();

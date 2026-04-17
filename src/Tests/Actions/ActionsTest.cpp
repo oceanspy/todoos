@@ -208,7 +208,7 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
         REQUIRE_NOTHROW(status.executeReset(resetCommand, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
-        REQUIRE(*(*item.status()).getCommandName() == "to-do");
+        REQUIRE(*(*item.status()).getCommandName() == "queued");
 
         installation.wipe();
         installation.make();

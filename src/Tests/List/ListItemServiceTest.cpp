@@ -93,7 +93,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getId() == "aaaa");
         REQUIRE(*listItemEntity.getValue() == "test 1");
         REQUIRE(*(*listItemEntity.priority()).getName() == "high");
-        REQUIRE(*(*listItemEntity.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity.status()).getCommandName() == "queued");
         REQUIRE(*(*listItemEntity.priority()).getName() == "high");
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
         REQUIRE(*listItemEntity.getUpdatedAt() == 1712487259);
@@ -103,7 +103,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     {
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         std::string value = "test 1";
 
@@ -115,14 +115,14 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         ListItemEntity listItemEntity2 = listItemService.find(id2, listName);
         REQUIRE(*listItemEntity2.getId() == id2);
         REQUIRE(*(*listItemEntity2.priority()).getName() == "urgent");
-        REQUIRE(*(*listItemEntity2.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity2.status()).getCommandName() == "queued");
     }
 
     SECTION("add too long")
     {
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         std::string value =
             "long string of more than 255 characters xxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx "
@@ -135,7 +135,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     {
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         std::string value = "test 1";
         std::string deadline = "2024-12-31";
@@ -151,7 +151,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         std::string id = "aaaa";
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         std::string value = "test 1";
 
@@ -182,7 +182,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemEntity = listItemService.find("aaaa", listName);
         REQUIRE(*listItemEntity.getValue() == "test 1");
         REQUIRE(*(*listItemEntity.priority()).getName() == "high");
-        REQUIRE(*(*listItemEntity.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity.status()).getCommandName() == "queued");
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
     }
 
@@ -210,7 +210,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     SECTION("editStatus")
     {
         std::string id = "aaaa";
-        const int statusValue = StatusService::TO_DO;
+        const int statusValue = StatusService::QUEUED;
         const int* status = &statusValue;
         std::string value = "test 1";
 
@@ -232,7 +232,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemEntity = listItemService.find("aaaa", listName);
         REQUIRE(*listItemEntity.getValue() == "test 1");
         REQUIRE(*(*listItemEntity.priority()).getName() == "high");
-        REQUIRE(*(*listItemEntity.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity.status()).getCommandName() == "queued");
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
     }
 
@@ -257,7 +257,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     {
         std::string priorityValue = "low";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         std::string value = "test 3";
         std::string id = listItemService.add(tempListName, value, priority, status);
@@ -266,7 +266,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getId() == id);
         REQUIRE(*listItemEntity.getValue() == "test 3");
         REQUIRE(*(*listItemEntity.priority()).getName() == "low");
-        REQUIRE(*(*listItemEntity.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity.status()).getCommandName() == "queued");
 
         std::vector<ListItemEntity> listItems = listItemService.get(tempListName);
         REQUIRE(listItems.size() == 3);
@@ -303,7 +303,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         std::string value = "bonjour tout le monde, ça marche?";
         std::string id = listItemService.add(listName, value, priority, status);
@@ -334,12 +334,12 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getId() == id);
         REQUIRE(*listItemEntity.getValue() == "test 1 append test");
         REQUIRE(*(*listItemEntity.priority()).getName() == "high");
-        REQUIRE(*(*listItemEntity.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity.status()).getCommandName() == "queued");
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
 
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         listItemService.edit(id, listName, "test 1", priority, status);
     }
@@ -354,12 +354,12 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItemEntity.getId() == id);
         REQUIRE(*listItemEntity.getValue() == "prepend test 1");
         REQUIRE(*(*listItemEntity.priority()).getName() == "high");
-        REQUIRE(*(*listItemEntity.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity.status()).getCommandName() == "queued");
         REQUIRE(*listItemEntity.getCreatedAt() == 1712487259);
 
         std::string priorityValue = "high";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         listItemService.edit(id, listName, "test 1", priority, status);
     }
@@ -418,11 +418,11 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
         REQUIRE_THROWS(listItemService.setStatus(id, listName, status));
 
-        std::string statusValue2 = "to-do";
+        std::string statusValue2 = "queued";
         const std::string* status2 = &statusValue2;
         listItemService.setStatus(id, listName, status2);
         ListItemEntity listItemEntity2 = listItemService.find(id, listName);
-        REQUIRE(*(*listItemEntity2.status()).getCommandName() == "to-do");
+        REQUIRE(*(*listItemEntity2.status()).getCommandName() == "queued");
     }
 
     SECTION("min/max priority")
@@ -453,7 +453,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     {
         std::string priorityValue = "low";
         const std::string* priority = &priorityValue;
-        std::string statusValue = "to-do";
+        std::string statusValue = "queued";
         const std::string* status = &statusValue;
         std::string value = "test 3";
         std::string id = listItemService.add(listName, value, priority, status);
@@ -564,7 +564,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     SECTION("Edit deadline of an item")
     {
         std::string id =
-            listItemService.add(tempListName, "test item", new std::string("high"), new std::string("to-do"));
+            listItemService.add(tempListName, "test item", new std::string("high"), new std::string("queued"));
 
         std::string deadline0 = "2024.12.31";
         time_t dueAt0 = DateHelpers::relativeDateToTimestamp(deadline0);
@@ -643,7 +643,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         // Reset should bring it back to to-do
         listItemService.reset(id, listName);
         ListItemEntity resetItem = listItemService.find(id, listName);
-        REQUIRE(*(*resetItem.status()).getCommandName() == "to-do");
+        REQUIRE(*(*resetItem.status()).getCommandName() == "queued");
     }
 
     SECTION("find non-existent item throws")

@@ -18,7 +18,7 @@ TEST_CASE("ListCountSummary", "[ListCountSummary]")
     SECTION("getStatus returns 0 for unknown key")
     {
         ListCountSummary summary;
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 0);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 0);
         REQUIRE(summary.getStatus(StatusService::COMPLETED) == 0);
         REQUIRE(summary.getStatus(999) == 0);
     }
@@ -26,11 +26,11 @@ TEST_CASE("ListCountSummary", "[ListCountSummary]")
     SECTION("addStatus increments the right key")
     {
         ListCountSummary summary;
-        summary.addStatus(StatusService::TO_DO);
-        summary.addStatus(StatusService::TO_DO);
+        summary.addStatus(StatusService::QUEUED);
+        summary.addStatus(StatusService::QUEUED);
         summary.addStatus(StatusService::STARTED);
 
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 2);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 2);
         REQUIRE(summary.getStatus(StatusService::STARTED) == 1);
         REQUIRE(summary.getStatus(StatusService::PAUSED) == 0);
     }
@@ -39,9 +39,9 @@ TEST_CASE("ListCountSummary", "[ListCountSummary]")
     {
         ListCountSummary summary;
         for (int i = 0; i < 5; i++) {
-            summary.addStatus(StatusService::REVIEWING);
+            summary.addStatus(StatusService::TRIAGED);
         }
-        REQUIRE(summary.getStatus(StatusService::REVIEWING) == 5);
+        REQUIRE(summary.getStatus(StatusService::TRIAGED) == 5);
     }
 
     SECTION("getPriority returns 0 for unknown key")
@@ -90,17 +90,17 @@ TEST_CASE("ListCountSummary", "[ListCountSummary]")
     SECTION("all status keys are independent")
     {
         ListCountSummary summary;
-        summary.addStatus(StatusService::TO_DO);
+        summary.addStatus(StatusService::QUEUED);
         summary.addStatus(StatusService::STARTED);
-        summary.addStatus(StatusService::REVIEWING);
+        summary.addStatus(StatusService::TRIAGED);
         summary.addStatus(StatusService::PAUSED);
         summary.addStatus(StatusService::BLOCKED);
         summary.addStatus(StatusService::COMPLETED);
         summary.addStatus(StatusService::CANCELLED);
 
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 1);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 1);
         REQUIRE(summary.getStatus(StatusService::STARTED) == 1);
-        REQUIRE(summary.getStatus(StatusService::REVIEWING) == 1);
+        REQUIRE(summary.getStatus(StatusService::TRIAGED) == 1);
         REQUIRE(summary.getStatus(StatusService::PAUSED) == 1);
         REQUIRE(summary.getStatus(StatusService::BLOCKED) == 1);
         REQUIRE(summary.getStatus(StatusService::COMPLETED) == 1);

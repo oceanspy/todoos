@@ -157,11 +157,10 @@ CommandAutoCompleteUseCase::execute(Command& command)
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "remove") ||
                CommandService::isCommand(firstSubCommand, "archive") ||
-               CommandService::isCommand(firstSubCommand, "to-do") ||
+               CommandService::isCommand(firstSubCommand, "queue") ||
                CommandService::isCommand(firstSubCommand, "start") ||
                CommandService::isCommand(firstSubCommand, "pause") ||
-               CommandService::isCommand(firstSubCommand, "review") ||
-               CommandService::isCommand(firstSubCommand, "pend") ||
+               CommandService::isCommand(firstSubCommand, "triage") ||
                CommandService::isCommand(firstSubCommand, "complete") ||
                CommandService::isCommand(firstSubCommand, "cancel") ||
                CommandService::isCommand(firstSubCommand, "reset") ||

@@ -129,14 +129,14 @@ HelpPrinter::helpListForCli()
         "     " + DIM + "remove: reset / none" + RST,
         "",
         section("STATUS"),
-        "   to-do    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 To do",          // col 17 + 7 = 24
+        "   queue    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Queued",
         "   start    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Started",
+        "   triage   " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Triaged",
         "   pause    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Paused",
-        "   review   " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Review",
-        "   pending  " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Pending",
+        "   block    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Blocked",
         "   complete " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Completed",
         "   cancel   " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Cancelled",
-        "   reset    " + YLW + "{ids/all}" + RST + "   Reset to 'To do' & clear timings", // col 21 + 3 = 24
+        "   reset    " + YLW + "{ids/all}" + RST + "   Reset to queued & clear date/deadline",
         "",
         section("BULK"),
         "   clean              Archive all completed/cancelled items",
