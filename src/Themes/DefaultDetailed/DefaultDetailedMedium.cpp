@@ -138,15 +138,15 @@ DefaultDetailedMedium::printStats(ListName& listName)
     std::string total = std::to_string(listItemService.count(listName));
     total = totalEmoji + total;
 
-    std::string todoEmoji = " ⏳ Queued: ";
+    std::string todoEmoji = " 📥 Queued: ";
     std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
     todoCount = todoEmoji + todoCount;
 
-    std::string startedEmoji = " 🏃 Started: ";
+    std::string startedEmoji = " 🔨 Started: ";
     std::string startedCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
     startedCount = startedEmoji + startedCount;
 
-    std::string underReviewEmoji = " 🔍 Triaged: ";
+    std::string underReviewEmoji = " ⚖️ Triaged: ";
     std::string underReviewCount =
         std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
     underReviewCount = underReviewEmoji + underReviewCount;
@@ -168,12 +168,12 @@ DefaultDetailedMedium::printStats(ListName& listName)
     std::string archivedCount = std::to_string(listItemService.count(listNameArchive));
     archivedCount = archivedEmoji + archivedCount;
 
-    std::string cancelledArchivedEmoji = "  🚫 Cancelled: ";
+    std::string cancelledArchivedEmoji = "  🧱 Cancelled: ";
     std::string cancelledArchivedCount =
         std::to_string(listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED }));
     cancelledArchivedCount = cancelledArchivedEmoji + cancelledArchivedCount;
 
-    std::string deletedEmoji = "  🧹 Deleted: ";
+    std::string deletedEmoji = "  🗑️ Deleted: ";
     std::string deletedCount = std::to_string(listItemService.count(listNameDelete));
     deletedCount = deletedEmoji + deletedCount;
 

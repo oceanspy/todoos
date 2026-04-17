@@ -182,17 +182,17 @@ Default::printStats(ListName& listName)
     ListName listNameDelete = ListName::createVariant(listName, "delete");
 
     std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
-    todoCount = " ⏳ Queued: " + todoCount;
+    todoCount = " 📥 Queued: " + todoCount;
 
     std::string startedCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
-    startedCount = " 🏃 Started: " + startedCount;
+    startedCount = " 🔨 Started: " + startedCount;
 
     std::string underReviewCount =
         std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
-    underReviewCount = " 🔍 Triaged: " + underReviewCount;
+    underReviewCount = " ⚖️ Triaged: " + underReviewCount;
 
     std::string deletedCount = std::to_string(listItemService.count(listNameDelete));
-    deletedCount = "  🧹 Deleted: " + deletedCount;
+    deletedCount = "  🗑️ Deleted: " + deletedCount;
 
     std::string criticalCount =
         StringHelpers::colorize(" ■ ", WHITE) +
@@ -202,7 +202,7 @@ Default::printStats(ListName& listName)
         std::string total = " 📈 Total: " + std::to_string(listItemService.count(listName));
 
         std::string pauseCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
-        pauseCount = " 💤 Paused: " + pauseCount;
+        pauseCount = " ⏸️ Paused: " + pauseCount;
 
         int archivedCount = listItemService.countWithStatus(listName, { StatusService::COMPLETED });
         archivedCount += listItemService.countWithStatus(listNameArchive, { StatusService::COMPLETED });
@@ -210,7 +210,7 @@ Default::printStats(ListName& listName)
 
         int cancelCount = listItemService.countWithStatus(listName, { StatusService::CANCELLED });
         cancelCount += listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED });
-        std::string cancelCountStr = " ✖️ Cancelled: " + std::to_string(cancelCount);
+        std::string cancelCountStr = " 🚫 Cancelled: " + std::to_string(cancelCount);
 
         std::string urgentCount =
             StringHelpers::colorize(" ● ", RED) +
@@ -255,7 +255,7 @@ Default::printStats(ListName& listName)
         std::string archivedCount = " 🚀 Archived: " + std::to_string(listItemService.count(listNameArchive));
 
         std::string cancelledArchivedCount =
-            "  🚫 Cancelled: " +
+            "  🧱 Cancelled: " +
             std::to_string(listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED }));
 
         std::string urgentCount =

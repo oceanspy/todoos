@@ -282,11 +282,11 @@ Theme::buildShortStatsCounts(const ListCountSummary& summary)
 
     std::string cancelledStr = std::to_string(summary.cancelled);
     int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
-    cancelledStr = " ✖️ " + cancelledStr;
+    cancelledStr = " 🚫 " + cancelledStr;
 
     std::string deletedStr = std::to_string(summary.deleted);
     int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
-    deletedStr = " 🧹 " + deletedStr;
+    deletedStr = " 🗑️ " + deletedStr;
 
     std::string statusPrintCount = totalStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
 

@@ -26,23 +26,23 @@ Default::printListTitle(ListName& listName)
 
     std::string todoStr = std::to_string(summary.getStatus(StatusService::QUEUED));
     int todoCharLength = 6 + static_cast<int>(todoStr.length());
-    todoStr = "   ⏳ " + todoStr;
+    todoStr = "   📥 " + todoStr;
 
     std::string startedStr = std::to_string(summary.getStatus(StatusService::STARTED));
     int startedCharLength = 4 + static_cast<int>(startedStr.length());
-    startedStr = " 🏃 " + startedStr;
+    startedStr = " 🔨 " + startedStr;
 
     std::string underReviewStr = std::to_string(summary.getStatus(StatusService::TRIAGED));
     int underReviewCharLength = 4 + static_cast<int>(underReviewStr.length());
-    underReviewStr = " 🔍 " + underReviewStr;
+    underReviewStr = " ⚖️ " + underReviewStr;
 
     std::string pauseStr = std::to_string(summary.getStatus(StatusService::PAUSED));
     int pauseCharLength = 4 + static_cast<int>(pauseStr.length());
-    pauseStr = " 💤 " + pauseStr;
+    pauseStr = " ⏸️ " + pauseStr;
 
     std::string blockedStr = std::to_string(summary.getStatus(StatusService::BLOCKED));
     int blockedCharLength = 4 + static_cast<int>(blockedStr.length());
-    blockedStr = " 🚫 " + blockedStr;
+    blockedStr = " 🧱 " + blockedStr;
 
     std::string completedStr = std::to_string(summary.getStatus(StatusService::COMPLETED));
     int completedCharLength = 4 + static_cast<int>(completedStr.length());
@@ -58,11 +58,11 @@ Default::printListTitle(ListName& listName)
 
     std::string cancelledStr = std::to_string(summary.cancelled);
     int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
-    cancelledStr = " ✖️ " + cancelledStr;
+    cancelledStr = " 🚫 " + cancelledStr;
 
     std::string deletedStr = std::to_string(summary.deleted);
     int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
-    deletedStr = " 🧹 " + deletedStr;
+    deletedStr = " 🗑️ " + deletedStr;
 
     std::string statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + blockedStr +
                                    completedStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
@@ -252,20 +252,20 @@ Default::printStats(ListName& listName)
     std::string total = std::to_string(listItemService.count(listName));
     total = totalEmoji + total;
 
-    std::string todoEmoji = " ⏳ Queued: ";
+    std::string todoEmoji = " 📥 Queued: ";
     std::string todoCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
     todoCount = todoEmoji + todoCount;
 
-    std::string startedEmoji = " 🏃 Started: ";
+    std::string startedEmoji = " 🔨 Started: ";
     std::string startedCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
     startedCount = startedEmoji + startedCount;
 
-    std::string underReviewEmoji = " 🔍 Triaged: ";
+    std::string underReviewEmoji = " ⚖️ Triaged: ";
     std::string underReviewCount =
         std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
     underReviewCount = underReviewEmoji + underReviewCount;
 
-    std::string pauseEmoji = " 💤 Paused: ";
+    std::string pauseEmoji = " ⏸️ Paused: ";
     std::string pauseCount = std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
     pauseCount = pauseEmoji + pauseCount;
 
@@ -274,12 +274,12 @@ Default::printStats(ListName& listName)
     archivedCount += listItemService.countWithStatus(listNameArchive, { StatusService::COMPLETED });
     std::string archivedCountStr = archivedEmoji + std::to_string(archivedCount);
 
-    std::string cancelEmoji = " ✖️ Cancelled: ";
+    std::string cancelEmoji = " 🚫 Cancelled: ";
     int cancelCount = listItemService.countWithStatus(listName, { StatusService::CANCELLED });
     cancelCount += listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED });
     std::string cancelCountStr = cancelEmoji + std::to_string(cancelCount);
 
-    std::string deletedEmoji = "  🧹 Deleted: ";
+    std::string deletedEmoji = "  🗑️ Deleted: ";
     std::string deletedCount = std::to_string(listItemService.count(listNameDelete));
     deletedCount = deletedEmoji + deletedCount;
 

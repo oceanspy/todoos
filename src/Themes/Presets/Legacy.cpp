@@ -55,23 +55,23 @@ Legacy::renderTitleBox(ListName& displayName, ListCountSummary& summary)
 
     std::string todoStr = std::to_string(summary.getStatus(StatusService::QUEUED));
     int todoCharLength = 6 + static_cast<int>(todoStr.length());
-    todoStr = "   ⏳ " + todoStr;
+    todoStr = "   📥 " + todoStr;
 
     std::string startedStr = std::to_string(summary.getStatus(StatusService::STARTED));
     int startedCharLength = 4 + static_cast<int>(startedStr.length());
-    startedStr = " 🏃 " + startedStr;
+    startedStr = " 🔨 " + startedStr;
 
     std::string underReviewStr = std::to_string(summary.getStatus(StatusService::TRIAGED));
     int underReviewCharLength = 4 + static_cast<int>(underReviewStr.length());
-    underReviewStr = " 🔍 " + underReviewStr;
+    underReviewStr = " ⚖️ " + underReviewStr;
 
     std::string pauseStr = std::to_string(summary.getStatus(StatusService::PAUSED));
     int pauseCharLength = 4 + static_cast<int>(pauseStr.length());
-    pauseStr = " 💤 " + pauseStr;
+    pauseStr = " ⏸️ " + pauseStr;
 
     std::string blockedStr = std::to_string(summary.getStatus(StatusService::BLOCKED));
     int blockedCharLength = 4 + static_cast<int>(blockedStr.length());
-    blockedStr = " 🚫 " + blockedStr;
+    blockedStr = " 🧱 " + blockedStr;
 
     std::string completedStr = std::to_string(summary.getStatus(StatusService::COMPLETED));
     int completedCharLength = 4 + static_cast<int>(completedStr.length());
@@ -87,11 +87,11 @@ Legacy::renderTitleBox(ListName& displayName, ListCountSummary& summary)
 
     std::string cancelledStr = std::to_string(summary.cancelled);
     int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
-    cancelledStr = " ✖️ " + cancelledStr;
+    cancelledStr = " 🚫 " + cancelledStr;
 
     std::string deletedStr = std::to_string(summary.deleted);
     int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
-    deletedStr = " 🧹 " + deletedStr;
+    deletedStr = " 🗑️ " + deletedStr;
 
     std::string statusPrintCount = totalStr + todoStr + startedStr + underReviewStr + pauseStr + blockedStr +
                                    completedStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
@@ -298,12 +298,12 @@ Legacy::printStats(ListName& listName)
     ListName listNameDelete = ListName::createVariant(listName, "delete");
 
     std::string todoCount =
-        " ⏳ Queued: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
+        " 📥 Queued: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::QUEUED }));
     std::string startedCount =
-        " 🏃 Started: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
+        " 🔨 Started: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::STARTED }));
     std::string underReviewCount =
-        " 🔍 Triaged: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
-    std::string deletedCount = "  🧹 Deleted: " + std::to_string(listItemService.count(listNameDelete));
+        " ⚖️ Triaged: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::TRIAGED }));
+    std::string deletedCount = "  🗑️ Deleted: " + std::to_string(listItemService.count(listNameDelete));
 
     std::string criticalCount =
         StringHelpers::colorize(" ■ ", WHITE) +
@@ -313,7 +313,7 @@ Legacy::printStats(ListName& listName)
         std::string total = " 📈 Total: " + std::to_string(listItemService.count(listName));
 
         std::string pauseCount =
-            " 💤 Paused: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
+            " ⏸️ Paused: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
 
         int archivedCount = listItemService.countWithStatus(listName, { StatusService::COMPLETED });
         archivedCount += listItemService.countWithStatus(listNameArchive, { StatusService::COMPLETED });
@@ -321,7 +321,7 @@ Legacy::printStats(ListName& listName)
 
         int cancelCount = listItemService.countWithStatus(listName, { StatusService::CANCELLED });
         cancelCount += listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED });
-        std::string cancelCountStr = " ✖️ Cancelled: " + std::to_string(cancelCount);
+        std::string cancelCountStr = " 🚫 Cancelled: " + std::to_string(cancelCount);
 
         std::string urgentCount =
             StringHelpers::colorize(" ● ", RED) +
@@ -355,7 +355,7 @@ Legacy::printStats(ListName& listName)
         std::string total = " 📈 Total: " + std::to_string(listItemService.count(listName));
 
         std::string pauseCount =
-            " 💤 Paused: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
+            " ⏸️ Paused: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::PAUSED }));
 
         std::string completedCount =
             " ✅ Completed: " + std::to_string(listItemService.countWithStatus(listName, { StatusService::COMPLETED }));
@@ -366,7 +366,7 @@ Legacy::printStats(ListName& listName)
         std::string archivedCount = " 🚀 Archived: " + std::to_string(listItemService.count(listNameArchive));
 
         std::string cancelledArchivedCount =
-            "  🚫 Cancelled: " +
+            "  🧱 Cancelled: " +
             std::to_string(listItemService.countWithStatus(listNameArchive, { StatusService::CANCELLED }));
 
         std::string urgentCount =
