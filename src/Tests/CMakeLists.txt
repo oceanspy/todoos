@@ -147,6 +147,10 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/StatsUseCase.cpp
         ../UseCase/MoveItemUseCase.cpp
         ../UseCase/DescribeItemUseCase.cpp
+        ../FileDataStorageRepositories/DescriptionRepository.cpp
+        ../Describe/DescribeItem.cpp
+        ../Describe/DescribeItemEdited.cpp
+        ../Actions/Description/ItemTempFile.cpp
         ../UseCase/CopyItemUseCase.cpp
         ../UseCase/DuplicateItemUseCase.cpp
         ../UseCase/EmptyUseCase.cpp
@@ -155,6 +159,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         UseCase/UseCaseTest.cpp
         UseCase/MissingUseCaseTest.cpp
         Actions/ItemActionsTest.cpp
+        Describe/DescribeItemTest.cpp
+        Describe/DescribeItemEditedTest.cpp
+        Describe/DescriptionRepositoryTest.cpp
         TestMain.cpp
 )
 

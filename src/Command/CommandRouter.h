@@ -7,6 +7,7 @@
 #include "../Command/CommandService.h"
 #include "../Command/SmartCommand.h"
 #include "../Config/ConfigService.h"
+#include "../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../FileStorage/FileStorageService.h"
 #include "../Help/HelpPrinter.h"
 #include "../IOService/IOService.h"
@@ -25,7 +26,9 @@ class CommandRouter
                   FileStorageService& fileStorageService,
                   ListService& listService,
                   ListItemService& listItemService,
-                  ThemeService& themeService);
+                  ThemeService& themeService,
+                  DescriptionRepository& descriptionRepository,
+                  std::filesystem::path cacheDirPath);
 
     void execute(Command& command, ListName& currentList);
 
@@ -39,6 +42,8 @@ class CommandRouter
     ListService& listService;
     ListItemService& listItemService;
     ThemeService& themeService;
+    DescriptionRepository& descriptionRepository;
+    std::filesystem::path cacheDirPath;
 };
 
 #endif // COMMANDROUTER_H

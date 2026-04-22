@@ -1,5 +1,6 @@
 #include "../../Command/CommandRouter.h"
 #include "../../Command/CommandOption.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
@@ -60,6 +61,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         ListName listName = listService.createUsedListName();
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -67,7 +69,9 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              fileStorageService,
                              listService,
                              listItemService,
-                             themeService);
+                             themeService,
+                             descriptionRepository,
+                             init.getCacheDirPath());
         REQUIRE_NOTHROW(router.execute(command, listName));
     }
 
@@ -86,6 +90,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -93,7 +98,9 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              fileStorageService,
                              listService,
                              listItemService,
-                             themeService);
+                             themeService,
+                             descriptionRepository,
+                             init.getCacheDirPath());
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -118,6 +125,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -125,7 +133,9 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              fileStorageService,
                              listService,
                              listItemService,
-                             themeService);
+                             themeService,
+                             descriptionRepository,
+                             init.getCacheDirPath());
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -150,6 +160,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -157,7 +168,9 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              fileStorageService,
                              listService,
                              listItemService,
-                             themeService);
+                             themeService,
+                             descriptionRepository,
+                             init.getCacheDirPath());
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -182,6 +195,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -189,7 +203,9 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              fileStorageService,
                              listService,
                              listItemService,
-                             themeService);
+                             themeService,
+                             descriptionRepository,
+                             init.getCacheDirPath());
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -214,6 +230,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         ListName listName = listService.createUsedListName();
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -221,7 +238,9 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              fileStorageService,
                              listService,
                              listItemService,
-                             themeService);
+                             themeService,
+                             descriptionRepository,
+                             init.getCacheDirPath());
         REQUIRE_NOTHROW(router.execute(command, listName));
     }
 
@@ -241,6 +260,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         ListName listName = listService.createUsedListName();
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -248,7 +268,9 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              fileStorageService,
                              listService,
                              listItemService,
-                             themeService);
+                             themeService,
+                             descriptionRepository,
+                             init.getCacheDirPath());
         REQUIRE_THROWS_AS(router.execute(command, listName), std::invalid_argument);
     }
 }

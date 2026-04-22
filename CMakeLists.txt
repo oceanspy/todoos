@@ -105,6 +105,14 @@ add_executable(todoos main.cpp
         src/Command/SmartCommand.h
         src/FileDataStorageRepositories/ListRepository.cpp
         src/FileDataStorageRepositories/ListRepository.h
+        src/FileDataStorageRepositories/DescriptionRepository.cpp
+        src/FileDataStorageRepositories/DescriptionRepository.h
+        src/Describe/DescribeItem.cpp
+        src/Describe/DescribeItem.h
+        src/Describe/DescribeItemEdited.cpp
+        src/Describe/DescribeItemEdited.h
+        src/Actions/Description/ItemTempFile.cpp
+        src/Actions/Description/ItemTempFile.h
         src/Command/CommandShortcut.cpp
         src/Command/CommandShortcut.h
         src/Helpers/TerminalStyle.h

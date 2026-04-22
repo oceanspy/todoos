@@ -1,4 +1,5 @@
 #include "CommandRouter.h"
+#include "../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../UseCase/AddItemUseCase.h"
 #include "../UseCase/AddListUseCase.h"
 #include "../UseCase/AppendItemUseCase.h"
@@ -34,7 +35,9 @@ CommandRouter::CommandRouter(IOService& ioService,
                              FileStorageService& fileStorageService,
                              ListService& listService,
                              ListItemService& listItemService,
-                             ThemeService& themeService)
+                             ThemeService& themeService,
+                             DescriptionRepository& descriptionRepository,
+                             std::filesystem::path cacheDirPath)
   : ioService(ioService)
   , help(help)
   , commandService(commandService)
@@ -43,6 +46,8 @@ CommandRouter::CommandRouter(IOService& ioService,
   , listService(listService)
   , listItemService(listItemService)
   , themeService(themeService)
+  , descriptionRepository(descriptionRepository)
+  , cacheDirPath(std::move(cacheDirPath))
 {
 }
 
@@ -204,7 +209,7 @@ CommandRouter::execute(Command& command, ListName& currentList)
                 .execute(command, currentList);
             return;
         case CommandRegistry::DESCRIBE:
-            DescribeItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
+            DescribeItemUseCase(ioService, commandService, listItemService, listService, configService, themeService, descriptionRepository, cacheDirPath)
                 .execute(subCommand, currentList);
             return;
         default:

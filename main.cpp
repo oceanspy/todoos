@@ -4,6 +4,7 @@
 #include "src/Command/CommandValidation.h"
 #include "src/Config/ConfigService.h"
 #include "src/FileDataStorageRepositories/ConfigRepository.h"
+#include "src/FileDataStorageRepositories/DescriptionRepository.h"
 #include "src/FileDataStorageRepositories/ListItemRepository.h"
 #include "src/FileDataStorageRepositories/ListRepository.h"
 #include "src/Help/HelpPrinter.h"
@@ -132,9 +133,10 @@ main(int argc, const char* argv[])
 
     // ----
     // Initializing cli actions and frontend
+    DescriptionRepository descriptionRepository = DescriptionRepository(configService.getDescriptionsDirPath());
     ThemeService themeService = ThemeService(ioService, configService, listService, listItemService);
     CommandRouter commandRouter = CommandRouter(
-        ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+        ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService, descriptionRepository, init.getCacheDirPath());
 
     // ----
     // Do the actions and print

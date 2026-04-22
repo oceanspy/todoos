@@ -209,6 +209,12 @@ ConfigService::getListArchiveFilePathFromFilePath(std::filesystem::path listFile
 }
 
 std::filesystem::path
+ConfigService::getDescriptionsDirPath()
+{
+    return getAppDirPath() / "descriptions";
+}
+
+std::filesystem::path
 ConfigService::getListDeleteFilePathFromFilePath(std::filesystem::path listFilePath)
 {
     if (listFilePath.filename().string().find(".del_") != std::string::npos) {
