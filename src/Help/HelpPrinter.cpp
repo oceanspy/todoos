@@ -60,17 +60,23 @@ std::vector<std::string>
 HelpPrinter::helpListForCli()
 {
     // Colors
-    const std::string RST  = "\033[0m";
+    const std::string RST = "\033[0m";
     const std::string BOLD = "\033[1m";
-    const std::string CYN  = "\033[96m";   // flags
-    const std::string BLU  = "\033[94m";   // options
-    const std::string YLW  = "\033[93m";   // arguments
-    const std::string DIM  = "\033[90m";   // dim / hints
-    const std::string SEP  = DIM + " \xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" + RST;
+    const std::string CYN = "\033[96m"; // flags
+    const std::string BLU = "\033[94m"; // options
+    const std::string YLW = "\033[93m"; // arguments
+    const std::string DIM = "\033[90m"; // dim / hints
+    const std::string SEP =
+        DIM +
+        " \xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"
+        "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"
+        "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"
+        "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"
+        "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"
+        "\xE2\x94\x80" +
+        RST;
 
-    auto section = [&](const std::string& title) {
-        return BOLD + " " + title + RST;
-    };
+    auto section = [&](const std::string& title) { return BOLD + " " + title + RST; };
 
     // clang-format off
     return {
@@ -107,6 +113,7 @@ HelpPrinter::helpListForCli()
         "   append      " + YLW + "{id} {value}" + RST + "     Append to item" + BLU + " [-p] [-s] [-i]" + RST,  // col 27 +  5 = 32
         "   prepend     " + YLW + "{id} {value}" + RST + "     Prepend to item" + BLU + " [-p] [-s] [-i]" + RST, // col 27 +  5 = 32
         "   find    (f) " + YLW + "{word}"       + RST + "           Find item              " + CYN + "[-a] [-d]" + RST, // col 21 + 11 = 32
+        "   describe    " + YLW + "{id}"       + RST + "             Edit the description of an item  " + CYN + "[-a] [-d]" + RST, // col 21 + 11 = 32
         "",
         section("MOVE & COPY"),
         "   remove  (rm) " + CYN + "[-f] " + YLW + "{ids}" + RST + "       Remove items",              // col 26 +  7 = 33

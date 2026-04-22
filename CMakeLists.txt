@@ -108,8 +108,6 @@ add_executable(todoos main.cpp
         src/Command/CommandShortcut.cpp
         src/Command/CommandShortcut.h
         src/Helpers/TerminalStyle.h
-        src/UseCase/CommandAutoCompleteUseCase.cpp
-        src/UseCase/CommandAutoCompleteUseCase.h
         src/Themes/Presets/Default.cpp
         src/Themes/Presets/Default.h
         src/Themes/Presets/Legacy.cpp
@@ -141,6 +139,8 @@ add_executable(todoos main.cpp
         src/Themes/ThemeService.cpp
         src/Themes/ThemeService.h
         src/Helpers/TerminalStyle.cpp
+        src/UseCase/CommandAutoCompleteUseCase.cpp
+        src/UseCase/CommandAutoCompleteUseCase.h
         src/UseCase/ShowUseCase.cpp
         src/UseCase/ShowUseCase.h
         src/UseCase/AddItemUseCase.cpp
@@ -185,6 +185,8 @@ add_executable(todoos main.cpp
         src/UseCase/StatsUseCase.h
         src/UseCase/MoveItemUseCase.cpp
         src/UseCase/MoveItemUseCase.h
+        src/UseCase/DescribeItemUseCase.cpp
+        src/UseCase/DescribeItemUseCase.h
         src/UseCase/CopyItemUseCase.cpp
         src/UseCase/CopyItemUseCase.h
         src/UseCase/DuplicateItemUseCase.cpp

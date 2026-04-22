@@ -18,13 +18,10 @@ DuplicateItemUseCase::DuplicateItemUseCase(IOService& ioService,
 }
 
 void
-DuplicateItemUseCase::execute(Command& command)
+DuplicateItemUseCase::execute(Command& command, ListName& currentList)
 {
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-
     DuplicateItemAction action(ioService, listService, listItemService);
-    std::string newListNameStr = action.execute(command, listName);
+    std::string newListNameStr = action.execute(command, currentList);
 
     if (!newListNameStr.empty()) {
         ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());

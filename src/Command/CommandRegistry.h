@@ -35,6 +35,7 @@ class CommandRegistry
         BLOCKED = 35,
         COMPLETE = 36,
         CANCEL = 37,
+        RESET = 38,
         REMOVE = 40,
         ARCHIVE = 41,
         RESTORE = 42,
@@ -47,7 +48,7 @@ class CommandRegistry
         LIST = 70,
         USE = 71,
         STATS = 80,
-        RESET = 90,
+        DESCRIBE = 90,
         COMMANDS = 100
     };
 

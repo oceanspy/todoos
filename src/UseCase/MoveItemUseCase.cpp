@@ -20,13 +20,11 @@ MoveItemUseCase::MoveItemUseCase(IOService& ioService,
 }
 
 void
-MoveItemUseCase::execute(Command& command)
+MoveItemUseCase::execute(Command& command, ListName& currentList)
 {
     MoveItemAction move(ioService, listService, listItemService);
 
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    std::string newListNameStr = move.execute(command, listName);
+    std::string newListNameStr = move.execute(command, currentList);
     if (!newListNameStr.empty()) {
         ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());
         ShowAction show(ioService, listService, listItemService, themeService);

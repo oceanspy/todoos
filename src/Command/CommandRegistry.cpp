@@ -20,9 +20,9 @@ CommandRegistry::CommandRegistry()
 void
 CommandRegistry::make()
 {
-    commandIds = { SHOW,  ADD,   EDIT,      APPEND,   PREPEND,  FIND,   PRIORITY, INCREASE, DECREASE, STATUS, QUEUE,
-                   START, PAUSE, TRIAGE,    BLOCKED,  COMPLETE, CANCEL, REMOVE,   ARCHIVE,  RESTORE,  MOVE,   COPY,
-                   EMPTY, CLEAN, DUPLICATE, DEADLINE, LIST,     USE,    STATS,    RESET,    COMMANDS };
+    commandIds = { SHOW,  ADD,   EDIT,   APPEND,    PREPEND,  FIND,   PRIORITY, INCREASE, DECREASE, STATUS,  QUEUE,
+                   START, PAUSE, TRIAGE, BLOCKED,   COMPLETE, CANCEL, RESET,    REMOVE,   ARCHIVE,  RESTORE, MOVE,
+                   COPY,  EMPTY, CLEAN,  DUPLICATE, DEADLINE, LIST,   USE,      STATS,    DESCRIBE, COMMANDS };
 
     // loop to commandIds to get the command name
     for (int commandId : commandIds) {
@@ -83,6 +83,9 @@ CommandRegistry::make()
             case CANCEL:
                 commands[commandId].name = "cancel";
                 break;
+            case RESET:
+                commands[commandId].name = "reset";
+                break;
             case REMOVE:
                 commands[commandId].name = "remove";
                 break;
@@ -119,8 +122,8 @@ CommandRegistry::make()
             case STATS:
                 commands[commandId].name = "stats";
                 break;
-            case RESET:
-                commands[commandId].name = "reset";
+            case DESCRIBE:
+                commands[commandId].name = "describe";
                 break;
             case COMMANDS:
                 commands[commandId].name = "commands";

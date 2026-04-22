@@ -18,21 +18,20 @@ ResetUseCase::ResetUseCase(IOService& ioService,
 }
 
 void
-ResetUseCase::execute(Command& command)
+ResetUseCase::execute(Command& command, ListName& currentList)
 {
-    std::string answer = ioService.ask("Are you sure you want to reset item(s) to queued and clear date/deadline? (y/n) ");
+    std::string answer =
+        ioService.ask("Are you sure you want to reset item(s) to queued and clear date/deadline? (y/n) ");
 
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     if (answer == "y" || answer == "yes") {
         StatusAction status(ioService, listItemService);
-        status.executeReset(command, listName);
+        status.executeReset(command, currentList);
 
         ShowAction show(ioService, listService, listItemService, themeService);
 
-        std::vector<ListItemEntity> listItems = listItemService.get(listName);
+        std::vector<ListItemEntity> listItems = listItemService.get(currentList);
         try {
-            show.execute(listItems, listName);
+            show.execute(listItems, currentList);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error(e.what());

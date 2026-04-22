@@ -18,18 +18,16 @@ RestoreUseCase::RestoreUseCase(IOService& ioService,
 }
 
 void
-RestoreUseCase::execute(Command& command)
+RestoreUseCase::execute(Command& command, ListName& currentList)
 {
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     RemoveAction remove(ioService, listItemService);
-    remove.execute(command, listName, "restore");
+    remove.execute(command, currentList, "restore");
 
     ShowAction show(ioService, listService, listItemService, themeService);
 
-    std::vector<ListItemEntity> listItems = listItemService.get(listName);
+    std::vector<ListItemEntity> listItems = listItemService.get(currentList);
     try {
-        show.execute(listItems, listName);
+        show.execute(listItems, currentList);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

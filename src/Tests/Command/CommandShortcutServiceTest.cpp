@@ -22,6 +22,7 @@ TEST_CASE("CommandShortcutService Tests", "[CommandShortcutService]")
         REQUIRE(shortcuts["append"] == "append");
         REQUIRE(shortcuts["prepend"] == "prepend");
         REQUIRE(shortcuts["empty"] == "empty");
+        REQUIRE(shortcuts["desc"] == "describe");
     }
 
     SECTION("Get shortcuts for command")

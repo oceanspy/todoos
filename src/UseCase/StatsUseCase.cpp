@@ -16,10 +16,8 @@ StatsUseCase::StatsUseCase(IOService& ioService,
 }
 
 void
-StatsUseCase::execute(Command& command)
+StatsUseCase::execute(Command& command, ListName& currentList)
 {
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     StatsAction stats(ioService, configService, listItemService, themeService);
-    stats.execute(command, listName);
+    stats.execute(command, currentList);
 }

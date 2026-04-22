@@ -146,6 +146,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/MoveListUseCase.cpp
         ../UseCase/StatsUseCase.cpp
         ../UseCase/MoveItemUseCase.cpp
+        ../UseCase/DescribeItemUseCase.cpp
         ../UseCase/CopyItemUseCase.cpp
         ../UseCase/DuplicateItemUseCase.cpp
         ../UseCase/EmptyUseCase.cpp

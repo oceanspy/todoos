@@ -127,6 +127,10 @@ main(int argc, const char* argv[])
     }
 
     // ----
+    // Get list used
+    ListName currentList = listService.createUsedListName();
+
+    // ----
     // Initializing cli actions and frontend
     ThemeService themeService = ThemeService(ioService, configService, listService, listItemService);
     CommandRouter commandRouter = CommandRouter(
@@ -135,7 +139,7 @@ main(int argc, const char* argv[])
     // ----
     // Do the actions and print
     try {
-        commandRouter.execute(command);
+        commandRouter.execute(command, currentList);
     } catch (ListNotFoundException& e) {
         help.listNotFound(e.getName());
         return 1;

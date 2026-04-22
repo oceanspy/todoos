@@ -34,6 +34,7 @@ CommandShortcut::getShortcutCommands()
     shortCutCommands["cp"] = "copy-to";
     shortCutCommands["duplicate"] = "duplicate";
     shortCutCommands["current"] = "current";
+    shortCutCommands["desc"] = "describe";
 
     return shortCutCommands;
 }

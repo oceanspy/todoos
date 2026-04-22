@@ -56,7 +56,7 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
 
         REQUIRE_NOTHROW(
             AppendItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         std::string value = *item.getValue();
@@ -81,7 +81,7 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
 
         REQUIRE_NOTHROW(
             AppendItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
@@ -101,10 +101,11 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             AppendItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 
     SECTION("append with invalid ID does not throw")
@@ -118,10 +119,11 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             AppendItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 }
 
@@ -163,7 +165,7 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
 
         REQUIRE_NOTHROW(
             PrependItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         std::string value = *item.getValue();
@@ -188,7 +190,7 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
 
         REQUIRE_NOTHROW(
             PrependItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
@@ -208,10 +210,11 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             PrependItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 
     SECTION("prepend with invalid ID does not throw")
@@ -225,10 +228,11 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             PrependItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 }
 
@@ -270,7 +274,7 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
 
         REQUIRE_NOTHROW(
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*item.getValue() == "replaced value");
@@ -294,7 +298,7 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
 
         REQUIRE_NOTHROW(
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
@@ -314,10 +318,11 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 
     SECTION("edit with priority option changes priority")
@@ -336,7 +341,7 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
 
         REQUIRE_NOTHROW(
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "low");
@@ -361,7 +366,7 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
 
         REQUIRE_NOTHROW(
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "triaged");
@@ -381,10 +386,11 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 
     SECTION("edit with invalid deadline option does not throw")
@@ -399,10 +405,11 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 }
 
@@ -444,7 +451,7 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
 
         REQUIRE_NOTHROW(
             DeadlineItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*item.getDueAt() > 0);
@@ -464,10 +471,11 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             DeadlineItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 
     SECTION("deadline does not change item count")
@@ -485,7 +493,7 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
 
         REQUIRE_NOTHROW(
             DeadlineItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
@@ -505,10 +513,11 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
             DeadlineItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
-                .execute(command));
+                .execute(command, listName));
     }
 }
 
@@ -548,7 +557,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         ListName targetListName = listService.createListName("tempList2Name");
 
         REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command));
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command, listName));
 
         std::vector<ListItemEntity> sourceItems = listItemService.get(listName);
         REQUIRE(sourceItems.size() == 2);
@@ -577,9 +586,10 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command));
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command, listName));
     }
 
     SECTION("copy with non-existent ID does not throw")
@@ -593,9 +603,10 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command));
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command, listName));
     }
 }
 
@@ -633,7 +644,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
-                            .execute(command));
+                            .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 3);
@@ -656,7 +667,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
-                            .execute(command));
+                            .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         int matchCount = 0;
@@ -685,7 +696,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
-                            .execute(command));
+                            .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         std::vector<std::string> ids;
@@ -714,7 +725,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
-                            .execute(command));
+                            .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
@@ -731,9 +742,10 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
+        ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
-                            .execute(command));
+                            .execute(command, listName));
     }
 }
 

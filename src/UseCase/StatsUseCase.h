@@ -15,7 +15,7 @@ class StatsUseCase
                  ListItemService& listItemService,
                  ThemeService& themeService,
                  ListService& listService);
-    void execute(Command& command);
+    void execute(Command& command, ListName& currentList);
 
   private:
     IOService& ioService;

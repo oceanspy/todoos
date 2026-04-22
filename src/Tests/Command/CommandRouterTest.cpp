@@ -59,6 +59,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
+        ListName listName = listService.createUsedListName();
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -67,7 +68,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listService,
                              listItemService,
                              themeService);
-        REQUIRE_NOTHROW(router.execute(command));
+        REQUIRE_NOTHROW(router.execute(command, listName));
     }
 
     // ---- add -------------------------------------------------------------------
@@ -93,7 +94,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listService,
                              listItemService,
                              themeService);
-        REQUIRE_NOTHROW(router.execute(command));
+        REQUIRE_NOTHROW(router.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 3);
@@ -125,7 +126,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listService,
                              listItemService,
                              themeService);
-        REQUIRE_NOTHROW(router.execute(command));
+        REQUIRE_NOTHROW(router.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -157,7 +158,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listService,
                              listItemService,
                              themeService);
-        REQUIRE_NOTHROW(router.execute(command));
+        REQUIRE_NOTHROW(router.execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "started");
@@ -189,7 +190,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listService,
                              listItemService,
                              themeService);
-        REQUIRE_NOTHROW(router.execute(command));
+        REQUIRE_NOTHROW(router.execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.priority()).getName() == "urgent");
@@ -212,6 +213,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
+        ListName listName = listService.createUsedListName();
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -220,7 +222,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listService,
                              listItemService,
                              themeService);
-        REQUIRE_NOTHROW(router.execute(command));
+        REQUIRE_NOTHROW(router.execute(command, listName));
     }
 
     // ---- unknown command -------------------------------------------------------
@@ -238,6 +240,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
+        ListName listName = listService.createUsedListName();
         CommandRouter router(ioService,
                              help,
                              commandService,
@@ -246,6 +249,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listService,
                              listItemService,
                              themeService);
-        REQUIRE_THROWS_AS(router.execute(command), std::invalid_argument);
+        REQUIRE_THROWS_AS(router.execute(command, listName), std::invalid_argument);
     }
 }

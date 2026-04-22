@@ -19,7 +19,7 @@ CleanUseCase::CleanUseCase(IOService& ioService,
 }
 
 void
-CleanUseCase::execute(Command& command)
+CleanUseCase::execute(Command& command, ListName& currentList)
 {
     ioService.br();
     std::string message = "Are you sure you want to archive all completed & cancelled from ";
@@ -28,19 +28,17 @@ CleanUseCase::execute(Command& command)
     std::string answer = ioService.ask(message);
 
     if (answer == "yes") {
-        ListName listName =
-            listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-        listItemService.archiveFinishedItems(listName);
+        listItemService.archiveFinishedItems(currentList);
         ioService.br();
         ioService.success("List cleaned.");
         ioService.br();
 
         ShowAction show(ioService, listService, listItemService, themeService);
 
-        std::vector<ListItemEntity> listItems = listItemService.get(listName);
+        std::vector<ListItemEntity> listItems = listItemService.get(currentList);
 
         try {
-            show.execute(listItems, listName);
+            show.execute(listItems, currentList);
         } catch (std::exception& e) {
             ioService.br();
             ioService.error(e.what());
