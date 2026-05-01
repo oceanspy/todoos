@@ -6,6 +6,7 @@
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../Helpers/StringHelpers.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/ListItemEntity.h"
 #include "../../List/ListItems/PriorityService.h"
@@ -75,7 +76,9 @@ TEST_CASE("Default theme", "[Default]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr =
         std::make_unique<JsonSerializer>(ioService);
     ListRepository listRepository(configService, jsonFileDataStorageServicePtr.get());

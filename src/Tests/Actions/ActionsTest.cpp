@@ -2,6 +2,7 @@
 #include "../../Actions/PriorityAction/PriorityAction.h"
 #include "../../Actions/RemoveAction/RemoveAction.h"
 #include "../../Actions/StatusAction/StatusAction.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../List/ListService.h"
@@ -34,7 +35,9 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -143,7 +146,9 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -238,7 +243,9 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -338,7 +345,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, addCommand);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
@@ -369,7 +378,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, emptyAddCommand);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
@@ -389,7 +400,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, addWithPrio);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
@@ -411,7 +424,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, addCommand);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();

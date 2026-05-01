@@ -1,3 +1,5 @@
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
+#include "../../List/ListItemId.h"
 #include "../../List/ListItemService.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../IOService/IOService.h"
@@ -38,7 +40,9 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     StatusService statusService = StatusService();
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -691,12 +695,41 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     SECTION("makeId returns a string of correct length")
     {
         std::string id = listItemService.makeId(tempListName);
-        REQUIRE(id.length() == listItemService.idLength);
+        REQUIRE(id.length() == static_cast<size_t>(ListItemId::getIdLength()));
     }
 
     SECTION("isIdAvailable")
     {
         REQUIRE(listItemService.isIdAvailable("zzzz", tempListName) == true);
         REQUIRE(listItemService.isIdAvailable("aaaa", tempListName) == false);
+    }
+
+    SECTION("get sets hasDescription to false when no description files exist")
+    {
+        std::vector<ListItemEntity> items = listItemService.get(tempListName);
+        for (const ListItemEntity& item : items) {
+            REQUIRE_FALSE(*item.hasDescription());
+        }
+    }
+
+    SECTION("get sets hasDescription to true for items with a description file")
+    {
+        std::filesystem::path descPath = descriptionRepository.getFilePath("aaaa", tempListName);
+        std::filesystem::create_directories(descPath.parent_path());
+        std::ofstream(descPath) << "Some description.";
+
+        std::vector<ListItemEntity> items = listItemService.get(tempListName);
+        auto aaaa = std::find_if(items.begin(), items.end(),
+                                 [](const ListItemEntity& i) { return *i.getId() == "aaaa"; });
+        auto bbbb = std::find_if(items.begin(), items.end(),
+                                 [](const ListItemEntity& i) { return *i.getId() == "bbbb"; });
+
+        REQUIRE(aaaa != items.end());
+        REQUIRE(bbbb != items.end());
+        REQUIRE(*aaaa->hasDescription());
+        REQUIRE_FALSE(*bbbb->hasDescription());
+
+        installation.wipe();
+        installation.make();
     }
 }

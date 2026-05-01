@@ -18,6 +18,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Config/ConfigEntity.cpp
         ../List/ListEntity.cpp
         ../List/ListItems/ListItemEntity.cpp
+        ../List/ListItemId.cpp
         ../List/ListItems/PriorityEntity.cpp
         ../List/ListItems/StatusEntity.cpp
         ../Serializers/ConfSerializer.cpp
@@ -67,6 +68,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Mock/MockAppInitialization.h
         Config/ConfigRepositoryTest.cpp
         List/ListRepositoryTest.cpp
+        List/ListItemIdTest.cpp
         List/ListItemServiceTest.cpp
         List/ListCountSummaryTest.cpp
         List/ListItemServiceCountSummaryTest.cpp

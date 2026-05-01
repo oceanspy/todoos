@@ -1,16 +1,21 @@
 #include "ListItemService.h"
+#include "ListItemId.h"
+#include "ListItems/ListItemEntity.h"
 
+#include <algorithm>
 #include <string>
 #include <utility>
 
 ListItemService::ListItemService(IOService& ioService,
                                  ConfigService& configService,
                                  ListItemRepository& listItemRepository,
+                                 DescriptionRepository& descriptionRepository,
                                  PriorityService& priorityService,
                                  StatusService& statusService)
   : ioService(ioService)
   , configService(configService)
   , listItemRepository(listItemRepository)
+  , descriptionRepository(descriptionRepository)
   , priorityService(priorityService)
   , statusService(statusService)
 {
@@ -19,7 +24,19 @@ ListItemService::ListItemService(IOService& ioService,
 std::vector<ListItemEntity>
 ListItemService::get(ListName& listName)
 {
-    return sort(listItemRepository.get(listName));
+    auto listItems = listItemRepository.get(listName);
+    auto existingDescriptions = descriptionRepository.getIds(listName);
+
+    for (auto& listItem : listItems) {
+        bool hasDescription = false;
+        if (std::count(existingDescriptions.begin(), existingDescriptions.end(), *listItem.getId()) > 0) {
+            hasDescription = true;
+        }
+
+        listItem.setHasDescription(hasDescription);
+    }
+
+    return sort(listItems);
 }
 
 ListItemEntity
@@ -74,22 +91,15 @@ ListItemService::add(ListName& listName,
     return id;
 }
 
-std::string
+std::string const
 ListItemService::makeId(ListName& listName)
 {
     bool validId = false;
-    std::string id;
     int i = 0;
-    const std::string idType = configService.getValue("idRandomGenerationType");
+    std::string id;
+    const std::string generationType = configService.getValue("idRandomGenerationType");
     while (!validId && i < 50) {
-        if (idType == idLettersLowercase) {
-            id = StringHelpers::randomLettersLowercase(idLength);
-        } else if (idType == idLetters) {
-            id = StringHelpers::randomAlNumString(idLength);
-        } else {
-            id = StringHelpers::randomString(idLength);
-        }
-
+        id = ListItemId::generate(generationType);
         if (isIdAvailable(id, listName)) {
             validId = true;
         }

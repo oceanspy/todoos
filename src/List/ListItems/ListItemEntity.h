@@ -17,6 +17,7 @@ class ListItemEntity
     [[nodiscard]] const std::string* getValue() const;
     [[nodiscard]] const PriorityEntity* priority() const;
     [[nodiscard]] const StatusEntity* status() const;
+    [[nodiscard]] const bool* hasDescription() const;
     [[nodiscard]] const time_t* getDueAt() const;
     [[nodiscard]] const time_t* getClosedAt() const;
     [[nodiscard]] const time_t* getCreatedAt() const;
@@ -26,6 +27,7 @@ class ListItemEntity
     void setValue(const std::string& valueStr);
     void setPriority(const PriorityEntity& priorityEntity);
     void setStatus(const StatusEntity& statusEntity);
+    void setHasDescription(const bool& description);
     void setDueAt(time_t dueAtDate);
     void setClosedAt(time_t closedAtDate);
     void setCreatedAt(time_t createdAt);
@@ -48,6 +50,7 @@ class ListItemEntity
   private:
     std::string id;
     int position = 0;
+    bool descriptionExists = false;
     ListName listName;
     std::string value;
     PriorityEntity priorityEntity;

@@ -108,10 +108,11 @@ main(int argc, const char* argv[])
     EventBus bus = EventBus();
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
+    DescriptionRepository descriptionRepository = DescriptionRepository(configService.getDescriptionsDirPath());
     ListItemRepository listItemRepository =
         ListItemRepository(configService, fileDataStorageServicePtr, priorityService, statusService);
-    ListItemService listItemService =
-        ListItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    ListItemService listItemService = ListItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository = ListRepository(configService, &jsonService);
     ListService listService = ListService(ioService, configService, listRepository, bus);
 
@@ -133,10 +134,17 @@ main(int argc, const char* argv[])
 
     // ----
     // Initializing cli actions and frontend
-    DescriptionRepository descriptionRepository = DescriptionRepository(configService.getDescriptionsDirPath());
     ThemeService themeService = ThemeService(ioService, configService, listService, listItemService);
-    CommandRouter commandRouter = CommandRouter(
-        ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService, descriptionRepository, init.getCacheDirPath());
+    CommandRouter commandRouter = CommandRouter(ioService,
+                                                help,
+                                                commandService,
+                                                configService,
+                                                fileStorageService,
+                                                listService,
+                                                listItemService,
+                                                themeService,
+                                                descriptionRepository,
+                                                init.getCacheDirPath());
 
     // ----
     // Do the actions and print

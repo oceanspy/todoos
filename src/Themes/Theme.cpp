@@ -74,11 +74,14 @@ Theme::buildStatus(const ListItemEntity& listItemEntity)
 std::string
 Theme::buildPriority(const ListItemEntity& listItemEntity)
 {
+    std::string icon = *(*listItemEntity.priority()).getIcon();
+    if (*listItemEntity.hasDescription()) {
+        icon = "⇱";
+    }
     if (*(*listItemEntity.status()).isClosed()) {
-        return StringHelpers::colorize(" " + *(*listItemEntity.priority()).getIcon() + "  ", GRAY);
+        return StringHelpers::colorize(" " + icon + "  ", GRAY);
     } else {
-        return StringHelpers::colorize(" " + *(*listItemEntity.priority()).getIcon() + "  ",
-                                       (*listItemEntity.priority()).getColor());
+        return StringHelpers::colorize(" " + icon + "  ", (*listItemEntity.priority()).getColor());
     }
 }
 

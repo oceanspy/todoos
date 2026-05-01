@@ -44,6 +44,8 @@ add_executable(todoos main.cpp
         src/List/ListService.h
         src/List/ListName.cpp
         src/List/ListName.h
+        src/List/ListItemId.cpp
+        src/List/ListItemId.h
         src/Init/AppInitialization.cpp
         src/Init/AppInitialization.h
         src/Init/AppInstallation.cpp

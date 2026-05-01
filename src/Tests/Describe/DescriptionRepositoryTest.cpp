@@ -5,6 +5,7 @@
 #include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
+#include <algorithm>
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
 #include <fstream>
@@ -104,6 +105,45 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
         std::string pathStr = std::filesystem::weakly_canonical(path).string();
         std::string dirStr  = std::filesystem::weakly_canonical(descriptionsDir).string();
         REQUIRE(pathStr.find(dirStr) == 0);
+    }
+
+    SECTION("getIds returns empty vector when descriptions directory does not exist")
+    {
+        ListName noDescList("noDescriptions", "default");
+        std::vector<std::string> ids = descriptionRepository.getIds(noDescList);
+        REQUIRE(ids.empty());
+    }
+
+    SECTION("getIds returns ids of existing description files")
+    {
+        std::filesystem::path path1 = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::path path2 = descriptionRepository.getFilePath("bbbb", listName);
+        std::filesystem::create_directories(path1.parent_path());
+        std::ofstream(path1) << "desc 1";
+        std::ofstream(path2) << "desc 2";
+
+        std::vector<std::string> ids = descriptionRepository.getIds(listName);
+        REQUIRE(ids.size() == 2);
+        REQUIRE(std::find(ids.begin(), ids.end(), "aaaa") != ids.end());
+        REQUIRE(std::find(ids.begin(), ids.end(), "bbbb") != ids.end());
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("getIds does not include removed description files")
+    {
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "desc";
+
+        descriptionRepository.remove("aaaa", listName);
+
+        std::vector<std::string> ids = descriptionRepository.getIds(listName);
+        REQUIRE(std::find(ids.begin(), ids.end(), "aaaa") == ids.end());
+
+        installation.wipe();
+        installation.make();
     }
 
     installation.wipe();

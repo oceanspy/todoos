@@ -2,6 +2,7 @@
 #include "../../FileStorage/FileStorageService.h"
 #include "../../Help/HelpPrinter.h"
 #include "../../IOService/IOService.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
 #include "../../Serializers/ConfSerializer.h"
@@ -34,7 +35,9 @@ TEST_CASE("FileStorage", "[moveFileTo]")
     StatusService statusService = StatusService();
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createListName("tempListName");

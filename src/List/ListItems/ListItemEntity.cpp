@@ -1,4 +1,5 @@
 #include "ListItemEntity.h"
+#include "../ListItemId.h"
 #include <stdexcept>
 #include <utility>
 
@@ -43,6 +44,12 @@ ListItemEntity::status() const
     return &statusEntity;
 }
 
+const bool*
+ListItemEntity::hasDescription() const
+{
+    return &descriptionExists;
+}
+
 const time_t*
 ListItemEntity::getDueAt() const
 {
@@ -71,8 +78,8 @@ void
 ListItemEntity::setId(std::string idStr)
 {
     // ID cannot be empty and needs to be numbers and letters
-    if (idStr.length() != 4) {
-        throw std::invalid_argument("ID must be 4 characters long");
+    if (idStr.length() != ListItemId::getIdLength()) {
+        throw std::invalid_argument("Error generating the ID. It must be 4 characters long");
     }
 
     for (char ch : idStr) {
@@ -114,6 +121,12 @@ void
 ListItemEntity::setStatus(const StatusEntity& statusEntity)
 {
     this->statusEntity = statusEntity;
+}
+
+void
+ListItemEntity::setHasDescription(const bool& hasDescription)
+{
+    this->descriptionExists = hasDescription;
 }
 
 void
