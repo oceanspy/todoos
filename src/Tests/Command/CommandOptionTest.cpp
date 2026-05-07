@@ -27,6 +27,7 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isValidOption("status") == true);
         REQUIRE(commandOption.isValidOption("archived") == true);
         REQUIRE(commandOption.isValidOption("deleted") == true);
+        REQUIRE(commandOption.isValidOption("described") == true);
         REQUIRE(commandOption.isValidOption("force") == true);
         REQUIRE(commandOption.isValidOption("help") == true);
         REQUIRE(commandOption.isValidOption("version") == true);
@@ -58,6 +59,8 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isOptionWithValue("archived") == false);
         REQUIRE(commandOption.isOptionWithValue("d") == false);
         REQUIRE(commandOption.isOptionWithValue("deleted") == false);
+        REQUIRE(commandOption.isOptionWithValue("D") == false);
+        REQUIRE(commandOption.isOptionWithValue("described") == false);
         REQUIRE(commandOption.isOptionWithValue("f") == false);
         REQUIRE(commandOption.isOptionWithValue("force") == false);
         REQUIRE(commandOption.isOptionWithValue("h") == false);
@@ -73,6 +76,7 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.shortToLongOption("s") == "status");
         REQUIRE(commandOption.shortToLongOption("a") == "archived");
         REQUIRE(commandOption.shortToLongOption("d") == "deleted");
+        REQUIRE(commandOption.shortToLongOption("D") == "described");
         REQUIRE(commandOption.shortToLongOption("f") == "force");
         REQUIRE(commandOption.shortToLongOption("h") == "help");
         REQUIRE(commandOption.shortToLongOption("v") == "version");

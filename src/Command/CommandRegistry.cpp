@@ -213,6 +213,10 @@ CommandRegistry::isCommandValidWithOptions(const std::string commandName,
             if (commandName == "show" || commandName == "find") {
                 return true;
             }
+        } else if (option.first == "described") {
+            if (commandName == "show" || commandName == "find") {
+                return true;
+            }
         } else if (option.first == "force") {
             if (commandName == "remove" || commandName == "move-to" || commandName == "copy-to") {
                 return true;

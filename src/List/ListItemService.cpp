@@ -733,3 +733,12 @@ ListItemService::filterDeadlineBefore(std::vector<ListItemEntity>& listItems, co
                                    }),
                     listItems.end());
 }
+
+void
+ListItemService::filterDescribed(std::vector<ListItemEntity>& listItems)
+{
+    listItems.erase(std::remove_if(listItems.begin(),
+                                   listItems.end(),
+                                   [](const ListItemEntity& item) { return !(*item.hasDescription()); }),
+                    listItems.end());
+}

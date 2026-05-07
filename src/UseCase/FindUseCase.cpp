@@ -35,6 +35,10 @@ FindUseCase::execute(Command& command)
         if (command.hasOption("archived")) {
             listItems = listItemService.search(listNameArchive, command.getArguments());
 
+            if (command.hasOption("described")) {
+                listItemService.filterDescribed(listItems);
+            }
+
             ioService.br();
             ioService.info("Searching for " + stringSearch + "in archived items...");
             ioService.br();
@@ -42,6 +46,10 @@ FindUseCase::execute(Command& command)
             show.execute(listItems, listName);
         } else if (command.hasOption("deleted")) {
             listItems = listItemService.search(listNameDelete, command.getArguments());
+
+            if (command.hasOption("described")) {
+                listItemService.filterDescribed(listItems);
+            }
 
             ioService.br();
             ioService.info("Searching for " + stringSearch + "in deleted items...");
@@ -56,6 +64,11 @@ FindUseCase::execute(Command& command)
             }
         } else {
             listItems = listItemService.search(listName, command.getArguments());
+
+            if (command.hasOption("described")) {
+                listItemService.filterDescribed(listItems);
+            }
+
             ioService.br();
             ioService.info("Searching for " + stringSearch + "...");
             ioService.br();

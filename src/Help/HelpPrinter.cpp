@@ -94,9 +94,10 @@ HelpPrinter::helpListForCli()
         "   " + CYN + "-h/--help"    + RST + "         Show the help center",
         "   " + CYN + "-v/--version" + RST + "      Show app version",
         "   " + CYN + "-c/--config"  + RST + "       Show app config",
-        "   " + CYN + "-a/--archived" + RST + "     Show archived items     " + DIM + "(show, find)" + RST,
-        "   " + CYN + "-d/--deleted"  + RST + "      Show deleted items      " + DIM + "(show, find)" + RST,
-        "   " + CYN + "-f/--force"   + RST + "        Force action            " + DIM + "(remove, copy-to, move-to)" + RST,
+        "   " + CYN + "-a/--archived" + RST + "     Show archived items        " + DIM + "(show, find)" + RST,
+        "   " + CYN + "-d/--deleted"  + RST + "      Show deleted items         " + DIM + "(show, find)" + RST,
+        "   " + CYN + "-D/--described" + RST + "    Show only described items  " + DIM + "(show, find)" + RST,
+        "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, copy-to, move-to)" + RST,
         "   " + CYN + "-Q/--no-quit" + RST + "      Keep app alive after command",
         "",
         section("OPTIONS"),
@@ -115,12 +116,12 @@ HelpPrinter::helpListForCli()
         "     copy " + YLW + "{name} {new_name}" + RST + "      Duplicate list",                  // col 27 +  6 = 33
         "",
         section("ITEMS"),
-        "   show                           Show items     " + BLU + "[-p] [-s] [-i] " + CYN + "[-a] [-d]" + RST, // col 7  + 26 = 33
+        "   show                           Show items     " + BLU + "[-p] [-s] [-i] " + CYN + "[-a] [-d] [-D]" + RST, // col 7  + 26 = 33
         "   add      (a) " + YLW + "{value}"      + RST + "           Add item     " + BLU + "[-p] [-s] [-i]" + RST, // col 22 + 11 = 33
         "   edit     (e) " + YLW + "{id} {value}" + RST + "      Edit item     " + BLU + "[-p] [-s] [-i]" + RST,    // col 27 +  6 = 33
         "   append       " + YLW + "{id} {value}" + RST + "      Append to item" + BLU + " [-p] [-s] [-i]" + RST,  // col 27 +  6 = 33
         "   prepend      " + YLW + "{id} {value}" + RST + "      Prepend to item" + BLU + " [-p] [-s] [-i]" + RST, // col 27 +  6 = 33
-        "   find     (f) " + YLW + "{word}"       + RST + "            Find item              " + CYN + "[-a] [-d]" + RST, // col 21 + 12 = 33
+        "   find     (f) " + YLW + "{word}"       + RST + "            Find item              " + CYN + "[-a] [-d] [-D]" + RST, // col 21 + 12 = 33
         "   describe (d) " + YLW + "{id}"         + RST + "              Edit item description  " + CYN + "[-a] [-d]" + RST, // col 19 + 14 = 33
         "",
         section("ITEM ACTIONS"),

@@ -316,6 +316,28 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
         REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "deleted", "" } });
     }
 
+    SECTION("Get command: described option (long)")
+    {
+        const char* argv[] = { "./program", "--described", "show" };
+        int argc = sizeof(argv) / sizeof(argv[0]);
+        CommandOption commandOption = CommandOption();
+        CommandValidation commandValidation(commandOption, argc, argv);
+        commandValidation.make();
+        REQUIRE(commandValidation.getCommandName() == "show");
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "described", "" } });
+    }
+
+    SECTION("Get command: described option (short)")
+    {
+        const char* argv[] = { "./program", "-D", "show" };
+        int argc = sizeof(argv) / sizeof(argv[0]);
+        CommandOption commandOption = CommandOption();
+        CommandValidation commandValidation(commandOption, argc, argv);
+        commandValidation.make();
+        REQUIRE(commandValidation.getCommandName() == "show");
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "described", "" } });
+    }
+
     //    No other option actually implemented
     //    SECTION("Get command: multiple arguments, multiple options") {
     //        const char* argv[] = {"./program", "ls", "-l", "list", "add", "Value", "test", "-a", "all"};

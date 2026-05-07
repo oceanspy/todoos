@@ -64,6 +64,7 @@ class ListItemService
     void filterPriorityAbove(std::vector<ListItemEntity>& listItems, const int priority);
     void filterStatus(std::vector<ListItemEntity>& listItems, const std::vector<int>& statuses);
     void filterDeadlineBefore(std::vector<ListItemEntity>& listItems, const time_t timestamp);
+    void filterDescribed(std::vector<ListItemEntity>& listItems);
 
   private:
     IOService& ioService;
