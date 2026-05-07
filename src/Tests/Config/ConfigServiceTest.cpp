@@ -104,8 +104,8 @@ TEST_CASE("ConfigServiceTest", "[ConfigService]")
 
     SECTION("getUsedListVariantStr returns archive when command has archive option")
     {
-        std::map<std::string, std::string> options = { { "archive", "" } };
-        Command archiveCommand = Command("show", {}, options, "show --archive");
+        std::map<std::string, std::string> options = { { "archived", "" } };
+        Command archiveCommand = Command("show", {}, options, "show --archived");
         ConfigService archiveConfigService(ioService, init, configRepository, cacheRepository, archiveCommand);
 
         std::string variant = archiveConfigService.getUsedListVariantStr();
@@ -114,8 +114,8 @@ TEST_CASE("ConfigServiceTest", "[ConfigService]")
 
     SECTION("getUsedListVariantStr returns delete when command has delete option")
     {
-        std::map<std::string, std::string> options = { { "delete", "" } };
-        Command deleteCommand = Command("show", {}, options, "show --delete");
+        std::map<std::string, std::string> options = { { "deleted", "" } };
+        Command deleteCommand = Command("show", {}, options, "show --deleted");
         ConfigService deleteConfigService(ioService, init, configRepository, cacheRepository, deleteCommand);
 
         std::string variant = deleteConfigService.getUsedListVariantStr();

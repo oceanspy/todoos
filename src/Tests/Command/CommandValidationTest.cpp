@@ -210,26 +210,26 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
 
     SECTION("Get command: archive option")
     {
-        const char* argv[] = { "./program", "find", "--archive", "chose" };
+        const char* argv[] = { "./program", "find", "--archived", "chose" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archive", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archived", "" } });
     }
 
     SECTION("Get command: archive option")
     {
-        const char* argv[] = { "./program", "find", "chose", "--archive" };
+        const char* argv[] = { "./program", "find", "chose", "--archived" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archive", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archived", "" } });
     }
 
     SECTION("Get command: archive option")
@@ -241,7 +241,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archive", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archived", "" } });
     }
 
     SECTION("Get command: archive option")
@@ -253,19 +253,19 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archive", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archived", "" } });
     }
 
     SECTION("Get command: archive option")
     {
-        const char* argv[] = { "./program", "--archive", "find", "chose" };
+        const char* argv[] = { "./program", "--archived", "find", "chose" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archive", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archived", "" } });
     }
 
     SECTION("Get command: archive option")
@@ -277,31 +277,31 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archive", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archived", "" } });
     }
 
     SECTION("Get command: archive option")
     {
-        const char* argv[] = { "./program", "--archive", "find", "chose" };
+        const char* argv[] = { "./program", "--archived", "find", "chose" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archive", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "archived", "" } });
     }
 
     SECTION("Get command: delete option")
     {
-        const char* argv[] = { "./program", "--delete", "find", "chose" };
+        const char* argv[] = { "./program", "--deleted", "find", "chose" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "delete", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "deleted", "" } });
     }
 
     SECTION("Get command: delete option")
@@ -313,7 +313,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
         commandValidation.make();
         REQUIRE(commandValidation.getCommandName() == "find");
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "chose" });
-        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "delete", "" } });
+        REQUIRE(commandValidation.getCommandOptions() == std::map<std::string, std::string>{ { "deleted", "" } });
     }
 
     //    No other option actually implemented

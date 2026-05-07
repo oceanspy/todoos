@@ -32,7 +32,7 @@ FindUseCase::execute(Command& command)
 
     try {
         std::vector<ListItemEntity> listItems;
-        if (command.hasOption("archive")) {
+        if (command.hasOption("archived")) {
             listItems = listItemService.search(listNameArchive, command.getArguments());
 
             ioService.br();
@@ -40,7 +40,7 @@ FindUseCase::execute(Command& command)
             ioService.br();
 
             show.execute(listItems, listName);
-        } else if (command.hasOption("delete")) {
+        } else if (command.hasOption("deleted")) {
             listItems = listItemService.search(listNameDelete, command.getArguments());
 
             ioService.br();

@@ -12,8 +12,8 @@ CommandOption::populateOptions()
     options["l"] = "list";
     options["p"] = "priority";
     options["s"] = "status";
-    options["a"] = "archive";
-    options["d"] = "delete";
+    options["a"] = "archived";
+    options["d"] = "deleted";
     options["f"] = "force";
     options["h"] = "help";
     options["v"] = "version";

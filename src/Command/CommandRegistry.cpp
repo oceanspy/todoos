@@ -205,11 +205,11 @@ CommandRegistry::isCommandValidWithOptions(const std::string commandName,
                 commandName == "prepend") {
                 return true;
             }
-        } else if (option.first == "archive") {
+        } else if (option.first == "archived") {
             if (commandName == "show" || commandName == "find") {
                 return true;
             }
-        } else if (option.first == "delete") {
+        } else if (option.first == "deleted") {
             if (commandName == "show" || commandName == "find") {
                 return true;
             }

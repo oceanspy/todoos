@@ -155,9 +155,9 @@ ConfigService::getUsedListNameStr()
 std::string
 ConfigService::getUsedListVariantStr()
 {
-    if (!command.getOptions().empty() && command.hasOption("archive")) {
+    if (!command.getOptions().empty() && command.hasOption("archived")) {
         return "archive";
-    } else if (!command.getOptions().empty() && command.hasOption("delete")) {
+    } else if (!command.getOptions().empty() && command.hasOption("deleted")) {
         return "delete";
     }
 
