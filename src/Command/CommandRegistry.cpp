@@ -180,47 +180,46 @@ CommandRegistry::getMainCommandNames(bool showOnlyAutocomplete)
 }
 
 bool
-CommandRegistry::isCommandValidWithOptions(const std::string commandName,
-                                           const std::map<std::string, std::string> options)
+CommandRegistry::isCommandValidWithOptions(Command& command)
 {
-    if (options.empty() || commandName == "show") {
+    if (command.getOptions().empty() || command.getName() == "show") {
         return true;
     }
 
-    return std::ranges::any_of(options, [&commandName](const auto& option) {
+    return std::ranges::any_of(command.getOptions(), [&command](const auto& option) {
         if (option.first == "list") {
             return true;
         } else if (option.first == "priority") {
-            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
-                commandName == "prepend") {
+            if (command.getName() == "show" || command.getName() == "add" || command.getName() == "edit" ||
+                command.getName() == "append" || command.getName() == "prepend") {
                 return true;
             }
         } else if (option.first == "status") {
-            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
-                commandName == "prepend") {
+            if (command.getName() == "show" || command.getName() == "add" || command.getName() == "edit" ||
+                command.getName() == "append" || command.getName() == "prepend") {
                 return true;
             }
         } else if (option.first == "deadline") {
-            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
-                commandName == "prepend") {
+            if (command.getName() == "show" || command.getName() == "add" || command.getName() == "edit" ||
+                command.getName() == "append" || command.getName() == "prepend") {
                 return true;
             }
         } else if (option.first == "archived") {
-            if (commandName == "show" || commandName == "find") {
+            if (command.getName() == "show" || command.getName() == "find") {
                 return true;
             }
         } else if (option.first == "deleted") {
-            if (commandName == "show" || commandName == "find") {
+            if (command.getName() == "show" || command.getName() == "find") {
                 return true;
             }
         } else if (option.first == "described") {
-            if (commandName == "show" || commandName == "find") {
+            if (command.getName() == "show" || command.getName() == "find") {
                 return true;
             }
         } else if (option.first == "force") {
-            if (commandName == "remove" || commandName == "move-to" || commandName == "copy-to") {
+            if (command.getName() == "remove" || command.getName() == "move-to" || command.getName() == "copy-to") {
                 return true;
-            } else if (commandName == "list") {
+            } else if (command.getName() == "list") {
                 // TODO: implement accept only for "remove"
                 return true;
             }

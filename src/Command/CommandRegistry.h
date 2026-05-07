@@ -1,6 +1,7 @@
 #ifndef TODOOS_COMMANDREGISTRY_H
 #define TODOOS_COMMANDREGISTRY_H
 
+#include "Command.h"
 #include "CommandOption.h"
 #include <map>
 #include <string>
@@ -14,7 +15,7 @@ class CommandRegistry
     int getCommandId(const std::string& command);
     bool isValid(const std::string& commandNameToEvaluate);
     bool isBeginningOfCommand(const std::string& partialCommandNameToEvaluate);
-    static bool isCommandValidWithOptions(std::string option, std::map<std::string, std::string> options);
+    static bool isCommandValidWithOptions(Command& command);
 
     enum CommandIds
     {

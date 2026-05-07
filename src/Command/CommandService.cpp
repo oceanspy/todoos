@@ -44,7 +44,7 @@ CommandService::isBeginningOfCommand(Command command)
 bool
 CommandService::isCommandValidWithOption(Command& command)
 {
-    return CommandRegistry::isCommandValidWithOptions(command.getName(), command.getOptions());
+    return CommandRegistry::isCommandValidWithOptions(command);
 }
 
 std::vector<std::string>
