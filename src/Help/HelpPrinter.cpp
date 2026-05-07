@@ -16,10 +16,16 @@ HelpPrinter::show()
 }
 
 void
-HelpPrinter::listNotFound(std::string list)
+HelpPrinter::listNotFound(const std::string& list)
 {
     ioService.error("List \"" + list + "\" not found");
     ioService.info("Type 'todoos list' to show all available lists.");
+}
+
+void
+HelpPrinter::listItemNotFound(const std::string& id, const ListName& listName)
+{
+    ioService.error("Item \"" + id + "\" not found in list: " + listName.getName());
 }
 
 void

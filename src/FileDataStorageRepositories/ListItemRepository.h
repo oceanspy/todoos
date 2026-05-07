@@ -2,6 +2,7 @@
 #define LISTITEMREPOSITORY_H
 
 #include "../Config/ConfigService.h"
+#include "../Exception/ListItemNotFoundException.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItems/ListItemEntity.h"

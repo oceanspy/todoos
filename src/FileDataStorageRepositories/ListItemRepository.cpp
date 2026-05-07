@@ -52,7 +52,8 @@ ListItemRepository::find(const std::string& id, ListName& listName)
             return item;
         }
     }
-    throw std::invalid_argument("Item with id: " + id + " was not found.");
+
+    throw ListItemNotFoundException("Item not found: invalid id.", id, listName);
 }
 
 void

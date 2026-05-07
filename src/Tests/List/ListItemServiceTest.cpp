@@ -1,8 +1,8 @@
-#include "../../FileDataStorageRepositories/DescriptionRepository.h"
-#include "../../List/ListItemId.h"
 #include "../../List/ListItemService.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../IOService/IOService.h"
+#include "../../List/ListItemId.h"
 #include "../../List/ListService.h"
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
@@ -42,7 +42,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+    ListItemService listItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -253,7 +254,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
         listItemService.editStatus(id, listName, newStatus);
 
-        REQUIRE_THROWS(listItemService.find("aaaa", listName));
+        REQUIRE_THROWS_AS(listItemService.find("aaaa", listName), ListItemNotFoundException);
         REQUIRE_NOTHROW(listItemService.find("aaaa", listNameArchive));
     }
 
@@ -652,7 +653,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
     SECTION("find non-existent item throws")
     {
-        REQUIRE_THROWS(listItemService.find("zzzz", listName));
+        REQUIRE_THROWS_AS(listItemService.find("zzzz", listName), ListItemNotFoundException);
     }
 
     SECTION("Count()")
@@ -719,10 +720,10 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         std::ofstream(descPath) << "Some description.";
 
         std::vector<ListItemEntity> items = listItemService.get(tempListName);
-        auto aaaa = std::find_if(items.begin(), items.end(),
-                                 [](const ListItemEntity& i) { return *i.getId() == "aaaa"; });
-        auto bbbb = std::find_if(items.begin(), items.end(),
-                                 [](const ListItemEntity& i) { return *i.getId() == "bbbb"; });
+        auto aaaa =
+            std::find_if(items.begin(), items.end(), [](const ListItemEntity& i) { return *i.getId() == "aaaa"; });
+        auto bbbb =
+            std::find_if(items.begin(), items.end(), [](const ListItemEntity& i) { return *i.getId() == "bbbb"; });
 
         REQUIRE(aaaa != items.end());
         REQUIRE(bbbb != items.end());

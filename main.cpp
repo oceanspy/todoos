@@ -153,6 +153,9 @@ main(int argc, const char* argv[])
     } catch (ListNotFoundException& e) {
         help.listNotFound(e.getName());
         return 1;
+    } catch (ListItemNotFoundException& e) {
+        help.listItemNotFound(e.getId(), e.getListName());
+        return 1;
     } catch (std::exception& e) {
         help.commandNotFound();
         return 1;

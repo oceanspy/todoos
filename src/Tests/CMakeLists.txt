@@ -15,6 +15,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../IOService/IOService.cpp
         ../IOService/CliIOChannel/CliIOChannel.cpp
         ../Exception/ListNotFoundException.cpp
+        ../Exception/ListItemNotFoundException.cpp
         ../Config/ConfigEntity.cpp
         ../List/ListEntity.cpp
         ../List/ListItems/ListItemEntity.cpp

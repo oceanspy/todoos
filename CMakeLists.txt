@@ -52,6 +52,8 @@ add_executable(todoos main.cpp
         src/Init/AppInstallation.h
         src/Exception/ListNotFoundException.cpp
         src/Exception/ListNotFoundException.h
+        src/Exception/ListItemNotFoundException.cpp
+        src/Exception/ListItemNotFoundException.h
         src/Config/ConfigEntity.cpp
         src/Config/ConfigEntity.h
         src/Config/ConfigService.cpp
