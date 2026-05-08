@@ -234,7 +234,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
 
     SECTION("Get command: archive option")
     {
-        const char* argv[] = { "./program", "find", "chose", "-a" };
+        const char* argv[] = { "./program", "find", "chose", "-A" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
@@ -246,7 +246,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
 
     SECTION("Get command: archive option")
     {
-        const char* argv[] = { "./program", "find", "-a", "chose" };
+        const char* argv[] = { "./program", "find", "-A", "chose" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
@@ -270,7 +270,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
 
     SECTION("Get command: archive option")
     {
-        const char* argv[] = { "./program", "-a", "find", "chose" };
+        const char* argv[] = { "./program", "-A", "find", "chose" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
@@ -306,7 +306,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
 
     SECTION("Get command: delete option")
     {
-        const char* argv[] = { "./program", "-d", "find", "chose" };
+        const char* argv[] = { "./program", "-D", "find", "chose" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
@@ -329,7 +329,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
 
     SECTION("Get command: described option (short)")
     {
-        const char* argv[] = { "./program", "-D", "show" };
+        const char* argv[] = { "./program", "-d", "show" };
         int argc = sizeof(argv) / sizeof(argv[0]);
         CommandOption commandOption = CommandOption();
         CommandValidation commandValidation(commandOption, argc, argv);
@@ -340,7 +340,7 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
 
     //    No other option actually implemented
     //    SECTION("Get command: multiple arguments, multiple options") {
-    //        const char* argv[] = {"./program", "ls", "-l", "list", "add", "Value", "test", "-a", "all"};
+    //        const char* argv[] = {"./program", "ls", "-l", "list", "add", "Value", "test", "-A", "all"};
     //        int argc = sizeof(argv) / sizeof(argv[0]);
     //        CommandValidation commandValidation(argc, argv);
     //        REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{"add", "Value", "test"});
