@@ -92,6 +92,14 @@ CommandAutoCompleteUseCase::execute(Command& command)
             return true;
         }
         return true;
+    } else if (CommandService::isCommand(firstSubCommand, "describe")) {
+        try {
+            std::vector<ListName> listNames = { listName };
+            autocompleteId(firstSubCommand, listNames);
+        } catch (std::exception& e) {
+            return true;
+        }
+        return true;
     } else if (CommandService::isCommand(firstSubCommand, "edit")) {
         if (!commandService.hasSubCommand(firstSubCommand)) {
             try {
