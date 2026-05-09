@@ -96,7 +96,7 @@ HelpPrinter::helpListForCli()
         "   " + CYN + "-c/--config"  + RST + "       Show app config",
         "   " + CYN + "-A/--archived" + RST + "     Show archived items        " + DIM + "(show, find)" + RST,
         "   " + CYN + "-D/--deleted"  + RST + "      Show deleted items         " + DIM + "(show, find)" + RST,
-        "   " + CYN + "-d/--described" + RST + "    Show only described items  " + DIM + "(show, find)" + RST,
+        "   " + CYN + "-d/--described" + RST + "    Describe items             " + DIM + "(add, show, find)" + RST,
         "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, copy-to, move-to)" + RST,
         "   " + CYN + "-Q/--no-quit" + RST + "      Keep app alive after command",
         "",
@@ -117,7 +117,7 @@ HelpPrinter::helpListForCli()
         "",
         section("ITEMS"),
         "   show                           Show items     " + BLU + "[-p] [-s] [-i] " + CYN + "[-a] [-d] [-D]" + RST, // col 7  + 26 = 33
-        "   add      (a) " + YLW + "{value}"      + RST + "           Add item     " + BLU + "[-p] [-s] [-i]" + RST, // col 22 + 11 = 33
+        "   add      (a) " + YLW + "{value}"      + RST + "           Add item     " + BLU + "[-p] [-s] [-i] " + CYN + "[-d]" + RST, // col 22 + 11 = 33
         "   edit     (e) " + YLW + "{id} {value}" + RST + "      Edit item     " + BLU + "[-p] [-s] [-i]" + RST,    // col 27 +  6 = 33
         "   append       " + YLW + "{id} {value}" + RST + "      Append to item" + BLU + " [-p] [-s] [-i]" + RST,  // col 27 +  6 = 33
         "   prepend      " + YLW + "{id} {value}" + RST + "      Prepend to item" + BLU + " [-p] [-s] [-i]" + RST, // col 27 +  6 = 33

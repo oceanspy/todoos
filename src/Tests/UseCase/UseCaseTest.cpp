@@ -10,6 +10,7 @@
 #include "../../Serializers/JsonSerializer.h"
 #include "../../Themes/ThemeService.h"
 #include "../../UseCase/AddItemUseCase.h"
+#include "../../UseCase/DescribeItemUseCase.h"
 #include "../../UseCase/AddListUseCase.h"
 #include "../../UseCase/ArchiveUseCase.h"
 #include "../../UseCase/CleanUseCase.h"
@@ -134,8 +135,13 @@ TEST_CASE("AddItemUseCase", "[UseCase][AddItem]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescribeItemUseCase describeItemUseCase(
+            ioService, commandService, listItemService, listService, configService, themeService,
+            descriptionRepository, init.getCacheDirPath());
+
         REQUIRE_NOTHROW(
-            AddItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
+            AddItemUseCase(ioService, commandService, listItemService, listService, configService, themeService,
+                           describeItemUseCase)
                 .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -162,8 +168,13 @@ TEST_CASE("AddItemUseCase", "[UseCase][AddItem]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescribeItemUseCase describeItemUseCase(
+            ioService, commandService, listItemService, listService, configService, themeService,
+            descriptionRepository, init.getCacheDirPath());
+
         REQUIRE_NOTHROW(
-            AddItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
+            AddItemUseCase(ioService, commandService, listItemService, listService, configService, themeService,
+                           describeItemUseCase)
                 .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);

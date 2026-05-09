@@ -12,7 +12,7 @@ class AddItemAction
 {
   public:
     AddItemAction(IOService& ioService, CommandService& commandService, ListItemService& listItemService);
-    void execute(Command& command, ListName& listName);
+    std::string execute(Command& command, ListName& listName);
 
   private:
     IOService& ioService;

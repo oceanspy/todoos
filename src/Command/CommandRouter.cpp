@@ -61,10 +61,25 @@ CommandRouter::execute(Command& command, ListName& currentList)
             ShowUseCase(ioService, help, commandService, configService, listService, listItemService, themeService)
                 .execute(command);
             return;
-        case CommandRegistry::ADD:
-            AddItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
+        case CommandRegistry::ADD: {
+            DescribeItemUseCase describeItemUseCase(ioService,
+                                                    commandService,
+                                                    listItemService,
+                                                    listService,
+                                                    configService,
+                                                    themeService,
+                                                    descriptionRepository,
+                                                    cacheDirPath);
+            AddItemUseCase(ioService,
+                           commandService,
+                           listItemService,
+                           listService,
+                           configService,
+                           themeService,
+                           describeItemUseCase)
                 .execute(command, currentList);
             return;
+        }
         case CommandRegistry::EDIT:
             EditItemUseCase(ioService, commandService, listItemService, listService, configService, themeService)
                 .execute(command, currentList);
@@ -209,7 +224,14 @@ CommandRouter::execute(Command& command, ListName& currentList)
                 .execute(command, currentList);
             return;
         case CommandRegistry::DESCRIBE:
-            DescribeItemUseCase(ioService, commandService, listItemService, listService, configService, themeService, descriptionRepository, cacheDirPath)
+            DescribeItemUseCase(ioService,
+                                commandService,
+                                listItemService,
+                                listService,
+                                configService,
+                                themeService,
+                                descriptionRepository,
+                                cacheDirPath)
                 .execute(subCommand, currentList);
             return;
         default:

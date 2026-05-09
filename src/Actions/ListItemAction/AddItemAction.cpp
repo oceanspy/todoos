@@ -7,9 +7,10 @@ AddItemAction::AddItemAction(IOService& ioService, CommandService& commandServic
 {
 }
 
-void
+std::string
 AddItemAction::execute(Command& command, ListName& listName)
 {
+    std::string id;
     const std::vector<std::string> arguments = command.getArguments();
     std::vector<std::string> itemValueFromArguments = command.getArguments();
 
@@ -17,7 +18,7 @@ AddItemAction::execute(Command& command, ListName& listName)
         ioService.br();
         ioService.error("Please provide the value you want to add.");
         ioService.br();
-        return;
+        return id;
     }
 
     std::string priorityValue;
@@ -43,11 +44,10 @@ AddItemAction::execute(Command& command, ListName& listName)
             ioService.br();
             ioService.error("Invalid deadline date.");
             ioService.br();
-            return;
+            return id;
         }
     }
 
-    std::string id;
     try {
         id = listItemService.add(
             listName, StringHelpers::vectorToString(itemValueFromArguments), priority, status, dueAt);
@@ -56,11 +56,11 @@ AddItemAction::execute(Command& command, ListName& listName)
         ioService.error("Item could not be added.");
         ioService.info(e.what());
         ioService.br();
-        return;
+        return id;
     }
 
     ioService.br();
     ioService.success("Item " + id + " correctly added.");
     ioService.br();
-    return;
+    return id;
 }

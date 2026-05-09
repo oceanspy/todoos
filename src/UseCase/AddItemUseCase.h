@@ -7,6 +7,7 @@
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
 #include "../Themes/ThemeService.h"
+#include "DescribeItemUseCase.h"
 
 class AddItemUseCase
 {
@@ -16,7 +17,8 @@ class AddItemUseCase
                    ListItemService& listItemService,
                    ListService& listService,
                    ConfigService& configService,
-                   ThemeService& themeService);
+                   ThemeService& themeService,
+                   DescribeItemUseCase& describeItemUseCase);
     void execute(Command& command, ListName& currentList);
 
   private:
@@ -26,4 +28,5 @@ class AddItemUseCase
     ListService& listService;
     ConfigService& configService;
     ThemeService& themeService;
+    DescribeItemUseCase& describeItemUseCase;
 };

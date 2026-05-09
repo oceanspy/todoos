@@ -138,7 +138,7 @@ CommandRegistry::make()
 bool
 CommandRegistry::isValid(const std::string& commandNameToEvaluate)
 {
-    return std::ranges::any_of(commands, [&commandNameToEvaluate](const auto& command) {
+    return std::any_of(commands.begin(), commands.end(), [&commandNameToEvaluate](const auto& command) {
         return command.second.name == commandNameToEvaluate;
     });
 }
@@ -146,7 +146,7 @@ CommandRegistry::isValid(const std::string& commandNameToEvaluate)
 bool
 CommandRegistry::isBeginningOfCommand(const std::string& partialCommandNameToEvaluate)
 {
-    return std::ranges::any_of(commands, [&partialCommandNameToEvaluate](const auto& command) {
+    return std::any_of(commands.begin(), commands.end(), [&partialCommandNameToEvaluate](const auto& command) {
         return command.second.name.compare(0, partialCommandNameToEvaluate.size(), partialCommandNameToEvaluate) == 0;
     });
 }
@@ -186,7 +186,8 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
         return true;
     }
 
-    return std::ranges::any_of(command.getOptions(), [&command](const auto& option) {
+    const auto options = command.getOptions();
+    return std::any_of(options.begin(), options.end(), [&command](const auto& option) {
         if (option.first == "list") {
             return true;
         } else if (option.first == "priority") {
@@ -213,7 +214,7 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
                 return true;
             }
         } else if (option.first == "described") {
-            if (command.getName() == "show" || command.getName() == "find") {
+            if (command.getName() == "add" || command.getName() == "show" || command.getName() == "find") {
                 return true;
             }
         } else if (option.first == "force") {
