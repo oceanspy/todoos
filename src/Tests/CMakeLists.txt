@@ -96,7 +96,6 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Themes/ThemeTest.cpp
         Themes/DefaultTest.cpp
         Themes/ThemeServiceTest.cpp
-        ../Actions/RemoveAction/RemoveAction.cpp
         ../Actions/StatusAction/StatusAction.cpp
         ../Actions/PriorityAction/PriorityAction.cpp
         ../Actions/ListItemAction/AddItemAction.cpp
@@ -104,6 +103,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/ListItemAction/DeadlineItemAction.cpp
         ../Actions/ListItemAction/EditItemAction.cpp
         ../Actions/ListItemAction/PrependItemAction.cpp
+        ../Actions/ListItemAction/RemoveItemAction.cpp
+        ../Actions/ListItemAction/ArchiveItemAction.cpp
+        ../Actions/ListItemAction/RestoreItemAction.cpp
         ../Actions/ShowAction/ShowAction.cpp
         ../Actions/ConfigAction/ConfigAction.cpp
         ../Actions/ListAction/ShowListAction.cpp

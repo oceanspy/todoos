@@ -1,5 +1,5 @@
 #include "RemoveUseCase.h"
-#include "../Actions/RemoveAction/RemoveAction.h"
+#include "../Actions/ListItemAction/RemoveItemAction.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
@@ -8,20 +8,22 @@ RemoveUseCase::RemoveUseCase(IOService& ioService,
                              ListItemService& listItemService,
                              ListService& listService,
                              ConfigService& configService,
-                             ThemeService& themeService)
+                             ThemeService& themeService,
+                             DescriptionRepository& descriptionRepository)
   : ioService(ioService)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
   , themeService(themeService)
+  , descriptionRepository(descriptionRepository)
 {
 }
 
 void
 RemoveUseCase::execute(Command& command, ListName& currentList)
 {
-    RemoveAction remove(ioService, listItemService);
-    remove.execute(command, currentList, "remove");
+    RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+    remove.execute(command, currentList);
 
     ShowAction show(ioService, listService, listItemService, themeService);
 

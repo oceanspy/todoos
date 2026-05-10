@@ -1,5 +1,5 @@
 #include "RestoreUseCase.h"
-#include "../Actions/RemoveAction/RemoveAction.h"
+#include "../Actions/ListItemAction/RestoreItemAction.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
@@ -20,8 +20,8 @@ RestoreUseCase::RestoreUseCase(IOService& ioService,
 void
 RestoreUseCase::execute(Command& command, ListName& currentList)
 {
-    RemoveAction remove(ioService, listItemService);
-    remove.execute(command, currentList, "restore");
+    RestoreItemAction restore(ioService, listItemService);
+    restore.execute(command, currentList);
 
     ShowAction show(ioService, listService, listItemService, themeService);
 

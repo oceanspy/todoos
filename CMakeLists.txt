@@ -72,6 +72,12 @@ add_executable(todoos main.cpp
         src/Actions/ListItemAction/EditItemAction.h
         src/Actions/ListItemAction/PrependItemAction.cpp
         src/Actions/ListItemAction/PrependItemAction.h
+        src/Actions/ListItemAction/RemoveItemAction.cpp
+        src/Actions/ListItemAction/RemoveItemAction.h
+        src/Actions/ListItemAction/ArchiveItemAction.cpp
+        src/Actions/ListItemAction/ArchiveItemAction.h
+        src/Actions/ListItemAction/RestoreItemAction.cpp
+        src/Actions/ListItemAction/RestoreItemAction.h
         src/List/ListItemService.cpp
         src/List/ListItemService.h
         src/List/ListCountSummary.h
@@ -83,8 +89,6 @@ add_executable(todoos main.cpp
         src/Actions/ShowAction/ShowAction.h
         src/Command/CommandRouter.cpp
         src/Command/CommandRouter.h
-        src/Actions/RemoveAction/RemoveAction.cpp
-        src/Actions/RemoveAction/RemoveAction.h
         src/Actions/StatusAction/StatusAction.cpp
         src/Actions/StatusAction/StatusAction.h
         src/Actions/PriorityAction/PriorityAction.cpp

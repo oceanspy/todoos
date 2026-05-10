@@ -2,6 +2,7 @@
 
 #include "../Command/Command.h"
 #include "../Config/ConfigService.h"
+#include "../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
@@ -14,7 +15,8 @@ class RemoveUseCase
                   ListItemService& listItemService,
                   ListService& listService,
                   ConfigService& configService,
-                  ThemeService& themeService);
+                  ThemeService& themeService,
+                  DescriptionRepository& descriptionRepository);
     void execute(Command& command, ListName& currentList);
 
   private:
@@ -23,4 +25,5 @@ class RemoveUseCase
     ListService& listService;
     ConfigService& configService;
     ThemeService& themeService;
+    DescriptionRepository& descriptionRepository;
 };

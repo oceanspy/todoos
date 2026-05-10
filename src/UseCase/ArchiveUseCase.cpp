@@ -1,5 +1,5 @@
 #include "ArchiveUseCase.h"
-#include "../Actions/RemoveAction/RemoveAction.h"
+#include "../Actions/ListItemAction/ArchiveItemAction.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
@@ -20,8 +20,8 @@ ArchiveUseCase::ArchiveUseCase(IOService& ioService,
 void
 ArchiveUseCase::execute(Command& command, ListName& currentList)
 {
-    RemoveAction remove(ioService, listItemService);
-    remove.execute(command, currentList, "archive");
+    ArchiveItemAction archive(ioService, listItemService);
+    archive.execute(command, currentList);
 
     ShowAction show(ioService, listService, listItemService, themeService);
 

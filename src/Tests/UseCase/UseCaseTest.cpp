@@ -521,7 +521,7 @@ TEST_CASE("RemoveUseCase", "[UseCase][Remove]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            RemoveUseCase(ioService, listItemService, listService, configService, themeService).execute(command, listName));
+            RemoveUseCase(ioService, listItemService, listService, configService, themeService, descriptionRepository).execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -547,7 +547,7 @@ TEST_CASE("RemoveUseCase", "[UseCase][Remove]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            RemoveUseCase(ioService, listItemService, listService, configService, themeService).execute(command, listName));
+            RemoveUseCase(ioService, listItemService, listService, configService, themeService, descriptionRepository).execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);

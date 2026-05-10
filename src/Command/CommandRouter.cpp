@@ -148,7 +148,7 @@ CommandRouter::execute(Command& command, ListName& currentList)
                 .execute(command, currentList);
             return;
         case CommandRegistry::REMOVE:
-            RemoveUseCase(ioService, listItemService, listService, configService, themeService)
+            RemoveUseCase(ioService, listItemService, listService, configService, themeService, descriptionRepository)
                 .execute(command, currentList);
             return;
         case CommandRegistry::ARCHIVE:
