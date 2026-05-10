@@ -7,7 +7,7 @@
 #include <vector>
 
 #define CONST_WIDTH_DEFAULT_WIDE_VALUE 160
-#define CONST_WIDTH_DEFAULT_VALUE 140
+#define CONST_WIDTH_DEFAULT_VALUE 124
 
 class ThemeService
 {
