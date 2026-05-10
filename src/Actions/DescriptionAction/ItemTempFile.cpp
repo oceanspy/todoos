@@ -7,8 +7,9 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-ItemTempFile::ItemTempFile(const DescribeItem& describeItem, const std::filesystem::path& cacheDirPath)
-  : describeItem(describeItem)
+ItemTempFile::ItemTempFile(IOService& ioService, const DescribeItem& describeItem, const std::filesystem::path& cacheDirPath)
+  : ioService(ioService)
+  , describeItem(describeItem)
   , cacheDirPath(cacheDirPath)
 {
 }
@@ -22,6 +23,19 @@ ItemTempFile::execute()
                                        / (*describeItem.getListItem().getId() + ".md");
 
     std::filesystem::create_directories(editFilePath.parent_path());
+
+    if (std::filesystem::exists(editFilePath) && std::filesystem::file_size(editFilePath) > 0) {
+        ioService.br();
+        std::string answer;
+        do {
+            answer = ioService.ask("A previous draft was found. Recover it? [y/n]: ");
+        } while (answer != "y" && answer != "Y" && answer != "n" && answer != "N");
+        ioService.br();
+        if (answer == "y" || answer == "Y") {
+            openInEditor(editFilePath.string());
+            return editFilePath.string();
+        }
+    }
 
     std::ofstream file(editFilePath);
     if (!file.is_open()) {

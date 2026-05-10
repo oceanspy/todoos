@@ -1,5 +1,5 @@
 #include "DescribeItemUseCase.h"
-#include "../Actions/Description/ItemTempFile.h"
+#include "../Actions/DescriptionAction/ItemTempFile.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../Describe/DescribeItem.h"
 #include "../Describe/DescribeItemEdited.h"
@@ -39,7 +39,7 @@ DescribeItemUseCase::execute(Command& command, ListName& currentList)
     }
 
     DescribeItem describeItem = DescribeItem::create(currentList, listItem, existingDescription);
-    ItemTempFile tempFile(describeItem, cacheDirPath);
+    ItemTempFile tempFile(ioService, describeItem, cacheDirPath);
     std::string editFilePath = tempFile.execute();
 
     std::string destPath = descriptionRepository.getFilePath(itemId, currentList).string();
