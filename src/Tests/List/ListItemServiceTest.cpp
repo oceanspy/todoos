@@ -470,7 +470,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItems[1].getId() == "bbbb");
         REQUIRE(*listItems[2].getId() == id);
 
-        listItemService.archiveFinishedItems(listName);
+        listItemService.archiveFinishedItems(listName, false);
         std::vector<ListItemEntity> listItems2 = listItemService.get(listName);
         REQUIRE(listItems2.size() == 2);
         REQUIRE(*listItems2[0].getId() == "aaaa");
@@ -490,6 +490,46 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(listArchiveItems2.size() == 0);
 
         listItemService.remove(id, listName);
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("archiveFinishedItems skips described items unless withDescribedItems is true")
+    {
+        std::string priorityValue = "low";
+        const std::string* priority = &priorityValue;
+        std::string statusValue = "queued";
+        const std::string* status = &statusValue;
+        std::string id = listItemService.add(listName, "described finished item", priority, status);
+        listItemService.editStatus(id, listName, new int(StatusService::COMPLETED));
+
+        std::filesystem::path descPath = descriptionRepository.getFilePath(id, listName);
+        std::filesystem::create_directories(descPath.parent_path());
+        std::ofstream(descPath) << "Some description.";
+
+        // Without -d: described completed item must NOT be archived
+        listItemService.archiveFinishedItems(listName, false);
+
+        std::vector<ListItemEntity> listItems = listItemService.get(listName);
+        auto found = std::find_if(listItems.begin(), listItems.end(), [&id](const ListItemEntity& i) {
+            return *i.getId() == id;
+        });
+        REQUIRE(found != listItems.end());
+        REQUIRE(listItemService.get(listNameArchive).empty());
+
+        // With -d: described completed item SHOULD be archived
+        listItemService.archiveFinishedItems(listName, true);
+
+        std::vector<ListItemEntity> listItems2 = listItemService.get(listName);
+        auto found2 = std::find_if(listItems2.begin(), listItems2.end(), [&id](const ListItemEntity& i) {
+            return *i.getId() == id;
+        });
+        REQUIRE(found2 == listItems2.end());
+
+        std::vector<ListItemEntity> archiveItems = listItemService.get(listNameArchive);
+        REQUIRE(archiveItems.size() == 1);
+        REQUIRE(*archiveItems[0].getId() == id);
 
         installation.wipe();
         installation.make();

@@ -52,7 +52,7 @@ class ListItemService
     void duplicate(const std::string& id, ListName& listName);
     void archive(const std::string& id, ListName& listName);
     void archiveAll(ListName& listName);
-    void archiveFinishedItems(ListName& listName);
+    void archiveFinishedItems(ListName& listName, bool withDescribedItems);
     void restore(const std::string& id, ListName& listName);
     void editDeadline(std::string& id, ListName& listName, time_t dueAt = 0);
     long count(ListName& listName);

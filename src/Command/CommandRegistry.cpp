@@ -214,7 +214,8 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
                 return true;
             }
         } else if (option.first == "described") {
-            if (command.getName() == "add" || command.getName() == "show" || command.getName() == "find") {
+            if (command.getName() == "add" || command.getName() == "show" || command.getName() == "find" ||
+                command.getName() == "clean") {
                 return true;
             }
         } else if (option.first == "force") {

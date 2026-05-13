@@ -27,26 +27,26 @@ CleanUseCase::execute(Command& command, ListName& currentList)
     message += " list? (yes/no) ";
     std::string answer = ioService.ask(message);
 
-    if (answer == "yes") {
-        listItemService.archiveFinishedItems(currentList);
-        ioService.br();
-        ioService.success("List cleaned.");
-        ioService.br();
-
-        ShowAction show(ioService, listService, listItemService, themeService);
-
-        std::vector<ListItemEntity> listItems = listItemService.get(currentList);
-
-        try {
-            show.execute(listItems, currentList);
-        } catch (std::exception& e) {
-            ioService.br();
-            ioService.error(e.what());
-            ioService.br();
-        }
-    } else {
+    if (answer != "yes") {
         ioService.br();
         ioService.message("Action cancelled.");
+        ioService.br();
+    }
+
+    listItemService.archiveFinishedItems(currentList, command.hasOption("described"));
+    ioService.br();
+    ioService.success("List cleaned.");
+    ioService.br();
+
+    ShowAction show(ioService, listService, listItemService, themeService);
+
+    std::vector<ListItemEntity> listItems = listItemService.get(currentList);
+
+    try {
+        show.execute(listItems, currentList);
+    } catch (std::exception& e) {
+        ioService.br();
+        ioService.error(e.what());
         ioService.br();
     }
 }

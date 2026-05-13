@@ -298,10 +298,14 @@ ListItemService::archiveAll(ListName& listName)
 }
 
 void
-ListItemService::archiveFinishedItems(ListName& listName)
+ListItemService::archiveFinishedItems(ListName& listName, bool withDescribedItems)
 {
     std::vector<ListItemEntity> listItems = get(listName);
     for (ListItemEntity& listItem : listItems) {
+        if (!withDescribedItems && *listItem.hasDescription()) {
+            continue;
+        }
+
         if (*(*listItem.status()).isClosed()) {
             archiveItem(listItem, listName);
         }
