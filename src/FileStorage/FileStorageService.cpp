@@ -6,6 +6,9 @@ FileStorageService::FileStorageService(IOService& ioService, ConfigService& conf
 {
 }
 
+const std::string FileStorageService::CSV = "csv";
+const std::string FileStorageService::JSON = "json";
+
 void
 FileStorageService::createNewListFile(const std::string& listName)
 {

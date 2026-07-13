@@ -14,7 +14,7 @@ CommandAutoCompleteUseCase::CommandAutoCompleteUseCase(IOService& ioService,
 bool
 CommandAutoCompleteUseCase::execute(Command& command)
 {
-    if (!CommandService::isCommand(command, "commands")) {
+    if (!CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {
         return false;
     }
     ListName listName = listService.createUsedListName();

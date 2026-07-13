@@ -126,7 +126,7 @@ CommandRegistry::make()
                 commands[commandId].name = "describe";
                 break;
             case COMMANDS:
-                commands[commandId].name = "commands";
+                commands[commandId].name = Command::COMMAND_AUTOCOMPLETE;
                 commands[commandId].showInAutocomplete = false;
                 break;
             default:

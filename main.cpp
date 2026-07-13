@@ -7,6 +7,7 @@
 #include "src/FileDataStorageRepositories/DescriptionRepository.h"
 #include "src/FileDataStorageRepositories/ListItemRepository.h"
 #include "src/FileDataStorageRepositories/ListRepository.h"
+#include "src/FileStorage/FileStorageService.h"
 #include "src/Help/HelpPrinter.h"
 #include "src/IOService/IOService.h"
 #include "src/Init/AppInitialization.h"
@@ -26,7 +27,7 @@ main(int argc, const char* argv[])
 
     // ----
     // Configuration initialization
-    std::string channel = "cli";
+    std::string channel = IOService::CLI;
     IOService ioService = IOService(channel);
     HelpPrinter help = HelpPrinter(ioService);
     ConfSerializer confService = ConfSerializer(ioService);
@@ -35,24 +36,23 @@ main(int argc, const char* argv[])
 
     // ----
     // Input sanitization ACL
-    CommandOption commandOption = CommandOption();
+    auto commandRegistry = CommandRegistry();
+    auto commandOption = CommandOption();
+    auto commandService = CommandService(commandRegistry, commandOption);
     CommandValidation commandValidation(commandOption, argc, argv);
     try {
         commandValidation.make();
     } catch (const std::exception& e) {
-        if (commandValidation.getCommandName() == "commands") {
+        // we avoid printing if it is an autocomplete
+        // can't use commandService.isCommand since it didn't pass validation
+        if (argc > 1 && std::string(argv[1]) == Command::COMMAND_AUTOCOMPLETE) {
             return 1;
         }
 
         help.commandNotFound();
         return 1;
     }
-    Command command(commandValidation.getCommandName(),
-                    commandValidation.getCommandArguments(),
-                    commandValidation.getCommandOptions(),
-                    commandValidation.getRawCommand());
-    CommandRegistry commandList = CommandRegistry();
-    auto commandService = CommandService(commandList, commandOption);
+    auto command = Command::createFromValidation(commandValidation);
 
     // ----
     // Autocorrect command for common mistakes or allowed shortcuts
@@ -76,7 +76,7 @@ main(int argc, const char* argv[])
     AppInitialization init = AppInitialization(ioService);
     AppInstallation installation = AppInstallation(ioService, jsonService, csvService, confService, init);
     if (installation.isNew()) {
-        if (commandValidation.getCommandName() == "commands") {
+        if (CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {
             return 0;
         }
 
@@ -94,9 +94,9 @@ main(int argc, const char* argv[])
     // Storage initialization
     FileStorageService fileStorageService = FileStorageService(ioService, configService);
     DataSerializerInterface* fileDataStorageServicePtr;
-    if (configService.getFileDataStorageType() == "csv") {
+    if (configService.getFileDataStorageType() == FileStorageService::CSV) {
         fileDataStorageServicePtr = &csvService;
-    } else if (configService.getFileDataStorageType() == "json") {
+    } else if (configService.getFileDataStorageType() == FileStorageService::JSON) {
         fileDataStorageServicePtr = &jsonService;
     } else {
         ioService.error("File data storage type not supported.");
@@ -118,7 +118,7 @@ main(int argc, const char* argv[])
 
     // ----
     // Dealing with command autocomplete
-    if (CommandService::isCommand(command, "commands")) {
+    if (CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {
         try {
             CommandAutoCompleteUseCase(ioService, commandService, listService, listItemService).execute(command);
             return 1;

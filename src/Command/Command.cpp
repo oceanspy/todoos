@@ -1,8 +1,11 @@
 #include "Command.h"
+#include "CommandValidation.h"
 
 #include <algorithm>
 #include <string>
 #include <vector>
+
+const std::string Command::COMMAND_AUTOCOMPLETE = "commands";
 
 Command::Command(std::string command,
                  std::vector<std::string> arguments,
@@ -13,6 +16,17 @@ Command::Command(std::string command,
   , options(options)
   , rawCommand(rawCommand)
 {
+}
+
+Command
+Command::createFromValidation(CommandValidation& commandValidation)
+{
+    Command command(commandValidation.getCommandName(),
+                    commandValidation.getCommandArguments(),
+                    commandValidation.getCommandOptions(),
+                    commandValidation.getRawCommand());
+
+    return command;
 }
 
 Command
@@ -94,5 +108,5 @@ Command::hasOption(const std::string& optionName)
 bool
 Command::isAutocompletion()
 {
-    return Command::getName() == "commands";
+    return Command::getName() == COMMAND_AUTOCOMPLETE;
 }

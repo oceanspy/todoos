@@ -2,6 +2,8 @@
 
 #include "CliIOChannel/CliIOChannel.h"
 
+const std::string IOService::CLI = "cli";
+
 IOService::IOService(const std::string& channel)
   : channel(channel)
 {

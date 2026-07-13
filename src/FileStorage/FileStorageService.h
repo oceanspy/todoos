@@ -12,6 +12,8 @@ class FileStorageService
 {
   public:
     FileStorageService(IOService& ioService, ConfigService& configService);
+    static const std::string CSV;
+    static const std::string JSON;
     void moveFileTo(const std::string& oldListName, const std::string& newListName);
     void createNewListFile(const std::string& listName);
     void removeListFile(const std::string& listName);

@@ -10,7 +10,7 @@ SmartCommand::apply(Command& command)
 
     // If command is autocomplete, let's apply the smart filter
     // and treat it again
-    if (CommandService::isCommand(command, "commands")) {
+    if (CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {
         if (arguments.empty()) {
             return command;
         }
@@ -21,7 +21,7 @@ SmartCommand::apply(Command& command)
 
         std::vector<std::string> newArguments = autocompleteCommand.getArguments();
         newArguments.insert(newArguments.begin(), autocompleteCommand.getName());
-        Command adaptatedCommand = Command::create("commands", newArguments, command.getOptions());
+        Command adaptatedCommand = Command::create(Command::COMMAND_AUTOCOMPLETE, newArguments, command.getOptions());
         return adaptatedCommand;
     }
 

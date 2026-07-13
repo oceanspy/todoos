@@ -10,6 +10,7 @@ class IOService
 {
   public:
     explicit IOService(const std::string& channel);
+    static const std::string CLI;
     void print(const std::string& message);
     void message(const std::string& message);
     void printWithoutLineBreak(const std::string& message);

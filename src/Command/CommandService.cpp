@@ -1,7 +1,7 @@
 #include "CommandService.h"
 
-CommandService::CommandService(CommandRegistry& commandList, CommandOption& commandOption)
-  : commandList(commandList)
+CommandService::CommandService(CommandRegistry& commandRegistry, CommandOption& commandOption)
+  : commandRegistry(commandRegistry)
   , commandOption(commandOption)
 {
 }
@@ -9,7 +9,7 @@ CommandService::CommandService(CommandRegistry& commandList, CommandOption& comm
 bool
 CommandService::isValid(Command& command)
 {
-    return commandList.isValid(CommandService::getCommandName(command.getName()));
+    return commandRegistry.isValid(CommandService::getCommandName(command.getName()));
 }
 
 bool
@@ -38,7 +38,7 @@ CommandService::isCommand(Command& command, const std::string& commandName)
 bool
 CommandService::isBeginningOfCommand(Command command)
 {
-    return commandList.isBeginningOfCommand(command.getName());
+    return commandRegistry.isBeginningOfCommand(command.getName());
 }
 
 bool
@@ -50,13 +50,13 @@ CommandService::isCommandValidWithOption(Command& command)
 std::vector<std::string>
 CommandService::getBaseCommandList()
 {
-    return commandList.getMainCommandNames();
+    return commandRegistry.getMainCommandNames();
 }
 
 std::string
 CommandService::getMainCommandListAsString()
 {
-    std::vector<std::string> baseCommandList = commandList.getMainCommandNames();
+    std::vector<std::string> baseCommandList = commandRegistry.getMainCommandNames();
     std::string baseCommandsString;
     int i = 0;
     for (const std::string& command : baseCommandList) {
@@ -72,7 +72,7 @@ CommandService::getMainCommandListAsString()
 CommandRegistry&
 CommandService::list()
 {
-    return commandList;
+    return commandRegistry;
 }
 
 CommandOption&

@@ -1,6 +1,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "CommandValidation.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -12,6 +13,8 @@ class Command
             std::vector<std::string> arguments,
             std::map<std::string, std::string> options,
             std::string rawCommand = "");
+    static const std::string COMMAND_AUTOCOMPLETE;
+    static Command createFromValidation(CommandValidation& commandValidation);
     static Command create(std::string command,
                           std::vector<std::string> arguments,
                           std::map<std::string, std::string> options);

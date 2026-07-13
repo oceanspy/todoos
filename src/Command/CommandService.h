@@ -9,7 +9,7 @@
 class CommandService
 {
   public:
-    explicit CommandService(CommandRegistry& commandList, CommandOption& commandOption);
+    explicit CommandService(CommandRegistry& commandRegistry, CommandOption& commandOption);
     std::vector<std::string> getBaseCommandList();
     std::string getMainCommandListAsString();
     bool isValid(Command& command);
@@ -23,7 +23,7 @@ class CommandService
     static bool isCommandValidWithOption(Command& command);
 
   private:
-    CommandRegistry& commandList;
+    CommandRegistry& commandRegistry;
     CommandOption& commandOption;
 };
 
