@@ -3,6 +3,7 @@
 
 #include "StatusEntity.h"
 #include <algorithm>
+#include <map>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -13,12 +14,11 @@ class StatusService
     StatusService();
     enum Status
     {
-        TO_DO = 0,
+        QUEUED = 0,
         STARTED = 1,
-        REVIEWING = 2,
+        TRIAGED = 2,
         PAUSED = 3,
         BLOCKED = 4,
-        TENTATIVELY_CLOSED = 5,
         COMPLETED = 6,
         CANCELLED = 7
     };

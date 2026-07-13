@@ -37,6 +37,7 @@ class ConfigService
     std::filesystem::path getCurrentListFilePath();
     std::filesystem::path getListArchiveFilePathFromFilePath(std::filesystem::path listFilePath);
     std::filesystem::path getListDeleteFilePathFromFilePath(std::filesystem::path listFilePath);
+    std::filesystem::path getDescriptionsDirPath();
 
   private:
     IOService& ioService;

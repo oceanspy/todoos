@@ -1,4 +1,5 @@
 #include "../../../List/ListItems/StatusEntity.h"
+#include "../../../List/ListItems/StatusService.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("StatusEntityTest", "[StatusEntity]")
@@ -104,10 +105,26 @@ TEST_CASE("StatusEntityTest", "[StatusEntity]")
         REQUIRE(vectorResult[9] == "false");
     }
 
+    SECTION("legacy alias: 'to-do' resolves to 'queued'")
+    {
+        StatusService statusService;
+        StatusEntity entity = statusService.getStatusFromName("to-do");
+        REQUIRE(*entity.getCommandName() == "queued");
+        REQUIRE(*entity.getId() == StatusService::QUEUED);
+    }
+
+    SECTION("legacy alias: 'reviewing' resolves to 'triaged'")
+    {
+        StatusService statusService;
+        StatusEntity entity = statusService.getStatusFromName("reviewing");
+        REQUIRE(*entity.getCommandName() == "triaged");
+        REQUIRE(*entity.getId() == StatusService::TRIAGED);
+    }
+
     SECTION("setFromVector with false booleans")
     {
         std::vector<std::string> data = {
-            "0", "0", "to-do", "to-do", "○", "WHITE", "RESET", "false", "false", "false"
+            "0", "0", "queued", "queued", "○", "WHITE", "RESET", "false", "false", "false"
         };
 
         StatusEntity entity = StatusEntity::setFromVector(data);

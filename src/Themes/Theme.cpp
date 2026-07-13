@@ -74,11 +74,14 @@ Theme::buildStatus(const ListItemEntity& listItemEntity)
 std::string
 Theme::buildPriority(const ListItemEntity& listItemEntity)
 {
+    std::string icon = *(*listItemEntity.priority()).getIcon();
+    if (*listItemEntity.hasDescription()) {
+        icon = "⇱";
+    }
     if (*(*listItemEntity.status()).isClosed()) {
-        return StringHelpers::colorize(" " + *(*listItemEntity.priority()).getIcon() + "  ", GRAY);
+        return StringHelpers::colorize(" " + icon + "  ", GRAY);
     } else {
-        return StringHelpers::colorize(" " + *(*listItemEntity.priority()).getIcon() + "  ",
-                                       (*listItemEntity.priority()).getColor());
+        return StringHelpers::colorize(" " + icon + "  ", (*listItemEntity.priority()).getColor());
     }
 }
 
@@ -282,11 +285,11 @@ Theme::buildShortStatsCounts(const ListCountSummary& summary)
 
     std::string cancelledStr = std::to_string(summary.cancelled);
     int cancelledCharLength = 4 + static_cast<int>(cancelledStr.length());
-    cancelledStr = " ✖️ " + cancelledStr;
+    cancelledStr = " 🚫 " + cancelledStr;
 
     std::string deletedStr = std::to_string(summary.deleted);
     int deletedCharLength = 4 + static_cast<int>(deletedStr.length());
-    deletedStr = " 🧹 " + deletedStr;
+    deletedStr = " 🗑️ " + deletedStr;
 
     std::string statusPrintCount = totalStr + archivedStr + deliveredStr + cancelledStr + deletedStr;
 

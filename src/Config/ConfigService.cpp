@@ -155,9 +155,9 @@ ConfigService::getUsedListNameStr()
 std::string
 ConfigService::getUsedListVariantStr()
 {
-    if (!command.getOptions().empty() && command.hasOption("archive")) {
+    if (!command.getOptions().empty() && command.hasOption("archived")) {
         return "archive";
-    } else if (!command.getOptions().empty() && command.hasOption("delete")) {
+    } else if (!command.getOptions().empty() && command.hasOption("deleted")) {
         return "delete";
     }
 
@@ -206,6 +206,12 @@ ConfigService::getListArchiveFilePathFromFilePath(std::filesystem::path listFile
         return listFilePath;
     }
     return listFilePath.replace_filename(".archive_" + listFilePath.filename().string());
+}
+
+std::filesystem::path
+ConfigService::getDescriptionsDirPath()
+{
+    return getAppDirPath() / "descriptions";
 }
 
 std::filesystem::path

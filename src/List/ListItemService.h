@@ -2,11 +2,13 @@
 #define LISTITEMSERVICE_H
 
 #include "../Events/EventBus.h"
+#include "../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../FileDataStorageRepositories/ListItemRepository.h"
 #include "../Helpers/DateHelpers.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
 #include "ListCountSummary.h"
+#include "ListItemId.h"
 #include "ListName.h"
 
 class ListItemService
@@ -15,6 +17,7 @@ class ListItemService
     ListItemService(IOService& ioService,
                     ConfigService& configService,
                     ListItemRepository& listItemRepository,
+                    DescriptionRepository& descriptionRepository,
                     PriorityService& priorityService,
                     StatusService& statusService);
     PriorityService& priority();
@@ -28,7 +31,7 @@ class ListItemService
                     const std::string* priority = nullptr,
                     const std::string* status = nullptr,
                     time_t dueAt = 0);
-    std::string makeId(ListName& listName);
+    const std::string makeId(ListName& listName);
     bool isIdAvailable(const std::string& id, ListName& listName);
     void edit(const std::string& id,
               ListName& listName,
@@ -49,7 +52,7 @@ class ListItemService
     void duplicate(const std::string& id, ListName& listName);
     void archive(const std::string& id, ListName& listName);
     void archiveAll(ListName& listName);
-    void archiveFinishedItems(ListName& listName);
+    void archiveFinishedItems(ListName& listName, bool withDescribedItems);
     void restore(const std::string& id, ListName& listName);
     void editDeadline(std::string& id, ListName& listName, time_t dueAt = 0);
     long count(ListName& listName);
@@ -61,15 +64,13 @@ class ListItemService
     void filterPriorityAbove(std::vector<ListItemEntity>& listItems, const int priority);
     void filterStatus(std::vector<ListItemEntity>& listItems, const std::vector<int>& statuses);
     void filterDeadlineBefore(std::vector<ListItemEntity>& listItems, const time_t timestamp);
-    const int idLength = 4;
-    const std::string idLetters = "letters";
-    const std::string idLettersLowercase = "letters-lowercase";
-    const std::string idRandom = "random";
+    void filterDescribed(std::vector<ListItemEntity>& listItems);
 
   private:
     IOService& ioService;
     ConfigService& configService;
     ListItemRepository& listItemRepository;
+    DescriptionRepository& descriptionRepository;
     PriorityService priorityService;
     StatusService statusService;
     std::vector<ListItemEntity> sort(std::vector<ListItemEntity> listItems);

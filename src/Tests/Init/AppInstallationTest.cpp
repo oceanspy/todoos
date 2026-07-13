@@ -87,7 +87,7 @@ TEST_CASE("Populate default list file", "[Installation]")
     REQUIRE(defaultListData[0][0] == "aaaa");
     REQUIRE(defaultListData[0][1] == "test 1");
     REQUIRE(defaultListData[0][2] == "high");
-    REQUIRE(defaultListData[0][3] == "to-do");
+    REQUIRE(defaultListData[0][3] == "queued");
     REQUIRE(defaultListData[0][4] == "0");
     REQUIRE(defaultListData[0][5] == "0");
     REQUIRE(defaultListData[0][6] == "1712487259");

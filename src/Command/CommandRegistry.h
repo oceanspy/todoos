@@ -1,6 +1,7 @@
 #ifndef TODOOS_COMMANDREGISTRY_H
 #define TODOOS_COMMANDREGISTRY_H
 
+#include "Command.h"
 #include "CommandOption.h"
 #include <map>
 #include <string>
@@ -14,7 +15,7 @@ class CommandRegistry
     int getCommandId(const std::string& command);
     bool isValid(const std::string& commandNameToEvaluate);
     bool isBeginningOfCommand(const std::string& partialCommandNameToEvaluate);
-    static bool isCommandValidWithOptions(std::string option, std::map<std::string, std::string> options);
+    static bool isCommandValidWithOptions(Command& command);
 
     enum CommandIds
     {
@@ -28,13 +29,14 @@ class CommandRegistry
         INCREASE = 21,
         DECREASE = 22,
         STATUS = 30,
-        TO_DO = 31,
+        QUEUE = 31,
         START = 32,
         PAUSE = 33,
-        REVIEW = 34,
+        TRIAGE = 34,
         BLOCKED = 35,
         COMPLETE = 36,
         CANCEL = 37,
+        RESET = 38,
         REMOVE = 40,
         ARCHIVE = 41,
         RESTORE = 42,
@@ -47,7 +49,7 @@ class CommandRegistry
         LIST = 70,
         USE = 71,
         STATS = 80,
-        RESET = 90,
+        DESCRIBE = 90,
         COMMANDS = 100
     };
 

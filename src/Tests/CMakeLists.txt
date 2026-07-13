@@ -15,9 +15,11 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../IOService/IOService.cpp
         ../IOService/CliIOChannel/CliIOChannel.cpp
         ../Exception/ListNotFoundException.cpp
+        ../Exception/ListItemNotFoundException.cpp
         ../Config/ConfigEntity.cpp
         ../List/ListEntity.cpp
         ../List/ListItems/ListItemEntity.cpp
+        ../List/ListItemId.cpp
         ../List/ListItems/PriorityEntity.cpp
         ../List/ListItems/StatusEntity.cpp
         ../Serializers/ConfSerializer.cpp
@@ -67,6 +69,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Mock/MockAppInitialization.h
         Config/ConfigRepositoryTest.cpp
         List/ListRepositoryTest.cpp
+        List/ListItemIdTest.cpp
         List/ListItemServiceTest.cpp
         List/ListCountSummaryTest.cpp
         List/ListItemServiceCountSummaryTest.cpp
@@ -93,7 +96,6 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Themes/ThemeTest.cpp
         Themes/DefaultTest.cpp
         Themes/ThemeServiceTest.cpp
-        ../Actions/RemoveAction/RemoveAction.cpp
         ../Actions/StatusAction/StatusAction.cpp
         ../Actions/PriorityAction/PriorityAction.cpp
         ../Actions/ListItemAction/AddItemAction.cpp
@@ -101,6 +103,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/ListItemAction/DeadlineItemAction.cpp
         ../Actions/ListItemAction/EditItemAction.cpp
         ../Actions/ListItemAction/PrependItemAction.cpp
+        ../Actions/ListItemAction/RemoveItemAction.cpp
+        ../Actions/ListItemAction/ArchiveItemAction.cpp
+        ../Actions/ListItemAction/RestoreItemAction.cpp
         ../Actions/ShowAction/ShowAction.cpp
         ../Actions/ConfigAction/ConfigAction.cpp
         ../Actions/ListAction/ShowListAction.cpp
@@ -146,6 +151,11 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/MoveListUseCase.cpp
         ../UseCase/StatsUseCase.cpp
         ../UseCase/MoveItemUseCase.cpp
+        ../UseCase/DescribeItemUseCase.cpp
+        ../FileDataStorageRepositories/DescriptionRepository.cpp
+        ../Describe/DescribeItem.cpp
+        ../Describe/DescribeItemEdited.cpp
+        ../Actions/DescriptionAction/ItemTempFile.cpp
         ../UseCase/CopyItemUseCase.cpp
         ../UseCase/DuplicateItemUseCase.cpp
         ../UseCase/EmptyUseCase.cpp
@@ -154,6 +164,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         UseCase/UseCaseTest.cpp
         UseCase/MissingUseCaseTest.cpp
         Actions/ItemActionsTest.cpp
+        Describe/DescribeItemTest.cpp
+        Describe/DescribeItemEditedTest.cpp
+        Describe/DescriptionRepositoryTest.cpp
         TestMain.cpp
 )
 

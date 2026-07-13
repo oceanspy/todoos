@@ -4,7 +4,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-project(todoos VERSION 0.4.1)
+project(todoos VERSION 0.6.0)
 
 include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
@@ -44,12 +44,16 @@ add_executable(todoos main.cpp
         src/List/ListService.h
         src/List/ListName.cpp
         src/List/ListName.h
+        src/List/ListItemId.cpp
+        src/List/ListItemId.h
         src/Init/AppInitialization.cpp
         src/Init/AppInitialization.h
         src/Init/AppInstallation.cpp
         src/Init/AppInstallation.h
         src/Exception/ListNotFoundException.cpp
         src/Exception/ListNotFoundException.h
+        src/Exception/ListItemNotFoundException.cpp
+        src/Exception/ListItemNotFoundException.h
         src/Config/ConfigEntity.cpp
         src/Config/ConfigEntity.h
         src/Config/ConfigService.cpp
@@ -68,6 +72,12 @@ add_executable(todoos main.cpp
         src/Actions/ListItemAction/EditItemAction.h
         src/Actions/ListItemAction/PrependItemAction.cpp
         src/Actions/ListItemAction/PrependItemAction.h
+        src/Actions/ListItemAction/RemoveItemAction.cpp
+        src/Actions/ListItemAction/RemoveItemAction.h
+        src/Actions/ListItemAction/ArchiveItemAction.cpp
+        src/Actions/ListItemAction/ArchiveItemAction.h
+        src/Actions/ListItemAction/RestoreItemAction.cpp
+        src/Actions/ListItemAction/RestoreItemAction.h
         src/List/ListItemService.cpp
         src/List/ListItemService.h
         src/List/ListCountSummary.h
@@ -79,8 +89,6 @@ add_executable(todoos main.cpp
         src/Actions/ShowAction/ShowAction.h
         src/Command/CommandRouter.cpp
         src/Command/CommandRouter.h
-        src/Actions/RemoveAction/RemoveAction.cpp
-        src/Actions/RemoveAction/RemoveAction.h
         src/Actions/StatusAction/StatusAction.cpp
         src/Actions/StatusAction/StatusAction.h
         src/Actions/PriorityAction/PriorityAction.cpp
@@ -105,11 +113,17 @@ add_executable(todoos main.cpp
         src/Command/SmartCommand.h
         src/FileDataStorageRepositories/ListRepository.cpp
         src/FileDataStorageRepositories/ListRepository.h
+        src/FileDataStorageRepositories/DescriptionRepository.cpp
+        src/FileDataStorageRepositories/DescriptionRepository.h
+        src/Describe/DescribeItem.cpp
+        src/Describe/DescribeItem.h
+        src/Describe/DescribeItemEdited.cpp
+        src/Describe/DescribeItemEdited.h
+        src/Actions/DescriptionAction/ItemTempFile.cpp
+        src/Actions/DescriptionAction/ItemTempFile.h
         src/Command/CommandShortcut.cpp
         src/Command/CommandShortcut.h
         src/Helpers/TerminalStyle.h
-        src/UseCase/CommandAutoCompleteUseCase.cpp
-        src/UseCase/CommandAutoCompleteUseCase.h
         src/Themes/Presets/Default.cpp
         src/Themes/Presets/Default.h
         src/Themes/Presets/Legacy.cpp
@@ -141,6 +155,8 @@ add_executable(todoos main.cpp
         src/Themes/ThemeService.cpp
         src/Themes/ThemeService.h
         src/Helpers/TerminalStyle.cpp
+        src/UseCase/CommandAutoCompleteUseCase.cpp
+        src/UseCase/CommandAutoCompleteUseCase.h
         src/UseCase/ShowUseCase.cpp
         src/UseCase/ShowUseCase.h
         src/UseCase/AddItemUseCase.cpp
@@ -185,6 +201,8 @@ add_executable(todoos main.cpp
         src/UseCase/StatsUseCase.h
         src/UseCase/MoveItemUseCase.cpp
         src/UseCase/MoveItemUseCase.h
+        src/UseCase/DescribeItemUseCase.cpp
+        src/UseCase/DescribeItemUseCase.h
         src/UseCase/CopyItemUseCase.cpp
         src/UseCase/CopyItemUseCase.h
         src/UseCase/DuplicateItemUseCase.cpp

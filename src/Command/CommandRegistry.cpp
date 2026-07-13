@@ -20,9 +20,9 @@ CommandRegistry::CommandRegistry()
 void
 CommandRegistry::make()
 {
-    commandIds = { SHOW,  ADD,   EDIT,      APPEND,   PREPEND,  FIND,   PRIORITY, INCREASE, DECREASE, STATUS, TO_DO,
-                   START, PAUSE, REVIEW,    BLOCKED,  COMPLETE, CANCEL, REMOVE,   ARCHIVE,  RESTORE,  MOVE,   COPY,
-                   EMPTY, CLEAN, DUPLICATE, DEADLINE, LIST,     USE,    STATS,    RESET,    COMMANDS };
+    commandIds = { SHOW,  ADD,   EDIT,   APPEND,    PREPEND,  FIND,   PRIORITY, INCREASE, DECREASE, STATUS,  QUEUE,
+                   START, PAUSE, TRIAGE, BLOCKED,   COMPLETE, CANCEL, RESET,    REMOVE,   ARCHIVE,  RESTORE, MOVE,
+                   COPY,  EMPTY, CLEAN,  DUPLICATE, DEADLINE, LIST,   USE,      STATS,    DESCRIBE, COMMANDS };
 
     // loop to commandIds to get the command name
     for (int commandId : commandIds) {
@@ -62,8 +62,8 @@ CommandRegistry::make()
             case STATUS:
                 commands[commandId].name = "status";
                 break;
-            case TO_DO:
-                commands[commandId].name = "to-do";
+            case QUEUE:
+                commands[commandId].name = "queue";
                 break;
             case START:
                 commands[commandId].name = "start";
@@ -71,8 +71,8 @@ CommandRegistry::make()
             case PAUSE:
                 commands[commandId].name = "pause";
                 break;
-            case REVIEW:
-                commands[commandId].name = "review";
+            case TRIAGE:
+                commands[commandId].name = "triage";
                 break;
             case BLOCKED:
                 commands[commandId].name = "block";
@@ -82,6 +82,9 @@ CommandRegistry::make()
                 break;
             case CANCEL:
                 commands[commandId].name = "cancel";
+                break;
+            case RESET:
+                commands[commandId].name = "reset";
                 break;
             case REMOVE:
                 commands[commandId].name = "remove";
@@ -119,8 +122,8 @@ CommandRegistry::make()
             case STATS:
                 commands[commandId].name = "stats";
                 break;
-            case RESET:
-                commands[commandId].name = "reset";
+            case DESCRIBE:
+                commands[commandId].name = "describe";
                 break;
             case COMMANDS:
                 commands[commandId].name = "commands";
@@ -135,7 +138,7 @@ CommandRegistry::make()
 bool
 CommandRegistry::isValid(const std::string& commandNameToEvaluate)
 {
-    return std::ranges::any_of(commands, [&commandNameToEvaluate](const auto& command) {
+    return std::any_of(commands.begin(), commands.end(), [&commandNameToEvaluate](const auto& command) {
         return command.second.name == commandNameToEvaluate;
     });
 }
@@ -143,7 +146,7 @@ CommandRegistry::isValid(const std::string& commandNameToEvaluate)
 bool
 CommandRegistry::isBeginningOfCommand(const std::string& partialCommandNameToEvaluate)
 {
-    return std::ranges::any_of(commands, [&partialCommandNameToEvaluate](const auto& command) {
+    return std::any_of(commands.begin(), commands.end(), [&partialCommandNameToEvaluate](const auto& command) {
         return command.second.name.compare(0, partialCommandNameToEvaluate.size(), partialCommandNameToEvaluate) == 0;
     });
 }
@@ -177,43 +180,48 @@ CommandRegistry::getMainCommandNames(bool showOnlyAutocomplete)
 }
 
 bool
-CommandRegistry::isCommandValidWithOptions(const std::string commandName,
-                                           const std::map<std::string, std::string> options)
+CommandRegistry::isCommandValidWithOptions(Command& command)
 {
-    if (options.empty() || commandName == "show") {
+    if (command.getOptions().empty() || command.getName() == "show") {
         return true;
     }
 
-    return std::ranges::any_of(options, [&commandName](const auto& option) {
+    const auto options = command.getOptions();
+    return std::any_of(options.begin(), options.end(), [&command](const auto& option) {
         if (option.first == "list") {
             return true;
         } else if (option.first == "priority") {
-            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
-                commandName == "prepend") {
+            if (command.getName() == "show" || command.getName() == "add" || command.getName() == "edit" ||
+                command.getName() == "append" || command.getName() == "prepend") {
                 return true;
             }
         } else if (option.first == "status") {
-            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
-                commandName == "prepend") {
+            if (command.getName() == "show" || command.getName() == "add" || command.getName() == "edit" ||
+                command.getName() == "append" || command.getName() == "prepend") {
                 return true;
             }
         } else if (option.first == "deadline") {
-            if (commandName == "show" || commandName == "add" || commandName == "edit" || commandName == "append" ||
-                commandName == "prepend") {
+            if (command.getName() == "show" || command.getName() == "add" || command.getName() == "edit" ||
+                command.getName() == "append" || command.getName() == "prepend") {
                 return true;
             }
-        } else if (option.first == "archive") {
-            if (commandName == "show" || commandName == "find") {
+        } else if (option.first == "archived") {
+            if (command.getName() == "show" || command.getName() == "find") {
                 return true;
             }
-        } else if (option.first == "delete") {
-            if (commandName == "show" || commandName == "find") {
+        } else if (option.first == "deleted") {
+            if (command.getName() == "show" || command.getName() == "find") {
+                return true;
+            }
+        } else if (option.first == "described") {
+            if (command.getName() == "add" || command.getName() == "show" || command.getName() == "find" ||
+                command.getName() == "clean") {
                 return true;
             }
         } else if (option.first == "force") {
-            if (commandName == "remove" || commandName == "move-to" || commandName == "copy-to") {
+            if (command.getName() == "remove" || command.getName() == "move-to" || command.getName() == "copy-to") {
                 return true;
-            } else if (commandName == "list") {
+            } else if (command.getName() == "list") {
                 // TODO: implement accept only for "remove"
                 return true;
             }

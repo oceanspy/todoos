@@ -36,6 +36,7 @@ class Theme
     std::string buildId(const ListItemEntity& listItemEntity);
     std::string buildStatus(const ListItemEntity& listItemEntity);
     std::string buildPriority(const ListItemEntity& listItemEntity);
+    std::string buildDesc(const ListItemEntity& listItemEntity);
     std::string buildValue(const ListItemEntity& listItemEntity, const int leftOffset);
     std::string buildDate(const ListItemEntity& listItemEntity);
     std::string buildPriorityCounts(const ListCountSummary& summary);

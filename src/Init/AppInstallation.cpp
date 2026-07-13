@@ -62,7 +62,7 @@ AppInstallation::populate()
         { "aaaa",
           "Welcome to todoos!",
           "urgent",
-          "to-do",
+          "queued",
           "0",
           "0",
           std::to_string(time(nullptr)),
@@ -70,7 +70,7 @@ AppInstallation::populate()
         { "bbbb",
           "Please look at 'todoos -h' to get started!",
           "high",
-          "to-do",
+          "queued",
           "0",
           "0",
           std::to_string(time(nullptr)),
@@ -78,12 +78,12 @@ AppInstallation::populate()
         { "cccc",
           "Add your first task by doing: 'todoos add \"My first task\"'",
           "medium",
-          "to-do",
+          "queued",
           "0",
           "0",
           std::to_string(time(nullptr)),
           std::to_string(time(nullptr)) },
-        { "dddd", "Enjoy! :-)", "low", "to-do", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr)) }
+        { "dddd", "Enjoy! :-)", "low", "queued", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr)) }
     };
     storageCsvService.load(init.getDefaultListFilePath());
     storageCsvService.write(defaultListData);

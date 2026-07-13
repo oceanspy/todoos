@@ -1,7 +1,10 @@
 #include "../../Actions/ListItemAction/AddItemAction.h"
 #include "../../Actions/PriorityAction/PriorityAction.h"
-#include "../../Actions/RemoveAction/RemoveAction.h"
+#include "../../Actions/ListItemAction/ArchiveItemAction.h"
+#include "../../Actions/ListItemAction/RemoveItemAction.h"
+#include "../../Actions/ListItemAction/RestoreItemAction.h"
 #include "../../Actions/StatusAction/StatusAction.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../List/ListService.h"
@@ -34,7 +37,9 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -44,8 +49,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         std::vector<ListItemEntity> itemsBefore = listItemService.get(listName);
         REQUIRE(itemsBefore.size() == 2);
 
-        RemoveAction remove(ioService, listItemService);
-        REQUIRE_NOTHROW(remove.execute(command, listName, "remove"));
+        RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+        REQUIRE_NOTHROW(remove.execute(command, listName));
 
         std::vector<ListItemEntity> itemsAfter = listItemService.get(listName);
         REQUIRE(itemsAfter.size() == 1);
@@ -58,8 +63,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     SECTION("remove with empty arguments does not throw")
     {
         Command emptyCommand = Command("remove", {}, {}, "remove");
-        RemoveAction remove(ioService, listItemService);
-        REQUIRE_NOTHROW(remove.execute(emptyCommand, listName, "remove"));
+        RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+        REQUIRE_NOTHROW(remove.execute(emptyCommand, listName));
 
         // No items removed
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -70,8 +75,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     {
         std::map<std::string, std::string> options = { { "force", "" } };
         Command forceCommand = Command("remove", { "aaaa" }, options, "remove -f aaaa");
-        RemoveAction remove(ioService, listItemService);
-        REQUIRE_NOTHROW(remove.execute(forceCommand, listName, "remove"));
+        RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+        REQUIRE_NOTHROW(remove.execute(forceCommand, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -88,8 +93,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     SECTION("archive with valid ID archives item")
     {
         Command archiveCommand = Command("archive", { "aaaa" }, {}, "archive aaaa");
-        RemoveAction remove(ioService, listItemService);
-        REQUIRE_NOTHROW(remove.execute(archiveCommand, listName, "archive"));
+        ArchiveItemAction archive(ioService, listItemService);
+        REQUIRE_NOTHROW(archive.execute(archiveCommand, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 1);
@@ -109,8 +114,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         listItemService.archive("aaaa", listName);
 
         Command restoreCommand = Command("restore", { "aaaa" }, {}, "restore aaaa");
-        RemoveAction remove(ioService, listItemService);
-        REQUIRE_NOTHROW(remove.execute(restoreCommand, listName, "restore"));
+        RestoreItemAction restore(ioService, listItemService);
+        REQUIRE_NOTHROW(restore.execute(restoreCommand, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
@@ -143,7 +148,9 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -208,7 +215,7 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
         REQUIRE_NOTHROW(status.executeReset(resetCommand, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
-        REQUIRE(*(*item.status()).getCommandName() == "to-do");
+        REQUIRE(*(*item.status()).getCommandName() == "queued");
 
         installation.wipe();
         installation.make();
@@ -238,7 +245,9 @@ TEST_CASE("Priority controller", "[CommandRouter][Priority]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -338,7 +347,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, addCommand);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
@@ -369,7 +380,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, emptyAddCommand);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
@@ -389,7 +402,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, addWithPrio);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
@@ -411,7 +426,9 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, addCommand);
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();

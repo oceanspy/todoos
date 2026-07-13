@@ -18,13 +18,10 @@ CopyItemUseCase::CopyItemUseCase(IOService& ioService,
 }
 
 void
-CopyItemUseCase::execute(Command& command)
+CopyItemUseCase::execute(Command& command, ListName& currentList)
 {
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-
     CopyItemAction action(ioService, listService, listItemService);
-    std::string newListNameStr = action.execute(command, listName);
+    std::string newListNameStr = action.execute(command, currentList);
 
     if (!newListNameStr.empty()) {
         ListName newListName = listService.createListName(newListNameStr, configService.getUsedListVariantStr());

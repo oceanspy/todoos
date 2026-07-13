@@ -1,16 +1,21 @@
 #include "ListItemService.h"
+#include "ListItemId.h"
+#include "ListItems/ListItemEntity.h"
 
+#include <algorithm>
 #include <string>
 #include <utility>
 
 ListItemService::ListItemService(IOService& ioService,
                                  ConfigService& configService,
                                  ListItemRepository& listItemRepository,
+                                 DescriptionRepository& descriptionRepository,
                                  PriorityService& priorityService,
                                  StatusService& statusService)
   : ioService(ioService)
   , configService(configService)
   , listItemRepository(listItemRepository)
+  , descriptionRepository(descriptionRepository)
   , priorityService(priorityService)
   , statusService(statusService)
 {
@@ -19,7 +24,19 @@ ListItemService::ListItemService(IOService& ioService,
 std::vector<ListItemEntity>
 ListItemService::get(ListName& listName)
 {
-    return sort(listItemRepository.get(listName));
+    auto listItems = listItemRepository.get(listName);
+    auto existingDescriptions = descriptionRepository.getIds(listName);
+
+    for (auto& listItem : listItems) {
+        bool hasDescription = false;
+        if (std::count(existingDescriptions.begin(), existingDescriptions.end(), *listItem.getId()) > 0) {
+            hasDescription = true;
+        }
+
+        listItem.setHasDescription(hasDescription);
+    }
+
+    return sort(listItems);
 }
 
 ListItemEntity
@@ -61,7 +78,7 @@ ListItemService::add(ListName& listName,
         StatusEntity statusEntity = statusService.getStatusFromName(*status);
         listItemEntity.setStatus(statusEntity);
     } else {
-        StatusEntity statusEntity = statusService.getStatusFromName("to-do");
+        StatusEntity statusEntity = statusService.getStatusFromName("queued");
         listItemEntity.setStatus(statusEntity);
     }
 
@@ -74,22 +91,15 @@ ListItemService::add(ListName& listName,
     return id;
 }
 
-std::string
+std::string const
 ListItemService::makeId(ListName& listName)
 {
     bool validId = false;
-    std::string id;
     int i = 0;
-    const std::string idType = configService.getValue("idRandomGenerationType");
+    std::string id;
+    const std::string generationType = configService.getValue("idRandomGenerationType");
     while (!validId && i < 50) {
-        if (idType == idLettersLowercase) {
-            id = StringHelpers::randomLettersLowercase(idLength);
-        } else if (idType == idLetters) {
-            id = StringHelpers::randomAlNumString(idLength);
-        } else {
-            id = StringHelpers::randomString(idLength);
-        }
-
+        id = ListItemId::generate(generationType);
         if (isIdAvailable(id, listName)) {
             validId = true;
         }
@@ -191,7 +201,7 @@ ListItemService::reset(const std::string& id, ListName& listName)
 {
     ListItemEntity listItemToUpdate(listName);
     listItemToUpdate = find(id, listName);
-    StatusEntity statusEntity = statusService.getStatusFromName("to-do");
+    StatusEntity statusEntity = statusService.getStatusFromName("queued");
     listItemToUpdate.setStatus(statusEntity);
     listItemToUpdate.setCreatedAt(time(nullptr));
     listItemToUpdate.setUpdatedAt(time(nullptr));
@@ -288,10 +298,14 @@ ListItemService::archiveAll(ListName& listName)
 }
 
 void
-ListItemService::archiveFinishedItems(ListName& listName)
+ListItemService::archiveFinishedItems(ListName& listName, bool withDescribedItems)
 {
     std::vector<ListItemEntity> listItems = get(listName);
     for (ListItemEntity& listItem : listItems) {
+        if (!withDescribedItems && *listItem.hasDescription()) {
+            continue;
+        }
+
         if (*(*listItem.status()).isClosed()) {
             archiveItem(listItem, listName);
         }
@@ -721,5 +735,14 @@ ListItemService::filterDeadlineBefore(std::vector<ListItemEntity>& listItems, co
 
                                        return *item.getDueAt() >= timestamp + 86400;
                                    }),
+                    listItems.end());
+}
+
+void
+ListItemService::filterDescribed(std::vector<ListItemEntity>& listItems)
+{
+    listItems.erase(std::remove_if(listItems.begin(),
+                                   listItems.end(),
+                                   [](const ListItemEntity& item) { return !(*item.hasDescription()); }),
                     listItems.end());
 }

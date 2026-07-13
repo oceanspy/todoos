@@ -1,5 +1,6 @@
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../IOService/IOService.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
@@ -58,7 +59,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -85,7 +88,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -112,7 +117,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -139,7 +146,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -166,7 +175,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -193,7 +204,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -220,7 +233,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -247,7 +262,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -265,7 +282,7 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
 
     SECTION("Autocomplete commands: commands add -s to-do")
     {
-        Command command = Command("commands", { "add" }, { { "status", "to-do" } }, "commands add -s to-do");
+        Command command = Command("commands", { "add" }, { { "status", "queued" } }, "commands add -s to-do");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
         ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
@@ -274,7 +291,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -302,7 +321,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -330,7 +351,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -360,7 +383,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -387,7 +412,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -414,7 +441,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -441,7 +470,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -468,7 +499,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -495,7 +528,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -522,7 +557,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -549,7 +586,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -576,7 +615,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -603,7 +644,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -630,7 +673,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -657,7 +702,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -684,7 +731,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -712,7 +761,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -742,7 +793,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -769,7 +822,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -796,7 +851,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -823,7 +880,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -850,7 +909,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -877,7 +938,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -904,7 +967,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -931,7 +996,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -958,7 +1025,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -985,7 +1054,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1012,7 +1083,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1039,7 +1112,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1066,7 +1141,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1093,7 +1170,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1120,7 +1199,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1147,7 +1228,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1174,7 +1257,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1201,7 +1286,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1228,7 +1315,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1255,7 +1344,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1282,7 +1373,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1309,7 +1402,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1336,7 +1431,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1363,7 +1460,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1390,7 +1489,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1417,7 +1518,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1445,7 +1548,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1472,7 +1577,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1500,7 +1607,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1527,7 +1636,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 
@@ -1558,7 +1669,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         StatusService statusService = StatusService();
         ListItemRepository listItemRepository(
             configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, fileDataStorageServicePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
 

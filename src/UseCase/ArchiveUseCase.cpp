@@ -1,5 +1,5 @@
 #include "ArchiveUseCase.h"
-#include "../Actions/RemoveAction/RemoveAction.h"
+#include "../Actions/ListItemAction/ArchiveItemAction.h"
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
@@ -18,18 +18,16 @@ ArchiveUseCase::ArchiveUseCase(IOService& ioService,
 }
 
 void
-ArchiveUseCase::execute(Command& command)
+ArchiveUseCase::execute(Command& command, ListName& currentList)
 {
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-    RemoveAction remove(ioService, listItemService);
-    remove.execute(command, listName, "archive");
+    ArchiveItemAction archive(ioService, listItemService);
+    archive.execute(command, currentList);
 
     ShowAction show(ioService, listService, listItemService, themeService);
 
-    std::vector<ListItemEntity> listItems = listItemService.get(listName);
+    std::vector<ListItemEntity> listItems = listItemService.get(currentList);
     try {
-        show.execute(listItems, listName);
+        show.execute(listItems, currentList);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

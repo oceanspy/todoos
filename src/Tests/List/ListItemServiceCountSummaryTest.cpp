@@ -1,5 +1,6 @@
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../IOService/IOService.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
 #include "../../Serializers/ConfSerializer.h"
@@ -36,7 +37,9 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
     StatusService statusService = StatusService();
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
 
@@ -54,7 +57,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         REQUIRE(summary.cancelled == 0);
         REQUIRE(summary.deleted == 0);
 
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 1);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 1);
         REQUIRE(summary.getStatus(StatusService::STARTED) == 1);
         REQUIRE(summary.getStatus(StatusService::COMPLETED) == 0);
         REQUIRE(summary.getStatus(StatusService::CANCELLED) == 0);
@@ -77,7 +80,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         REQUIRE(summary.cancelled == 0);
         REQUIRE(summary.deleted == 0);
 
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 0);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 0);
         REQUIRE(summary.getStatus(StatusService::STARTED) == 1);
         REQUIRE(summary.getPriority(PriorityService::HIGH) == 0);
         REQUIRE(summary.getPriority(PriorityService::MEDIUM) == 1);
@@ -94,7 +97,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         REQUIRE(summary.delivered == 1);
         REQUIRE(summary.cancelled == 0);
         REQUIRE(summary.getStatus(StatusService::COMPLETED) == 1);
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 0);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 0);
     }
 
     SECTION("COMPLETED archived items contribute to delivered but not to statusCounts")
@@ -148,7 +151,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         REQUIRE(summary.total == 1);
         REQUIRE(summary.deleted == 1);
         REQUIRE(summary.archived == 0);
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 0);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 0);
         REQUIRE(summary.getStatus(StatusService::STARTED) == 1);
     }
 
@@ -160,14 +163,14 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
 
         const std::string lowPriority = "low";
         const std::string criticalPriority = "critical";
-        const std::string todoStatus = "to-do";
+        const std::string todoStatus = "queued";
         listItemService.add(secondListName, "extra item 1", &lowPriority, &todoStatus);
         listItemService.add(secondListName, "extra item 2", &criticalPriority, &todoStatus);
 
         ListCountSummary summary = listItemService.getCountSummary({ listName, secondListName });
 
         REQUIRE(summary.total == 4);
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 3);   // 1 from list + 2 from secondList
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 3);   // 1 from list + 2 from secondList
         REQUIRE(summary.getStatus(StatusService::STARTED) == 1); // 1 from list
         REQUIRE(summary.getPriority(PriorityService::LOW) == 1);
         REQUIRE(summary.getPriority(PriorityService::CRITICAL) == 1);
@@ -188,7 +191,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         REQUIRE(summary.delivered == 0);
         REQUIRE(summary.cancelled == 0);
         REQUIRE(summary.deleted == 0);
-        REQUIRE(summary.getStatus(StatusService::TO_DO) == 0);
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 0);
         REQUIRE(summary.getPriority(PriorityService::HIGH) == 0);
     }
 }

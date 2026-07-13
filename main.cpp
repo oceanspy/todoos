@@ -4,6 +4,7 @@
 #include "src/Command/CommandValidation.h"
 #include "src/Config/ConfigService.h"
 #include "src/FileDataStorageRepositories/ConfigRepository.h"
+#include "src/FileDataStorageRepositories/DescriptionRepository.h"
 #include "src/FileDataStorageRepositories/ListItemRepository.h"
 #include "src/FileDataStorageRepositories/ListRepository.h"
 #include "src/Help/HelpPrinter.h"
@@ -107,10 +108,11 @@ main(int argc, const char* argv[])
     EventBus bus = EventBus();
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
+    DescriptionRepository descriptionRepository = DescriptionRepository(configService.getDescriptionsDirPath());
     ListItemRepository listItemRepository =
         ListItemRepository(configService, fileDataStorageServicePtr, priorityService, statusService);
-    ListItemService listItemService =
-        ListItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    ListItemService listItemService = ListItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository = ListRepository(configService, &jsonService);
     ListService listService = ListService(ioService, configService, listRepository, bus);
 
@@ -127,17 +129,32 @@ main(int argc, const char* argv[])
     }
 
     // ----
+    // Get list used
+    ListName currentList = listService.createUsedListName();
+
+    // ----
     // Initializing cli actions and frontend
     ThemeService themeService = ThemeService(ioService, configService, listService, listItemService);
-    CommandRouter commandRouter = CommandRouter(
-        ioService, help, commandService, configService, fileStorageService, listService, listItemService, themeService);
+    CommandRouter commandRouter = CommandRouter(ioService,
+                                                help,
+                                                commandService,
+                                                configService,
+                                                fileStorageService,
+                                                listService,
+                                                listItemService,
+                                                themeService,
+                                                descriptionRepository,
+                                                init.getCacheDirPath());
 
     // ----
     // Do the actions and print
     try {
-        commandRouter.execute(command);
+        commandRouter.execute(command, currentList);
     } catch (ListNotFoundException& e) {
         help.listNotFound(e.getName());
+        return 1;
+    } catch (ListItemNotFoundException& e) {
+        help.listItemNotFound(e.getId(), e.getListName());
         return 1;
     } catch (std::exception& e) {
         help.commandNotFound();

@@ -18,17 +18,15 @@ PriorityUseCase::PriorityUseCase(IOService& ioService,
 }
 
 void
-PriorityUseCase::execute(Command& command, const std::string& action)
+PriorityUseCase::execute(Command& command, ListName& currentList, const std::string& action)
 {
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
     PriorityAction priority(ioService, listItemService);
-    priority.execute(command, listName, action);
+    priority.execute(command, currentList, action);
 
     ShowAction show(ioService, listService, listItemService, themeService);
-    std::vector<ListItemEntity> listItems = listItemService.get(listName);
+    std::vector<ListItemEntity> listItems = listItemService.get(currentList);
     try {
-        show.execute(listItems, listName);
+        show.execute(listItems, currentList);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

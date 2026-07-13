@@ -63,21 +63,21 @@ MockAppInstallation::populate()
     storageService.write(defaultListofListData);
 
     std::vector<std::vector<std::string>> defaultListData = {
-        { "aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259" },
+        { "aaaa", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
         { "bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getDefaultListFilePath());
     storageService.write(defaultListData);
 
     std::vector<std::vector<std::string>> tempListData = {
-        { "aaaa", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259" },
+        { "aaaa", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
         { "bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getMainDirPath() / "tempListName.json");
     storageService.write(tempListData);
 
     std::vector<std::vector<std::string>> temp2ListData = {
-        { "cccc", "test 1", "high", "to-do", "0", "0", "1712487259", "1712487259" },
+        { "cccc", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
         { "dddd", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getMainDirPath() / "tempList2Name.json");

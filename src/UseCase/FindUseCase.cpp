@@ -32,16 +32,24 @@ FindUseCase::execute(Command& command)
 
     try {
         std::vector<ListItemEntity> listItems;
-        if (command.hasOption("archive")) {
+        if (command.hasOption("archived")) {
             listItems = listItemService.search(listNameArchive, command.getArguments());
+
+            if (command.hasOption("described")) {
+                listItemService.filterDescribed(listItems);
+            }
 
             ioService.br();
             ioService.info("Searching for " + stringSearch + "in archived items...");
             ioService.br();
 
             show.execute(listItems, listName);
-        } else if (command.hasOption("delete")) {
+        } else if (command.hasOption("deleted")) {
             listItems = listItemService.search(listNameDelete, command.getArguments());
+
+            if (command.hasOption("described")) {
+                listItemService.filterDescribed(listItems);
+            }
 
             ioService.br();
             ioService.info("Searching for " + stringSearch + "in deleted items...");
@@ -56,6 +64,11 @@ FindUseCase::execute(Command& command)
             }
         } else {
             listItems = listItemService.search(listName, command.getArguments());
+
+            if (command.hasOption("described")) {
+                listItemService.filterDescribed(listItems);
+            }
+
             ioService.br();
             ioService.info("Searching for " + stringSearch + "...");
             ioService.br();

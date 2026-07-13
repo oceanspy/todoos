@@ -3,36 +3,42 @@
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
+#include "DescribeItemUseCase.h"
 
 AddItemUseCase::AddItemUseCase(IOService& ioService,
                                CommandService& commandService,
                                ListItemService& listItemService,
                                ListService& listService,
                                ConfigService& configService,
-                               ThemeService& themeService)
+                               ThemeService& themeService,
+                               DescribeItemUseCase& describeItemUseCase)
   : ioService(ioService)
   , commandService(commandService)
   , listItemService(listItemService)
   , listService(listService)
   , configService(configService)
   , themeService(themeService)
+  , describeItemUseCase(describeItemUseCase)
 {
 }
 
 void
-AddItemUseCase::execute(Command& command)
+AddItemUseCase::execute(Command& command, ListName& currentList)
 {
-    ListName listName =
-        listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-
     AddItemAction itemAction(ioService, commandService, listItemService);
-    itemAction.execute(command, listName);
+    std::string id = itemAction.execute(command, currentList);
+
+    Command describeCommand(id, {}, {});
+
+    if (command.hasOption("described")) {
+        describeItemUseCase.execute(describeCommand, currentList);
+    }
 
     ShowAction show(ioService, listService, listItemService, themeService);
 
-    std::vector<ListItemEntity> listItems = listItemService.get(listName);
+    std::vector<ListItemEntity> listItems = listItemService.get(currentList);
     try {
-        show.execute(listItems, listName);
+        show.execute(listItems, currentList);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error(e.what());

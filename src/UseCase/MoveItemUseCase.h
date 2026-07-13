@@ -17,7 +17,7 @@ class MoveItemUseCase
                     ListItemService& listItemService,
                     ConfigService& configService,
                     ThemeService& themeService);
-    void execute(Command& command);
+    void execute(Command& command, ListName& currentList);
 
   private:
     IOService& ioService;

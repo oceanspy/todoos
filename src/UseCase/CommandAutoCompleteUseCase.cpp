@@ -92,6 +92,14 @@ CommandAutoCompleteUseCase::execute(Command& command)
             return true;
         }
         return true;
+    } else if (CommandService::isCommand(firstSubCommand, "describe")) {
+        try {
+            std::vector<ListName> listNames = { listName };
+            autocompleteId(firstSubCommand, listNames);
+        } catch (std::exception& e) {
+            return true;
+        }
+        return true;
     } else if (CommandService::isCommand(firstSubCommand, "edit")) {
         if (!commandService.hasSubCommand(firstSubCommand)) {
             try {
@@ -157,11 +165,10 @@ CommandAutoCompleteUseCase::execute(Command& command)
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "remove") ||
                CommandService::isCommand(firstSubCommand, "archive") ||
-               CommandService::isCommand(firstSubCommand, "to-do") ||
+               CommandService::isCommand(firstSubCommand, "queue") ||
                CommandService::isCommand(firstSubCommand, "start") ||
                CommandService::isCommand(firstSubCommand, "pause") ||
-               CommandService::isCommand(firstSubCommand, "review") ||
-               CommandService::isCommand(firstSubCommand, "pend") ||
+               CommandService::isCommand(firstSubCommand, "triage") ||
                CommandService::isCommand(firstSubCommand, "complete") ||
                CommandService::isCommand(firstSubCommand, "cancel") ||
                CommandService::isCommand(firstSubCommand, "reset") ||

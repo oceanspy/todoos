@@ -6,6 +6,7 @@
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../Helpers/StringHelpers.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/ListItemEntity.h"
 #include "../../List/ListItems/PriorityService.h"
@@ -23,7 +24,7 @@ buildItem(const std::string& value, ListName& listName)
     PriorityService priorityService;
     StatusService statusService;
     PriorityEntity priorityEntity = priorityService.getPriorityFromName("high");
-    StatusEntity statusEntity = statusService.getStatusFromName("to-do");
+    StatusEntity statusEntity = statusService.getStatusFromName("queued");
     return ListItemEntity::set("aaaa", value, priorityEntity, statusEntity, 0, 0, 0, 0, listName);
 }
 
@@ -50,7 +51,9 @@ TEST_CASE("ThemeService", "[ThemeService]")
     StatusService statusService;
     ListItemRepository listItemRepository(
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-    ListItemService listItemService(ioService, configService, listItemRepository, priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr =
         std::make_unique<JsonSerializer>(ioService);
     ListRepository listRepository(configService, jsonFileDataStorageServicePtr.get());

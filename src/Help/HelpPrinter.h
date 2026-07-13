@@ -3,6 +3,7 @@
 
 #include "../Command/Command.h"
 #include "../IOService/IOService.h"
+#include "../List/ListName.h"
 
 class HelpPrinter
 {
@@ -13,7 +14,8 @@ class HelpPrinter
     void commandNotFoundSkipCommandAutocomplete(Command& command);
     void commandOptionNotSupported();
     void commandOptionNotSupportedSkipCommandAutocomplete(Command& command);
-    void listNotFound(std::string list);
+    void listNotFound(const std::string& list);
+    void listItemNotFound(const std::string& id, const ListName& listName);
     static std::string getVersion();
 
   private:

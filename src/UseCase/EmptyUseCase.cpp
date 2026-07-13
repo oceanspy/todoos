@@ -18,7 +18,7 @@ EmptyUseCase::EmptyUseCase(IOService& ioService,
 }
 
 void
-EmptyUseCase::execute(Command& command)
+EmptyUseCase::execute(Command& command, ListName& currentList)
 {
     ioService.br();
     std::string message = "Are you sure you want to empty ";
@@ -27,9 +27,7 @@ EmptyUseCase::execute(Command& command)
     std::string answer = ioService.ask(message);
 
     if (answer == "yes") {
-        ListName listName =
-            listService.createListName(configService.getUsedListNameStr(), configService.getUsedListVariantStr());
-        listItemService.archiveAll(listName);
+        listItemService.archiveAll(currentList);
         ioService.br();
         ioService.success("List cleared.");
         ioService.br();

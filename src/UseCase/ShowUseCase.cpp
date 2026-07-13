@@ -59,6 +59,9 @@ ShowUseCase::filterListItemsWithOptions(Command& command, std::vector<ListItemEn
             return;
         }
     }
+    if (command.hasOption("described")) {
+        listItemService.filterDescribed(listItems);
+    }
 }
 
 void
