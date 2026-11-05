@@ -7,8 +7,10 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)
 
 add_executable(TestsRun Helpers/HelpersTest.cpp
+        Helpers/PathHelpersTest.cpp
         IOService/IOServiceTest.cpp
         ../Helpers/DateHelpers.cpp
+        ../Helpers/PathHelpers.cpp
         ../Helpers/StringHelpers.cpp
         ../Helpers/TerminalStyle.cpp
         ../Help/HelpPrinter.cpp

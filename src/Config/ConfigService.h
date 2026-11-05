@@ -24,6 +24,7 @@ class ConfigService
     void edit(const std::string& key, std::string value);
     void editCurrentList(std::string value);
     void remove(std::string& key);
+    std::filesystem::path expandTilde(const std::string& p);
     std::filesystem::path getAppDirPath();
     std::string getFileDataStorageType();
     std::string getDefaultSystemExtension();

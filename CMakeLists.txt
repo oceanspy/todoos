@@ -146,6 +146,8 @@ add_executable(todoos main.cpp
         src/Command/CommandOption.h
         src/Helpers/DateHelpers.cpp
         src/Helpers/DateHelpers.h
+        src/Helpers/PathHelpers.cpp
+        src/Helpers/PathHelpers.h
         src/Helpers/StringHelpers.cpp
         src/Helpers/StringHelpers.h
         src/Serializers/ConfSerializer.cpp

@@ -255,7 +255,12 @@ DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t referenceTim
 
         if (lastChar == 'd' || lastChar == 'm' || lastChar == 'y') {
             std::string numberPart = stringDate.substr(0, stringDate.size() - 1);
-            int number = std::stoi(numberPart);
+            int number;
+            try {
+                number = std::stoi(numberPart);
+            } catch (...) {
+                throw std::invalid_argument("Invalid date format.");
+            }
 
             std::tm* now = std::localtime(&t);
 
@@ -284,11 +289,13 @@ DateHelpers::relativeDateToTimestamp(std::string stringDate, time_t referenceTim
         if (dayValue > 0 && dayValue <= 31) {
             std::tm* now = std::localtime(&t);
             int year = now->tm_year + 1900;
-            int month;
-            if (dayValue < now->tm_mday) {
-                month = now->tm_mon += 2;
-            } else {
-                month = now->tm_mon += 1;
+            int month = now->tm_mon + 1;
+            if (dayValue < now->tm_mday) { // Day already passed: use next month
+                month += 1;
+                if (month > 12) {
+                    month = 1;
+                    year += 1;
+                }
             }
             returnDate = std::to_string(year) + "-" + std::to_string(month) + "-" + stringDate;
         }

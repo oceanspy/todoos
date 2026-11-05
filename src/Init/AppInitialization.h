@@ -10,7 +10,7 @@
 class AppInitialization : public AppInitializationInterface
 {
   public:
-    explicit AppInitialization(IOService& ioService);
+    AppInitialization(IOService& ioService, std::filesystem::path home);
     std::filesystem::path getConfigFilePath() override;
     std::filesystem::path getCacheFilePath() override;
     std::filesystem::path getHomeDir() override;

@@ -115,10 +115,20 @@ ConfigService::getRepository(const std::string& key)
 }
 
 std::filesystem::path
+ConfigService::expandTilde(const std::string& p)
+{
+    if (p == "~")
+        return init.getHomeDir();
+    if (p.rfind("~/", 0) == 0)
+        return init.getHomeDir() / p.substr(2);
+    return p;
+}
+
+std::filesystem::path
 ConfigService::getAppDirPath()
 {
     ConfigEntity configEntity = configRepository.find("appDirStorage");
-    return *configEntity.getValue();
+    return expandTilde(*configEntity.getValue());
 }
 
 std::string

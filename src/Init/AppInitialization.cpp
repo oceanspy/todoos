@@ -1,10 +1,11 @@
 #include "AppInitialization.h"
 
 #include <filesystem>
+#include <utility>
 
-AppInitialization::AppInitialization(IOService& ioService)
+AppInitialization::AppInitialization(IOService& ioService, std::filesystem::path home)
   : ioService(ioService)
-  , homeDir(std::filesystem::path(getenv("HOME")))
+  , homeDir(std::move(home))
   , defaultFileDataStorage("csv")
   , defaultSystemFileDataStorage("json")
   , defaultConfigFileDataStorage("conf")

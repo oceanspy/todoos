@@ -9,6 +9,7 @@
 #include "src/FileDataStorageRepositories/ListRepository.h"
 #include "src/FileStorage/FileStorageService.h"
 #include "src/Help/HelpPrinter.h"
+#include "src/Helpers/PathHelpers.h"
 #include "src/IOService/IOService.h"
 #include "src/Init/AppInitialization.h"
 #include "src/Init/AppInstallation.h"
@@ -19,6 +20,7 @@
 #include "src/Serializers/JsonSerializer.h"
 #include "src/UseCase/CommandAutoCompleteUseCase.h"
 #include <clocale>
+#include <stdexcept>
 
 int
 main(int argc, const char* argv[])
@@ -73,7 +75,16 @@ main(int argc, const char* argv[])
 
     // ----
     // Program initialization and first launch
-    AppInitialization init = AppInitialization(ioService);
+    std::filesystem::path homeDir;
+    try {
+        homeDir = PathHelpers::getHomeDir();
+    } catch (const std::runtime_error&) {
+        if (!CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {
+            ioService.error("No home directory found: set the HOME environment variable.");
+        }
+        return 1;
+    }
+    AppInitialization init = AppInitialization(ioService, homeDir);
     AppInstallation installation = AppInstallation(ioService, jsonService, csvService, confService, init);
     if (installation.isNew()) {
         if (CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {

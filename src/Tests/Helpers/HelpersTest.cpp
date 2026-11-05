@@ -688,6 +688,12 @@ TEST_CASE("DateHelper::relativeDateToTimestamp function", "[Helpers]")
     {
         time_t referenceTime = time(nullptr);
 
+        // Months since year 0, so that comparisons stay valid across a year boundary
+        auto monthIndex = [](time_t timestamp) {
+            return stoi(DateHelpers::formatTimestamp(timestamp, "y")) * 12 +
+                   stoi(DateHelpers::formatTimestamp(timestamp, "m"));
+        };
+
         std::string timeTest1 = "2024-03-03";
         time_t test1 = DateHelpers::relativeDateToTimestamp(timeTest1);
         REQUIRE(test1 == 1709506799);
@@ -745,25 +751,21 @@ TEST_CASE("DateHelper::relativeDateToTimestamp function", "[Helpers]")
         // >= instead of == because if we are the 31, we are two months later
         std::string timeTest14 = "1month";
         time_t test14 = DateHelpers::relativeDateToTimestamp(timeTest14, referenceTime);
-        REQUIRE(stoi(DateHelpers::formatTimestamp(test14, "m")) >=
-                stoi(DateHelpers::formatTimestamp(referenceTime, "m")) + 1);
+        REQUIRE(monthIndex(test14) >= monthIndex(referenceTime) + 1);
 
         // >= instead of == because if we are the 31, we are two months later
         std::string timeTest15 = "1m";
         time_t test15 = DateHelpers::relativeDateToTimestamp(timeTest15, referenceTime);
-        REQUIRE(stoi(DateHelpers::formatTimestamp(test15, "m")) >=
-                stoi(DateHelpers::formatTimestamp(referenceTime, "m")) + 1);
+        REQUIRE(monthIndex(test15) >= monthIndex(referenceTime) + 1);
 
         // >= instead of == because if we are the 31, we are three months later
         std::string timeTest16 = "2m";
         time_t test16 = DateHelpers::relativeDateToTimestamp(timeTest16, referenceTime);
-        REQUIRE(stoi(DateHelpers::formatTimestamp(test16, "m")) >=
-                stoi(DateHelpers::formatTimestamp(referenceTime, "m")) + 2);
+        REQUIRE(monthIndex(test16) >= monthIndex(referenceTime) + 2);
 
         std::string timeTest17 = "2months";
         time_t test17 = DateHelpers::relativeDateToTimestamp(timeTest17, referenceTime);
-        REQUIRE(stoi(DateHelpers::formatTimestamp(test17, "m")) >=
-                stoi(DateHelpers::formatTimestamp(referenceTime, "m")) + 2);
+        REQUIRE(monthIndex(test17) >= monthIndex(referenceTime) + 2);
 
         std::string timeTest18 = "1y";
         time_t test18 = DateHelpers::relativeDateToTimestamp(timeTest18, referenceTime);
@@ -784,6 +786,21 @@ TEST_CASE("DateHelper::relativeDateToTimestamp function", "[Helpers]")
         time_t test21 = DateHelpers::relativeDateToTimestamp(timeTest21, referenceTime);
         REQUIRE(stoi(DateHelpers::formatTimestamp(test21, "y")) ==
                 stoi(DateHelpers::formatTimestamp(referenceTime, "y")) + 2);
+    }
+
+    SECTION("A day already passed in December rolls over to January of next year")
+    {
+        std::tm december = {};
+        december.tm_year = 2026 - 1900;
+        december.tm_mon = 11;
+        december.tm_mday = 15;
+        december.tm_hour = 12;
+        december.tm_isdst = -1;
+
+        time_t result = DateHelpers::relativeDateToTimestamp("03", std::mktime(&december));
+        REQUIRE(stoi(DateHelpers::formatTimestamp(result, "y")) == 2027);
+        REQUIRE(stoi(DateHelpers::formatTimestamp(result, "m")) == 1);
+        REQUIRE(stoi(DateHelpers::formatTimestamp(result, "d")) == 3);
     }
 }
 

@@ -90,6 +90,36 @@ TEST_CASE("ConfigServiceTest", "[ConfigService]")
         REQUIRE(path.empty() == false);
     }
 
+    SECTION("getAppDirPath expands a leading tilde")
+    {
+        std::filesystem::path home = init.getHomeDir();
+        std::string original = configService.getValue("appDirStorage");
+
+        configService.edit("appDirStorage", "~/.todoos");
+        REQUIRE(configService.getAppDirPath() == home / ".todoos");
+
+        // Restore
+        configService.edit("appDirStorage", original);
+    }
+
+    SECTION("expandTilde replaces a leading tilde with the cached home directory")
+    {
+        std::filesystem::path home = init.getHomeDir();
+
+        REQUIRE(configService.expandTilde("~") == home);
+        REQUIRE(configService.expandTilde("~/") == home / "");
+        REQUIRE(configService.expandTilde("~/.todoos/lists") == home / ".todoos/lists");
+    }
+
+    SECTION("expandTilde leaves other paths untouched")
+    {
+        REQUIRE(configService.expandTilde("") == std::filesystem::path(""));
+        REQUIRE(configService.expandTilde("/etc/todoos") == std::filesystem::path("/etc/todoos"));
+        REQUIRE(configService.expandTilde("relative/path") == std::filesystem::path("relative/path"));
+        REQUIRE(configService.expandTilde("/tmp/~/todoos") == std::filesystem::path("/tmp/~/todoos"));
+        REQUIRE(configService.expandTilde("~other/todoos") == std::filesystem::path("~other/todoos"));
+    }
+
     SECTION("getUsedListNameStr returns default list when no command option")
     {
         std::string listName = configService.getUsedListNameStr();
