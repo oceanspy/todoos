@@ -157,6 +157,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../FileDataStorageRepositories/DescriptionRepository.cpp
         ../Describe/DescribeItem.cpp
         ../Describe/DescribeItemEdited.cpp
+        ../Describe/DescriptionService.cpp
         ../Actions/DescriptionAction/ItemTempFile.cpp
         ../UseCase/CopyItemUseCase.cpp
         ../UseCase/DuplicateItemUseCase.cpp
@@ -169,6 +170,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Describe/DescribeItemTest.cpp
         Describe/DescribeItemEditedTest.cpp
         Describe/DescriptionRepositoryTest.cpp
+        Describe/DescriptionServiceTest.cpp
         TestMain.cpp
 )
 

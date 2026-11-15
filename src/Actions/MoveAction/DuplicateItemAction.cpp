@@ -2,10 +2,12 @@
 
 DuplicateItemAction::DuplicateItemAction(IOService& ioService,
                                          ListService& listService,
-                                         ListItemService& listItemService)
+                                         ListItemService& listItemService,
+                                         DescriptionService& descriptionService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
+  , descriptionService(descriptionService)
 {
 }
 
@@ -27,7 +29,9 @@ DuplicateItemAction::execute(Command& command, ListName& listName)
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.duplicate(id, listName);
+            std::string newId = listItemService.duplicate(id, listName);
+            descriptionService.duplicate(id, newId, listName);
+
             ioService.success("Item " + id + " duplicated in list " + listName.getName() + ".");
         } catch (std::exception& e) {
             ioService.error("Item " + id + " could not be duplicated in list " + listName.getName() + ".");

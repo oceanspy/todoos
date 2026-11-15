@@ -128,6 +128,7 @@ TEST_CASE("AddItemUseCase", "[UseCase][AddItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -137,7 +138,7 @@ TEST_CASE("AddItemUseCase", "[UseCase][AddItem]")
 
         DescribeItemUseCase describeItemUseCase(
             ioService, commandService, listItemService, listService, configService, themeService,
-            descriptionRepository, init.getCacheDirPath());
+            descriptionRepository, descriptionService);
 
         REQUIRE_NOTHROW(
             AddItemUseCase(ioService, commandService, listItemService, listService, configService, themeService,
@@ -161,6 +162,7 @@ TEST_CASE("AddItemUseCase", "[UseCase][AddItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -170,7 +172,7 @@ TEST_CASE("AddItemUseCase", "[UseCase][AddItem]")
 
         DescribeItemUseCase describeItemUseCase(
             ioService, commandService, listItemService, listService, configService, themeService,
-            descriptionRepository, init.getCacheDirPath());
+            descriptionRepository, descriptionService);
 
         REQUIRE_NOTHROW(
             AddItemUseCase(ioService, commandService, listItemService, listService, configService, themeService,
@@ -817,8 +819,11 @@ TEST_CASE("MoveItemUseCase", "[UseCase][Move]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
         REQUIRE_NOTHROW(
-            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService)
+            MoveItemUseCase(
+              ioService, commandService, listService, listItemService, configService, themeService, descriptionService)
                 .execute(command, listName));
 
         installation.wipe();
@@ -840,8 +845,11 @@ TEST_CASE("MoveItemUseCase", "[UseCase][Move]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
         REQUIRE_NOTHROW(
-            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService)
+            MoveItemUseCase(
+              ioService, commandService, listService, listItemService, configService, themeService, descriptionService)
                 .execute(command, listName));
     }
 }

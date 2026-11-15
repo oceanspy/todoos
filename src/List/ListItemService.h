@@ -49,7 +49,7 @@ class ListItemService
     void setStatus(const std::string& id, ListName& listName, const std::string* statusName);
     void move(const std::string& id, ListName& oldListName, ListName& newListName);
     void copy(const std::string& id, ListName& oldListName, ListName& newListName);
-    void duplicate(const std::string& id, ListName& listName);
+    std::string duplicate(const std::string& id, ListName& listName);
     void archive(const std::string& id, ListName& listName);
     void archiveAll(ListName& listName);
     void archiveFinishedItems(ListName& listName, bool withDescribedItems);

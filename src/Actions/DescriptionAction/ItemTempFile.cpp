@@ -7,20 +7,20 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-ItemTempFile::ItemTempFile(IOService& ioService, const DescribeItem& describeItem, const std::filesystem::path& cacheDirPath)
+ItemTempFile::ItemTempFile(IOService& ioService,
+                           const DescribeItem& describeItem,
+                           const DescriptionService& descriptionService)
   : ioService(ioService)
   , describeItem(describeItem)
-  , cacheDirPath(cacheDirPath)
+  , descriptionService(descriptionService)
 {
 }
 
 std::string
 ItemTempFile::execute()
 {
-    std::filesystem::path editFilePath = cacheDirPath
-                                       / "describe"
-                                       / describeItem.getListName().getName()
-                                       / (*describeItem.getListItem().getId() + ".md");
+    std::filesystem::path editFilePath =
+      descriptionService.getDraftFilePath(*describeItem.getListItem().getId(), describeItem.getListName());
 
     std::filesystem::create_directories(editFilePath.parent_path());
 

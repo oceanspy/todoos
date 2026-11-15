@@ -37,7 +37,7 @@ CommandRouter::CommandRouter(IOService& ioService,
                              ListItemService& listItemService,
                              ThemeService& themeService,
                              DescriptionRepository& descriptionRepository,
-                             std::filesystem::path cacheDirPath)
+                             DescriptionService& descriptionService)
   : ioService(ioService)
   , help(help)
   , commandService(commandService)
@@ -47,7 +47,7 @@ CommandRouter::CommandRouter(IOService& ioService,
   , listItemService(listItemService)
   , themeService(themeService)
   , descriptionRepository(descriptionRepository)
-  , cacheDirPath(std::move(cacheDirPath))
+  , descriptionService(descriptionService)
 {
 }
 
@@ -69,7 +69,7 @@ CommandRouter::execute(Command& command, ListName& currentList)
                                                     configService,
                                                     themeService,
                                                     descriptionRepository,
-                                                    cacheDirPath);
+                                                    descriptionService);
             AddItemUseCase(ioService,
                            commandService,
                            listItemService,
@@ -159,16 +159,18 @@ CommandRouter::execute(Command& command, ListName& currentList)
             RestoreUseCase(ioService, listItemService, listService, configService, themeService)
                 .execute(command, currentList);
             return;
-        case CommandRegistry::MOVE:
-            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService)
+        case CommandRegistry::MOVE: {
+            MoveItemUseCase(
+              ioService, commandService, listService, listItemService, configService, themeService, descriptionService)
                 .execute(command, currentList);
             return;
+        }
         case CommandRegistry::COPY:
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService)
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                 .execute(command, currentList);
             return;
         case CommandRegistry::DUPLICATE:
-            DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
+            DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                 .execute(command, currentList);
             return;
         case CommandRegistry::EMPTY:
@@ -196,11 +198,17 @@ CommandRouter::execute(Command& command, ListName& currentList)
                                 listItemService,
                                 fileStorageService,
                                 configService,
-                                themeService)
+                                themeService,
+                                descriptionService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "copy")) {
-                CopyListUseCase(
-                    ioService, listService, listItemService, fileStorageService, configService, themeService)
+                CopyListUseCase(ioService,
+                                listService,
+                                listItemService,
+                                fileStorageService,
+                                configService,
+                                themeService,
+                                descriptionService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "current")) {
                 CurrentListUseCase(ioService, configService).execute(subCommand);
@@ -231,7 +239,7 @@ CommandRouter::execute(Command& command, ListName& currentList)
                                 configService,
                                 themeService,
                                 descriptionRepository,
-                                cacheDirPath)
+                                descriptionService)
                 .execute(subCommand, currentList);
             return;
         default:

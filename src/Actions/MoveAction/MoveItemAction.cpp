@@ -1,9 +1,13 @@
 #include "MoveItemAction.h"
 
-MoveItemAction::MoveItemAction(IOService& ioService, ListService& listService, ListItemService& listItemService)
+MoveItemAction::MoveItemAction(IOService& ioService,
+                               ListService& listService,
+                               ListItemService& listItemService,
+                               DescriptionService& descriptionService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
+  , descriptionService(descriptionService)
 {
 }
 
@@ -55,6 +59,8 @@ MoveItemAction::execute(Command& command, ListName& listName)
             }
 
             listItemService.move(id, listName, newListName);
+            descriptionService.move(id, listName, newListName);
+
             ioService.success("Item " + id + " moved from " + listName.getName() + " to list " + newListName.getName() +
                               ".");
         } catch (std::exception& e) {

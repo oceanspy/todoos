@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Describe/DescribeItem.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../IOService/IOService.h"
 #include <filesystem>
 #include <string>
@@ -8,7 +9,7 @@
 class ItemTempFile
 {
   public:
-    ItemTempFile(IOService& ioService, const DescribeItem& describeItem, const std::filesystem::path& cacheDirPath);
+    ItemTempFile(IOService& ioService, const DescribeItem& describeItem, const DescriptionService& descriptionService);
     std::string execute();
 
     static void reopen(const std::string& filePath);
@@ -17,7 +18,7 @@ class ItemTempFile
   private:
     IOService& ioService;
     const DescribeItem& describeItem;
-    std::filesystem::path cacheDirPath;
+    const DescriptionService& descriptionService;
 
     static void openInEditor(const std::string& filePath);
     static std::string resolveEditor();

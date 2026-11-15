@@ -3,6 +3,7 @@
 #include "../Command/Command.h"
 #include "../Command/CommandService.h"
 #include "../Config/ConfigService.h"
+#include "../Describe/DescriptionService.h"
 #include "../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
@@ -20,7 +21,7 @@ class DescribeItemUseCase
                         ConfigService& configService,
                         ThemeService& themeService,
                         DescriptionRepository& descriptionRepository,
-                        std::filesystem::path cacheDirPath);
+                        DescriptionService& descriptionService);
     void execute(Command& command, ListName& currentList);
 
   private:
@@ -31,5 +32,5 @@ class DescribeItemUseCase
     ConfigService& configService;
     ThemeService& themeService;
     DescriptionRepository& descriptionRepository;
-    std::filesystem::path cacheDirPath;
+    DescriptionService& descriptionService;
 };

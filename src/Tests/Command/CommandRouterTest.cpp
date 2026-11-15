@@ -1,4 +1,5 @@
 #include "../../Command/CommandRouter.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../Command/CommandOption.h"
 #include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../Command/CommandRegistry.h"
@@ -54,6 +55,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -72,7 +74,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listItemService,
                              themeService,
                              descriptionRepository,
-                             init.getCacheDirPath());
+                             descriptionService);
         REQUIRE_NOTHROW(router.execute(command, listName));
     }
 
@@ -84,6 +86,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -102,7 +105,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listItemService,
                              themeService,
                              descriptionRepository,
-                             init.getCacheDirPath());
+                             descriptionService);
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -120,6 +123,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -138,7 +142,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listItemService,
                              themeService,
                              descriptionRepository,
-                             init.getCacheDirPath());
+                             descriptionService);
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -156,6 +160,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -174,7 +179,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listItemService,
                              themeService,
                              descriptionRepository,
-                             init.getCacheDirPath());
+                             descriptionService);
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -192,6 +197,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -210,7 +216,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listItemService,
                              themeService,
                              descriptionRepository,
-                             init.getCacheDirPath());
+                             descriptionService);
         REQUIRE_NOTHROW(router.execute(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -228,6 +234,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -246,7 +253,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listItemService,
                              themeService,
                              descriptionRepository,
-                             init.getCacheDirPath());
+                             descriptionService);
         REQUIRE_NOTHROW(router.execute(command, listName));
     }
 
@@ -259,6 +266,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -277,7 +285,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              listItemService,
                              themeService,
                              descriptionRepository,
-                             init.getCacheDirPath());
+                             descriptionService);
         REQUIRE_THROWS_AS(router.execute(command, listName), std::invalid_argument);
     }
 }

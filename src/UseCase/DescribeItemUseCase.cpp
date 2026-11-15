@@ -3,6 +3,7 @@
 #include "../Actions/ShowAction/ShowAction.h"
 #include "../Describe/DescribeItem.h"
 #include "../Describe/DescribeItemEdited.h"
+#include "../Describe/DescriptionService.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 #include <filesystem>
@@ -15,7 +16,7 @@ DescribeItemUseCase::DescribeItemUseCase(IOService& ioService,
                                          ConfigService& configService,
                                          ThemeService& themeService,
                                          DescriptionRepository& descriptionRepository,
-                                         std::filesystem::path cacheDirPath)
+                                         DescriptionService& descriptionService)
   : ioService(ioService)
   , commandService(commandService)
   , listItemService(listItemService)
@@ -23,7 +24,7 @@ DescribeItemUseCase::DescribeItemUseCase(IOService& ioService,
   , configService(configService)
   , themeService(themeService)
   , descriptionRepository(descriptionRepository)
-  , cacheDirPath(std::move(cacheDirPath))
+  , descriptionService(descriptionService)
 {
 }
 
@@ -39,7 +40,7 @@ DescribeItemUseCase::execute(Command& command, ListName& currentList)
     }
 
     DescribeItem describeItem = DescribeItem::create(currentList, listItem, existingDescription);
-    ItemTempFile tempFile(ioService, describeItem, cacheDirPath);
+    ItemTempFile tempFile(ioService, describeItem, descriptionService);
     std::string editFilePath = tempFile.execute();
 
     std::string destPath = descriptionRepository.getFilePath(itemId, currentList).string();
