@@ -8,19 +8,21 @@ CopyItemUseCase::CopyItemUseCase(IOService& ioService,
                                  ListService& listService,
                                  ListItemService& listItemService,
                                  ConfigService& configService,
-                                 ThemeService& themeService)
+                                 ThemeService& themeService,
+                                 DescriptionService& descriptionService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
   , configService(configService)
   , themeService(themeService)
+  , descriptionService(descriptionService)
 {
 }
 
 void
 CopyItemUseCase::execute(Command& command, ListName& currentList)
 {
-    CopyItemAction action(ioService, listService, listItemService);
+    CopyItemAction action(ioService, listService, listItemService, descriptionService);
     std::string newListNameStr = action.execute(command, currentList);
 
     if (!newListNameStr.empty()) {

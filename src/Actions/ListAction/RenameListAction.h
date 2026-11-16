@@ -3,6 +3,7 @@
 
 #include "../../Command/Command.h"
 #include "../../Config/ConfigService.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../FileStorage/FileStorageService.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListService.h"
@@ -13,7 +14,8 @@ class RenameListAction
     RenameListAction(IOService& ioService,
                      ListService& listService,
                      FileStorageService& fileStorageService,
-                     ConfigService& configService);
+                     ConfigService& configService,
+                     DescriptionService& descriptionService);
     void execute(Command& command);
 
   private:
@@ -21,6 +23,7 @@ class RenameListAction
     ListService& listService;
     FileStorageService& fileStorageService;
     ConfigService& configService;
+    DescriptionService& descriptionService;
     static std::string removeSpaceFromListName(std::string listName);
     static std::string addSpaceToListName(std::string listName);
 };

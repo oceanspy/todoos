@@ -1,4 +1,5 @@
 #include "../../Actions/ListAction/AddListAction.h"
+#include "../../Actions/ListAction/CopyListAction.h"
 #include "../../Actions/ListAction/RemoveListAction.h"
 #include "../../Actions/ListAction/RenameListAction.h"
 #include "../../Actions/ListAction/ShowListAction.h"
@@ -6,6 +7,7 @@
 #include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
@@ -29,6 +31,8 @@
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
+#include <fstream>
+#include <filesystem>
 
 TEST_CASE("ListAction action", "[ListAction]")
 {
@@ -174,6 +178,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -182,7 +187,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
 
         Command subCommand("move-to", { "tempListName", "renamedList" }, {}, "move-to tempListName renamedList");
-        RenameListAction action(ioService, listService, fileStorageService, configService);
+        RenameListAction action(ioService, listService, fileStorageService, configService, descriptionService);
         REQUIRE_NOTHROW(action.execute(subCommand));
 
         bool found = false;
@@ -204,6 +209,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -212,8 +218,76 @@ TEST_CASE("ListAction action", "[ListAction]")
         FileStorageService fileStorageService(ioService, configService);
 
         Command subCommand("move-to", { "tempListName" }, {}, "move-to tempListName");
-        RenameListAction action(ioService, listService, fileStorageService, configService);
+        RenameListAction action(ioService, listService, fileStorageService, configService, descriptionService);
         REQUIRE_NOTHROW(action.execute(subCommand));
+    }
+
+    SECTION("rename — move-to moves the list descriptions to the renamed list")
+    {
+        Command command(
+            "list", { "move-to", "tempListName", "renamedList" }, {}, "list move-to tempListName renamedList");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+        ListName sourceList = listService.createListName("tempListName");
+
+        std::filesystem::path descriptionPath = descriptionRepository.getFilePath("bbbb", sourceList);
+        std::filesystem::create_directories(descriptionPath.parent_path());
+        std::ofstream(descriptionPath) << "Description of bbbb.\n";
+
+        Command subCommand("move-to", { "tempListName", "renamedList" }, {}, "move-to tempListName renamedList");
+        RenameListAction action(ioService, listService, fileStorageService, configService, descriptionService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        ListName renamedList = listService.createListName("renamedList");
+        REQUIRE_FALSE(std::filesystem::exists(descriptionRepository.getListDirPath(sourceList)));
+        REQUIRE(descriptionRepository.exists("bbbb", renamedList));
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", renamedList));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    // ---- CopyListAction — copy subcommand -------------------------------------------------
+
+    SECTION("copy — copies the list descriptions to the new list")
+    {
+        Command command("list", { "copy", "tempListName", "copiedList" }, {}, "list copy tempListName copiedList");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+        ListName sourceList = listService.createListName("tempListName");
+
+        std::filesystem::path descriptionPath = descriptionRepository.getFilePath("bbbb", sourceList);
+        std::filesystem::create_directories(descriptionPath.parent_path());
+        std::ofstream(descriptionPath) << "Description of bbbb.\n";
+
+        Command subCommand("copy", { "tempListName", "copiedList" }, {}, "copy tempListName copiedList");
+        CopyListAction action(ioService, listService, listItemService, fileStorageService, descriptionService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        ListName copiedList = listService.createListName("copiedList");
+        REQUIRE(listItemService.get(copiedList).size() == 2);
+        REQUIRE(descriptionRepository.exists("bbbb", sourceList));
+        REQUIRE(descriptionRepository.exists("bbbb", copiedList));
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", copiedList));
+
+        installation.wipe();
+        installation.make();
     }
 
     // ---- ListUseCase — current subcommand ---------------------------------------------

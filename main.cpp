@@ -3,6 +3,7 @@
 #include "src/Command/CommandService.h"
 #include "src/Command/CommandValidation.h"
 #include "src/Config/ConfigService.h"
+#include "src/Describe/DescriptionService.h"
 #include "src/FileDataStorageRepositories/ConfigRepository.h"
 #include "src/FileDataStorageRepositories/DescriptionRepository.h"
 #include "src/FileDataStorageRepositories/ListItemRepository.h"
@@ -120,6 +121,7 @@ main(int argc, const char* argv[])
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
     DescriptionRepository descriptionRepository = DescriptionRepository(configService.getDescriptionsDirPath());
+    DescriptionService descriptionService = DescriptionService(init.getCacheDirPath(), descriptionRepository);
     ListItemRepository listItemRepository =
         ListItemRepository(configService, fileDataStorageServicePtr, priorityService, statusService);
     ListItemService listItemService = ListItemService(
@@ -155,7 +157,7 @@ main(int argc, const char* argv[])
                                                 listItemService,
                                                 themeService,
                                                 descriptionRepository,
-                                                init.getCacheDirPath());
+                                                descriptionService);
 
     // ----
     // Do the actions and print

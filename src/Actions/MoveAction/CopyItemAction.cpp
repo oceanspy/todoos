@@ -1,9 +1,13 @@
 #include "CopyItemAction.h"
 
-CopyItemAction::CopyItemAction(IOService& ioService, ListService& listService, ListItemService& listItemService)
+CopyItemAction::CopyItemAction(IOService& ioService,
+                               ListService& listService,
+                               ListItemService& listItemService,
+                               DescriptionService& descriptionService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
+  , descriptionService(descriptionService)
 {
 }
 
@@ -30,7 +34,7 @@ CopyItemAction::execute(Command& command, ListName& listName)
         try {
             ListItemEntity listItemEntity(listName);
             try {
-                listItemEntity = listItemService.find(id, listName);
+                listItemEntity = listItemService.find(id, newListName);
             } catch (std::exception& e) {
                 //
             }
@@ -48,6 +52,8 @@ CopyItemAction::execute(Command& command, ListName& listName)
             }
 
             listItemService.copy(id, listName, newListName);
+            descriptionService.copy(id, listName, newListName);
+
             ioService.success("Item " + id + " copied from " + listName.getName() + " to list " +
                               newListName.getName() + ".");
         } catch (std::exception& e) {

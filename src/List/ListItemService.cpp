@@ -42,7 +42,10 @@ ListItemService::get(ListName& listName)
 ListItemEntity
 ListItemService::find(const std::string& id, ListName& listName)
 {
-    return listItemRepository.find(id, listName);
+    ListItemEntity listItem = listItemRepository.find(id, listName);
+    listItem.setHasDescription(descriptionRepository.exists(id, listName));
+
+    return listItem;
 }
 
 bool
@@ -440,14 +443,17 @@ ListItemService::copy(const std::string& id, ListName& oldListName, ListName& ne
     listItemRepository.create(listItemToUpdate, newListName);
 }
 
-void
+std::string
 ListItemService::duplicate(const std::string& id, ListName& listName)
 {
     ListItemEntity listItemToDuplicate = listItemRepository.find(id, listName);
     std::string newId = makeId(listName);
     listItemToDuplicate.setId(newId);
     listItemRepository.create(listItemToDuplicate, listName);
+
+    return newId;
 }
+
 void
 ListItemService::restore(const std::string& id, ListName& listName)
 {

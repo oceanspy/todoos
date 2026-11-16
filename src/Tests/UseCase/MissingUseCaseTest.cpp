@@ -1,6 +1,7 @@
 #include "../../Command/CommandOption.h"
 #include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
@@ -588,6 +589,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -597,7 +599,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         ListName targetListName = listService.createListName("tempList2Name");
 
         REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command, listName));
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService).execute(command, listName));
 
         std::vector<ListItemEntity> sourceItems = listItemService.get(listName);
         REQUIRE(sourceItems.size() == 2);
@@ -623,6 +625,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -631,7 +634,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command, listName));
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService).execute(command, listName));
     }
 
     SECTION("copy with non-existent ID does not throw")
@@ -642,6 +645,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -650,7 +654,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService).execute(command, listName));
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService).execute(command, listName));
     }
 }
 
@@ -682,6 +686,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -689,7 +694,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -707,6 +712,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -714,7 +720,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -738,6 +744,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -745,7 +752,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -769,6 +776,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -776,7 +784,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -791,6 +799,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
@@ -798,7 +807,7 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                             .execute(command, listName));
     }
 }

@@ -7,6 +7,7 @@
 #include "../../Command/CommandRegistry.h"
 #include "../../Command/CommandService.h"
 #include "../../Config/ConfigService.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
@@ -21,6 +22,9 @@
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
+#include <sstream>
+#include <fstream>
+#include <filesystem>
 
 // ---------------------------------------------------------------------------
 // AppendItemAction
@@ -786,6 +790,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -794,7 +799,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ListName listName = listService.createUsedListName();
         ListName targetListName = listService.createListName("tempList2Name");
 
-        CopyItemAction action(ioService, listService, listItemService);
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
         REQUIRE_NOTHROW(action.execute(command, listName));
 
         std::vector<ListItemEntity> sourceItems = listItemService.get(listName);
@@ -820,6 +825,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -827,7 +833,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        CopyItemAction action(ioService, listService, listItemService);
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
         REQUIRE_NOTHROW(action.execute(command, listName));
     }
 
@@ -837,6 +843,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -844,7 +851,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        CopyItemAction action(ioService, listService, listItemService);
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
         REQUIRE_NOTHROW(action.execute(command, listName));
     }
 
@@ -855,6 +862,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -862,7 +870,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        CopyItemAction action(ioService, listService, listItemService);
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
         REQUIRE_NOTHROW(action.execute(command, listName));
 
         ListName targetListName = listService.createListName("tempList2Name");
@@ -885,6 +893,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
         ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
@@ -892,7 +901,128 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         ListService listService(ioService, configService, listRepository, bus);
         ListName listName = listService.createUsedListName();
 
-        CopyItemAction action(ioService, listService, listItemService);
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
         REQUIRE_NOTHROW(action.execute(command, listName));
+    }
+
+    SECTION("copy copies the item description to the target list")
+    {
+        Command command("copy", { "tempList2Name", "aaaa" }, {}, "copy tempList2Name aaaa");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+        ListName targetListName = listService.createListName("tempList2Name");
+
+        std::filesystem::path sourcePath = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(sourcePath.parent_path());
+        std::ofstream(sourcePath) << "Some description.\n";
+
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
+        REQUIRE(action.execute(command, listName) == "tempList2Name");
+
+        REQUIRE(descriptionRepository.exists("aaaa", listName));
+        REQUIRE(descriptionRepository.exists("aaaa", targetListName));
+        std::ifstream copiedFile(descriptionRepository.getFilePath("aaaa", targetListName));
+        std::ostringstream copiedContent;
+        copiedContent << copiedFile.rdbuf();
+        REQUIRE(copiedContent.str() == "Some description.\n");
+        REQUIRE(*listItemService.find("aaaa", targetListName).hasDescription());
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("copy of an item without description does not create one in the target list")
+    {
+        Command command("copy", { "tempList2Name", "aaaa" }, {}, "copy tempList2Name aaaa");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+        ListName targetListName = listService.createListName("tempList2Name");
+
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
+        REQUIRE(action.execute(command, listName) == "tempList2Name");
+
+        REQUIRE(listItemService.get(targetListName).size() == 3);
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", targetListName));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("copy overwriting an item removes the target description when the source has none")
+    {
+        std::map<std::string, std::string> forceOpt = { { "force", "" } };
+        Command command("copy", { "tempList2Name", "aaaa" }, forceOpt, "copy --force tempList2Name aaaa");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+        ListName targetListName = listService.createListName("tempList2Name");
+
+        // target list already has an item aaaa with its own description, source aaaa has none
+        listItemService.copy("aaaa", listName, targetListName);
+        std::filesystem::path targetPath = descriptionRepository.getFilePath("aaaa", targetListName);
+        std::filesystem::create_directories(targetPath.parent_path());
+        std::ofstream(targetPath) << "Stale description.\n";
+
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
+        REQUIRE(action.execute(command, listName) == "tempList2Name");
+
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", targetListName));
+        REQUIRE_FALSE(*listItemService.find("aaaa", targetListName).hasDescription());
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("copy of several items only copies the existing descriptions")
+    {
+        Command command("copy", { "tempList2Name", "aaaa", "bbbb" }, {}, "copy tempList2Name aaaa bbbb");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+        ListName targetListName = listService.createListName("tempList2Name");
+
+        std::filesystem::path sourcePath = descriptionRepository.getFilePath("bbbb", listName);
+        std::filesystem::create_directories(sourcePath.parent_path());
+        std::ofstream(sourcePath) << "Description of bbbb.\n";
+
+        CopyItemAction action(ioService, listService, listItemService, descriptionService);
+        REQUIRE(action.execute(command, listName) == "tempList2Name");
+
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", targetListName));
+        REQUIRE(descriptionRepository.exists("bbbb", listName));
+        REQUIRE(descriptionRepository.exists("bbbb", targetListName));
+
+        installation.wipe();
+        installation.make();
     }
 }

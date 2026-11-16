@@ -2,6 +2,7 @@
 #define COPYLISTACTION_H
 
 #include "../../Command/Command.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../FileStorage/FileStorageService.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
@@ -13,7 +14,8 @@ class CopyListAction
     CopyListAction(IOService& ioService,
                    ListService& listService,
                    ListItemService& listItemService,
-                   FileStorageService& fileStorageService);
+                   FileStorageService& fileStorageService,
+                   DescriptionService& descriptionService);
     void execute(Command& command);
 
   private:
@@ -21,6 +23,7 @@ class CopyListAction
     ListService& listService;
     ListItemService& listItemService;
     FileStorageService& fileStorageService;
+    DescriptionService& descriptionService;
     static std::string removeSpaceFromListName(std::string listName);
     static std::string addSpaceToListName(std::string listName);
 };

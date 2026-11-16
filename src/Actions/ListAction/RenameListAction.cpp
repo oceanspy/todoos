@@ -3,11 +3,13 @@
 RenameListAction::RenameListAction(IOService& ioService,
                                    ListService& listService,
                                    FileStorageService& fileStorageService,
-                                   ConfigService& configService)
+                                   ConfigService& configService,
+                                   DescriptionService& descriptionService)
   : ioService(ioService)
   , listService(listService)
   , fileStorageService(fileStorageService)
   , configService(configService)
+  , descriptionService(descriptionService)
 {
 }
 
@@ -27,8 +29,11 @@ RenameListAction::execute(Command& command)
         configService.getUsedListNameStr() == oldListName ? newListName : configService.getUsedListNameStr();
 
     try {
+        ListName oldList = listService.createListName(oldListName);
         fileStorageService.moveFileTo(oldListName, newListName);
         listService.edit(oldListName, newListName);
+        ListName newList = listService.createListName(newListName);
+        descriptionService.renameList(oldList, newList);
         listService.use(goBackList);
     } catch (std::invalid_argument& e) {
         ioService.br();

@@ -119,6 +119,8 @@ add_executable(todoos main.cpp
         src/Describe/DescribeItem.h
         src/Describe/DescribeItemEdited.cpp
         src/Describe/DescribeItemEdited.h
+        src/Describe/DescriptionService.cpp
+        src/Describe/DescriptionService.h
         src/Actions/DescriptionAction/ItemTempFile.cpp
         src/Actions/DescriptionAction/ItemTempFile.h
         src/Command/CommandShortcut.cpp

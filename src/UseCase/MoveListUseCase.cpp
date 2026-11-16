@@ -8,7 +8,8 @@ MoveListUseCase::MoveListUseCase(IOService& ioService,
                                  ListItemService& listItemService,
                                  FileStorageService& fileStorageService,
                                  ConfigService& configService,
-                                 ThemeService& themeService)
+                                 ThemeService& themeService,
+                                 DescriptionService& descriptionService)
   : ioService(ioService)
   , commandService(commandService)
   , listService(listService)
@@ -16,13 +17,14 @@ MoveListUseCase::MoveListUseCase(IOService& ioService,
   , fileStorageService(fileStorageService)
   , configService(configService)
   , themeService(themeService)
+  , descriptionService(descriptionService)
 {
 }
 
 void
 MoveListUseCase::execute(Command& command)
 {
-    RenameListAction action(ioService, listService, fileStorageService, configService);
+    RenameListAction action(ioService, listService, fileStorageService, configService, descriptionService);
     action.execute(command);
 
     ShowListAction showAction(ioService, listService, configService, themeService);
