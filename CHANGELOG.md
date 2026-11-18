@@ -1,5 +1,9 @@
 # ToDoOs
 ## Unreleased
+- Parent / child items: `add {value} --to {id}`, `attach {ids} --to {id}` (`-f` to switch an item to
+  another parent), `detach {ids}` (`-f` for a parent). Children are shown under their parent and follow it on `remove -f`, `archive`, `restore`, `move`
+  and `copy`. Removing a parent needs `-f` (or `-F`). `clean -a/--attached` also archives finished children.
+- Fix: `clean` no longer archives items when the confirmation is not answered with `yes`.
 - **Breaking (data):** every stored item gets a `parent_id` column, right after the id
   (`id, parent_id, value, priority, status, dueAt, closedAt, createdAt, updatedAt`), for parent/child items.
   **Migrate existing data before upgrading:** run `scripts/migrate-parent-id.py --dry-run`, then

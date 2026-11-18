@@ -86,6 +86,57 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     Default theme(ioService, listService, listItemService, 140, 140);
 
+    // ---- parent / child rows ------------------------------------------------------
+
+    SECTION("groupChildren puts children right after their parent; children of a hidden parent stay top-level")
+    {
+        ListName otherList = listService.createListName("tempList2Name");
+        ListItemEntity parent = buildOpenItem("pppp", "parent", "high", "queued", listName);
+        ListItemEntity child1 = buildOpenItem("c111", "child 1", "high", "queued", listName);
+        ListItemEntity child2 = buildOpenItem("c222", "child 2", "low", "queued", listName);
+        ListItemEntity other = buildOpenItem("oooo", "other", "medium", "queued", listName);
+        ListItemEntity orphan = buildOpenItem("c333", "orphan", "low", "queued", listName);
+        // same parent id, but in another list: not a child of pppp here
+        ListItemEntity otherListItem = buildOpenItem("c444", "other list", "low", "queued", otherList);
+        child1.setParentId("pppp");
+        child2.setParentId("pppp");
+        orphan.setParentId("gone");
+        otherListItem.setParentId("pppp");
+
+        std::vector<ListItemEntity> rows = { child1, other, parent, orphan, otherListItem, child2 };
+        ListItemService::groupChildren(rows);
+
+        std::vector<std::string> ids;
+        for (const ListItemEntity& row : rows) {
+            ids.push_back(*row.getId());
+        }
+        REQUIRE(ids == std::vector<std::string>{ "oooo", "pppp", "c111", "c222", "c333", "c444" });
+
+        REQUIRE(Theme::childConnectorFor(rows, 0).empty());
+        REQUIRE(Theme::childConnectorFor(rows, 1).empty());
+        REQUIRE(Theme::childConnectorFor(rows, 2) == "├─ ");
+        REQUIRE(Theme::childConnectorFor(rows, 3) == "└─ ");
+        REQUIRE(Theme::childConnectorFor(rows, 4).empty());
+        REQUIRE(Theme::childConnectorFor(rows, 5).empty());
+    }
+
+    SECTION("a child of a child is shown top-level (one level only)")
+    {
+        ListItemEntity parent = buildOpenItem("pppp", "parent", "high", "queued", listName);
+        ListItemEntity child = buildOpenItem("c111", "child", "high", "queued", listName);
+        ListItemEntity grandChild = buildOpenItem("c222", "grand child", "high", "queued", listName);
+        child.setParentId("pppp");
+        grandChild.setParentId("c111");
+
+        std::vector<ListItemEntity> rows = { grandChild, child, parent };
+        ListItemService::groupChildren(rows);
+        REQUIRE(rows.size() == 3);
+        REQUIRE(*rows[0].getId() == "c222");
+        REQUIRE(Theme::childConnectorFor(rows, 0).empty());
+        REQUIRE(Theme::childConnectorFor(rows, 2) == "└─ ");
+        REQUIRE_NOTHROW(theme.print(listName, rows, false, true));
+    }
+
     // ---- buildId ----------------------------------------------------------------
 
     SECTION("fitIdColumn — 5-char ids widen the ID column, TITLE shrinks so the line keeps its length")
