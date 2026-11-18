@@ -45,6 +45,8 @@ class CommandRegistry
         EMPTY = 52,
         CLEAN = 53,
         DUPLICATE = 54,
+        ATTACH = 55,
+        DETACH = 56,
         DEADLINE = 60,
         LIST = 70,
         USE = 71,
