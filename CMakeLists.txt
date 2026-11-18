@@ -107,8 +107,6 @@ add_executable(todoos main.cpp
         src/Actions/ListAction/RenameListAction.h
         src/Actions/ListAction/CopyListAction.cpp
         src/Actions/ListAction/CopyListAction.h
-        src/Actions/ListAction/MoveListAction.cpp
-        src/Actions/ListAction/MoveListAction.h
         src/Command/SmartCommand.cpp
         src/Command/SmartCommand.h
         src/FileDataStorageRepositories/ListRepository.cpp

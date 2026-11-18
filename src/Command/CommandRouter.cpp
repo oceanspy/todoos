@@ -191,7 +191,7 @@ CommandRouter::execute(Command& command, ListName& currentList)
             } else if (commandService.isCommand(subCommand, "remove")) {
                 RemoveListUseCase(ioService, listService, fileStorageService, configService, themeService)
                     .execute(subCommand);
-            } else if (commandService.isCommand(subCommand, "move-to")) {
+            } else if (commandService.isCommand(subCommand, "move")) {
                 MoveListUseCase(ioService,
                                 commandService,
                                 listService,

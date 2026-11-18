@@ -21,6 +21,7 @@ CommandOption::populateOptions()
     options["c"] = "config";
     options["i"] = "deadline";
     options["Q"] = "no-quit";
+    options["t"] = "to";
 }
 
 bool
@@ -50,6 +51,8 @@ CommandOption::isOptionWithValue(const std::string& arg)
     } else if (shortToLongOption(arg) == "status") {
         return true;
     } else if (shortToLongOption(arg) == "deadline") {
+        return true;
+    } else if (shortToLongOption(arg) == "to") {
         return true;
     }
 

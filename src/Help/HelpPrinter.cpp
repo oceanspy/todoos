@@ -97,7 +97,7 @@ HelpPrinter::helpListForCli()
         "   " + CYN + "-A/--archived" + RST + "     Show archived items        " + DIM + "(show, find)" + RST,
         "   " + CYN + "-D/--deleted"  + RST + "      Show deleted items         " + DIM + "(show, find)" + RST,
         "   " + CYN + "-d/--described" + RST + "    Describe items             " + DIM + "(add, show, find, clean)" + RST,
-        "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, copy-to, move-to)" + RST,
+        "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, move, copy)" + RST,
         "   " + CYN + "-Q/--no-quit" + RST + "      Keep app alive after command",
         "",
         section("OPTIONS"),
@@ -105,6 +105,7 @@ HelpPrinter::helpListForCli()
         "   " + BLU + "-p/--priority {name}" + RST + "     Filter/set priority",
         "   " + BLU + "-s/--status {name}"   + RST + "       Filter/set status",
         "   " + BLU + "-i/--deadline {date}" + RST + "     Filter/set deadline",
+        "   " + BLU + "-t/--to {list}"       + RST + "           Target list        " + DIM + "(move, copy)" + RST,
         "",
         section("LISTS"),
         "   use "  + YLW + "{list}"           + RST + "                    Switch active list",   // col 13 + 20 = 33
@@ -116,13 +117,13 @@ HelpPrinter::helpListForCli()
         "     copy " + YLW + "{name} {new_name}" + RST + "      Duplicate list",                  // col 27 +  6 = 33
         "",
         section("ITEMS"),
-        "   show                           Show items     " + BLU + "[-p] [-s] [-i] " + CYN + "[-a] [-d] [-D]" + RST, // col 7  + 26 = 33
+        "   show                           Show items     " + BLU + "[-p] [-s] [-i] " + CYN + "[-A] [-d] [-D]" + RST, // col 7  + 26 = 33
         "   add      (a) " + YLW + "{value}"      + RST + "           Add item     " + BLU + "[-p] [-s] [-i] " + CYN + "[-d]" + RST, // col 22 + 11 = 33
         "   edit     (e) " + YLW + "{id} {value}" + RST + "      Edit item     " + BLU + "[-p] [-s] [-i]" + RST,    // col 27 +  6 = 33
         "   append       " + YLW + "{id} {value}" + RST + "      Append to item" + BLU + " [-p] [-s] [-i]" + RST,  // col 27 +  6 = 33
         "   prepend      " + YLW + "{id} {value}" + RST + "      Prepend to item" + BLU + " [-p] [-s] [-i]" + RST, // col 27 +  6 = 33
-        "   find     (f) " + YLW + "{word}"       + RST + "            Find item              " + CYN + "[-a] [-d] [-D]" + RST, // col 21 + 12 = 33
-        "   describe (d) " + YLW + "{id}"         + RST + "              Edit item description  " + CYN + "[-a] [-d]" + RST, // col 19 + 14 = 33
+        "   find     (f) " + YLW + "{word}"       + RST + "            Find item              " + CYN + "[-A] [-d] [-D]" + RST, // col 21 + 12 = 33
+        "   describe (d) " + YLW + "{id}"         + RST + "              Edit item description", // col 19 + 14 = 33
         "",
         section("ITEM ACTIONS"),
         "   remove  (rm) " + CYN + "[-f] " + YLW + "{ids}" + RST + "       Remove items",              // col 26 +  7 = 33
@@ -131,8 +132,8 @@ HelpPrinter::helpListForCli()
         "   restore      " + YLW + "{ids}"                  + RST + "            Restore archived/deleted items",
         "",
         section("TRANSFER"),
-        "   move-to (mv) " + YLW + "{list} {ids}"           + RST + "     Move to list   " + CYN + "[-f]" + RST, // col 28 +  5 = 33
-        "   copy-to (cp) " + YLW + "{list} {ids}"           + RST + "     Copy to list   " + CYN + "[-f]" + RST, // col 28 +  5 = 33
+        "   move    (mv) " + YLW + "{ids} " + BLU + "-t {list}" + RST + "  Move to list   " + CYN + "[-f]" + RST, // col 31 +  2 = 33
+        "   copy    (cp) " + YLW + "{ids} " + BLU + "-t {list}" + RST + "  Copy to list   " + CYN + "[-f]" + RST, // col 31 +  2 = 33
         "",
         section("PRIORITY"),
         "   priority  (p)   " + YLW + "{priority} {ids}" + RST + "     Set priority",   // col 35 + 5 = 40

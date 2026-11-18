@@ -785,8 +785,8 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
 
     SECTION("copy moves item to target list while keeping it in source")
     {
-        std::map<std::string, std::string> forceOpt = { { "force", "" } };
-        Command command("copy", { "tempList2Name", "aaaa" }, forceOpt, "copy --force tempList2Name aaaa");
+        std::map<std::string, std::string> forceOpt = { { "force", "" }, { "to", "tempList2Name" } };
+        Command command("copy", { "aaaa" }, forceOpt, "copy aaaa --to tempList2Name --force");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -837,9 +837,9 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
         REQUIRE_NOTHROW(action.execute(command, listName));
     }
 
-    SECTION("copy with only list name and no ID does not throw")
+    SECTION("copy with --to but no ID does not throw")
     {
-        Command command("copy", { "tempList2Name" }, {}, "copy tempList2Name");
+        Command command("copy", {}, { { "to", "tempList2Name" } }, "copy --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -857,8 +857,8 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
 
     SECTION("copy with force option overwrites existing item")
     {
-        std::map<std::string, std::string> options = { { "force", "" } };
-        Command command("copy", { "tempList2Name", "aaaa" }, options, "copy --force tempList2Name aaaa");
+        std::map<std::string, std::string> options = { { "force", "" }, { "to", "tempList2Name" } };
+        Command command("copy", { "aaaa" }, options, "copy aaaa --to tempList2Name --force");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -889,7 +889,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
 
     SECTION("copy with non-existent source ID does not throw")
     {
-        Command command("copy", { "tempList2Name", "zzzz" }, {}, "copy tempList2Name zzzz");
+        Command command("copy", { "zzzz" }, { { "to", "tempList2Name" } }, "copy zzzz --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -907,7 +907,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
 
     SECTION("copy copies the item description to the target list")
     {
-        Command command("copy", { "tempList2Name", "aaaa" }, {}, "copy tempList2Name aaaa");
+        Command command("copy", { "aaaa" }, { { "to", "tempList2Name" } }, "copy aaaa --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -941,7 +941,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
 
     SECTION("copy of an item without description does not create one in the target list")
     {
-        Command command("copy", { "tempList2Name", "aaaa" }, {}, "copy tempList2Name aaaa");
+        Command command("copy", { "aaaa" }, { { "to", "tempList2Name" } }, "copy aaaa --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -966,8 +966,8 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
 
     SECTION("copy overwriting an item removes the target description when the source has none")
     {
-        std::map<std::string, std::string> forceOpt = { { "force", "" } };
-        Command command("copy", { "tempList2Name", "aaaa" }, forceOpt, "copy --force tempList2Name aaaa");
+        std::map<std::string, std::string> forceOpt = { { "force", "" }, { "to", "tempList2Name" } };
+        Command command("copy", { "aaaa" }, forceOpt, "copy aaaa --to tempList2Name --force");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -998,7 +998,7 @@ TEST_CASE("CopyItemAction", "[Actions][CopyItem]")
 
     SECTION("copy of several items only copies the existing descriptions")
     {
-        Command command("copy", { "tempList2Name", "aaaa", "bbbb" }, {}, "copy tempList2Name aaaa bbbb");
+        Command command("copy", { "aaaa", "bbbb" }, { { "to", "tempList2Name" } }, "copy aaaa bbbb --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());

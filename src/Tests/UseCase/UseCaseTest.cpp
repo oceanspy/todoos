@@ -804,9 +804,9 @@ TEST_CASE("MoveItemUseCase", "[UseCase][Move]")
     ConfigRepository configRepository(configStoragePtr.get(), init.getConfigFilePath());
     ConfigRepository cacheRepository(configStoragePtr.get(), init.getCacheFilePath());
 
-    SECTION("move-to moves item to another list without throwing")
+    SECTION("move moves item to another list without throwing")
     {
-        Command command("move-to", { "tempList2Name", "aaaa" }, {}, "move-to tempList2Name aaaa");
+        Command command("move", { "aaaa" }, { { "to", "tempList2Name" } }, "move aaaa --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService;
         StatusService statusService;
@@ -830,9 +830,9 @@ TEST_CASE("MoveItemUseCase", "[UseCase][Move]")
         installation.make();
     }
 
-    SECTION("move-to with no arguments does not throw")
+    SECTION("move with no arguments does not throw")
     {
-        Command command("move-to", {}, {}, "move-to");
+        Command command("move", {}, {}, "move");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService;
         StatusService statusService;

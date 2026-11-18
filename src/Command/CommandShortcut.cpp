@@ -27,11 +27,9 @@ CommandShortcut::getShortcutCommands()
     shortCutCommands["search"] = "find";
     shortCutCommands["s"] = "find";
     shortCutCommands["f"] = "find";
-    shortCutCommands["move"] = "move-to";
-    shortCutCommands["mv"] = "move-to";
-    shortCutCommands["rename"] = "move-to";
-    shortCutCommands["copy"] = "copy-to";
-    shortCutCommands["cp"] = "copy-to";
+    shortCutCommands["mv"] = "move";
+    shortCutCommands["rename"] = "move";
+    shortCutCommands["cp"] = "copy";
     shortCutCommands["duplicate"] = "duplicate";
     shortCutCommands["current"] = "current";
     shortCutCommands["desc"] = "describe";

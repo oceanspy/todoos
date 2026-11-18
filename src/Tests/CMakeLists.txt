@@ -118,7 +118,6 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/MoveAction/MoveItemAction.cpp
         ../Actions/MoveAction/CopyItemAction.cpp
         ../Actions/MoveAction/DuplicateItemAction.cpp
-        ../Actions/ListAction/MoveListAction.cpp
         ../Actions/StatsAction/StatsAction.cpp
         ../Command/CommandRouter.cpp
         ../Themes/ThemeService.cpp

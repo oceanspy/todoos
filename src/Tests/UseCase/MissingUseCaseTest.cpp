@@ -582,8 +582,8 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
 
     SECTION("copy places item in target list")
     {
-        std::map<std::string, std::string> forceOpt = { { "force", "" } };
-        Command command("copy", { "tempList2Name", "aaaa" }, forceOpt, "copy --force tempList2Name aaaa");
+        std::map<std::string, std::string> forceOpt = { { "force", "" }, { "to", "tempList2Name" } };
+        Command command("copy", { "aaaa" }, forceOpt, "copy aaaa --to tempList2Name --force");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService;
         StatusService statusService;
@@ -639,7 +639,7 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
 
     SECTION("copy with non-existent ID does not throw")
     {
-        Command command("copy", { "tempList2Name", "zzzz" }, {}, "copy tempList2Name zzzz");
+        Command command("copy", { "zzzz" }, { { "to", "tempList2Name" } }, "copy zzzz --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         PriorityService priorityService;
         StatusService statusService;

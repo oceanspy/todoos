@@ -47,11 +47,11 @@ TEST_CASE("Move action", "[Move]")
     PriorityService priorityService;
     StatusService statusService;
 
-    // ---- MoveItemAction — move-to ------------------------------------------------------
+    // ---- MoveItemAction — move ------------------------------------------------------
 
-    SECTION("move-to moves item to target list")
+    SECTION("move moves item to target list")
     {
-        Command command("move-to", { "tempList2Name", "aaaa" }, {}, "move-to tempList2Name aaaa");
+        Command command("move", { "aaaa" }, { { "to", "tempList2Name" } }, "move aaaa --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -74,9 +74,9 @@ TEST_CASE("Move action", "[Move]")
         installation.make();
     }
 
-    SECTION("move-to with too few arguments does not throw")
+    SECTION("move with --to but no ID does not throw")
     {
-        Command command("move-to", { "tempList2Name" }, {}, "move-to tempList2Name");
+        Command command("move", {}, { { "to", "tempList2Name" } }, "move --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -92,9 +92,9 @@ TEST_CASE("Move action", "[Move]")
         REQUIRE_NOTHROW(move.execute(command, listName));
     }
 
-    SECTION("move-to with empty arguments does not throw")
+    SECTION("move with empty arguments does not throw")
     {
-        Command command("move-to", {}, {}, "move-to");
+        Command command("move", {}, {}, "move");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -108,13 +108,76 @@ TEST_CASE("Move action", "[Move]")
         DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
         MoveItemAction move(ioService, listService, listItemService, descriptionService);
         REQUIRE_NOTHROW(move.execute(command, listName));
+    }
+
+    SECTION("move without --to does nothing, even with the old positional list argument")
+    {
+        Command command("move", { "tempList2Name", "aaaa" }, {}, "move tempList2Name aaaa");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+        MoveItemAction move(ioService, listService, listItemService, descriptionService);
+        std::string result;
+        REQUIRE_NOTHROW(result = move.execute(command, listName));
+        REQUIRE(result.empty());
+        REQUIRE(listItemService.get(listName).size() == 2);
+    }
+
+    SECTION("move with an empty --to does nothing")
+    {
+        Command command("move", { "aaaa" }, { { "to", "" } }, "move aaaa --to");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+        MoveItemAction move(ioService, listService, listItemService, descriptionService);
+        std::string result;
+        REQUIRE_NOTHROW(result = move.execute(command, listName));
+        REQUIRE(result.empty());
+        REQUIRE(listItemService.get(listName).size() == 2);
+    }
+
+    SECTION("move --to the current list does nothing")
+    {
+        Command command("move", { "aaaa" }, { { "to", "tempListName" } }, "move aaaa --to tempListName");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+        MoveItemAction move(ioService, listService, listItemService, descriptionService);
+        std::string result;
+        REQUIRE_NOTHROW(result = move.execute(command, listName));
+        REQUIRE(result.empty());
+        REQUIRE(listItemService.get(listName).size() == 2);
     }
 
     // ---- MoveItemAction — description ---------------------------------------------------
 
-    SECTION("move-to moves the item description to the target list")
+    SECTION("move moves the item description to the target list")
     {
-        Command command("move-to", { "tempList2Name", "aaaa" }, {}, "move-to tempList2Name aaaa");
+        Command command("move", { "aaaa" }, { { "to", "tempList2Name" } }, "move aaaa --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -150,9 +213,9 @@ TEST_CASE("Move action", "[Move]")
         installation.make();
     }
 
-    SECTION("move-to of an item without description does not create one in the target list")
+    SECTION("move of an item without description does not create one in the target list")
     {
-        Command command("move-to", { "tempList2Name", "aaaa" }, {}, "move-to tempList2Name aaaa");
+        Command command("move", { "aaaa" }, { { "to", "tempList2Name" } }, "move aaaa --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -175,9 +238,9 @@ TEST_CASE("Move action", "[Move]")
         installation.make();
     }
 
-    SECTION("move-to of several items only moves the existing descriptions")
+    SECTION("move of several items only moves the existing descriptions")
     {
-        Command command("move-to", { "tempList2Name", "aaaa", "bbbb" }, {}, "move-to tempList2Name aaaa bbbb");
+        Command command("move", { "aaaa", "bbbb" }, { { "to", "tempList2Name" } }, "move aaaa bbbb --to tempList2Name");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -206,10 +269,10 @@ TEST_CASE("Move action", "[Move]")
         installation.make();
     }
 
-    SECTION("move-to overwriting an item removes the target description when the source has none")
+    SECTION("move overwriting an item removes the target description when the source has none")
     {
-        std::map<std::string, std::string> forceOpt = { { "force", "" } };
-        Command command("move-to", { "tempList2Name", "aaaa" }, forceOpt, "move-to --force tempList2Name aaaa");
+        std::map<std::string, std::string> forceOpt = { { "force", "" }, { "to", "tempList2Name" } };
+        Command command("move", { "aaaa" }, forceOpt, "move aaaa --to tempList2Name --force");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -238,10 +301,10 @@ TEST_CASE("Move action", "[Move]")
         installation.make();
     }
 
-    SECTION("move-to overwriting an item replaces the target description with the source one")
+    SECTION("move overwriting an item replaces the target description with the source one")
     {
-        std::map<std::string, std::string> forceOpt = { { "force", "" } };
-        Command command("move-to", { "tempList2Name", "aaaa" }, forceOpt, "move-to --force tempList2Name aaaa");
+        std::map<std::string, std::string> forceOpt = { { "force", "" }, { "to", "tempList2Name" } };
+        Command command("move", { "aaaa" }, forceOpt, "move aaaa --to tempList2Name --force");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
