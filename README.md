@@ -139,6 +139,7 @@ todoos [flags] [options] <command> [args]
 | `-D/--deleted` | Target deleted items | `show`, `find` |
 | `-d/--described` | Filter/include items with descriptions | `add`, `show`, `find`, `clean` |
 | `-f/--force` | Skip confirmation | `remove`, `move`, `copy` |
+| `-F/--force-permanently` | Delete for good (no restore) | `remove` |
 | `-Q/--no-quit` | Keep app alive after command | |
 
 ## Options
@@ -179,7 +180,7 @@ todoos [flags] [options] <command> [args]
 
 | Command | Description |
 |---------|-------------|
-| `remove (rm) [-f] {ids}` | Remove items |
+| `remove (rm) [-f] [-F] {ids}` | Remove items (soft delete, restorable; `-F` deletes for good) |
 | `duplicate {ids}` | Duplicate items |
 | `archive {ids}` | Send to archive |
 | `restore {ids}` | Restore archived or deleted items |

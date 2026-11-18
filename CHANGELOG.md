@@ -1,5 +1,7 @@
 # ToDoOs
 ## Unreleased
+- **Breaking:** `remove -f` no longer deletes items for good: `-f/--force` only forces the action.
+  Use the new `-F/--force-permanently` to delete permanently. (`list rm -f` is unchanged.)
 - **Breaking:** `move-to {list} {ids}` / `copy-to {list} {ids}` are replaced by
   `move {ids} --to {list}` / `copy {ids} --to {list}` (short option `-t`, aliases `mv` / `cp`).
 - Help: archive flag shown as `-A` (was wrongly `-a`); `describe` no longer lists flags it ignores.

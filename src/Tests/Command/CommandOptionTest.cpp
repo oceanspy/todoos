@@ -20,6 +20,7 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isValidOption("i") == true);
         REQUIRE(commandOption.isValidOption("Q") == true);
         REQUIRE(commandOption.isValidOption("t") == true);
+        REQUIRE(commandOption.isValidOption("F") == true);
     }
 
     SECTION("isValidOption with long options")
@@ -37,6 +38,7 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isValidOption("deadline") == true);
         REQUIRE(commandOption.isValidOption("no-quit") == true);
         REQUIRE(commandOption.isValidOption("to") == true);
+        REQUIRE(commandOption.isValidOption("force-permanently") == true);
     }
 
     SECTION("isValidOption with invalid options")

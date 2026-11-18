@@ -22,6 +22,7 @@ CommandOption::populateOptions()
     options["i"] = "deadline";
     options["Q"] = "no-quit";
     options["t"] = "to";
+    options["F"] = "force-permanently";
 }
 
 bool
