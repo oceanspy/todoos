@@ -26,6 +26,8 @@ class ListItemRepository
                                 StatusService& statusService);
     std::vector<ListItemEntity> get(ListName& listName);
     ListItemEntity find(const std::string& id, ListName& listName);
+    // TEMPORARY: true when a stored row still has the pre-parent_id layout (8 columns)
+    bool hasLegacyRows(ListName& listName);
     void create(const ListItemEntity& item, ListName& listName);
     bool update(const std::string& id, ListName& listName, const ListItemEntity& item);
     bool remove(const std::string& id, ListName& listName);

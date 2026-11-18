@@ -14,6 +14,18 @@ ListItemEntity::getId() const
     return &id;
 }
 
+const std::string*
+ListItemEntity::getParentId() const
+{
+    return &parentId;
+}
+
+bool
+ListItemEntity::hasParent() const
+{
+    return !parentId.empty();
+}
+
 const int*
 ListItemEntity::getPosition() const
 {
@@ -83,6 +95,16 @@ ListItemEntity::setId(std::string idStr)
     }
 
     this->id = idStr;
+}
+
+void
+ListItemEntity::setParentId(const std::string& parentIdStr)
+{
+    if (!parentIdStr.empty() && !ListItemId::isValid(parentIdStr)) {
+        throw std::invalid_argument("Invalid parent ID: it must be empty or 4 or 5 alphanumeric characters long");
+    }
+
+    this->parentId = parentIdStr;
 }
 
 void
@@ -196,15 +218,20 @@ ListItemEntity::setFromVector(PriorityService& priorityService,
                               const std::vector<std::string>& item,
                               ListName& listName)
 {
+    if (item.size() != ROW_SIZE) {
+        throw std::invalid_argument("Invalid item: expected " + std::to_string(ROW_SIZE) + " columns");
+    }
+
     ListItemEntity listItemEntity(listName);
     listItemEntity.setId(item[0]);
-    listItemEntity.setValue(item[1]);
-    listItemEntity.setPriority(priorityService.getPriorityFromName(item[2]));
-    listItemEntity.setStatus(statusService.getStatusFromName(item[3]));
-    listItemEntity.setDueAt(std::stoi(item[4]));
-    listItemEntity.setClosedAt(std::stoi(item[5]));
-    listItemEntity.setCreatedAt(std::stoi(item[6]));
-    listItemEntity.setUpdatedAt(std::stoi(item[7]));
+    listItemEntity.setParentId(item[1]);
+    listItemEntity.setValue(item[2]);
+    listItemEntity.setPriority(priorityService.getPriorityFromName(item[3]));
+    listItemEntity.setStatus(statusService.getStatusFromName(item[4]));
+    listItemEntity.setDueAt(std::stoi(item[5]));
+    listItemEntity.setClosedAt(std::stoi(item[6]));
+    listItemEntity.setCreatedAt(std::stoi(item[7]));
+    listItemEntity.setUpdatedAt(std::stoi(item[8]));
     return listItemEntity;
 }
 
@@ -212,6 +239,7 @@ std::vector<std::string>
 ListItemEntity::makeVector(const ListItemEntity& listItemEntity)
 {
     return { *listItemEntity.getId(),
+             *listItemEntity.getParentId(),
              *listItemEntity.getValue(),
              *(*listItemEntity.priority()).getName(),
              *(*listItemEntity.status()).getCommandName(),

@@ -1036,6 +1036,17 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE_FALSE(listItemService.hasLegacyVariantIds(tempListName2));
     }
 
+    SECTION("hasLegacyRowLayout: detects 8-column rows in the list, its archive or its delete list")
+    {
+        REQUIRE_FALSE(listItemService.hasLegacyRowLayout(tempListName));
+
+        jsonService.load(configService.getListArchiveFilePathFromFilePath(configService.getListFilePath("tempListName")));
+        jsonService.write({ { "eeeea", "legacy", "high", "queued", "0", "0", "1", "1" } });
+        listItemRepository.resetCache("");
+        REQUIRE(listItemService.hasLegacyRowLayout(tempListName));
+        REQUIRE_FALSE(listItemService.hasLegacyRowLayout(tempListName2));
+    }
+
     SECTION("restore: unknown id throws")
     {
         REQUIRE_THROWS_AS(listItemService.restore("zzzzz", tempListName), std::invalid_argument);

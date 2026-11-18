@@ -66,6 +66,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Command/CommandShortcutServiceTest.cpp
         CommandAutocomplete/CommandAutocompleteServiceTest.cpp
         Mock/MockAppInstallation.cpp
+        ../Init/AppInstallation.cpp
         Mock/MockAppInstallation.h
         Mock/MockAppInitialization.cpp
         Mock/MockAppInitialization.h

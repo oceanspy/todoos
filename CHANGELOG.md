@@ -1,5 +1,10 @@
 # ToDoOs
 ## Unreleased
+- **Breaking (data):** every stored item gets a `parent_id` column, right after the id
+  (`id, parent_id, value, priority, status, dueAt, closedAt, createdAt, updatedAt`), for parent/child items.
+  **Migrate existing data before upgrading:** run `scripts/migrate-parent-id.py --dry-run`, then
+  `scripts/migrate-parent-id.py` on one machine, let the sync finish, then install the new binary everywhere.
+  Until then, todoos refuses to run and asks for the migration (temporary check on the current list).
 - **Breaking:** `remove -f` no longer deletes items for good: `-f/--force` only forces the action.
   Use the new `-F/--force-permanently` to delete permanently. (`list rm -f` is unchanged.)
 - Fix: todoos exits with 0 on success and 1 when the command fails (it always exited with 1), so
