@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
 
 ListItemService::ListItemService(IOService& ioService,
@@ -1108,6 +1110,58 @@ ListItemService::removePermanently(const std::string& id, ListName& listName)
     relinkVariantChildren(id, "", listName);
 
     return removedChildIds;
+}
+
+std::string
+ListItemService::itemKey(const ListItemEntity& item, const std::string& id)
+{
+    return (*item.getListName()).getName() + ":" + (*item.getListName()).getVariant() + ":" + id;
+}
+
+void
+ListItemService::groupChildren(std::vector<ListItemEntity>& listItems)
+{
+    std::unordered_map<std::string, const ListItemEntity*> itemsByKey;
+    for (const ListItemEntity& item : listItems) {
+        itemsByKey[itemKey(item, *item.getId())] = &item;
+    }
+
+    // A row is shown as a child when its parent is shown as a top-level row (one level only)
+    auto shownParentKey = [&itemsByKey](const ListItemEntity& item) -> std::string {
+        if (!item.hasParent()) {
+            return "";
+        }
+        auto parent = itemsByKey.find(itemKey(item, *item.getParentId()));
+        if (parent == itemsByKey.end() || parent->second->hasParent()) {
+            return "";
+        }
+        return parent->first;
+    };
+
+    std::vector<const ListItemEntity*> roots;
+    std::unordered_map<std::string, std::vector<const ListItemEntity*>> childrenByParent;
+    for (const ListItemEntity& item : listItems) {
+        std::string parentKey = shownParentKey(item);
+        if (parentKey.empty()) {
+            roots.push_back(&item);
+        } else {
+            childrenByParent[parentKey].push_back(&item);
+        }
+    }
+
+    std::vector<ListItemEntity> grouped;
+    grouped.reserve(listItems.size());
+    for (const ListItemEntity* root : roots) {
+        grouped.push_back(*root);
+        auto children = childrenByParent.find(itemKey(*root, *root->getId()));
+        if (children != childrenByParent.end()) {
+            for (const ListItemEntity* child : children->second) {
+                grouped.push_back(*child);
+            }
+        }
+    }
+
+    listItems = std::move(grouped);
 }
 
 void

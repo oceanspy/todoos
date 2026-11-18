@@ -43,6 +43,9 @@ class Theme
     std::string buildShortStatsCounts(const ListCountSummary& summary);
     // Widens the ID column for archived / deleted (5-char) ids; the TITLE column shrinks accordingly
     void fitIdColumn(const std::vector<ListItemEntity>& listItems);
+    // Connector of the row `index`: "├─ " / "└─ " (last one) for a child shown under its parent, "" otherwise.
+    // Expects the rows grouped by ListItemService::groupChildren.
+    static std::string childConnectorFor(const std::vector<ListItemEntity>& listItems, size_t index);
 
     // Pure virtual — theme-specific
     virtual void printListTitle(ListName& listName) = 0;
@@ -68,6 +71,9 @@ class Theme
     int consoleWidth;
     int consoleRowLength;
     int idColumnLength = ID_LENGTH;
+    // Connector of the row being printed, set by print / printMultipleList for buildValue
+    std::string childConnector;
+    static const int CHILD_CONNECTOR_LENGTH = 3;
     int idColumnExtraLength() const { return idColumnLength - ID_LENGTH; }
     int statsWhenLength = 0;
     int statsCreatedCompletedLength = 0;
