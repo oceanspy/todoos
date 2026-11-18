@@ -95,6 +95,11 @@ class ListItemService
     std::vector<std::string> withoutChildrenOfListedParents(const std::vector<std::string>& ids, ListName& listName);
     // Permanently removes an item, its children and their descriptions. Returns the removed child ids.
     std::vector<std::string> removePermanently(const std::string& id, ListName& listName);
+    // Puts each child right after its parent (children keep their relative order). Children whose
+    // parent is not in the vector stay where they are, as top-level items.
+    static void groupChildren(std::vector<ListItemEntity>& listItems);
+    // "list:variant:id": ids are only unique within a list
+    static std::string itemKey(const ListItemEntity& item, const std::string& id);
     void filterPriorityAbove(std::vector<ListItemEntity>& listItems, const int priority);
     void filterStatus(std::vector<ListItemEntity>& listItems, const std::vector<int>& statuses);
     void filterDeadlineBefore(std::vector<ListItemEntity>& listItems, const time_t timestamp);
