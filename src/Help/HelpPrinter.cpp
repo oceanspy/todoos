@@ -97,8 +97,9 @@ HelpPrinter::helpListForCli()
         "   " + CYN + "-A/--archived" + RST + "     Show archived items        " + DIM + "(show, find)" + RST,
         "   " + CYN + "-D/--deleted"  + RST + "      Show deleted items         " + DIM + "(show, find)" + RST,
         "   " + CYN + "-d/--described" + RST + "    Describe items             " + DIM + "(add, show, find, clean)" + RST,
-        "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, move, copy)" + RST,
+        "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, move, copy, (de)tach)" + RST,
         "   " + CYN + "-F/--force-permanently" + RST + " Delete for good       " + DIM + "(remove)" + RST,
+        "   " + CYN + "-a/--attached" + RST + "     Include child items        " + DIM + "(clean)" + RST,
         "   " + CYN + "-Q/--no-quit" + RST + "      Keep app alive after command",
         "",
         section("OPTIONS"),
@@ -107,6 +108,7 @@ HelpPrinter::helpListForCli()
         "   " + BLU + "-s/--status {name}"   + RST + "       Filter/set status",
         "   " + BLU + "-i/--deadline {date}" + RST + "     Filter/set deadline",
         "   " + BLU + "-t/--to {list}"       + RST + "           Target list        " + DIM + "(move, copy)" + RST,
+        "   " + BLU + "-t/--to {id}"         + RST + "             Parent item        " + DIM + "(add, attach)" + RST,
         "",
         section("LISTS"),
         "   use "  + YLW + "{list}"           + RST + "                    Switch active list",   // col 13 + 20 = 33
@@ -131,6 +133,12 @@ HelpPrinter::helpListForCli()
         "   duplicate    " + YLW + "{ids}"                  + RST + "            Duplicate items",      // col 21 + 12 = 33
         "   archive      " + YLW + "{ids}"                  + RST + "            Send to archive",      // col 21 + 12 = 33
         "   restore      " + YLW + "{ids}"                  + RST + "            Restore archived/deleted items",
+        "",
+        section("PARENT / CHILD"),
+        "   add      (a) " + YLW + "{value} " + BLU + "-t {id}" + RST + "  Add a child item",           // col 31 +  2 = 33
+        "   attach       " + YLW + "{ids} "   + BLU + "-t {id}" + RST + "    Attach to a parent " + CYN + "[-f] to switch parent" + RST, // col 29 +  4 = 33
+        "   detach       " + YLW + "{ids}"                      + RST + "            Detach children  " + CYN + "[-f] for a parent" + RST, // col 21 + 12 = 33
+        "     " + DIM + "children follow their parent (remove -f, archive, restore, move, copy)" + RST,
         "",
         section("TRANSFER"),
         "   move    (mv) " + YLW + "{ids} " + BLU + "-t {list}" + RST + "  Move to list   " + CYN + "[-f]" + RST, // col 31 +  2 = 33
@@ -161,6 +169,7 @@ HelpPrinter::helpListForCli()
         "",
         section("BULK"),
         "   clean              Archive all completed/cancelled items  " + CYN + "[-d] include described items" + RST,
+        "                                                             " + CYN + "[-a] include child items" + RST,
         "   empty              Empty the list",
         "",
         section("SHORTCUTS"),

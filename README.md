@@ -140,6 +140,7 @@ todoos [flags] [options] <command> [args]
 | `-d/--described` | Filter/include items with descriptions | `add`, `show`, `find`, `clean` |
 | `-f/--force` | Skip confirmation | `remove`, `move`, `copy` |
 | `-F/--force-permanently` | Delete for good (no restore) | `remove` |
+| `-a/--attached` | Include child items | `clean` |
 | `-Q/--no-quit` | Keep app alive after command | |
 
 ## Options
@@ -151,6 +152,7 @@ todoos [flags] [options] <command> [args]
 | `-s/--status {name}` | Filter or set status |
 | `-i/--deadline {date}` | Filter or set deadline |
 | `-t/--to {list}` | Target list for `move` and `copy` |
+| `-t/--to {id}` | Parent item for `add` and `attach` |
 
 ## Lists
 
@@ -184,6 +186,29 @@ todoos [flags] [options] <command> [args]
 | `duplicate {ids}` | Duplicate items |
 | `archive {ids}` | Send to archive |
 | `restore {ids}` | Restore archived or deleted items |
+
+## Parent / child
+
+Items can be grouped under a parent item (one level: a child cannot have children).
+Children are shown right under their parent:
+
+```
+ bofp  ●  List of tasks per service                    📥 queued   Mon 29 Jun at 13:21
+ ehtu  ●  ├─ system to follow the computers updates     📥 queued   Yesterday at 16:40
+ kpzr  ●  └─ inventory script                           📥 queued   Yesterday at 16:41
+```
+
+| Command | Description |
+|---------|-------------|
+| `add (a) {value} --to {id}` | Add a child item |
+| `attach {ids} --to {id}` | Attach items to a parent (`-f` to move an attached item to another parent) |
+| `detach {ids}` | Detach children; on a parent, detach all its children (`-f` required) |
+
+- Children follow their parent: `remove -f`, `archive`, `restore`, `move` and `copy` act on the whole group.
+- Removing a parent needs `-f` (soft delete with its children) or `-F` (deleted for good with its children).
+- `clean` keeps children and parents that still have children. With `-a`, finished children are archived
+  too, and a finished parent goes with its children once none of them is open.
+- A child moved or copied on its own becomes a top-level item in the target list.
 
 ## Transfer
 
