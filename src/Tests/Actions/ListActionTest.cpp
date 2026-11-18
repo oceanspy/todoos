@@ -169,6 +169,145 @@ TEST_CASE("ListAction action", "[ListAction]")
         REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
+    SECTION("remove — without force keeps a backup of the list files")
+    {
+        Command command("list", { "remove", "tempList2Name" }, {}, "list remove tempList2Name");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+
+        Command subCommand("remove", { "tempList2Name" }, {}, "remove tempList2Name");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListFilePath("tempList2Name")));
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListArchiveFilePath("tempList2Name")));
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListDeleteFilePath("tempList2Name")));
+        REQUIRE(std::filesystem::exists(configService.getListFilePath("._backup_del_tempList2Name")));
+        REQUIRE(std::filesystem::exists(configService.getListArchiveFilePath("._backup_del_tempList2Name")));
+        REQUIRE(std::filesystem::exists(configService.getListDeleteFilePath("._backup_del_tempList2Name")));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove — with force deletes the list files without backup")
+    {
+        std::map<std::string, std::string> forceOpt = { { "force", "" } };
+        Command command("list", { "remove", "tempList2Name" }, forceOpt, "list remove --force tempList2Name");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+
+        Command subCommand("remove", { "tempList2Name" }, forceOpt, "remove --force tempList2Name");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListFilePath("tempList2Name")));
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListArchiveFilePath("tempList2Name")));
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListDeleteFilePath("tempList2Name")));
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListFilePath("._backup_del_tempList2Name")));
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListArchiveFilePath("._backup_del_tempList2Name")));
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListDeleteFilePath("._backup_del_tempList2Name")));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove — with force removes the list from the list of lists")
+    {
+        std::map<std::string, std::string> forceOpt = { { "force", "" } };
+        Command command("list", { "remove", "tempList2Name" }, forceOpt, "list remove --force tempList2Name");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+
+        std::size_t countBefore = listService.get().size();
+
+        Command subCommand("remove", { "tempList2Name" }, forceOpt, "remove --force tempList2Name");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        REQUIRE(listService.get().size() == countBefore - 1);
+        REQUIRE_THROWS(listService.find("tempList2Name"));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove — with force on the used list switches back to the default list")
+    {
+        std::map<std::string, std::string> forceOpt = { { "force", "" } };
+        Command command("list", { "remove", "tempListName" }, forceOpt, "list remove --force tempListName");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+
+        configService.edit("defaultList", "tempList2Name");
+        REQUIRE(configService.getUsedListNameStr() == "tempListName");
+
+        Command subCommand("remove", { "tempListName" }, forceOpt, "remove --force tempListName");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        REQUIRE(configService.getUsedListNameStr() == "tempList2Name");
+        REQUIRE_FALSE(std::filesystem::exists(configService.getListFilePath("tempListName")));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove — with force on another list keeps the used list")
+    {
+        std::map<std::string, std::string> forceOpt = { { "force", "" } };
+        Command command("list", { "remove", "tempList2Name" }, forceOpt, "list remove --force tempList2Name");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+
+        Command subCommand("remove", { "tempList2Name" }, forceOpt, "remove --force tempList2Name");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        REQUIRE(configService.getUsedListNameStr() == "tempListName");
+        REQUIRE(std::filesystem::exists(configService.getListFilePath("tempListName")));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove — with force on an unknown list changes nothing")
+    {
+        std::map<std::string, std::string> forceOpt = { { "force", "" } };
+        Command command("list", { "remove", "unknownList" }, forceOpt, "list remove --force unknownList");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+
+        std::size_t countBefore = listService.get().size();
+
+        Command subCommand("remove", { "unknownList" }, forceOpt, "remove --force unknownList");
+        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        REQUIRE(listService.get().size() == countBefore);
+        REQUIRE(configService.getUsedListNameStr() == "tempListName");
+        REQUIRE(std::filesystem::exists(configService.getListFilePath("tempListName")));
+        REQUIRE(std::filesystem::exists(configService.getListFilePath("tempList2Name")));
+    }
+
     // ---- RenameListAction — move-to subcommand -------------------------------------------
 
     SECTION("rename — move-to renames a list")
