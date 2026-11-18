@@ -146,6 +146,19 @@ main(int argc, const char* argv[])
     ListName currentList = listService.createUsedListName();
 
     // ----
+    // TEMPORARY: rows now carry a parent_id column, refuse to run on unmigrated data
+    // (checked first: unmigrated rows can't be read, so the id check below would be wrong)
+    if (listItemService.hasLegacyRowLayout(currentList)) {
+        ioService.br();
+        ioService.error("Your lists still use the old row layout (no parent_id column).");
+        ioService.info("Run once, from the todoos repository:  scripts/migrate-parent-id.py");
+        ioService.message("(add --dry-run first to preview; with a synced setup, migrate on one machine and let it "
+                          "sync before upgrading the others)");
+        ioService.br();
+        return 1;
+    }
+
+    // ----
     // TEMPORARY: archived / deleted items now use 5-char ids, refuse to run on unmigrated data
     if (listItemService.hasLegacyVariantIds(currentList)) {
         ioService.br();

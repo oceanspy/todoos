@@ -81,6 +81,6 @@ FileStorageService::populateNewListFile(std::ofstream& outfile)
         outfile << "[\n";
         outfile << "]";
     } else if (configService.getFileDataStorageType() == "csv") {
-        outfile << "# ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT\n";
+        outfile << "# ID,PARENT_ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT\n";
     }
 }

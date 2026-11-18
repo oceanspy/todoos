@@ -63,22 +63,22 @@ MockAppInstallation::populate()
     storageService.write(defaultListofListData);
 
     std::vector<std::vector<std::string>> defaultListData = {
-        { "aaaa", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
-        { "bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
+        { "aaaa", "", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
+        { "bbbb", "", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getDefaultListFilePath());
     storageService.write(defaultListData);
 
     std::vector<std::vector<std::string>> tempListData = {
-        { "aaaa", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
-        { "bbbb", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
+        { "aaaa", "", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
+        { "bbbb", "", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getMainDirPath() / "tempListName.json");
     storageService.write(tempListData);
 
     std::vector<std::vector<std::string>> temp2ListData = {
-        { "cccc", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
-        { "dddd", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
+        { "cccc", "", "test 1", "high", "queued", "0", "0", "1712487259", "1712487259" },
+        { "dddd", "", "test 2", "medium", "started", "1712487259", "0", "1712487272", "1712487272" }
     };
     storageService.load(init.getMainDirPath() / "tempList2Name.json");
     storageService.write(temp2ListData);
@@ -185,6 +185,6 @@ MockAppInstallation::populateNewListFile(std::ofstream& outfile)
         outfile << "[\n";
         outfile << "]";
     } else if (init.getDefaultExtension() == "csv") {
-        outfile << "# ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT";
+        outfile << "# ID,PARENT_ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT";
     }
 }

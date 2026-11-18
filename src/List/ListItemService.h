@@ -57,6 +57,8 @@ class ListItemService
     std::string moveToVariant(const std::string& id, ListName& listName, ListName& targetListName);
     // TEMPORARY: true when the list's archive / delete still hold pre-migration 4-char ids
     bool hasLegacyVariantIds(ListName& listName);
+    // TEMPORARY: true when the list (or its archive / delete) still holds rows without parent_id
+    bool hasLegacyRowLayout(ListName& listName);
     void archiveAll(ListName& listName);
     void archiveFinishedItems(ListName& listName, bool withDescribedItems);
     // Restores an archived / deleted item by its 5-char id. Returns the id it gets in the active

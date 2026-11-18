@@ -140,4 +140,35 @@ TEST_CASE("ListItemEntity tests", "[ListItemEntity]")
         REQUIRE(*listItemEntity.getCreatedAt() == validCreatedAt);
         REQUIRE(*listItemEntity.getUpdatedAt() == validUpdatedAt);
     }
+
+    SECTION("parent_id: empty by default, validated, and stored right after the id")
+    {
+        ListItemEntity entity(listName);
+        REQUIRE(*entity.getParentId() == "");
+        REQUIRE_FALSE(entity.hasParent());
+
+        REQUIRE_THROWS(entity.setParentId("ab"));
+        REQUIRE_THROWS(entity.setParentId("ab-d"));
+        entity.setParentId("abcd");
+        REQUIRE(entity.hasParent());
+        entity.setParentId("abcda");
+        REQUIRE(*entity.getParentId() == "abcda");
+        entity.setParentId("");
+        REQUIRE_FALSE(entity.hasParent());
+
+        std::vector<std::string> row = { "efgh", "abcd", "child", "high", "queued", "0", "0", "10", "20" };
+        ListItemEntity fromRow = ListItemEntity::setFromVector(priorityService, statusService, row, listName);
+        REQUIRE(*fromRow.getId() == "efgh");
+        REQUIRE(*fromRow.getParentId() == "abcd");
+        REQUIRE(*fromRow.getValue() == "child");
+        REQUIRE(*fromRow.getUpdatedAt() == 20);
+        REQUIRE(ListItemEntity::makeVector(fromRow) == row);
+    }
+
+    SECTION("setFromVector refuses rows that do not have the 9-column layout")
+    {
+        std::vector<std::string> legacyRow = { "efgh", "child", "high", "queued", "0", "0", "10", "20" };
+        REQUIRE_THROWS_AS(ListItemEntity::setFromVector(priorityService, statusService, legacyRow, listName),
+                          std::invalid_argument);
+    }
 }

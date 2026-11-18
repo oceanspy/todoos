@@ -365,6 +365,20 @@ ListItemService::hasLegacyVariantIds(ListName& listName)
     return false;
 }
 
+// TEMPORARY (remove once every install is migrated): rows written before the parent_id column
+bool
+ListItemService::hasLegacyRowLayout(ListName& listName)
+{
+    for (const std::string variant : { "default", "archive", "delete" }) {
+        ListName variantListName = ListName::createVariant(listName, variant);
+        if (listItemRepository.hasLegacyRows(variantListName)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 std::string
 ListItemService::makeVariantId(const std::string& baseId, ListName& listName)
 {
