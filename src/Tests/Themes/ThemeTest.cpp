@@ -88,6 +88,31 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
 
     // ---- buildId ----------------------------------------------------------------
 
+    SECTION("fitIdColumn — 5-char ids widen the ID column, TITLE shrinks so the line keeps its length")
+    {
+        ListName archiveName = ListName::createVariant(listName, "archive");
+        ListItemEntity activeItem = buildOpenItem("aaaa", "test value", "high", "queued", listName);
+        ListItemEntity archivedItem = buildOpenItem("aaaaq", "test value", "high", "queued", archiveName);
+
+        theme.fitIdColumn({ activeItem });
+        std::string activeHeader = theme.printListTitleRow();
+        std::string activeRow = theme.printListRow(activeItem, true);
+        REQUIRE(static_cast<int>(StringHelpers::countCharsWithoutBashCodes(theme.buildId(activeItem))) == 6);
+
+        theme.fitIdColumn({ archivedItem });
+        std::string archivedHeader = theme.printListTitleRow();
+        std::string archivedRow = theme.printListRow(archivedItem, true);
+        REQUIRE(static_cast<int>(StringHelpers::countCharsWithoutBashCodes(theme.buildId(archivedItem))) == 7);
+        REQUIRE(theme.buildId(archivedItem).find("aaaaq") != std::string::npos);
+
+        REQUIRE(StringHelpers::countCharsWithoutBashCodes(archivedHeader) ==
+                StringHelpers::countCharsWithoutBashCodes(activeHeader));
+        REQUIRE(StringHelpers::countCharsWithoutBashCodes(archivedRow) ==
+                StringHelpers::countCharsWithoutBashCodes(activeRow));
+        // TITLE column starts one char further right
+        REQUIRE(archivedHeader.find("TITLE") == activeHeader.find("TITLE") + 1);
+    }
+
     SECTION("buildId — open item contains the ID")
     {
         ListItemEntity item = buildOpenItem("aaaa", "test value", "high", "queued", listName);

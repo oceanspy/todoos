@@ -897,7 +897,7 @@ TEST_CASE("Integration: archive then restore sequence", "[Integration][ArchiveRe
 
     SECTION("archive then restore returns item to main list")
     {
-        listItemService.archive("aaaa", listName);
+        std::string archivedId = listItemService.archive("aaaa", listName);
         std::vector<ListItemEntity> afterArchive = listItemService.get(listName);
         REQUIRE(afterArchive.size() == 1);
 
@@ -905,7 +905,7 @@ TEST_CASE("Integration: archive then restore sequence", "[Integration][ArchiveRe
         std::vector<ListItemEntity> inArchive = listItemService.get(archiveName);
         REQUIRE(inArchive.size() == 1);
 
-        listItemService.restore("aaaa", listName);
+        listItemService.restore(archivedId, listName);
         std::vector<ListItemEntity> afterRestore = listItemService.get(listName);
         REQUIRE(afterRestore.size() == 2);
 
@@ -918,8 +918,8 @@ TEST_CASE("Integration: archive then restore sequence", "[Integration][ArchiveRe
 
     SECTION("archive then restore then archive again works")
     {
-        listItemService.archive("aaaa", listName);
-        listItemService.restore("aaaa", listName);
+        std::string archivedId = listItemService.archive("aaaa", listName);
+        REQUIRE(listItemService.restore(archivedId, listName) == "aaaa");
         listItemService.archive("aaaa", listName);
 
         std::vector<ListItemEntity> mainItems = listItemService.get(listName);
@@ -928,7 +928,7 @@ TEST_CASE("Integration: archive then restore sequence", "[Integration][ArchiveRe
         ListName archiveName = ListName::createVariant(listName, "archive");
         std::vector<ListItemEntity> archiveItems = listItemService.get(archiveName);
         REQUIRE(archiveItems.size() == 1);
-        REQUIRE(*archiveItems[0].getId() == "aaaa");
+        REQUIRE((*archiveItems[0].getId()).substr(0, 4) == "aaaa");
 
         installation.wipe();
         installation.make();

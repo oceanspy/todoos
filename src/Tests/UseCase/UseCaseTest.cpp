@@ -599,7 +599,8 @@ TEST_CASE("ArchiveUseCase", "[UseCase][Archive]")
         ListName archiveName = ListName::createVariant(listName, "archive");
         std::vector<ListItemEntity> archived = listItemService.get(archiveName);
         REQUIRE(archived.size() == 1);
-        REQUIRE(*archived[0].getId() == "aaaa");
+        REQUIRE((*archived[0].getId()).length() == 5);
+        REQUIRE((*archived[0].getId()).substr(0, 4) == "aaaa");
 
         installation.wipe();
         installation.make();
@@ -640,10 +641,11 @@ TEST_CASE("RestoreUseCase", "[UseCase][Restore]")
 
     SECTION("restore brings archived item back to main list")
     {
-        listItemService.archive("aaaa", listName);
+        std::string archivedId = listItemService.archive("aaaa", listName);
+        Command restoreCommand("restore", { archivedId }, {}, "restore " + archivedId);
 
-        REQUIRE_NOTHROW(
-            RestoreUseCase(ioService, listItemService, listService, configService, themeService).execute(command, listName));
+        REQUIRE_NOTHROW(RestoreUseCase(ioService, listItemService, listService, configService, themeService)
+                            .execute(restoreCommand, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);

@@ -216,9 +216,9 @@ std::string
 Legacy::printListTitleRow()
 {
     std::string line = "";
-    line += StringHelpers::adjustStringLength(" ID", ID_LENGTH);
+    line += StringHelpers::adjustStringLength(" ID", idColumnLength);
     line += StringHelpers::adjustStringLength("", PRIORITY_LENGTH);
-    line += StringHelpers::adjustStringLength("TITLE", consoleRowLength);
+    line += StringHelpers::adjustStringLength("TITLE", consoleRowLength - idColumnExtraLength());
     if (consoleRowMaxLength > 100) {
         line += StringHelpers::adjustStringLength("STATUS", STATUS_LENGTH);
     }

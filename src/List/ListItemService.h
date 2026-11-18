@@ -25,7 +25,7 @@ class ListItemService
     std::vector<ListItemEntity> get(ListName& listName);
     ListItemEntity find(const std::string& id, ListName& listName);
     bool remove(const std::string& id, ListName& listName);
-    void softDelete(const std::string& id, ListName& listName);
+    std::string softDelete(const std::string& id, ListName& listName);
     std::string add(ListName& listName,
                     const std::string& itemValue,
                     const std::string* priority = nullptr,
@@ -50,10 +50,18 @@ class ListItemService
     void move(const std::string& id, ListName& oldListName, ListName& newListName);
     void copy(const std::string& id, ListName& oldListName, ListName& newListName);
     std::string duplicate(const std::string& id, ListName& listName);
-    void archive(const std::string& id, ListName& listName);
+    std::string archive(const std::string& id, ListName& listName);
+    // Moves an item to the archive or delete variant of the same list (same name required). An active
+    // (4-char) id gets a random [a-z] suffix, unique across archive + delete; archive <-> delete keeps
+    // the 5-char id. Returns the new id.
+    std::string moveToVariant(const std::string& id, ListName& listName, ListName& targetListName);
+    // TEMPORARY: true when the list's archive / delete still hold pre-migration 4-char ids
+    bool hasLegacyVariantIds(ListName& listName);
     void archiveAll(ListName& listName);
     void archiveFinishedItems(ListName& listName, bool withDescribedItems);
-    void restore(const std::string& id, ListName& listName);
+    // Restores an archived / deleted item by its 5-char id. Returns the id it gets in the active
+    // list: its original 4 chars when free, a new id otherwise.
+    std::string restore(const std::string& id, ListName& listName);
     void editDeadline(std::string& id, ListName& listName, time_t dueAt = 0);
     long count(ListName& listName);
     long countWithStatus(ListName& listName, const std::vector<int>& status);
@@ -74,6 +82,7 @@ class ListItemService
     PriorityService priorityService;
     StatusService statusService;
     std::vector<ListItemEntity> sort(std::vector<ListItemEntity> listItems);
+    std::string makeVariantId(const std::string& baseId, ListName& listName);
 
   protected:
     void archiveItem(ListItemEntity& listItem, ListName& listName);

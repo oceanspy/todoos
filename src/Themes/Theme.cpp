@@ -4,6 +4,8 @@
 void
 Theme::print(ListName& listName, std::vector<ListItemEntity> listItems, bool showListName, bool showTitle)
 {
+    fitIdColumn(listItems);
+
     bool hideListNameInLine = false;
     if (showListName) {
         printListTitle(listName);
@@ -31,6 +33,7 @@ void
 Theme::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemEntity>& listItems)
 {
     printMultipleListTitles(listNames);
+    fitIdColumn(listItems);
 
     std::string title = printListTitleRow();
     ioService.print(title);
@@ -47,13 +50,26 @@ Theme::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemE
     }
 }
 
+void
+Theme::fitIdColumn(const std::vector<ListItemEntity>& listItems)
+{
+    idColumnLength = ID_LENGTH;
+    for (const ListItemEntity& listItemEntity : listItems) {
+        int length = static_cast<int>((*listItemEntity.getId()).length()) + 2;
+        if (length > idColumnLength) {
+            idColumnLength = length;
+        }
+    }
+}
+
 std::string
 Theme::buildId(const ListItemEntity& listItemEntity)
 {
+    std::string id = StringHelpers::adjustStringLength(" " + *listItemEntity.getId() + " ", idColumnLength);
     if (*(*listItemEntity.status()).isClosed()) {
-        return StringHelpers::colorize(" " + *listItemEntity.getId() + " ", GRAY);
+        return StringHelpers::colorize(id, GRAY);
     }
-    return " " + *listItemEntity.getId() + " ";
+    return id;
 }
 
 std::string
@@ -89,7 +105,8 @@ std::string
 Theme::buildValue(const ListItemEntity& listItemEntity, const int leftOffset)
 {
     std::string value = *listItemEntity.getValue();
-    value = autoLineBreak(value, consoleRowLength - leftOffset, ID_LENGTH + PRIORITY_LENGTH + leftOffset);
+    value = autoLineBreak(
+        value, consoleRowLength - leftOffset - idColumnExtraLength(), idColumnLength + PRIORITY_LENGTH + leftOffset);
     value = StringHelpers::colorize(value, (*listItemEntity.status()).getColor());
     value = StringHelpers::colorize(value, (*listItemEntity.status()).getStyle());
     return value;

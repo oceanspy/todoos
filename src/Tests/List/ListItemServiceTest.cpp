@@ -9,7 +9,9 @@
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <filesystem>
+#include <fstream>
 
 // {"aaaa", "test 1", "3", "0", "1712487259", "1712487259", "0", "0"}
 // {"bbbb", "test 2", "1", "1", "1712487272", "1712487272", "1712487259", "0"}
@@ -255,7 +257,9 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemService.editStatus(id, listName, newStatus);
 
         REQUIRE_THROWS_AS(listItemService.find("aaaa", listName), ListItemNotFoundException);
-        REQUIRE_NOTHROW(listItemService.find("aaaa", listNameArchive));
+        std::vector<ListItemEntity> archived = listItemService.get(listNameArchive);
+        REQUIRE(archived.size() == 1);
+        REQUIRE(ListItemId::baseOf(*archived[0].getId()) == "aaaa");
     }
 
     SECTION("add & remove")
@@ -279,18 +283,20 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItems[1].getId() == "bbbb");
         REQUIRE(*listItems[2].getId() == id);
 
-        listItemService.softDelete(id, tempListName);
+        std::string deletedId = listItemService.softDelete(id, tempListName);
+        REQUIRE(deletedId.length() == 5);
+        REQUIRE(ListItemId::baseOf(deletedId) == id);
 
         std::vector<ListItemEntity> listDelItems = listItemService.get(tempListNameDelete);
         REQUIRE(listDelItems.size() == 1);
-        REQUIRE(*listDelItems[0].getId() == id);
+        REQUIRE(*listDelItems[0].getId() == deletedId);
 
         std::vector<ListItemEntity> listItems2 = listItemService.get(tempListName);
         REQUIRE(listItems2.size() == 2);
         REQUIRE(*listItems2[0].getId() == "aaaa");
         REQUIRE(*listItems2[1].getId() == "bbbb");
 
-        listItemService.restore(id, tempListName);
+        REQUIRE(listItemService.restore(deletedId, tempListName) == id);
         std::vector<ListItemEntity> listRestoreItems = listItemService.get(tempListName);
         REQUIRE(listRestoreItems.size() == 3);
         REQUIRE(*listRestoreItems[0].getId() == "aaaa");
@@ -479,7 +485,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         std::vector<ListItemEntity> listArchiveItems = listItemService.get(listNameArchive);
         REQUIRE(listArchiveItems.size() == 1);
 
-        listItemService.restore(id, listName);
+        REQUIRE(listItemService.restore(*listArchiveItems[0].getId(), listName) == id);
         std::vector<ListItemEntity> listItems3 = listItemService.get(listName);
         REQUIRE(listItems3.size() == 3);
         REQUIRE(*listItems3[0].getId() == "aaaa");
@@ -529,7 +535,7 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
         std::vector<ListItemEntity> archiveItems = listItemService.get(listNameArchive);
         REQUIRE(archiveItems.size() == 1);
-        REQUIRE(*archiveItems[0].getId() == id);
+        REQUIRE(ListItemId::baseOf(*archiveItems[0].getId()) == id);
 
         installation.wipe();
         installation.make();
@@ -543,12 +549,12 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*listItems[0].getId() == "aaaa");
         REQUIRE(*listItems[1].getId() == "bbbb");
 
-        listItemService.archive(id, listName);
+        std::string archivedId = listItemService.archive(id, listName);
 
         std::vector<ListItemEntity> listItems2 = listItemService.get(listName);
         REQUIRE(listItems2.size() == 1);
 
-        listItemService.restore(id, listName);
+        REQUIRE(listItemService.restore(archivedId, listName) == id);
 
         std::vector<ListItemEntity> listItems3 = listItemService.get(listName);
         REQUIRE(listItems3.size() == 2);
@@ -772,5 +778,283 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
 
         installation.wipe();
         installation.make();
+    }
+
+    // ---- 5-char ids for archived / deleted items --------------------------------------------
+
+    auto writeDescription = [&descriptionRepository](const std::string& id, ListName& ln, const std::string& text) {
+        std::filesystem::path descPath = descriptionRepository.getFilePath(id, ln);
+        std::filesystem::create_directories(descPath.parent_path());
+        std::ofstream(descPath) << text;
+    };
+
+    // Puts a copy of `bbbb` (from the active temp list) into any list under `variantId`
+    auto seedVariantItem = [&](ListName& variantListName, const std::string& variantId) {
+        ListItemEntity seeded = listItemRepository.find("bbbb", tempListName);
+        seeded.setId(variantId);
+        listItemRepository.create(seeded, variantListName);
+    };
+
+    SECTION("moveToVariant: archive gives base + one [a-z] suffix and removes the item from the active list")
+    {
+        std::string newId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+
+        REQUIRE(newId.length() == 5);
+        REQUIRE(newId.substr(0, 4) == "aaaa");
+        REQUIRE(newId[4] >= 'a');
+        REQUIRE(newId[4] <= 'z');
+        REQUIRE_THROWS_AS(listItemService.find("aaaa", tempListName), ListItemNotFoundException);
+        REQUIRE(*listItemService.find(newId, tempListNameArchive).getValue() ==
+                *listItemRepository.find(newId, tempListNameArchive).getValue());
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 1);
+        REQUIRE(listItemService.get(tempListNameDelete).empty());
+    }
+
+    SECTION("moveToVariant: delete gives base + one [a-z] suffix")
+    {
+        std::string newId = listItemService.moveToVariant("bbbb", tempListName, tempListNameDelete);
+
+        REQUIRE(newId.length() == 5);
+        REQUIRE(newId.substr(0, 4) == "bbbb");
+        REQUIRE_NOTHROW(listItemService.find(newId, tempListNameDelete));
+        REQUIRE(listItemService.get(tempListName).size() == 1);
+    }
+
+    SECTION("moveToVariant: item fields are preserved")
+    {
+        ListItemEntity before = listItemService.find("aaaa", tempListName);
+        std::string newId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+        ListItemEntity after = listItemService.find(newId, tempListNameArchive);
+
+        REQUIRE(*after.getValue() == *before.getValue());
+        REQUIRE(*(*after.priority()).getName() == *(*before.priority()).getName());
+        REQUIRE(*(*after.status()).getCommandName() == *(*before.status()).getCommandName());
+        REQUIRE(*after.getCreatedAt() == *before.getCreatedAt());
+        REQUIRE(*after.getUpdatedAt() == *before.getUpdatedAt());
+    }
+
+    SECTION("moveToVariant: description follows the new id")
+    {
+        writeDescription("aaaa", tempListName, "my description");
+
+        std::string newId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", tempListName));
+        REQUIRE(descriptionRepository.exists(newId, tempListName));
+        REQUIRE(descriptionRepository.load(newId, tempListName) == "my description");
+        REQUIRE(*listItemService.find(newId, tempListNameArchive).hasDescription());
+    }
+
+    SECTION("moveToVariant: item without description creates no description file")
+    {
+        std::string newId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+        REQUIRE_FALSE(descriptionRepository.exists(newId, tempListName));
+    }
+
+    SECTION("moveToVariant: same base archived twice gets two distinct ids")
+    {
+        std::string firstId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+
+        // The 4-char id is free again in the active list
+        REQUIRE(listItemService.isIdAvailable("aaaa", tempListName));
+        seedVariantItem(tempListName, "aaaa");
+
+        std::string secondId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+
+        REQUIRE(firstId != secondId);
+        REQUIRE(secondId.substr(0, 4) == "aaaa");
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 2);
+    }
+
+    SECTION("moveToVariant: suffix is unique across archive AND delete")
+    {
+        // Every suffix but 'q' is taken: half in archive, half in delete
+        for (char c = 'a'; c <= 'z'; c++) {
+            if (c == 'q') {
+                continue;
+            }
+            seedVariantItem(c < 'n' ? tempListNameArchive : tempListNameDelete, std::string("aaaa") + c);
+        }
+
+        REQUIRE(listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive) == "aaaaq");
+    }
+
+    SECTION("moveToVariant: all 26 suffixes taken throws and leaves the item untouched")
+    {
+        writeDescription("aaaa", tempListName, "kept");
+        for (char c = 'a'; c <= 'z'; c++) {
+            seedVariantItem(tempListNameArchive, std::string("aaaa") + c);
+        }
+
+        REQUIRE_THROWS_AS(listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive), std::runtime_error);
+        REQUIRE_NOTHROW(listItemService.find("aaaa", tempListName));
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 26);
+        REQUIRE(descriptionRepository.load("aaaa", tempListName) == "kept");
+    }
+
+    SECTION("moveToVariant: archive -> delete keeps the 5-char id and its description")
+    {
+        std::string archivedId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+        writeDescription(archivedId, tempListName, "desc");
+
+        std::string deletedId = listItemService.moveToVariant(archivedId, tempListNameArchive, tempListNameDelete);
+
+        REQUIRE(deletedId == archivedId);
+        REQUIRE(listItemService.get(tempListNameArchive).empty());
+        REQUIRE_NOTHROW(listItemService.find(deletedId, tempListNameDelete));
+        REQUIRE(descriptionRepository.load(deletedId, tempListName) == "desc");
+    }
+
+    SECTION("moveToVariant: rejects another list, the default variant and the same variant")
+    {
+        REQUIRE_THROWS_AS(listItemService.moveToVariant("aaaa", tempListName, tempListName2Archive),
+                          std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.moveToVariant("aaaa", tempListName, tempListName2Delete),
+                          std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.moveToVariant("aaaa", tempListName, tempListName), std::invalid_argument);
+
+        std::string archivedId = listItemService.moveToVariant("aaaa", tempListName, tempListNameArchive);
+        REQUIRE_THROWS_AS(listItemService.moveToVariant(archivedId, tempListNameArchive, tempListNameArchive),
+                          std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.moveToVariant(archivedId, tempListNameArchive, tempListName),
+                          std::invalid_argument);
+
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 1);
+        REQUIRE(listItemService.get(tempListName2Archive).empty());
+        REQUIRE(listItemService.get(tempListName2Delete).empty());
+        REQUIRE(listItemService.get(tempListName).size() == 1);
+    }
+
+    SECTION("moveToVariant: unknown id throws and changes nothing")
+    {
+        REQUIRE_THROWS_AS(listItemService.moveToVariant("zzzz", tempListName, tempListNameArchive),
+                          ListItemNotFoundException);
+        REQUIRE(listItemService.get(tempListName).size() == 2);
+        REQUIRE(listItemService.get(tempListNameArchive).empty());
+    }
+
+    SECTION("archive, softDelete, archiveAll and auto-archive all produce 5-char ids")
+    {
+        REQUIRE(listItemService.archive("aaaa", tempListName).length() == 5);
+        REQUIRE(listItemService.softDelete("bbbb", tempListName).length() == 5);
+
+        listItemService.archiveAll(listName);
+        for (const ListItemEntity& item : listItemService.get(listNameArchive)) {
+            REQUIRE((*item.getId()).length() == 5);
+        }
+
+        configService.edit("archiveWhenCompleted", "true");
+        std::string id = listItemService.add(tempListName2, "auto archived");
+        const int completed = StatusService::COMPLETED;
+        listItemService.editStatus(id, tempListName2, &completed);
+        std::vector<ListItemEntity> archived = listItemService.get(tempListName2Archive);
+        REQUIRE(archived.size() == 1);
+        REQUIRE(*archived[0].getId() != id);
+        REQUIRE(ListItemId::baseOf(*archived[0].getId()) == id);
+        configService.edit("archiveWhenCompleted", "false");
+    }
+
+    SECTION("auto-archive does not fire when editing an archived item")
+    {
+        configService.edit("archiveWhenCompleted", "true");
+        std::string archivedId = listItemService.archive("aaaa", tempListName);
+        const int completed = StatusService::COMPLETED;
+
+        REQUIRE_NOTHROW(listItemService.editStatus(archivedId, tempListNameArchive, &completed));
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 1);
+        configService.edit("archiveWhenCompleted", "false");
+    }
+
+    SECTION("isIdAvailable only looks at the active list")
+    {
+        listItemService.archive("aaaa", tempListName);
+        listItemService.softDelete("bbbb", tempListName);
+
+        REQUIRE(listItemService.isIdAvailable("aaaa", tempListName));
+        REQUIRE(listItemService.isIdAvailable("bbbb", tempListName));
+    }
+
+    SECTION("restore: original 4-char id is given back when free, with its description")
+    {
+        writeDescription("aaaa", tempListName, "restored desc");
+        std::string archivedId = listItemService.archive("aaaa", tempListName);
+
+        REQUIRE(listItemService.restore(archivedId, tempListName) == "aaaa");
+        REQUIRE_NOTHROW(listItemService.find("aaaa", tempListName));
+        REQUIRE(listItemService.get(tempListNameArchive).empty());
+        REQUIRE(descriptionRepository.load("aaaa", tempListName) == "restored desc");
+        REQUIRE_FALSE(descriptionRepository.exists(archivedId, tempListName));
+    }
+
+    SECTION("restore: a new id is generated when the base is taken, description follows")
+    {
+        writeDescription("aaaa", tempListName, "old item desc");
+        std::string archivedId = listItemService.archive("aaaa", tempListName);
+        seedVariantItem(tempListName, "aaaa"); // a new active item now owns "aaaa"
+        std::string archivedText = *listItemService.find(archivedId, tempListNameArchive).getValue();
+
+        std::string restoredId = listItemService.restore(archivedId, tempListName);
+
+        REQUIRE(restoredId != "aaaa");
+        REQUIRE(restoredId.length() == 4);
+        REQUIRE(*listItemService.find(restoredId, tempListName).getValue() == archivedText);
+        REQUIRE(listItemService.get(tempListName).size() == 3);
+        REQUIRE(descriptionRepository.load(restoredId, tempListName) == "old item desc");
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", tempListName));
+    }
+
+    SECTION("restore: works from the delete list")
+    {
+        std::string deletedId = listItemService.softDelete("bbbb", tempListName);
+        REQUIRE(listItemService.restore(deletedId, tempListName) == "bbbb");
+        REQUIRE(listItemService.get(tempListNameDelete).empty());
+    }
+
+    SECTION("restore: the 4-char base alone is not an id")
+    {
+        listItemService.archive("aaaa", tempListName);
+        REQUIRE_THROWS_AS(listItemService.restore("aaaa", tempListName), std::invalid_argument);
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 1);
+    }
+
+    SECTION("hasLegacyVariantIds: false on migrated / empty lists, true with a 4-char id in archive or delete")
+    {
+        REQUIRE_FALSE(listItemService.hasLegacyVariantIds(tempListName));
+
+        listItemService.archive("aaaa", tempListName);
+        listItemService.softDelete(listItemService.add(tempListName, "to delete"), tempListName);
+        REQUIRE_FALSE(listItemService.hasLegacyVariantIds(tempListName));
+
+        seedVariantItem(tempListNameArchive, "cccc");
+        REQUIRE(listItemService.hasLegacyVariantIds(tempListName));
+    }
+
+    SECTION("hasLegacyVariantIds: detects a 4-char id in the delete list")
+    {
+        seedVariantItem(tempListNameDelete, "cccc");
+        REQUIRE(listItemService.hasLegacyVariantIds(tempListName));
+        REQUIRE_FALSE(listItemService.hasLegacyVariantIds(tempListName2));
+    }
+
+    SECTION("restore: unknown id throws")
+    {
+        REQUIRE_THROWS_AS(listItemService.restore("zzzzz", tempListName), std::invalid_argument);
+    }
+
+    SECTION("move / copy / duplicate are rejected from archive and delete lists")
+    {
+        std::string archivedId = listItemService.archive("aaaa", tempListName);
+        std::string deletedId = listItemService.softDelete("bbbb", tempListName);
+
+        REQUIRE_THROWS_AS(listItemService.move(archivedId, tempListNameArchive, tempListName2), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.copy(archivedId, tempListNameArchive, tempListName2), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.duplicate(archivedId, tempListNameArchive), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.move(deletedId, tempListNameDelete, tempListName2), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.copy(deletedId, tempListNameDelete, tempListName2), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.duplicate(deletedId, tempListNameDelete), std::invalid_argument);
+
+        REQUIRE(listItemService.get(tempListName2).size() == 2);
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 1);
+        REQUIRE(listItemService.get(tempListNameDelete).size() == 1);
     }
 }

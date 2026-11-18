@@ -102,7 +102,8 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         ListName archiveListName = ListName::createVariant(listName, "archive");
         std::vector<ListItemEntity> archivedItems = listItemService.get(archiveListName);
         REQUIRE(archivedItems.size() == 1);
-        REQUIRE(*archivedItems[0].getId() == "aaaa");
+        REQUIRE((*archivedItems[0].getId()).length() == 5);
+        REQUIRE((*archivedItems[0].getId()).substr(0, 4) == "aaaa");
 
         installation.wipe();
         installation.make();
@@ -111,9 +112,9 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
     SECTION("restore with valid ID restores item")
     {
         // First archive an item
-        listItemService.archive("aaaa", listName);
+        std::string archivedId = listItemService.archive("aaaa", listName);
 
-        Command restoreCommand = Command("restore", { "aaaa" }, {}, "restore aaaa");
+        Command restoreCommand = Command("restore", { archivedId }, {}, "restore " + archivedId);
         RestoreItemAction restore(ioService, listItemService);
         REQUIRE_NOTHROW(restore.execute(restoreCommand, listName));
 

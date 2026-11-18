@@ -77,15 +77,9 @@ ListItemEntity::getUpdatedAt() const
 void
 ListItemEntity::setId(std::string idStr)
 {
-    // ID cannot be empty and needs to be numbers and letters
-    if (idStr.length() != ListItemId::getIdLength()) {
-        throw std::invalid_argument("Error generating the ID. It must be 4 characters long");
-    }
-
-    for (char ch : idStr) {
-        if (!std::isalnum(ch)) {
-            throw std::invalid_argument("ID must be alphanumeric");
-        }
+    // 4 alphanumeric chars for active items, 5 for archived / deleted items
+    if (!ListItemId::isValid(idStr)) {
+        throw std::invalid_argument("Invalid ID: it must be 4 or 5 alphanumeric characters long");
     }
 
     this->id = idStr;

@@ -66,6 +66,7 @@ CopyItemAction::execute(Command& command, ListName& listName)
         } catch (std::exception& e) {
             ioService.error("Item " + id + " could not be copied from list " + listName.getName() + " to " +
                             newListName.getName() + ".");
+            ioService.info(e.what());
             return "";
         }
     }

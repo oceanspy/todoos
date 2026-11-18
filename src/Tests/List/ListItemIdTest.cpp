@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cctype>
 #include <set>
+#include <stdexcept>
 
 TEST_CASE("ListItemId", "[ListItemId]")
 {
@@ -47,5 +48,37 @@ TEST_CASE("ListItemId", "[ListItemId]")
             ids.insert(ListItemId::generate("letters-lowercase"));
         }
         REQUIRE(ids.size() > 1);
+    }
+
+    SECTION("getVariantIdLength returns 5")
+    {
+        REQUIRE(ListItemId::getVariantIdLength() == 5);
+    }
+
+    SECTION("isValid accepts 4 and 5 alphanumeric characters only")
+    {
+        REQUIRE(ListItemId::isValid("aB3d"));
+        REQUIRE(ListItemId::isValid("aB3dz"));
+        REQUIRE_FALSE(ListItemId::isValid("abc"));
+        REQUIRE_FALSE(ListItemId::isValid("abcdef"));
+        REQUIRE_FALSE(ListItemId::isValid("ab-d"));
+        REQUIRE_FALSE(ListItemId::isValid("abcd "));
+        REQUIRE_FALSE(ListItemId::isValid(""));
+    }
+
+    SECTION("baseOf returns the 4-char part")
+    {
+        REQUIRE(ListItemId::baseOf("abcdz") == "abcd");
+        REQUIRE(ListItemId::baseOf("abcd") == "abcd");
+    }
+
+    SECTION("withSuffix appends a lowercase letter to a 4-char base")
+    {
+        REQUIRE(ListItemId::withSuffix("aB3d", 'a') == "aB3da");
+        REQUIRE(ListItemId::withSuffix("aB3d", 'z') == "aB3dz");
+        REQUIRE_THROWS_AS(ListItemId::withSuffix("abc", 'a'), std::invalid_argument);
+        REQUIRE_THROWS_AS(ListItemId::withSuffix("abcde", 'a'), std::invalid_argument);
+        REQUIRE_THROWS_AS(ListItemId::withSuffix("abcd", 'A'), std::invalid_argument);
+        REQUIRE_THROWS_AS(ListItemId::withSuffix("abcd", '1'), std::invalid_argument);
     }
 }

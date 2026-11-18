@@ -14,6 +14,8 @@ class DescriptionRepository
     std::string load(const std::string& itemId, const ListName& listName);
     std::vector<std::string> getIds(const ListName& listName);
     void remove(const std::string& itemId, const ListName& listName);
+    // Renames an item's description inside the same list (no-op when the item has none)
+    void rename(const std::string& oldItemId, const std::string& newItemId, const ListName& listName);
     std::filesystem::path getListDirPath(const ListName& listName);
     std::filesystem::path getFilePath(const std::string& itemId, const ListName& listName);
 

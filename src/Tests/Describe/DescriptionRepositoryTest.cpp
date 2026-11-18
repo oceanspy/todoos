@@ -146,5 +146,63 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
         installation.make();
     }
 
+    SECTION("getIds returns 5-char ids of archived / deleted items")
+    {
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaaq", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "desc";
+
+        std::vector<std::string> ids = descriptionRepository.getIds(listName);
+        REQUIRE(ids.size() == 1);
+        REQUIRE(ids[0] == "aaaaq");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("getIds ignores non-markdown files")
+    {
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path.parent_path() / "notes.txt") << "x";
+        std::ofstream(path) << "desc";
+
+        std::vector<std::string> ids = descriptionRepository.getIds(listName);
+        REQUIRE(ids == std::vector<std::string>{ "aaaa" });
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("rename moves the description to the new id")
+    {
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "desc";
+
+        descriptionRepository.rename("aaaa", "aaaaq", listName);
+
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", listName));
+        REQUIRE(descriptionRepository.load("aaaaq", listName) == "desc");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("rename is a no-op when the item has no description, or ids are equal")
+    {
+        REQUIRE_NOTHROW(descriptionRepository.rename("zzzz", "zzzzq", listName));
+        REQUIRE_FALSE(descriptionRepository.exists("zzzzq", listName));
+
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "desc";
+        REQUIRE_NOTHROW(descriptionRepository.rename("aaaa", "aaaa", listName));
+        REQUIRE(descriptionRepository.load("aaaa", listName) == "desc");
+
+        installation.wipe();
+        installation.make();
+    }
+
     installation.wipe();
 }

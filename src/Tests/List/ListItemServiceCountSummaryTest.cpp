@@ -102,10 +102,10 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
 
     SECTION("COMPLETED archived items contribute to delivered but not to statusCounts")
     {
-        listItemService.archive("aaaa", listName);
+        std::string archivedId = listItemService.archive("aaaa", listName);
 
         const int completedStatus = StatusService::COMPLETED;
-        listItemService.editStatus("aaaa", listNameArchive, &completedStatus);
+        listItemService.editStatus(archivedId, listNameArchive, &completedStatus);
 
         ListCountSummary summary = listItemService.getCountSummary({ listName });
 
@@ -130,10 +130,10 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
 
     SECTION("CANCELLED archived items contribute to cancelled but not to statusCounts")
     {
-        listItemService.archive("aaaa", listName);
+        std::string archivedId = listItemService.archive("aaaa", listName);
 
         const int cancelledStatus = StatusService::CANCELLED;
-        listItemService.editStatus("aaaa", listNameArchive, &cancelledStatus);
+        listItemService.editStatus(archivedId, listNameArchive, &cancelledStatus);
 
         ListCountSummary summary = listItemService.getCountSummary({ listName });
 
