@@ -1068,4 +1068,69 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(listItemService.get(tempListNameArchive).size() == 1);
         REQUIRE(listItemService.get(tempListNameDelete).size() == 1);
     }
+
+    // ---- reassign ----------------------------------------------------------------------------
+
+    SECTION("reassign: the item gets the new id and keeps its place in the file")
+    {
+        listItemService.reassign("aaaa", "SRV1", tempListName);
+
+        std::vector<ListItemEntity> rows = listItemRepository.get(tempListName);
+        REQUIRE(rows.size() == 2);
+        REQUIRE(*rows[0].getId() == "SRV1");
+        REQUIRE(*rows[0].getValue() == "test 1");
+        REQUIRE(*rows[1].getId() == "bbbb");
+        REQUIRE_THROWS_AS(listItemService.find("aaaa", tempListName), ListItemNotFoundException);
+    }
+
+    SECTION("reassign: refuses a taken id, a bad format, the same id, an unknown or archived item")
+    {
+        REQUIRE_THROWS_AS(listItemService.reassign("aaaa", "bbbb", tempListName), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.reassign("aaaa", "ab", tempListName), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.reassign("aaaa", "ab-c", tempListName), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.reassign("aaaa", "abcde", tempListName), std::invalid_argument);
+        REQUIRE_THROWS_AS(listItemService.reassign("aaaa", "aaaa", tempListName), std::invalid_argument);
+        REQUIRE_THROWS(listItemService.reassign("zzzz", "SRV1", tempListName));
+
+        std::string archivedId = listItemService.archive("bbbb", tempListName);
+        REQUIRE_THROWS_AS(listItemService.reassign(archivedId, "SRV1", tempListNameArchive), std::invalid_argument);
+
+        // nothing changed
+        REQUIRE(*listItemService.find("aaaa", tempListName).getId() == "aaaa");
+    }
+
+    SECTION("reassign: the id is case-sensitive, like every id")
+    {
+        listItemService.reassign("aaaa", "AAAA", tempListName);
+        REQUIRE(*listItemService.find("AAAA", tempListName).getValue() == "test 1");
+    }
+
+    SECTION("reassign: the description follows")
+    {
+        writeDescription("aaaa", tempListName, "notes");
+        listItemService.reassign("aaaa", "SRV1", tempListName);
+        REQUIRE(descriptionRepository.exists("SRV1", tempListName));
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", tempListName));
+    }
+
+    SECTION("reassign a parent: its children, also archived / deleted ones, follow the new id")
+    {
+        std::string child = listItemService.add(tempListName, "child", nullptr, nullptr, 0, "aaaa");
+        listItemService.attach("bbbb", "aaaa", tempListName);
+        std::string archivedChild = listItemService.archive("bbbb", tempListName);
+
+        listItemService.reassign("aaaa", "SRV1", tempListName);
+        REQUIRE(*listItemService.find(child, tempListName).getParentId() == "SRV1");
+        REQUIRE(*listItemService.find(archivedChild, tempListNameArchive).getParentId() == "SRV1");
+
+        listItemService.restore(archivedChild, tempListName);
+        REQUIRE(*listItemService.find("bbbb", tempListName).getParentId() == "SRV1");
+    }
+
+    SECTION("reassign a child: it stays attached")
+    {
+        listItemService.attach("bbbb", "aaaa", tempListName);
+        listItemService.reassign("bbbb", "kid1", tempListName);
+        REQUIRE(*listItemService.find("kid1", tempListName).getParentId() == "aaaa");
+    }
 }

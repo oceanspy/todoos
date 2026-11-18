@@ -50,6 +50,12 @@ ListItemId::isValid(const std::string& id)
     return true;
 }
 
+bool
+ListItemId::isValidActive(const std::string& id)
+{
+    return id.length() == idLength && isValid(id);
+}
+
 std::string
 ListItemId::baseOf(const std::string& id)
 {

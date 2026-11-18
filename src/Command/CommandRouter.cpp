@@ -20,6 +20,7 @@
 #include "../UseCase/MoveListUseCase.h"
 #include "../UseCase/PrependItemUseCase.h"
 #include "../UseCase/PriorityUseCase.h"
+#include "../UseCase/ReassignItemUseCase.h"
 #include "../UseCase/RemoveListUseCase.h"
 #include "../UseCase/RemoveUseCase.h"
 #include "../UseCase/ResetUseCase.h"
@@ -180,6 +181,9 @@ CommandRouter::execute(Command& command, ListName& currentList)
             return;
         case CommandRegistry::DETACH:
             DetachItemUseCase(ioService, listItemService, listService, themeService).execute(command, currentList);
+            return;
+        case CommandRegistry::REASSIGN:
+            ReassignItemUseCase(ioService, listItemService, listService, themeService).execute(command, currentList);
             return;
         case CommandRegistry::EMPTY:
             EmptyUseCase(ioService, listItemService, listService, configService, themeService)

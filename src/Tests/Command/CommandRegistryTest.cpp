@@ -43,6 +43,10 @@ TEST_CASE("CommandRegistry Tests", "[CommandRegistry]")
     {
         Command detach("detach", { "aaaa" }, { { "force", "" } }, "detach aaaa --force");
         REQUIRE(CommandRegistry::isCommandValidWithOptions(detach) == true);
+        Command reassign("reassign", { "aaaa" }, { { "to", "SRV1" } }, "reassign aaaa --to SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(reassign) == true);
+        CommandRegistry registry;
+        REQUIRE(registry.isValid("reassign"));
         Command attach("attach", { "aaaa" }, { { "force", "" } }, "attach aaaa --force");
         REQUIRE(CommandRegistry::isCommandValidWithOptions(attach) == true);
 

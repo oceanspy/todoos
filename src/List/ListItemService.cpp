@@ -673,6 +673,37 @@ ListItemService::duplicate(const std::string& id, ListName& listName)
     return newId;
 }
 
+void
+ListItemService::reassign(const std::string& id, const std::string& newId, ListName& listName)
+{
+    if (listName.getVariant() != "default") {
+        throw std::invalid_argument("Only active items can be reassigned. Restore them first.");
+    }
+    if (!ListItemId::isValidActive(newId)) {
+        throw std::invalid_argument("The new id must be 4 letters or digits.");
+    }
+
+    ListItemEntity listItem = listItemRepository.find(id, listName);
+    if (newId == id) {
+        throw std::invalid_argument("Item " + id + " already has this id.");
+    }
+    if (!isIdAvailable(newId, listName)) {
+        throw std::invalid_argument("Id " + newId + " is already used in list " + listName.getName() + ".");
+    }
+
+    // Updated in place: the item keeps its position in the file
+    listItem.setId(newId);
+    listItem.setUpdatedAt(time(nullptr));
+    listItemRepository.update(id, listName, listItem);
+
+    for (ListItemEntity& child : getChildren(id, listName)) {
+        child.setParentId(newId);
+        listItemRepository.update(*child.getId(), listName, child);
+    }
+    relinkVariantChildren(id, newId, listName);
+    descriptionRepository.rename(id, newId, listName);
+}
+
 std::string
 ListItemService::restore(const std::string& id, ListName& listName)
 {

@@ -1,5 +1,7 @@
 # ToDoOs
 ## Unreleased
+- `reassign {id} --to {newId}`: give an active item an id you choose (4 letters or digits, upper or
+  lower case, free in the list). Its children, archived/deleted children and description follow.
 - Parent / child items: `add {value} --to {id}`, `attach {ids} --to {id}` (`-f` to switch an item to
   another parent), `detach {ids}` (`-f` for a parent). Children are shown under their parent and follow it on `remove -f`, `archive`, `restore`, `move`
   and `copy`. Removing a parent needs `-f` (or `-F`). `clean -a/--attached` also archives finished children.

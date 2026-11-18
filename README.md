@@ -153,6 +153,7 @@ todoos [flags] [options] <command> [args]
 | `-i/--deadline {date}` | Filter or set deadline             |
 | `-t/--to {list}`       | Target list for `move` and `copy`  |
 | `-t/--to {id}`         | Parent item for `add` and `attach` |
+| `-t/--to {newId}`      | New id for `reassign`              |
 
 ## Lists
 
@@ -186,6 +187,7 @@ todoos [flags] [options] <command> [args]
 | `duplicate {ids}`             | Duplicate items                                               |
 | `archive {ids}`               | Send to archive                                               |
 | `restore {ids}`               | Restore archived or deleted items                             |
+| `reassign {id} --to {newId}`  | Choose an item's id (4 letters/digits, free in the list)      |
 
 ## Parent / child
 
