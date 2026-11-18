@@ -308,12 +308,12 @@ TEST_CASE("ListAction action", "[ListAction]")
         REQUIRE(std::filesystem::exists(configService.getListFilePath("tempList2Name")));
     }
 
-    // ---- RenameListAction — move-to subcommand -------------------------------------------
+    // ---- RenameListAction — move subcommand -------------------------------------------
 
-    SECTION("rename — move-to renames a list")
+    SECTION("rename — move renames a list")
     {
         Command command(
-            "list", { "move-to", "tempListName", "renamedList" }, {}, "list move-to tempListName renamedList");
+            "list", { "move", "tempListName", "renamedList" }, {}, "list move tempListName renamedList");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -325,7 +325,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
 
-        Command subCommand("move-to", { "tempListName", "renamedList" }, {}, "move-to tempListName renamedList");
+        Command subCommand("move", { "tempListName", "renamedList" }, {}, "move tempListName renamedList");
         RenameListAction action(ioService, listService, fileStorageService, configService, descriptionService);
         REQUIRE_NOTHROW(action.execute(subCommand));
 
@@ -342,9 +342,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         installation.make();
     }
 
-    SECTION("rename — move-to with too few arguments does not throw")
+    SECTION("rename — move with too few arguments does not throw")
     {
-        Command command("list", { "move-to", "tempListName" }, {}, "list move-to tempListName");
+        Command command("list", { "move", "tempListName" }, {}, "list move tempListName");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -356,15 +356,15 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListService listService(ioService, configService, listRepository, bus);
         FileStorageService fileStorageService(ioService, configService);
 
-        Command subCommand("move-to", { "tempListName" }, {}, "move-to tempListName");
+        Command subCommand("move", { "tempListName" }, {}, "move tempListName");
         RenameListAction action(ioService, listService, fileStorageService, configService, descriptionService);
         REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
-    SECTION("rename — move-to moves the list descriptions to the renamed list")
+    SECTION("rename — move moves the list descriptions to the renamed list")
     {
         Command command(
-            "list", { "move-to", "tempListName", "renamedList" }, {}, "list move-to tempListName renamedList");
+            "list", { "move", "tempListName", "renamedList" }, {}, "list move tempListName renamedList");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
@@ -381,7 +381,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::filesystem::create_directories(descriptionPath.parent_path());
         std::ofstream(descriptionPath) << "Description of bbbb.\n";
 
-        Command subCommand("move-to", { "tempListName", "renamedList" }, {}, "move-to tempListName renamedList");
+        Command subCommand("move", { "tempListName", "renamedList" }, {}, "move tempListName renamedList");
         RenameListAction action(ioService, listService, fileStorageService, configService, descriptionService);
         REQUIRE_NOTHROW(action.execute(subCommand));
 

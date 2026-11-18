@@ -16,15 +16,22 @@ MoveItemAction::execute(Command& command, ListName& listName)
 {
     const std::vector<std::string> arguments = command.getArguments();
 
-    if (arguments.size() < 2) {
+    if (arguments.empty()) {
         ioService.br();
-        ioService.error("Please provide the list name where to move the element and its ID.");
+        ioService.error("Please provide the ID(s) of the element(s) to move.");
         ioService.br();
         return "";
     }
 
-    std::string newListStr = arguments.at(0);
-    std::vector<std::string> ids(arguments.begin() + 1, arguments.end());
+    std::string newListStr = command.getOption("to");
+    if (newListStr.empty()) {
+        ioService.br();
+        ioService.error("Please provide the target list with --to {list}.");
+        ioService.br();
+        return "";
+    }
+
+    std::vector<std::string> ids = arguments;
     ids.erase(unique(ids.begin(), ids.end()), ids.end());
 
     ListName newListName = listService.createListName(newListStr);

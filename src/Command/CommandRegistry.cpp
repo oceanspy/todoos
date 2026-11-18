@@ -1,4 +1,5 @@
 #include "CommandRegistry.h"
+#include "CommandShortcut.h"
 #include <algorithm>
 #include <stdexcept>
 
@@ -96,10 +97,10 @@ CommandRegistry::make()
                 commands[commandId].name = "restore";
                 break;
             case MOVE:
-                commands[commandId].name = "move-to";
+                commands[commandId].name = "move";
                 break;
             case COPY:
-                commands[commandId].name = "copy-to";
+                commands[commandId].name = "copy";
                 break;
             case EMPTY:
                 commands[commandId].name = "empty";
@@ -219,10 +220,16 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
                 return true;
             }
         } else if (option.first == "force") {
-            if (command.getName() == "remove" || command.getName() == "move-to" || command.getName() == "copy-to") {
+            const std::string name = CommandShortcut::getCommandName(command.getName());
+            if (name == "remove" || name == "move" || name == "copy") {
                 return true;
-            } else if (command.getName() == "list") {
+            } else if (name == "list") {
                 // TODO: implement accept only for "remove"
+                return true;
+            }
+        } else if (option.first == "to") {
+            const std::string name = CommandShortcut::getCommandName(command.getName());
+            if (name == "move" || name == "copy" || name == Command::COMMAND_AUTOCOMPLETE) {
                 return true;
             }
         } else if (option.first == "no-quit") {

@@ -1537,9 +1537,68 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         REQUIRE(printedString == expectedString);
     }
 
-    SECTION("Autocomplete commands: commands move-to")
+    SECTION("Autocomplete commands: commands move")
     {
-        Command command = Command("commands", { "move-to" }, {}, "commands move-to");
+        Command command = Command("commands", { "move" }, {}, "commands move");
+
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+
+        // Create an instance of CommandAutocompleteService
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
+
+        // Test getCompletion function
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
+
+        // Capture the printed output of getCompletion()
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
+        std::string expectedString = "aaaa bbbb\n";
+        REQUIRE(printedString == expectedString);
+    }
+
+    SECTION("Autocomplete commands: commands move aaaa")
+    {
+        Command command = Command("commands", { "move", "aaaa" }, {}, "commands move aaaa");
+
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+
+        // Create an instance of CommandAutocompleteService
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
+
+        // Test getCompletion function
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
+
+        // Capture the printed output of getCompletion()
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
+        std::string expectedString = "aaaa bbbb\n";
+        REQUIRE(printedString == expectedString);
+    }
+
+    SECTION("Autocomplete commands: commands move aaaa --to")
+    {
+        Command command =
+            Command("commands", { "move", "aaaa" }, { { "to", "" } }, "commands move aaaa --to");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
         ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
@@ -1566,68 +1625,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         REQUIRE(printedString == expectedString);
     }
 
-    SECTION("Autocomplete commands: commands move tempListName")
+    SECTION("Autocomplete commands: commands mv aaaa --to tempList2")
     {
-        Command command = Command("commands", { "move", "tempListName" }, {}, "commands move tempListName");
-
-        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
-        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        PriorityService priorityService = PriorityService();
-        StatusService statusService = StatusService();
-        ListItemRepository listItemRepository(
-            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
-        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
-        ListService listService(ioService, configService, listRepository, bus);
-
-        // Create an instance of CommandAutocompleteService
-        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
-
-        // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.execute(command));
-
-        // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
-        std::string expectedString = "aaaa bbbb\n";
-        REQUIRE(printedString == expectedString);
-    }
-
-    SECTION("Autocomplete commands: commands move tempList2Name aaaa")
-    {
-        Command command =
-            Command("commands", { "move", "tempList2Name", "aaaa" }, {}, "commands move tempList2Name aaaa");
-
-        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
-        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
-        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
-        PriorityService priorityService = PriorityService();
-        StatusService statusService = StatusService();
-        ListItemRepository listItemRepository(
-            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
-        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
-        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
-        ListService listService(ioService, configService, listRepository, bus);
-
-        // Create an instance of CommandAutocompleteService
-        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
-
-        // Test getCompletion function
-        REQUIRE_NOTHROW(autocompleteService.execute(command));
-
-        // Capture the printed output of getCompletion()
-        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
-        std::string expectedString = "aaaa bbbb\n";
-        REQUIRE(printedString == expectedString);
-    }
-
-    SECTION("Autocomplete commands: commands move aaaa tempList2")
-    {
-        Command command = Command("commands", { "move", "aaaa", "tempList2" }, {}, "commands move aaaa tempList2");
+        Command command = Command("commands", { "mv", "aaaa" }, { { "to", "tempList2" } }, "commands mv aaaa --to tempList2");
 
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
         ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());

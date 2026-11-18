@@ -23,7 +23,14 @@ CommandAutoCompleteUseCase::execute(Command& command)
     if (!command.getOptions().empty()) {
         if (command.hasOption("list") && !listService.isListExist(command.getOption("list"))) {
             try {
-                autocompleteOptionList(command);
+                autocompleteOptionList(command, "list");
+            } catch (std::exception& e) {
+                return true;
+            }
+            return true;
+        } else if (command.hasOption("to") && !listService.isListExist(command.getOption("to"))) {
+            try {
+                autocompleteOptionList(command, "to");
             } catch (std::exception& e) {
                 return true;
             }
@@ -228,9 +235,17 @@ CommandAutoCompleteUseCase::execute(Command& command)
         }
 
         return true;
-    } else if (CommandService::isCommand(firstSubCommand, "move-to") ||
-               CommandService::isCommand(firstSubCommand, "copy-to") ||
-               CommandService::isCommand(firstSubCommand, "duplicate")) {
+    } else if (CommandService::isCommand(firstSubCommand, "move") ||
+               CommandService::isCommand(firstSubCommand, "copy")) {
+        try {
+            std::vector<ListName> listNames = { listName };
+            autocompleteIdIndefinitely(firstSubCommand, listNames);
+        } catch (std::exception& e) {
+            return true;
+        }
+
+        return true;
+    } else if (CommandService::isCommand(firstSubCommand, "duplicate")) {
         try {
             std::vector<ListName> listNames = { listName };
             autocompleteMoveList(firstSubCommand, listNames);
@@ -260,7 +275,7 @@ CommandAutoCompleteUseCase::getAllLists(std::string& listString)
 }
 
 void
-CommandAutoCompleteUseCase::autocompleteOptionList(Command& command)
+CommandAutoCompleteUseCase::autocompleteOptionList(Command& command, const std::string& optionName)
 {
     std::string listString;
     getAllLists(listString);
@@ -269,7 +284,7 @@ CommandAutoCompleteUseCase::autocompleteOptionList(Command& command)
     // get last word of the raw command
     std::string lastWord = temp.substr(temp.find_last_of(" ") + 1);
     if (!StringHelpers::containsWord(listString, lastWord) &&
-        (!StringHelpers::containsWord(listString, command.getOptions().at("list")))) {
+        (!StringHelpers::containsWord(listString, command.getOptions().at(optionName)))) {
         ioService.print(listString);
     }
 }

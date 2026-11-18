@@ -19,6 +19,7 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isValidOption("c") == true);
         REQUIRE(commandOption.isValidOption("i") == true);
         REQUIRE(commandOption.isValidOption("Q") == true);
+        REQUIRE(commandOption.isValidOption("t") == true);
     }
 
     SECTION("isValidOption with long options")
@@ -35,6 +36,7 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isValidOption("config") == true);
         REQUIRE(commandOption.isValidOption("deadline") == true);
         REQUIRE(commandOption.isValidOption("no-quit") == true);
+        REQUIRE(commandOption.isValidOption("to") == true);
     }
 
     SECTION("isValidOption with invalid options")
@@ -55,6 +57,9 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isOptionWithValue("status") == true);
         REQUIRE(commandOption.isOptionWithValue("i") == true);
         REQUIRE(commandOption.isOptionWithValue("deadline") == true);
+        REQUIRE(commandOption.isOptionWithValue("t") == true);
+        REQUIRE(commandOption.isOptionWithValue("to") == true);
+        REQUIRE(commandOption.getLongOptionName("t") == "to");
 
         REQUIRE(commandOption.isOptionWithValue("A") == false);
         REQUIRE(commandOption.isOptionWithValue("archived") == false);

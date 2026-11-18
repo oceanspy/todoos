@@ -18,7 +18,7 @@ class CommandAutoCompleteUseCase
     bool execute(Command& command);
 
   protected:
-    void autocompleteOptionList(Command& command);
+    void autocompleteOptionList(Command& command, const std::string& optionName);
     void autocompleteBase();
     void autocompletePriority(const Command& firstSubCommand, std::vector<ListName>& listNames);
     void autocompleteStatus(const Command& firstSubCommand, std::vector<ListName>& listNames);

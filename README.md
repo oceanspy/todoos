@@ -103,8 +103,8 @@ todoos cancel ab12     # → Cancelled
 todoos list                        # Show all lists
 todoos list add "work"             # Create a list
 todoos use "work"                  # Switch to it
-todoos move-to "work" ab12 cd34   # Move items across lists
-todoos copy-to "work" ab12        # Copy items across lists
+todoos move ab12 cd34 --to "work" # Move items across lists
+todoos copy ab12 -t "work"         # Copy items across lists
 ```
 
 ## Archive & clean
@@ -133,7 +133,7 @@ todoos [flags] [options] <command> [args]
 | `-A/--archived` | Target archive | `show`, `find` |
 | `-D/--deleted` | Target deleted items | `show`, `find` |
 | `-d/--described` | Filter/include items with descriptions | `add`, `show`, `find`, `clean` |
-| `-f/--force` | Skip confirmation | `remove`, `move-to`, `copy-to` |
+| `-f/--force` | Skip confirmation | `remove`, `move`, `copy` |
 | `-Q/--no-quit` | Keep app alive after command | |
 
 ## Options
@@ -144,6 +144,7 @@ todoos [flags] [options] <command> [args]
 | `-p/--priority {name}` | Filter or set priority |
 | `-s/--status {name}` | Filter or set status |
 | `-i/--deadline {date}` | Filter or set deadline |
+| `-t/--to {list}` | Target list for `move` and `copy` |
 
 ## Lists
 
@@ -182,8 +183,8 @@ todoos [flags] [options] <command> [args]
 
 | Command | Description |
 |---------|-------------|
-| `move-to (mv) {list} {ids}` | Move items to another list |
-| `copy-to (cp) {list} {ids}` | Copy items to another list |
+| `move (mv) {ids} --to {list}` | Move items to another list (`-f`) |
+| `copy (cp) {ids} --to {list}` | Copy items to another list (`-f`) |
 
 ## Priority
 
