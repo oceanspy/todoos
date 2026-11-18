@@ -291,7 +291,7 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         REQUIRE_THROWS_AS(router.execute(command, listName), std::invalid_argument);
     }
 
-    // ---- parent / child, routed as typed ------------------------------------------------
+    // ---- parent / child and reassign, routed as typed --------------------------------
 
     // Runs a command through the router, with fresh services (like a new todoos call)
     auto route = [&](Command command) {
@@ -394,6 +394,23 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         REQUIRE(target.size() == 4);
         REQUIRE(target["aaaa"].empty());
         REQUIRE(target["bbbb"] == "aaaa");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("reassign --to, routed as typed: the children follow the new id")
+    {
+        route(Command("attach", { "bbbb" }, { { "to", "aaaa" } }, "attach bbbb --to aaaa"));
+        route(Command("reassign", { "aaaa" }, { { "to", "SRV1" } }, "reassign aaaa --to SRV1"));
+        auto parents = parentsIn(usedList);
+        REQUIRE(parents.count("aaaa") == 0);
+        REQUIRE(parents.count("SRV1") == 1);
+        REQUIRE(parents["bbbb"] == "SRV1");
+
+        // refused: id taken
+        route(Command("reassign", { "SRV1" }, { { "to", "bbbb" } }, "reassign SRV1 --to bbbb"));
+        REQUIRE(parentsIn(usedList).count("SRV1") == 1);
 
         installation.wipe();
         installation.make();

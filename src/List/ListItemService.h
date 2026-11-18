@@ -58,6 +58,9 @@ class ListItemService
                                                           ListName& oldListName,
                                                           ListName& newListName);
     std::string duplicate(const std::string& id, ListName& listName);
+    // Gives an active item a chosen id (4 alphanumeric chars, free in the list). Its children, its
+    // archived / deleted children and its description follow.
+    void reassign(const std::string& id, const std::string& newId, ListName& listName);
     std::string archive(const std::string& id, ListName& listName);
     // Moves an item to the archive or delete variant of the same list (same name required). An active
     // (4-char) id gets a random [a-z] suffix, unique across archive + delete; archive <-> delete keeps

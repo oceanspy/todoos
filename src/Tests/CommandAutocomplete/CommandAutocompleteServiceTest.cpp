@@ -1687,7 +1687,7 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         REQUIRE(printedString == expectedString);
     }
 
-    // ---- parent / child ------------------------------------------------------------------
+    // ---- parent / child and reassign ------------------------------------------------------
 
     auto completionOf = [&](Command command) {
         ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
@@ -1706,9 +1706,9 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         return captureGetCompletionOutput(autocompleteService, command);
     };
 
-    SECTION("Autocomplete commands: attach / detach suggest the item ids")
+    SECTION("Autocomplete commands: attach / detach / reassign suggest the item ids")
     {
-        for (const std::string name : { "attach", "detach" }) {
+        for (const std::string name : { "attach", "detach", "reassign" }) {
             REQUIRE(completionOf(Command("commands", { name }, {}, "commands " + name)) == "aaaa bbbb\n");
         }
     }
@@ -1725,8 +1725,10 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
                     .empty());
     }
 
-    SECTION("Autocomplete commands: move --to still suggests the lists")
+    SECTION("Autocomplete commands: reassign --to suggests nothing; move --to still suggests the lists")
     {
+        REQUIRE(completionOf(Command("commands", { "reassign", "aaaa" }, { { "to", "" } }, "commands reassign aaaa --to"))
+                    .empty());
         REQUIRE(completionOf(Command("commands", { "move", "aaaa" }, { { "to", "" } }, "commands move aaaa --to"))
                     .find("tempList2Name") != std::string::npos);
     }

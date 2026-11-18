@@ -109,6 +109,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/ListItemAction/PrependItemAction.cpp
         ../Actions/ListItemAction/RemoveItemAction.cpp
         ../Actions/ListItemAction/ArchiveItemAction.cpp
+        ../Actions/ListItemAction/ReassignItemAction.cpp
         ../Actions/ParentAction/AttachItemAction.cpp
         ../Actions/ParentAction/DetachItemAction.cpp
         ../Actions/ListItemAction/RestoreItemAction.cpp
@@ -141,6 +142,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/StatusUseCase.cpp
         ../UseCase/RemoveUseCase.cpp
         ../UseCase/ArchiveUseCase.cpp
+        ../UseCase/ReassignItemUseCase.cpp
         ../UseCase/AttachItemUseCase.cpp
         ../UseCase/DetachItemUseCase.cpp
         ../UseCase/RestoreUseCase.cpp

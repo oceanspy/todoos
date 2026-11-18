@@ -4,6 +4,7 @@
 #include "../../Actions/ListItemAction/RemoveItemAction.h"
 #include "../../Actions/ListItemAction/RestoreItemAction.h"
 #include "../../Actions/StatusAction/StatusAction.h"
+#include "../../Actions/ListItemAction/ReassignItemAction.h"
 #include "../../Actions/ParentAction/AttachItemAction.h"
 #include "../../Actions/ParentAction/DetachItemAction.h"
 #include "../../Command/CommandService.h"
@@ -188,6 +189,24 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         std::vector<ListItemEntity> deleted = listItemService.get(deleteListName);
         REQUIRE(deleted.size() == 2);
         REQUIRE(std::any_of(deleted.begin(), deleted.end(), [](const ListItemEntity& i) { return i.hasParent(); }));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("reassign --to {newId}; a missing --to or several ids change nothing")
+    {
+        ReassignItemAction reassign(ioService, listItemService);
+
+        Command missingTo("reassign", { "aaaa" }, {}, "reassign aaaa");
+        REQUIRE_NOTHROW(reassign.execute(missingTo, listName));
+        Command severalIds("reassign", { "aaaa", "bbbb" }, { { "to", "SRV1" } }, "reassign aaaa bbbb --to SRV1");
+        REQUIRE_NOTHROW(reassign.execute(severalIds, listName));
+        REQUIRE(*listItemService.find("aaaa", listName).getId() == "aaaa");
+
+        Command reassignCommand("reassign", { "aaaa" }, { { "to", "SRV1" } }, "reassign aaaa --to SRV1");
+        REQUIRE_NOTHROW(reassign.execute(reassignCommand, listName));
+        REQUIRE(*listItemService.find("SRV1", listName).getValue() == "test 1");
 
         installation.wipe();
         installation.make();

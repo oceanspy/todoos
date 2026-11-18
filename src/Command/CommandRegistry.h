@@ -47,6 +47,7 @@ class CommandRegistry
         DUPLICATE = 54,
         ATTACH = 55,
         DETACH = 56,
+        REASSIGN = 57,
         DEADLINE = 60,
         LIST = 70,
         USE = 71,

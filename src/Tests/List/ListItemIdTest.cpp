@@ -81,4 +81,16 @@ TEST_CASE("ListItemId", "[ListItemId]")
         REQUIRE_THROWS_AS(ListItemId::withSuffix("abcd", 'A'), std::invalid_argument);
         REQUIRE_THROWS_AS(ListItemId::withSuffix("abcd", '1'), std::invalid_argument);
     }
+
+    SECTION("isValidActive: exactly 4 letters or digits, any case")
+    {
+        REQUIRE(ListItemId::isValidActive("abcd"));
+        REQUIRE(ListItemId::isValidActive("SRV1"));
+        REQUIRE(ListItemId::isValidActive("a1B2"));
+        REQUIRE_FALSE(ListItemId::isValidActive("abc"));
+        REQUIRE_FALSE(ListItemId::isValidActive("abcde"));
+        REQUIRE_FALSE(ListItemId::isValidActive("ab-c"));
+        REQUIRE_FALSE(ListItemId::isValidActive("ab c"));
+        REQUIRE_FALSE(ListItemId::isValidActive(""));
+    }
 }
