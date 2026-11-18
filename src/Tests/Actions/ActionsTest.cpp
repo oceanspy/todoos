@@ -4,6 +4,9 @@
 #include "../../Actions/ListItemAction/RemoveItemAction.h"
 #include "../../Actions/ListItemAction/RestoreItemAction.h"
 #include "../../Actions/StatusAction/StatusAction.h"
+#include "../../Actions/ParentAction/AttachItemAction.h"
+#include "../../Actions/ParentAction/DetachItemAction.h"
+#include "../../Command/CommandService.h"
 #include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
@@ -138,6 +141,97 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
         REQUIRE(items.size() == 2);
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove a parent: refused without -f; with -f its children are soft deleted with it")
+    {
+        listItemService.attach("bbbb", "aaaa", listName);
+        RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+
+        REQUIRE_NOTHROW(remove.execute(command, listName));
+        REQUIRE(listItemService.get(listName).size() == 2);
+
+        Command forceCommand("remove", { "aaaa" }, { { "force", "" } }, "remove -f aaaa");
+        REQUIRE_NOTHROW(remove.execute(forceCommand, listName));
+        REQUIRE(listItemService.get(listName).empty());
+        ListName deleteListName = ListName::createVariant(listName, "delete");
+        REQUIRE(listItemService.get(deleteListName).size() == 2);
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove -F on a parent deletes it and its children for good")
+    {
+        listItemService.attach("bbbb", "aaaa", listName);
+        RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+        Command forceCommand("remove", { "aaaa" }, { { "force-permanently", "" } }, "remove -F aaaa");
+        REQUIRE_NOTHROW(remove.execute(forceCommand, listName));
+        REQUIRE(listItemService.get(listName).empty());
+        ListName deleteListName = ListName::createVariant(listName, "delete");
+        REQUIRE(listItemService.get(deleteListName).empty());
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove a parent and its child listed together with -f: the child goes with its parent")
+    {
+        listItemService.attach("bbbb", "aaaa", listName);
+        RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+        Command forceCommand("remove", { "bbbb", "aaaa" }, { { "force", "" } }, "remove -f bbbb aaaa");
+        REQUIRE_NOTHROW(remove.execute(forceCommand, listName));
+        ListName deleteListName = ListName::createVariant(listName, "delete");
+        std::vector<ListItemEntity> deleted = listItemService.get(deleteListName);
+        REQUIRE(deleted.size() == 2);
+        REQUIRE(std::any_of(deleted.begin(), deleted.end(), [](const ListItemEntity& i) { return i.hasParent(); }));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("attach an already attached item: refused without --force, switched with it")
+    {
+        listItemService.attach("bbbb", "aaaa", listName);
+        std::string otherParent = listItemService.add(listName, "other parent");
+        AttachItemAction attach(ioService, listItemService);
+
+        Command attachCommand("attach", { "bbbb" }, { { "to", otherParent } }, "attach bbbb --to " + otherParent);
+        REQUIRE_NOTHROW(attach.execute(attachCommand, listName));
+        REQUIRE(*listItemService.find("bbbb", listName).getParentId() == "aaaa");
+
+        Command forcedCommand(
+            "attach", { "bbbb" }, { { "to", otherParent }, { "force", "" } }, "attach bbbb --to " + otherParent + " -f");
+        REQUIRE_NOTHROW(attach.execute(forcedCommand, listName));
+        REQUIRE(*listItemService.find("bbbb", listName).getParentId() == otherParent);
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("attach --to / detach; detaching a parent needs --force")
+    {
+        AttachItemAction attach(ioService, listItemService);
+        Command attachCommand("attach", { "bbbb" }, { { "to", "aaaa" } }, "attach bbbb --to aaaa");
+        REQUIRE_NOTHROW(attach.execute(attachCommand, listName));
+        REQUIRE(*listItemService.find("bbbb", listName).getParentId() == "aaaa");
+
+        DetachItemAction detach(ioService, listItemService);
+        Command detachParent("detach", { "aaaa" }, {}, "detach aaaa");
+        REQUIRE_NOTHROW(detach.execute(detachParent, listName));
+        REQUIRE(*listItemService.find("bbbb", listName).getParentId() == "aaaa");
+
+        Command detachParentForced("detach", { "aaaa" }, { { "force", "" } }, "detach aaaa --force");
+        REQUIRE_NOTHROW(detach.execute(detachParentForced, listName));
+        REQUIRE(*listItemService.find("bbbb", listName).getParentId() == "");
+
+        REQUIRE_NOTHROW(attach.execute(attachCommand, listName));
+        Command detachChild("detach", { "bbbb" }, {}, "detach bbbb");
+        REQUIRE_NOTHROW(detach.execute(detachChild, listName));
+        REQUIRE(*listItemService.find("bbbb", listName).getParentId() == "");
 
         installation.wipe();
         installation.make();
@@ -388,6 +482,31 @@ TEST_CASE("AddItemAction controller", "[CommandRouter][AddItemAction]")
             }
         }
         REQUIRE(found);
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("add --to {id} adds a child; an unknown parent adds nothing")
+    {
+        Command addCommand = Command("add", { "child" }, { { "to", "aaaa" } }, "add child --to aaaa");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, addCommand);
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        ListName listName = listService.createUsedListName();
+
+        AddItemAction actions(ioService, commandService, listItemService);
+        std::string id = actions.execute(addCommand, listName);
+        REQUIRE(*listItemService.find(id, listName).getParentId() == "aaaa");
+
+        Command orphanCommand = Command("add", { "orphan" }, { { "to", "zzzz" } }, "add orphan --to zzzz");
+        REQUIRE(actions.execute(orphanCommand, listName).empty());
+        REQUIRE(listItemService.get(listName).size() == 3);
 
         installation.wipe();
         installation.make();

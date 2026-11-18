@@ -429,6 +429,39 @@ TEST_CASE("ListAction action", "[ListAction]")
         installation.make();
     }
 
+    SECTION("copy — keeps the parent / child links and the children's descriptions")
+    {
+        Command command("list", { "copy", "tempListName", "copiedList" }, {}, "list copy tempListName copiedList");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
+
+        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+        ListName sourceList = listService.createListName("tempListName");
+
+        listItemService.attach("bbbb", "aaaa", sourceList);
+        std::filesystem::path descriptionPath = descriptionRepository.getFilePath("bbbb", sourceList);
+        std::filesystem::create_directories(descriptionPath.parent_path());
+        std::ofstream(descriptionPath) << "Description of bbbb.\n";
+
+        Command subCommand("copy", { "tempListName", "copiedList" }, {}, "copy tempListName copiedList");
+        CopyListAction action(ioService, listService, listItemService, fileStorageService, descriptionService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        ListName copiedList = listService.createListName("copiedList");
+        REQUIRE(listItemService.get(copiedList).size() == 2);
+        REQUIRE(*listItemService.find("bbbb", copiedList).getParentId() == "aaaa");
+        REQUIRE(descriptionRepository.exists("bbbb", copiedList));
+
+        installation.wipe();
+        installation.make();
+    }
+
     // ---- ListUseCase — current subcommand ---------------------------------------------
 
     SECTION("list current — does not throw")

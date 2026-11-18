@@ -31,9 +31,10 @@ CleanUseCase::execute(Command& command, ListName& currentList)
         ioService.br();
         ioService.message("Action cancelled.");
         ioService.br();
+        return;
     }
 
-    listItemService.archiveFinishedItems(currentList, command.hasOption("described"));
+    listItemService.archiveFinishedItems(currentList, command.hasOption("described"), command.hasOption("attached"));
     ioService.br();
     ioService.success("List cleaned.");
     ioService.br();
