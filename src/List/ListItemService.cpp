@@ -110,24 +110,18 @@ ListItemService::makeId(ListName& listName)
         i++;
     }
 
+    if (!validId) {
+        throw std::runtime_error("Could not generate a free ID for list " + listName.getName() + ".");
+    }
+
     return id;
 }
 
 bool
 ListItemService::isIdAvailable(const std::string& id, ListName& listName)
 {
-    ListName listNameArchive = ListName::createVariant(listName, "archive");
-    ListName listNameDelete = ListName::createVariant(listName, "delete");
-
+    // Archived / deleted items carry a 5-char id, so only the active list can hold a 4-char id
     for (const ListItemEntity& item : listItemRepository.get(listName)) {
-        if (*item.getId() == id)
-            return false;
-    }
-    for (const ListItemEntity& item : listItemRepository.get(listNameArchive)) {
-        if (*item.getId() == id)
-            return false;
-    }
-    for (const ListItemEntity& item : listItemRepository.get(listNameDelete)) {
         if (*item.getId() == id)
             return false;
     }
@@ -192,7 +186,7 @@ ListItemService::editStatus(const std::string& id, ListName& listName, const int
 
     listItemRepository.update(id, listName, listItemToUpdate);
 
-    if (configService.isTrue("archiveWhenCompleted")) {
+    if (configService.isTrue("archiveWhenCompleted") && listName.getVariant() == "default") {
         if (statusService.isClosed(statusService.getNameFromId(*status))) {
             archive(id, listName);
         }
@@ -319,17 +313,84 @@ void
 ListItemService::archiveItem(ListItemEntity& listItem, ListName& listName)
 {
     ListName listNameArchive = ListName::createVariant(listName, "archive");
-    listItemRepository.create(listItem, listNameArchive);
-    listItemRepository.remove(*listItem.getId(), listName);
+    moveToVariant(*listItem.getId(), listName, listNameArchive);
 }
 
-void
+std::string
 ListItemService::softDelete(const std::string& id, ListName& listName)
 {
     ListName listNameDelete = ListName::createVariant(listName, "delete");
+    return moveToVariant(id, listName, listNameDelete);
+}
+
+std::string
+ListItemService::moveToVariant(const std::string& id, ListName& listName, ListName& targetListName)
+{
+    if (listName.getName() != targetListName.getName()) {
+        throw std::invalid_argument("Items can only be moved to the archive or delete list of their own list.");
+    }
+    if (targetListName.getVariant() == "default") {
+        throw std::invalid_argument("Use restore to bring an item back to the active list.");
+    }
+    if (listName.getVariant() == targetListName.getVariant()) {
+        throw std::invalid_argument("Item " + id + " is already in the " + targetListName.getVariant() + " list.");
+    }
+
     ListItemEntity listItem = listItemRepository.find(id, listName);
-    listItemRepository.create(listItem, listNameDelete);
+
+    // Coming from archive <-> delete: the 5-char id is already unique across both lists, keep it
+    std::string newId = listName.getVariant() == "default" ? makeVariantId(id, listName) : id;
+
+    listItem.setId(newId);
+    listItemRepository.create(listItem, targetListName);
     listItemRepository.remove(id, listName);
+    descriptionRepository.rename(id, newId, listName);
+
+    return newId;
+}
+
+// TEMPORARY (remove once every install is migrated): data written before 5-char archive/delete ids
+bool
+ListItemService::hasLegacyVariantIds(ListName& listName)
+{
+    for (const std::string variant : { "archive", "delete" }) {
+        ListName variantListName = ListName::createVariant(listName, variant);
+        for (const ListItemEntity& item : listItemRepository.get(variantListName)) {
+            if ((*item.getId()).length() == static_cast<size_t>(ListItemId::getIdLength())) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+std::string
+ListItemService::makeVariantId(const std::string& baseId, ListName& listName)
+{
+    // Archive and delete lists share the description directory and are both searched by restore:
+    // the suffixed id must be unique across both of them.
+    ListName listNameArchive = ListName::createVariant(listName, "archive");
+    ListName listNameDelete = ListName::createVariant(listName, "delete");
+    std::vector<std::string> takenIds;
+    for (const ListItemEntity& item : listItemRepository.get(listNameArchive)) {
+        takenIds.push_back(*item.getId());
+    }
+    for (const ListItemEntity& item : listItemRepository.get(listNameDelete)) {
+        takenIds.push_back(*item.getId());
+    }
+
+    // Random starting letter, then walk the alphabet: random suffix, guaranteed to end
+    const std::string letters = "abcdefghijklmnopqrstuvwxyz";
+    const size_t start = letters.find(StringHelpers::randomLettersLowercase(1)[0]);
+    for (size_t i = 0; i < letters.size(); i++) {
+        std::string candidate = ListItemId::withSuffix(baseId, letters[(start + i) % letters.size()]);
+        if (std::find(takenIds.begin(), takenIds.end(), candidate) == takenIds.end()) {
+            return candidate;
+        }
+    }
+
+    throw std::runtime_error("No free archive/delete ID left for base " + baseId + ".");
 }
 
 void
@@ -405,6 +466,9 @@ ListItemService::search(ListName& listName, const std::vector<std::string>& sear
 void
 ListItemService::move(const std::string& id, ListName& oldListName, ListName& newListName)
 {
+    if (oldListName.getVariant() != "default") {
+        throw std::invalid_argument("Archived or deleted items cannot be moved. Restore them first.");
+    }
     if (oldListName.getName() == newListName.getName()) {
         throw std::invalid_argument("Cannot move item to the same list.");
     }
@@ -425,6 +489,9 @@ ListItemService::move(const std::string& id, ListName& oldListName, ListName& ne
 void
 ListItemService::copy(const std::string& id, ListName& oldListName, ListName& newListName)
 {
+    if (oldListName.getVariant() != "default") {
+        throw std::invalid_argument("Archived or deleted items cannot be copied. Restore them first.");
+    }
     if (oldListName.getName() == newListName.getName()) {
         throw std::invalid_argument("Cannot copy item to the same list.");
     }
@@ -446,6 +513,10 @@ ListItemService::copy(const std::string& id, ListName& oldListName, ListName& ne
 std::string
 ListItemService::duplicate(const std::string& id, ListName& listName)
 {
+    if (listName.getVariant() != "default") {
+        throw std::invalid_argument("Archived or deleted items cannot be duplicated. Restore them first.");
+    }
+
     ListItemEntity listItemToDuplicate = listItemRepository.find(id, listName);
     std::string newId = makeId(listName);
     listItemToDuplicate.setId(newId);
@@ -454,46 +525,49 @@ ListItemService::duplicate(const std::string& id, ListName& listName)
     return newId;
 }
 
-void
+std::string
 ListItemService::restore(const std::string& id, ListName& listName)
 {
     ListName listNameArchive = ListName::createVariant(listName, "archive");
     ListName listNameDelete = ListName::createVariant(listName, "delete");
+
     ListItemEntity listItem(listName);
-    try {
-        listItem = listItemRepository.find(id, listNameArchive);
-        if (*listItem.getId() == id) {
-            listItemRepository.create(listItem, listName);
-            listItemRepository.remove(id, listNameArchive);
-            return;
+    ListName sourceListName = listNameArchive;
+    bool found = false;
+    for (ListName& variantListName : std::vector<ListName>{ listNameArchive, listNameDelete }) {
+        try {
+            listItem = listItemRepository.find(id, variantListName);
+            sourceListName = variantListName;
+            found = true;
+            break;
+        } catch (ListItemNotFoundException& e) {
+            // not in this variant
         }
-    } catch (std::exception& e) {
-        //
     }
 
-    try {
-        listItem = listItemRepository.find(id, listNameDelete);
-        if (*listItem.getId() == id) {
-            listItemRepository.create(listItem, listName);
-            listItemRepository.remove(id, listNameDelete);
-            return;
-        }
-    } catch (std::exception& e) {
-        //
+    if (!found) {
+        throw std::invalid_argument("Item to restore couldn't be found.");
     }
 
-    throw std::invalid_argument("Item to restore couldn't be found.");
+    std::string oldId = *listItem.getId();
+
+    // Give back the original 4-char id when it is still free in the active list
+    std::string baseId = ListItemId::baseOf(oldId);
+    std::string newId = isIdAvailable(baseId, listName) ? baseId : makeId(listName);
+
+    listItem.setId(newId);
+    listItemRepository.create(listItem, listName);
+    listItemRepository.remove(oldId, sourceListName);
+    descriptionRepository.rename(oldId, newId, listName);
+
+    return newId;
 }
 
-void
+std::string
 ListItemService::archive(const std::string& id, ListName& listName)
 {
     ListName listNameArchive = ListName::createVariant(listName, "archive");
-    ListName listNameDelete = ListName::createVariant(listName, "delete");
-
-    ListItemEntity listItem = listItemRepository.find(id, listName);
-    listItemRepository.create(listItem, listNameArchive);
-    listItemRepository.remove(id, listName);
+    return moveToVariant(id, listName, listNameArchive);
 }
 
 void

@@ -1,5 +1,4 @@
 #include "DescriptionRepository.h"
-#include "../List/ListItemId.h"
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -57,9 +56,10 @@ DescriptionRepository::getIds(const ListName& listName)
     }
     for (const auto& entry :
          std::filesystem::directory_iterator(dirPath, std::filesystem::directory_options::skip_permission_denied)) {
-        std::string id = entry.path().filename().string();
-        id.resize(ListItemId::getIdLength()); // keep only the id
-        availableIdsWithDescription.push_back(id);
+        if (entry.path().extension() != ".md") {
+            continue;
+        }
+        availableIdsWithDescription.push_back(entry.path().stem().string());
     }
 
     return availableIdsWithDescription;
@@ -72,4 +72,19 @@ DescriptionRepository::remove(const std::string& itemId, const ListName& listNam
     if (std::filesystem::exists(filePath)) {
         std::filesystem::remove(filePath);
     }
+}
+
+void
+DescriptionRepository::rename(const std::string& oldItemId, const std::string& newItemId, const ListName& listName)
+{
+    if (oldItemId == newItemId) {
+        return;
+    }
+
+    std::filesystem::path oldFilePath = getFilePath(oldItemId, listName);
+    if (!std::filesystem::exists(oldFilePath)) {
+        return;
+    }
+
+    std::filesystem::rename(oldFilePath, getFilePath(newItemId, listName));
 }

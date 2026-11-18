@@ -22,10 +22,11 @@ ArchiveItemAction::execute(Command& command, ListName& listName)
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.archive(id, listName);
-            ioService.success("Item with id: " + id + " correctly archived.");
+            std::string archivedId = listItemService.archive(id, listName);
+            ioService.success("Item with id: " + id + " correctly archived as " + archivedId + ".");
         } catch (std::exception& e) {
             ioService.error("Item with id: " + id + " couldn't be archived.");
+            ioService.info(e.what());
         }
     }
     ioService.br();

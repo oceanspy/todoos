@@ -22,8 +22,8 @@ RestoreItemAction::execute(Command& command, ListName& listName)
     ioService.br();
     for (const auto& id : ids) {
         try {
-            listItemService.restore(id, listName);
-            ioService.success("Item with id: " + id + " correctly restored.");
+            std::string restoredId = listItemService.restore(id, listName);
+            ioService.success("Item with id: " + id + " correctly restored as " + restoredId + ".");
         } catch (std::exception& e) {
             ioService.error("Item with id: " + id + " couldn't be restored.");
             ioService.info(e.what());

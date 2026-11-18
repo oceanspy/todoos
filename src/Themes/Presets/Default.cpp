@@ -104,9 +104,9 @@ std::string
 Default::printListTitleRow()
 {
     std::string line = "";
-    line += StringHelpers::adjustStringLength(" ID", ID_LENGTH);
+    line += StringHelpers::adjustStringLength(" ID", idColumnLength);
     line += StringHelpers::adjustStringLength("", PRIORITY_LENGTH);
-    line += StringHelpers::adjustStringLength("TITLE", consoleRowLength);
+    line += StringHelpers::adjustStringLength("TITLE", consoleRowLength - idColumnExtraLength());
     if (consoleRowMaxLength > 120) {
         line += StringHelpers::adjustStringLength("STATUS", STATUS_LENGTH);
         line += StringHelpers::adjustStringLength("DATE", DATE_LENGTH);

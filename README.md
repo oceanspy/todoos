@@ -112,8 +112,13 @@ todoos copy ab12 -t "work"         # Copy items across lists
 ```bash
 todoos clean          # Archive all completed/cancelled items
 todoos --archived     # View the archive
-todoos restore ab12   # Restore an archived/deleted item
+todoos restore ab12x  # Restore an archived/deleted item
 ```
+
+Archived and deleted items get a 5-char id (their 4-char id plus a random letter, e.g. `ab12` →
+`ab12x`), so the active list keeps the whole 4-char id space. `restore` gives the item back its
+original 4-char id when it is still free, a new one otherwise (the new id is printed).
+Archived and deleted items can't be moved, copied or duplicated: restore them first.
 
 ---
 

@@ -41,6 +41,8 @@ class Theme
     std::string buildDate(const ListItemEntity& listItemEntity);
     std::string buildPriorityCounts(const ListCountSummary& summary);
     std::string buildShortStatsCounts(const ListCountSummary& summary);
+    // Widens the ID column for archived / deleted (5-char) ids; the TITLE column shrinks accordingly
+    void fitIdColumn(const std::vector<ListItemEntity>& listItems);
 
     // Pure virtual — theme-specific
     virtual void printListTitle(ListName& listName) = 0;
@@ -65,6 +67,8 @@ class Theme
 
     int consoleWidth;
     int consoleRowLength;
+    int idColumnLength = ID_LENGTH;
+    int idColumnExtraLength() const { return idColumnLength - ID_LENGTH; }
     int statsWhenLength = 0;
     int statsCreatedCompletedLength = 0;
     int statsPercentageLength = 0;

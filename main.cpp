@@ -146,6 +146,18 @@ main(int argc, const char* argv[])
     ListName currentList = listService.createUsedListName();
 
     // ----
+    // TEMPORARY: archived / deleted items now use 5-char ids, refuse to run on unmigrated data
+    if (listItemService.hasLegacyVariantIds(currentList)) {
+        ioService.br();
+        ioService.error("Your archived/deleted items still use the old 4-char ids.");
+        ioService.info("Run once, from the todoos repository:  scripts/migrate-archive-ids.py");
+        ioService.message("(add --dry-run first to preview; with a synced setup, migrate on one machine and let it "
+                          "sync before upgrading the others)");
+        ioService.br();
+        return 1;
+    }
+
+    // ----
     // Initializing cli actions and frontend
     ThemeService themeService = ThemeService(ioService, configService, listService, listItemService);
     CommandRouter commandRouter = CommandRouter(ioService,

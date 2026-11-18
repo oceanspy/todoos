@@ -30,8 +30,8 @@ RemoveItemAction::execute(Command& command, ListName& listName)
                 continue;
             }
 
-            listItemService.softDelete(id, listName);
-            ioService.success("Item with id: " + id + " correctly removed.");
+            std::string deletedId = listItemService.softDelete(id, listName);
+            ioService.success("Item with id: " + id + " correctly removed (restorable as " + deletedId + ").");
         } catch (std::exception& e) {
             ioService.error("Item with id: " + id + " couldn't be deleted.");
         }
