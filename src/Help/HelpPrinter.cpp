@@ -98,6 +98,7 @@ HelpPrinter::helpListForCli()
         "   " + CYN + "-D/--deleted"  + RST + "      Show deleted items         " + DIM + "(show, find)" + RST,
         "   " + CYN + "-d/--described" + RST + "    Describe items             " + DIM + "(add, show, find, clean)" + RST,
         "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, move, copy)" + RST,
+        "   " + CYN + "-F/--force-permanently" + RST + " Delete for good       " + DIM + "(remove)" + RST,
         "   " + CYN + "-Q/--no-quit" + RST + "      Keep app alive after command",
         "",
         section("OPTIONS"),
@@ -126,7 +127,7 @@ HelpPrinter::helpListForCli()
         "   describe (d) " + YLW + "{id}"         + RST + "              Edit item description", // col 19 + 14 = 33
         "",
         section("ITEM ACTIONS"),
-        "   remove  (rm) " + CYN + "[-f] " + YLW + "{ids}" + RST + "       Remove items",              // col 26 +  7 = 33
+        "   remove  (rm) " + CYN + "[-fF] " + YLW + "{ids}" + RST + "      Remove items",              // col 27 +  6 = 33
         "   duplicate    " + YLW + "{ids}"                  + RST + "            Duplicate items",      // col 21 + 12 = 33
         "   archive      " + YLW + "{ids}"                  + RST + "            Send to archive",      // col 21 + 12 = 33
         "   restore      " + YLW + "{ids}"                  + RST + "            Restore archived/deleted items",

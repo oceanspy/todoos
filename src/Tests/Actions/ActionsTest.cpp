@@ -71,10 +71,28 @@ TEST_CASE("Remove controller", "[CommandRouter][Remove]")
         REQUIRE(items.size() == 2);
     }
 
-    SECTION("remove with force option permanently removes")
+    SECTION("remove with force option alone still soft deletes")
     {
         std::map<std::string, std::string> options = { { "force", "" } };
         Command forceCommand = Command("remove", { "aaaa" }, options, "remove -f aaaa");
+        RemoveItemAction remove(ioService, listItemService, descriptionRepository);
+        REQUIRE_NOTHROW(remove.execute(forceCommand, listName));
+
+        std::vector<ListItemEntity> items = listItemService.get(listName);
+        REQUIRE(items.size() == 1);
+
+        ListName deleteListName = ListName::createVariant(listName, "delete");
+        std::vector<ListItemEntity> deletedItems = listItemService.get(deleteListName);
+        REQUIRE(deletedItems.size() == 1);
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("remove with force-permanently option permanently removes")
+    {
+        std::map<std::string, std::string> options = { { "force-permanently", "" } };
+        Command forceCommand = Command("remove", { "aaaa" }, options, "remove -F aaaa");
         RemoveItemAction remove(ioService, listItemService, descriptionRepository);
         REQUIRE_NOTHROW(remove.execute(forceCommand, listName));
 

@@ -227,6 +227,10 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
                 // TODO: implement accept only for "remove"
                 return true;
             }
+        } else if (option.first == "force-permanently") {
+            if (CommandShortcut::getCommandName(command.getName()) == "remove") {
+                return true;
+            }
         } else if (option.first == "to") {
             const std::string name = CommandShortcut::getCommandName(command.getName());
             if (name == "move" || name == "copy" || name == Command::COMMAND_AUTOCOMPLETE) {

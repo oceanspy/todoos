@@ -23,7 +23,7 @@ RemoveItemAction::execute(Command& command, ListName& listName)
     ioService.br();
     for (const auto& id : ids) {
         try {
-            if (command.hasOption("force")) {
+            if (command.hasOption("force-permanently")) {
                 listItemService.remove(id, listName);
                 descriptionRepository.remove(id, listName);
                 ioService.success("Item with id: " + id + " definitely removed.");

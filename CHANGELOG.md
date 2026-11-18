@@ -1,5 +1,7 @@
 # ToDoOs
 ## Unreleased
+- **Breaking:** `remove -f` no longer deletes items for good: `-f/--force` only forces the action.
+  Use the new `-F/--force-permanently` to delete permanently. (`list rm -f` is unchanged.)
 - Fix: todoos exits with 0 on success and 1 when the command fails (it always exited with 1), so
   `todoos … && …` chains work. A missing theme is now a notice, not an error.
 - Zsh sync wrapper (`Linux/Zsh/zsh_todoos_sync`): `todoos`, `t`, `ta`… now return todoos' exit code
