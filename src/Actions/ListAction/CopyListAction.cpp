@@ -57,10 +57,18 @@ CopyListAction::execute(Command& command)
         ListName listName = listService.createListName(listNameStr);
         ListName newListName = listService.createListName(newListNameStr);
 
-        std::vector<ListItemEntity> listItems = listItemService.get(listName);
-        for (ListItemEntity& listItem : listItems) {
-            listItemService.copy(*listItem.getId(), listName, newListName);
-            descriptionService.copy(*listItem.getId(), listName, newListName);
+        std::vector<std::string> ids;
+        for (const ListItemEntity& listItem : listItemService.get(listName)) {
+            ids.push_back(*listItem.getId());
+        }
+
+        // Children are copied with their parent
+        for (const std::string& id : listItemService.withoutChildrenOfListedParents(ids, listName)) {
+            auto copiedChildren = listItemService.copy(id, listName, newListName);
+            descriptionService.copy(id, listName, newListName);
+            for (const auto& [childId, newChildId] : copiedChildren) {
+                descriptionService.copy(childId, listName, newListName, newChildId);
+            }
         }
     } catch (std::invalid_argument& e) {
         ioService.error("Error while creating the file -- is list name correct?");

@@ -23,6 +23,7 @@ CommandOption::populateOptions()
     options["Q"] = "no-quit";
     options["t"] = "to";
     options["F"] = "force-permanently";
+    options["a"] = "attached";
 }
 
 bool

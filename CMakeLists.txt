@@ -76,6 +76,10 @@ add_executable(todoos main.cpp
         src/Actions/ListItemAction/RemoveItemAction.h
         src/Actions/ListItemAction/ArchiveItemAction.cpp
         src/Actions/ListItemAction/ArchiveItemAction.h
+        src/Actions/ParentAction/AttachItemAction.cpp
+        src/Actions/ParentAction/AttachItemAction.h
+        src/Actions/ParentAction/DetachItemAction.cpp
+        src/Actions/ParentAction/DetachItemAction.h
         src/Actions/ListItemAction/RestoreItemAction.cpp
         src/Actions/ListItemAction/RestoreItemAction.h
         src/List/ListItemService.cpp
@@ -183,6 +187,10 @@ add_executable(todoos main.cpp
         src/UseCase/RemoveUseCase.h
         src/UseCase/ArchiveUseCase.cpp
         src/UseCase/ArchiveUseCase.h
+        src/UseCase/AttachItemUseCase.cpp
+        src/UseCase/AttachItemUseCase.h
+        src/UseCase/DetachItemUseCase.cpp
+        src/UseCase/DetachItemUseCase.h
         src/UseCase/RestoreUseCase.cpp
         src/UseCase/RestoreUseCase.h
         src/UseCase/ShowListUseCase.cpp

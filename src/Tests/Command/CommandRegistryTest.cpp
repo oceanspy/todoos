@@ -31,11 +31,34 @@ TEST_CASE("CommandRegistry Tests", "[CommandRegistry]")
         }
     }
 
+    SECTION("--to names a parent item on add / attach")
+    {
+        for (const std::string name : { "add", "a", "attach" }) {
+            Command to(name, { "aaaa" }, { { "to", "bbbb" } }, name + " aaaa --to bbbb");
+            REQUIRE(CommandRegistry::isCommandValidWithOptions(to) == true);
+        }
+    }
+
+    SECTION("parent / child options: detach --force, clean --attached, remove --force-permanently")
+    {
+        Command detach("detach", { "aaaa" }, { { "force", "" } }, "detach aaaa --force");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(detach) == true);
+        Command attach("attach", { "aaaa" }, { { "force", "" } }, "attach aaaa --force");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(attach) == true);
+
+        Command clean("clean", {}, { { "attached", "" } }, "clean -a");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(clean) == true);
+        Command showAttached("find", { "foo" }, { { "attached", "" } }, "find foo -a");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(showAttached) == false);
+
+        Command removeF("rm", { "aaaa" }, { { "force-permanently", "" } }, "rm aaaa -F");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(removeF) == true);
+        Command moveF("move", { "aaaa" }, { { "force-permanently", "" } }, "move aaaa -F");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(moveF) == false);
+    }
+
     SECTION("--to is rejected on other commands")
     {
-        Command add("add", { "foo" }, { { "to", "work" } }, "add foo --to work");
-        REQUIRE(CommandRegistry::isCommandValidWithOptions(add) == false);
-
         Command remove("remove", { "aaaa" }, { { "to", "work" } }, "remove aaaa --to work");
         REQUIRE(CommandRegistry::isCommandValidWithOptions(remove) == false);
     }
