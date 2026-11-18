@@ -425,5 +425,37 @@ TEST_CASE("ListItemServiceParentTest", "[ListItemService]")
                 std::vector<std::string>{ child, "bbbb" });
     }
 
+    // ---- edge branches -------------------------------------------------------------------------
+
+    SECTION("add --to in an archive / delete list is refused")
+    {
+        REQUIRE_THROWS_AS(listItemService.add(tempListNameArchive, "x", nullptr, nullptr, 0, "aaaa"),
+                          std::invalid_argument);
+        REQUIRE(listItemService.get(tempListNameArchive).empty());
+    }
+
+    SECTION("archiveAll also archives a child whose parent is not in the list")
+    {
+        ListItemEntity orphan = listItemRepository.find("bbbb", tempListName);
+        orphan.setParentId("zzzz");
+        listItemRepository.update("bbbb", tempListName, orphan);
+
+        listItemService.archiveAll(tempListName);
+        REQUIRE(listItemService.get(tempListName).empty());
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 2);
+    }
+
+    SECTION("a lone child restored after its old parent became a child itself comes back top-level")
+    {
+        listItemService.attach("bbbb", "aaaa", tempListName);
+        std::string archivedChild = listItemService.archive("bbbb", tempListName);
+        std::string newParent = listItemService.add(tempListName, "new parent");
+        listItemService.attach("aaaa", newParent, tempListName); // aaaa has no active child anymore
+
+        listItemService.restore(archivedChild, tempListName);
+        REQUIRE(parentOf("bbbb", tempListName).empty());
+        REQUIRE(parentOf("aaaa", tempListName) == newParent);
+    }
+
     installation.wipe();
 }

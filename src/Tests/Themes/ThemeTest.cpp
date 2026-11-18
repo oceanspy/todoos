@@ -19,6 +19,8 @@
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
+#include <regex>
+#include <sstream>
 
 static ListItemEntity
 buildOpenItem(const std::string& id,
@@ -48,6 +50,67 @@ buildClosedItem(const std::string& id,
     PriorityEntity priorityEntity = priorityService.getPriorityFromName("high");
     StatusEntity statusEntity = statusService.getStatusFromName("completed");
     return ListItemEntity::set(id, value, priorityEntity, statusEntity, 0, updatedAt, createdAt, updatedAt, listName);
+}
+
+// Default theme that prints a row as a child row, with the connector print() would give it
+class ChildRowTheme : public Default
+{
+  public:
+    using Default::Default;
+    std::string childRow(const ListItemEntity& item, const std::string& connector)
+    {
+        childConnector = connector;
+        std::string row = printListRow(item, true);
+        childConnector = "";
+        return row;
+    }
+};
+
+// Column (in characters) of the first character that is neither a space nor the `│` connector
+static long
+textColumn(const std::string& line)
+{
+    long column = 0;
+    for (size_t i = 0; i < line.size(); i++) {
+        if ((static_cast<unsigned char>(line[i]) & 0xC0) == 0x80) {
+            continue;
+        }
+        if (line[i] != ' ' && line.compare(i, std::string("│").size(), "│") != 0) {
+            return column;
+        }
+        column++;
+    }
+    return -1;
+}
+
+// Visible lines of a rendered row (color codes removed)
+static std::vector<std::string>
+visibleLines(const std::string& row)
+{
+    static const std::regex colorCodes("\033\\[[0-9;]*m");
+    std::vector<std::string> lines;
+    std::stringstream stream(std::regex_replace(row, colorCodes, ""));
+    for (std::string line; std::getline(stream, line);) {
+        lines.push_back(line);
+    }
+    return lines;
+}
+
+// Column (in characters, not bytes) of `text` in a UTF-8 line
+static long
+columnOf(const std::string& line, const std::string& text)
+{
+    size_t at = line.find(text);
+    if (at == std::string::npos) {
+        return -1;
+    }
+    long column = 0;
+    for (size_t i = 0; i < at; i++) {
+        if ((static_cast<unsigned char>(line[i]) & 0xC0) != 0x80) {
+            column++;
+        }
+    }
+    return column;
 }
 
 TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
@@ -599,4 +662,85 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         summaryB.total = 10;
         REQUIRE(theme.buildShortStatsCounts(summaryA) != theme.buildShortStatsCounts(summaryB));
     }
+}
+
+TEST_CASE("Theme child rows", "[ThemeAbstract]")
+{
+    IOService ioService("cli");
+    ConfSerializer confService(ioService);
+    JsonSerializer jsonService(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> fileDataConfigStorageServicePtr =
+        std::make_unique<ConfSerializer>(ioService);
+    MockAppInitialization init(ioService, "_todoos_ThemeChildRowsTest");
+    MockAppInstallation installation(ioService, jsonService, confService, init);
+    installation.wipe();
+    installation.make();
+
+    Command command("", {}, {}, "");
+    ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+    ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+    ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+    PriorityService priorityService;
+    StatusService statusService;
+    ListItemRepository listItemRepository(
+        configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+    DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+    ListItemService listItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+    std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    ListRepository listRepository(configService, jsonFileDataStorageServicePtr.get());
+    EventBus bus;
+    ListService listService(ioService, configService, listRepository, bus);
+    ListName listName = listService.createUsedListName();
+
+    ChildRowTheme theme(ioService, listService, listItemService, 140, 140);
+    theme.fitIdColumn({});
+
+    SECTION("a child row has the same visible width as a top-level row; its text starts after the connector")
+    {
+        ListItemEntity item = buildOpenItem("aaaa", "short value", "high", "queued", listName);
+        std::vector<std::string> topLevel = visibleLines(theme.printListRow(item, true));
+        std::vector<std::string> child = visibleLines(theme.childRow(item, "└─ "));
+
+        REQUIRE(topLevel.size() == 1);
+        REQUIRE(child.size() == 1);
+        REQUIRE(StringHelpers::countCharsWithoutBashCodes(child[0]) ==
+                StringHelpers::countCharsWithoutBashCodes(topLevel[0]));
+        REQUIRE(columnOf(child[0], "└─ ") == columnOf(topLevel[0], "short value"));
+        REQUIRE(columnOf(child[0], "short value") == columnOf(topLevel[0], "short value") + 3);
+    }
+
+    SECTION("wrapped child lines line up under the child's text; `├─` keeps a `│`, `└─` does not")
+    {
+        std::string longValue;
+        for (int i = 0; i < 12; i++) {
+            longValue += "wrapping words ";
+        }
+        longValue += "end";
+        ListItemEntity item = buildOpenItem("aaaa", longValue, "high", "queued", listName);
+
+        std::vector<std::string> middle = visibleLines(theme.childRow(item, "├─ "));
+        REQUIRE(middle.size() >= 2);
+        const long connectorColumn = columnOf(middle[0], "├─ ");
+        for (size_t i = 1; i < middle.size(); i++) {
+            REQUIRE(columnOf(middle[i], "│") == connectorColumn);
+            // the text starts 3 columns after the connector column: "│" + 2 spaces
+            REQUIRE(textColumn(middle[i]) == connectorColumn + 3);
+        }
+
+        std::vector<std::string> last = visibleLines(theme.childRow(item, "└─ "));
+        REQUIRE(last.size() == middle.size());
+        for (size_t i = 1; i < last.size(); i++) {
+            REQUIRE(last[i].find("│") == std::string::npos);
+            REQUIRE(textColumn(last[i]) == connectorColumn + 3);
+        }
+
+        // the last line ends at the same column as a top-level row's last line
+        std::vector<std::string> topLevel = visibleLines(theme.printListRow(item, true));
+        REQUIRE(StringHelpers::countCharsWithoutBashCodes(last.back()) ==
+                StringHelpers::countCharsWithoutBashCodes(topLevel.back()));
+    }
+
+    installation.wipe();
 }
