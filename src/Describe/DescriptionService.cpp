@@ -13,24 +13,31 @@ DescriptionService::getDraftFilePath(const std::string& id, const ListName& list
 }
 
 void
-DescriptionService::move(const std::string& id, ListName& oldListName, ListName& newListName)
+DescriptionService::move(const std::string& id,
+                         ListName& oldListName,
+                         ListName& newListName,
+                         const std::string& newId)
 {
+    const std::string targetId = newId.empty() ? id : newId;
     std::filesystem::path oldFilePath = descriptionRepository.getFilePath(id, oldListName);
     if (!std::filesystem::exists(oldFilePath)) {
         // the overwritten item in the target list may have had its own description
-        descriptionRepository.remove(id, newListName);
+        descriptionRepository.remove(targetId, newListName);
         return;
     }
 
-    std::filesystem::path newFilePath = descriptionRepository.getFilePath(id, newListName);
+    std::filesystem::path newFilePath = descriptionRepository.getFilePath(targetId, newListName);
     std::filesystem::create_directories(newFilePath.parent_path());
     std::filesystem::rename(oldFilePath, newFilePath);
 }
 
 void
-DescriptionService::copy(const std::string& id, ListName& oldListName, ListName& newListName)
+DescriptionService::copy(const std::string& id,
+                         ListName& oldListName,
+                         ListName& newListName,
+                         const std::string& newId)
 {
-    copyFile(id, oldListName, id, newListName);
+    copyFile(id, oldListName, newId.empty() ? id : newId, newListName);
 }
 
 void

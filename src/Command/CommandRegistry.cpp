@@ -21,9 +21,10 @@ CommandRegistry::CommandRegistry()
 void
 CommandRegistry::make()
 {
-    commandIds = { SHOW,  ADD,   EDIT,   APPEND,    PREPEND,  FIND,   PRIORITY, INCREASE, DECREASE, STATUS,  QUEUE,
-                   START, PAUSE, TRIAGE, BLOCKED,   COMPLETE, CANCEL, RESET,    REMOVE,   ARCHIVE,  RESTORE, MOVE,
-                   COPY,  EMPTY, CLEAN,  DUPLICATE, DEADLINE, LIST,   USE,      STATS,    DESCRIBE, COMMANDS };
+    commandIds = { SHOW,  ADD,   EDIT,   APPEND,    PREPEND, FIND,   PRIORITY, INCREASE, DECREASE, STATUS,   QUEUE,
+                   START, PAUSE, TRIAGE, BLOCKED,   COMPLETE, CANCEL, RESET,    REMOVE,   ARCHIVE,  RESTORE,  MOVE,
+                   COPY,  EMPTY, CLEAN,  DUPLICATE, ATTACH,  DETACH, REASSIGN, DEADLINE, LIST,     USE,      STATS,
+                   DESCRIBE, COMMANDS };
 
     // loop to commandIds to get the command name
     for (int commandId : commandIds) {
@@ -110,6 +111,15 @@ CommandRegistry::make()
                 break;
             case DUPLICATE:
                 commands[commandId].name = "duplicate";
+                break;
+            case ATTACH:
+                commands[commandId].name = "attach";
+                break;
+            case DETACH:
+                commands[commandId].name = "detach";
+                break;
+            case REASSIGN:
+                commands[commandId].name = "reassign";
                 break;
             case DEADLINE:
                 commands[commandId].name = "deadline";
@@ -219,17 +229,31 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
                 command.getName() == "clean") {
                 return true;
             }
+        } else if (option.first == "attached") {
+            if (command.getName() == "clean") {
+                return true;
+            }
         } else if (option.first == "force") {
             const std::string name = CommandShortcut::getCommandName(command.getName());
-            if (name == "remove" || name == "move" || name == "copy") {
+            if (name == "remove" || name == "move" || name == "copy" || name == "attach" || name == "detach") {
                 return true;
             } else if (name == "list") {
                 // TODO: implement accept only for "remove"
                 return true;
             }
+        } else if (option.first == "force-permanently") {
+            if (CommandShortcut::getCommandName(command.getName()) == "remove") {
+                return true;
+            }
         } else if (option.first == "to") {
             const std::string name = CommandShortcut::getCommandName(command.getName());
-            if (name == "move" || name == "copy" || name == Command::COMMAND_AUTOCOMPLETE) {
+            if (name == "move" || name == "copy" || name == "add" || name == "attach" || name == "reassign" ||
+                name == Command::COMMAND_AUTOCOMPLETE) {
+                return true;
+            }
+        } else if (option.first == "id") {
+            if (CommandShortcut::getCommandName(command.getName()) == "add" ||
+                command.getName() == Command::COMMAND_AUTOCOMPLETE) {
                 return true;
             }
         } else if (option.first == "no-quit") {

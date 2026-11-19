@@ -48,9 +48,19 @@ AddItemAction::execute(Command& command, ListName& listName)
         }
     }
 
+    // --to {id}: the new item is a child of that item
+    const std::string parentId = command.hasOption("to") ? command.getOption("to") : "";
+    // --id {id}: used when free, a generated id otherwise
+    const std::string requestedId = command.hasOption("id") ? command.getOption("id") : "";
+
     try {
-        id = listItemService.add(
-            listName, StringHelpers::vectorToString(itemValueFromArguments), priority, status, dueAt);
+        id = listItemService.add(listName,
+                                 StringHelpers::vectorToString(itemValueFromArguments),
+                                 priority,
+                                 status,
+                                 dueAt,
+                                 parentId,
+                                 requestedId);
     } catch (std::exception& e) {
         ioService.br();
         ioService.error("Item could not be added.");
@@ -60,7 +70,10 @@ AddItemAction::execute(Command& command, ListName& listName)
     }
 
     ioService.br();
-    ioService.success("Item " + id + " correctly added.");
+    if (!requestedId.empty() && requestedId != id) {
+        ioService.info("Id " + requestedId + " is already used, a new id was generated.");
+    }
+    ioService.success("Item " + id + " correctly added" + (parentId.empty() ? "" : " to " + parentId) + ".");
     ioService.br();
     return id;
 }

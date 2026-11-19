@@ -28,6 +28,23 @@ CommandAutoCompleteUseCase::execute(Command& command)
                 return true;
             }
             return true;
+        } else if (command.hasOption("id")) {
+            // add --id {id}: a new id is typed, nothing to suggest
+            return true;
+        } else if (command.hasOption("to") && isReassign(command)) {
+            // reassign --to {newId}: a new id is typed, nothing to suggest
+            return true;
+        } else if (command.hasOption("to") && isItemIdTarget(command)) {
+            // add / attach --to {id}: the target is a parent item of the current list
+            try {
+                if (!isValidListItemId(command.getOption("to"), listName)) {
+                    std::vector<ListName> listNames = { listName };
+                    showListItemId(listNames);
+                }
+            } catch (std::exception& e) {
+                return true;
+            }
+            return true;
         } else if (command.hasOption("to") && !listService.isListExist(command.getOption("to"))) {
             try {
                 autocompleteOptionList(command, "to");
@@ -99,7 +116,8 @@ CommandAutoCompleteUseCase::execute(Command& command)
             return true;
         }
         return true;
-    } else if (CommandService::isCommand(firstSubCommand, "describe")) {
+    } else if (CommandService::isCommand(firstSubCommand, "describe") ||
+               CommandService::isCommand(firstSubCommand, "reassign")) {
         try {
             std::vector<ListName> listNames = { listName };
             autocompleteId(firstSubCommand, listNames);
@@ -172,6 +190,8 @@ CommandAutoCompleteUseCase::execute(Command& command)
         return true;
     } else if (CommandService::isCommand(firstSubCommand, "remove") ||
                CommandService::isCommand(firstSubCommand, "archive") ||
+               CommandService::isCommand(firstSubCommand, "attach") ||
+               CommandService::isCommand(firstSubCommand, "detach") ||
                CommandService::isCommand(firstSubCommand, "queue") ||
                CommandService::isCommand(firstSubCommand, "start") ||
                CommandService::isCommand(firstSubCommand, "pause") ||
@@ -424,6 +444,28 @@ CommandAutoCompleteUseCase::showListItemId(std::vector<ListName>& listNames)
     }
 
     ioService.print(listItemIds);
+}
+
+bool
+CommandAutoCompleteUseCase::isReassign(Command& command)
+{
+    if (!commandService.hasSubCommand(command)) {
+        return false;
+    }
+
+    Command subCommand = commandService.getSubCommand(command);
+    return CommandService::isCommand(subCommand, "reassign");
+}
+
+bool
+CommandAutoCompleteUseCase::isItemIdTarget(Command& command)
+{
+    if (!commandService.hasSubCommand(command)) {
+        return false;
+    }
+
+    Command subCommand = commandService.getSubCommand(command);
+    return CommandService::isCommand(subCommand, "add") || CommandService::isCommand(subCommand, "attach");
 }
 
 bool

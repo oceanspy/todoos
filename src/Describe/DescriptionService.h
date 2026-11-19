@@ -12,8 +12,9 @@ class DescriptionService
   public:
     DescriptionService(std::filesystem::path cacheDirPath, DescriptionRepository& descriptionRepository);
     std::filesystem::path getDraftFilePath(const std::string& id, const ListName& listName) const;
-    void move(const std::string& id, ListName& oldListName, ListName& newListName);
-    void copy(const std::string& id, ListName& oldListName, ListName& newListName);
+    // newId: the id the item gets in the new list (default: the same id)
+    void move(const std::string& id, ListName& oldListName, ListName& newListName, const std::string& newId = "");
+    void copy(const std::string& id, ListName& oldListName, ListName& newListName, const std::string& newId = "");
     void duplicate(const std::string& id, const std::string& newId, ListName& listName);
     void renameList(ListName& oldListName, ListName& newListName);
 

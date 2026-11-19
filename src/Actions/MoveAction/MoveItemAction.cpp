@@ -36,6 +36,9 @@ MoveItemAction::execute(Command& command, ListName& listName)
 
     ListName newListName = listService.createListName(newListStr);
 
+    // Children of a listed parent follow it: no need to move them on their own
+    ids = listItemService.withoutChildrenOfListedParents(ids, listName);
+
     if (listName.getName() == newListName.getName()) {
         ioService.br();
         ioService.error("Item is already in list " + newListName.getName() + ".");
@@ -65,11 +68,18 @@ MoveItemAction::execute(Command& command, ListName& listName)
                 }
             }
 
-            listItemService.move(id, listName, newListName);
+            auto movedChildren = listItemService.move(id, listName, newListName);
             descriptionService.move(id, listName, newListName);
+            for (const auto& [childId, newChildId] : movedChildren) {
+                descriptionService.move(childId, listName, newListName, newChildId);
+            }
 
             ioService.success("Item " + id + " moved from " + listName.getName() + " to list " + newListName.getName() +
                               ".");
+            for (const auto& [childId, newChildId] : movedChildren) {
+                ioService.info("  child " + childId + " moved with it" +
+                               (childId != newChildId ? " (now " + newChildId + ")" : "") + ".");
+            }
         } catch (std::exception& e) {
             ioService.error("Item " + id + " could not be moved from list " + listName.getName() + " to " +
                             newListName.getName() + ".");

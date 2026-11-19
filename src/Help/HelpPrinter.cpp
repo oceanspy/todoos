@@ -84,6 +84,68 @@ HelpPrinter::helpListForCli()
 
     auto section = [&](const std::string& title) { return BOLD + " " + title + RST; };
 
+    // A cell is a list of (text, color) parts padded to `width` visible chars (ASCII text only), so that
+    // every column lines up whatever the colors
+    using Parts = std::vector<std::pair<std::string, std::string>>;
+    auto cell = [&](size_t width, const Parts& parts) {
+        std::string render;
+        size_t length = 0;
+        for (const auto& [text, color] : parts) {
+            render += color.empty() ? text : color + text + RST;
+            length += text.size();
+        }
+        return render + std::string(length < width ? width - length : 1, ' ');
+    };
+
+    const size_t FLAG_WIDTH = 25; // FLAGS / OPTIONS: name column
+    const size_t FLAG_DESC_WIDTH = 22;
+    const size_t COMMAND_WIDTH = 36; // command sections: "name (alias) args" column
+    const size_t DESC_WIDTH = 24;
+
+    auto flag = [&](const std::string& name, const std::string& desc, const std::string& appliesTo = "") {
+        return "   " + cell(FLAG_WIDTH, { { name, CYN } }) +
+               (appliesTo.empty() ? desc : cell(FLAG_DESC_WIDTH, { { desc, "" } }) + DIM + "(" + appliesTo + ")" + RST);
+    };
+    auto option = [&](const std::string& name, const std::string& desc, const std::string& appliesTo = "") {
+        return "   " + cell(FLAG_WIDTH, { { name, BLU } }) +
+               (appliesTo.empty() ? desc : cell(FLAG_DESC_WIDTH, { { desc, "" } }) + DIM + "(" + appliesTo + ")" + RST);
+    };
+    // name column (10), alias column (7), then the arguments (yellow) and their options (blue, from " -")
+    auto command = [&](const std::string& name,
+                       const std::string& alias,
+                       const std::string& args,
+                       const std::string& desc,
+                       const Parts& hints = {}) {
+        Parts parts = { { name + std::string(name.size() < 10 ? 10 - name.size() : 1, ' '), "" } };
+        std::string aliasText = alias.empty() ? "" : "(" + alias + ")";
+        parts.push_back({ aliasText + std::string(aliasText.size() < 7 ? 7 - aliasText.size() : 1, ' '), "" });
+        size_t optionsAt = args.find(" -");
+        parts.push_back({ args.substr(0, optionsAt), YLW });
+        if (optionsAt != std::string::npos) {
+            parts.push_back({ args.substr(optionsAt), BLU });
+        }
+        std::string line = "   " + cell(COMMAND_WIDTH, parts);
+        if (hints.empty()) {
+            return line + desc;
+        }
+        line += cell(DESC_WIDTH, { { desc, "" } });
+        for (size_t i = 0; i < hints.size(); i++) {
+            line += (i == 0 ? "" : " ") + hints[i].second + hints[i].first + RST;
+        }
+        return line;
+    };
+    auto hintLine = [&](const std::string& text, const std::string& color) {
+        return std::string(3 + COMMAND_WIDTH + DESC_WIDTH, ' ') + color + text + RST;
+    };
+    auto note = [&](const std::string& text) { return "     " + DIM + text + RST; };
+    const Parts FILTERS = { { "[-p]", BLU }, { "[-s]", BLU }, { "[-x]", BLU } };
+    auto withFlags = [&](Parts parts, const std::vector<std::string>& flags) {
+        for (const std::string& f : flags) {
+            parts.push_back({ "[" + f + "]", CYN });
+        }
+        return parts;
+    };
+
     // clang-format off
     return {
         SEP,
@@ -91,76 +153,90 @@ HelpPrinter::helpListForCli()
         DIM + "   todoos [flags] [options] <command> [args]" + RST,
         "",
         section("FLAGS"),
-        "   " + CYN + "-h/--help"    + RST + "         Show the help center",
-        "   " + CYN + "-v/--version" + RST + "      Show app version",
-        "   " + CYN + "-c/--config"  + RST + "       Show app config",
-        "   " + CYN + "-A/--archived" + RST + "     Show archived items        " + DIM + "(show, find)" + RST,
-        "   " + CYN + "-D/--deleted"  + RST + "      Show deleted items         " + DIM + "(show, find)" + RST,
-        "   " + CYN + "-d/--described" + RST + "    Describe items             " + DIM + "(add, show, find, clean)" + RST,
-        "   " + CYN + "-f/--force"   + RST + "        Force action               " + DIM + "(remove, move, copy)" + RST,
-        "   " + CYN + "-Q/--no-quit" + RST + "      Keep app alive after command",
+        flag("-h/--help", "Show the help center"),
+        flag("-v/--version", "Show app version"),
+        flag("-c/--config", "Show app config"),
+        flag("-A/--archived", "Show archived items", "show, find"),
+        flag("-D/--deleted", "Show deleted items", "show, find"),
+        flag("-d/--described", "Describe items", "add, show, find, clean"),
+        flag("-f/--force", "Force action", "remove, move, copy, attach, detach"),
+        flag("-F/--force-permanently", "Delete for good", "remove"),
+        flag("-a/--attached", "Include child items", "clean"),
+        flag("-Q/--no-quit", "Keep app alive after command"),
         "",
         section("OPTIONS"),
-        "   " + BLU + "-l/--list {name}"     + RST + "         Target list",
-        "   " + BLU + "-p/--priority {name}" + RST + "     Filter/set priority",
-        "   " + BLU + "-s/--status {name}"   + RST + "       Filter/set status",
-        "   " + BLU + "-i/--deadline {date}" + RST + "     Filter/set deadline",
-        "   " + BLU + "-t/--to {list}"       + RST + "           Target list        " + DIM + "(move, copy)" + RST,
+        option("-l/--list {name}", "Target list"),
+        option("-p/--priority {name}", "Filter/set priority"),
+        option("-s/--status {name}", "Filter/set status"),
+        option("-x/--deadline {date}", "Filter/set deadline"),
+        option("-t/--to {list}", "Target list", "move, copy"),
+        option("-t/--to {id}", "Parent item", "add, attach"),
+        option("-t/--to {newId}", "New item id", "reassign"),
+        option("-i/--id {id}", "Id of the new item", "add"),
         "",
         section("LISTS"),
-        "   use "  + YLW + "{list}"           + RST + "                    Switch active list",   // col 13 + 20 = 33
-        "   list                          Show all lists",                                          // col 7  + 26 = 33
-        "     add " + YLW + "{name}"          + RST + "                  Create list",             // col 15 + 18 = 33
-        "     rm  " + YLW + "{name}"          + RST + "                  Remove list",             // col 15 + 18 = 33
-        "     mv  " + YLW + "{name} {new_name}" + RST + "       Rename list",                     // col 26 +  7 = 33
-        "     current                     Show active list",                                        // col 12 + 21 = 33
-        "     copy " + YLW + "{name} {new_name}" + RST + "      Duplicate list",                  // col 27 +  6 = 33
+        command("use", "", "{list}", "Switch active list"),
+        command("list", "", "", "Show all lists"),
+        command("  add", "", "{name}", "Create list"),
+        command("  rm", "", "{name}", "Remove list"),
+        command("  mv", "", "{name} {new_name}", "Rename list"),
+        command("  copy", "", "{name} {new_name}", "Duplicate list"),
+        command("  current", "", "", "Show active list"),
         "",
         section("ITEMS"),
-        "   show                           Show items     " + BLU + "[-p] [-s] [-i] " + CYN + "[-A] [-d] [-D]" + RST, // col 7  + 26 = 33
-        "   add      (a) " + YLW + "{value}"      + RST + "           Add item     " + BLU + "[-p] [-s] [-i] " + CYN + "[-d]" + RST, // col 22 + 11 = 33
-        "   edit     (e) " + YLW + "{id} {value}" + RST + "      Edit item     " + BLU + "[-p] [-s] [-i]" + RST,    // col 27 +  6 = 33
-        "   append       " + YLW + "{id} {value}" + RST + "      Append to item" + BLU + " [-p] [-s] [-i]" + RST,  // col 27 +  6 = 33
-        "   prepend      " + YLW + "{id} {value}" + RST + "      Prepend to item" + BLU + " [-p] [-s] [-i]" + RST, // col 27 +  6 = 33
-        "   find     (f) " + YLW + "{word}"       + RST + "            Find item              " + CYN + "[-A] [-d] [-D]" + RST, // col 21 + 12 = 33
-        "   describe (d) " + YLW + "{id}"         + RST + "              Edit item description", // col 19 + 14 = 33
+        command("show", "", "", "Show items", withFlags(FILTERS, { "-A", "-d", "-D" })),
+        command("add", "a", "{value}", "Add item", withFlags(FILTERS, { "-d", "-i" })),
+        command("edit", "e", "{id} {value}", "Edit item", FILTERS),
+        command("append", "", "{id} {value}", "Append to item", FILTERS),
+        command("prepend", "", "{id} {value}", "Prepend to item", FILTERS),
+        command("find", "f", "{word}", "Find items", withFlags({}, { "-A", "-d", "-D" })),
+        command("describe", "d", "{id}", "Edit item description"),
         "",
         section("ITEM ACTIONS"),
-        "   remove  (rm) " + CYN + "[-f] " + YLW + "{ids}" + RST + "       Remove items",              // col 26 +  7 = 33
-        "   duplicate    " + YLW + "{ids}"                  + RST + "            Duplicate items",      // col 21 + 12 = 33
-        "   archive      " + YLW + "{ids}"                  + RST + "            Send to archive",      // col 21 + 12 = 33
-        "   restore      " + YLW + "{ids}"                  + RST + "            Restore archived/deleted items",
+        command("remove", "rm", "{ids}", "Remove items", withFlags({}, { "-f", "-F" })),
+        command("duplicate", "", "{ids}", "Duplicate items"),
+        command("archive", "", "{ids}", "Send to archive"),
+        command("restore", "", "{ids}", "Restore archived/deleted items"),
+        command("reassign", "", "{id} -t {newId}", "Choose an item's id"),
+        note("4 letters/digits, free in the list; children & description follow"),
+        "",
+        section("PARENT / CHILD"),
+        command("add", "a", "{value} -t {id}", "Add a child item"),
+        command("attach", "", "{ids} -t {id}", "Attach to a parent", { { "[-f] switch parent", CYN } }),
+        command("detach", "", "{ids}", "Detach children", { { "[-f] all, on a parent", CYN } }),
+        note("children follow their parent: remove -f, archive, restore, move, copy"),
         "",
         section("TRANSFER"),
-        "   move    (mv) " + YLW + "{ids} " + BLU + "-t {list}" + RST + "  Move to list   " + CYN + "[-f]" + RST, // col 31 +  2 = 33
-        "   copy    (cp) " + YLW + "{ids} " + BLU + "-t {list}" + RST + "  Copy to list   " + CYN + "[-f]" + RST, // col 31 +  2 = 33
+        command("move", "mv", "{ids} -t {list}", "Move to list", withFlags({}, { "-f" })),
+        command("copy", "cp", "{ids} -t {list}", "Copy to list", withFlags({}, { "-f" })),
         "",
         section("PRIORITY"),
-        "   priority  (p)   " + YLW + "{priority} {ids}" + RST + "     Set priority",   // col 35 + 5 = 40
-        "     " + DIM + "low \xC2\xB7 medium \xC2\xB7 high \xC2\xB7 urgent \xC2\xB7 critical" + RST,
-        "   increase  (inc) " + YLW + "[1-4] {ids}"     + RST + "          Raise priority", // col 30 + 10 = 40
-        "   decrease  (dec) " + YLW + "[1-4] {ids}"     + RST + "          Lower priority", // col 30 + 10 = 40
+        command("priority", "p", "{priority} {ids}", "Set priority"),
+        note("low \xC2\xB7 medium \xC2\xB7 high \xC2\xB7 urgent \xC2\xB7 critical"),
+        command("increase", "inc", "[1-4] {ids}", "Raise priority"),
+        command("decrease", "dec", "[1-4] {ids}", "Lower priority"),
         "",
         section("DEADLINE"),
-        "   deadline " + YLW + "{date} {ids}"                     + RST + "                 Set deadline",
-        "     " + DIM + "YYYY-MM-DD \xC2\xB7 MM-DD \xC2\xB7 DD" + RST,
-        "     " + DIM + "today \xC2\xB7 tomorrow \xC2\xB7 next-week \xC2\xB7 next-month \xC2\xB7 next-year" + RST,
-        "     " + DIM + "1d \xC2\xB7 1w \xC2\xB7 1m \xC2\xB7 1y \xC2\xB7 Xday(s) \xC2\xB7 Xweek(s) \xC2\xB7 Xmonth(s) \xC2\xB7 Xyear(s)" + RST,
-        "     " + DIM + "remove: reset / none" + RST,
+        command("deadline", "dln", "{date} {ids}", "Set deadline"),
+        note("YYYY-MM-DD \xC2\xB7 MM-DD \xC2\xB7 DD"),
+        note("today \xC2\xB7 tomorrow \xC2\xB7 next-week \xC2\xB7 next-month \xC2\xB7 next-year"),
+        note("1d \xC2\xB7 1w \xC2\xB7 1m \xC2\xB7 1y \xC2\xB7 Xday(s) \xC2\xB7 Xweek(s) \xC2\xB7 Xmonth(s) \xC2\xB7 Xyear(s)"),
+        note("remove: reset / none"),
         "",
         section("STATUS"),
-        "   queue    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Queued",
-        "   start    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Started",
-        "   triage   " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Triaged",
-        "   pause    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Paused",
-        "   block    " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Blocked",
-        "   complete " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Completed",
-        "   cancel   " + YLW + "{ids}"     + RST + "       \xE2\x86\x92 Cancelled",
-        "   reset    " + YLW + "{ids/all}" + RST + "   Reset to queued & clear date/deadline",
+        command("queue", "", "{ids}", "\xE2\x86\x92 Queued"),
+        command("start", "", "{ids}", "\xE2\x86\x92 Started"),
+        command("triage", "", "{ids}", "\xE2\x86\x92 Triaged"),
+        command("pause", "", "{ids}", "\xE2\x86\x92 Paused"),
+        command("block", "", "{ids}", "\xE2\x86\x92 Blocked"),
+        command("complete", "done", "{ids}", "\xE2\x86\x92 Completed"),
+        command("cancel", "", "{ids}", "\xE2\x86\x92 Cancelled"),
+        command("reset", "", "{ids/all}", "\xE2\x86\x92 Queued, clear date/deadline"),
         "",
         section("BULK"),
-        "   clean              Archive all completed/cancelled items  " + CYN + "[-d] include described items" + RST,
-        "   empty              Empty the list",
+        command("clean", "", "", "Archive done/cancelled", { { "[-d] include described items", CYN } }),
+        hintLine("[-a] include child items", CYN),
+        command("empty", "", "", "Empty the list"),
         "",
         section("SHORTCUTS"),
         "   create            \xE2\x86\x92 add",

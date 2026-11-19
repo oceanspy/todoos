@@ -19,6 +19,12 @@ RestoreItemAction::execute(Command& command, ListName& listName)
     std::vector<std::string> ids = command.getArguments();
     ids.erase(unique(ids.begin(), ids.end()), ids.end());
 
+    // Children of a listed parent come back with it
+    for (const std::string variant : { "archive", "delete" }) {
+        ListName variantListName = ListName::createVariant(listName, variant);
+        ids = listItemService.withoutChildrenOfListedParents(ids, variantListName);
+    }
+
     ioService.br();
     for (const auto& id : ids) {
         try {

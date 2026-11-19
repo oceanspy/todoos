@@ -4,12 +4,14 @@
 #include "../UseCase/AddListUseCase.h"
 #include "../UseCase/AppendItemUseCase.h"
 #include "../UseCase/ArchiveUseCase.h"
+#include "../UseCase/AttachItemUseCase.h"
 #include "../UseCase/CleanUseCase.h"
 #include "../UseCase/CopyItemUseCase.h"
 #include "../UseCase/CopyListUseCase.h"
 #include "../UseCase/CurrentListUseCase.h"
 #include "../UseCase/DeadlineItemUseCase.h"
 #include "../UseCase/DescribeItemUseCase.h"
+#include "../UseCase/DetachItemUseCase.h"
 #include "../UseCase/DuplicateItemUseCase.h"
 #include "../UseCase/EditItemUseCase.h"
 #include "../UseCase/EmptyUseCase.h"
@@ -18,6 +20,7 @@
 #include "../UseCase/MoveListUseCase.h"
 #include "../UseCase/PrependItemUseCase.h"
 #include "../UseCase/PriorityUseCase.h"
+#include "../UseCase/ReassignItemUseCase.h"
 #include "../UseCase/RemoveListUseCase.h"
 #include "../UseCase/RemoveUseCase.h"
 #include "../UseCase/ResetUseCase.h"
@@ -172,6 +175,15 @@ CommandRouter::execute(Command& command, ListName& currentList)
         case CommandRegistry::DUPLICATE:
             DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
                 .execute(command, currentList);
+            return;
+        case CommandRegistry::ATTACH:
+            AttachItemUseCase(ioService, listItemService, listService, themeService).execute(command, currentList);
+            return;
+        case CommandRegistry::DETACH:
+            DetachItemUseCase(ioService, listItemService, listService, themeService).execute(command, currentList);
+            return;
+        case CommandRegistry::REASSIGN:
+            ReassignItemUseCase(ioService, listItemService, listService, themeService).execute(command, currentList);
             return;
         case CommandRegistry::EMPTY:
             EmptyUseCase(ioService, listItemService, listService, configService, themeService)

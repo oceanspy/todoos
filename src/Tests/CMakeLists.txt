@@ -66,6 +66,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Command/CommandShortcutServiceTest.cpp
         CommandAutocomplete/CommandAutocompleteServiceTest.cpp
         Mock/MockAppInstallation.cpp
+        ../Init/AppInstallation.cpp
         Mock/MockAppInstallation.h
         Mock/MockAppInitialization.cpp
         Mock/MockAppInitialization.h
@@ -73,6 +74,7 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         List/ListRepositoryTest.cpp
         List/ListItemIdTest.cpp
         List/ListItemServiceTest.cpp
+        List/ListItemServiceParentTest.cpp
         List/ListCountSummaryTest.cpp
         List/ListItemServiceCountSummaryTest.cpp
         List/ListServiceTest.cpp
@@ -107,6 +109,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../Actions/ListItemAction/PrependItemAction.cpp
         ../Actions/ListItemAction/RemoveItemAction.cpp
         ../Actions/ListItemAction/ArchiveItemAction.cpp
+        ../Actions/ListItemAction/ReassignItemAction.cpp
+        ../Actions/ParentAction/AttachItemAction.cpp
+        ../Actions/ParentAction/DetachItemAction.cpp
         ../Actions/ListItemAction/RestoreItemAction.cpp
         ../Actions/ShowAction/ShowAction.cpp
         ../Actions/ConfigAction/ConfigAction.cpp
@@ -137,6 +142,9 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         ../UseCase/StatusUseCase.cpp
         ../UseCase/RemoveUseCase.cpp
         ../UseCase/ArchiveUseCase.cpp
+        ../UseCase/ReassignItemUseCase.cpp
+        ../UseCase/AttachItemUseCase.cpp
+        ../UseCase/DetachItemUseCase.cpp
         ../UseCase/RestoreUseCase.cpp
         ../UseCase/AddListUseCase.cpp
         ../UseCase/RemoveListUseCase.cpp

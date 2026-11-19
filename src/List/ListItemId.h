@@ -13,6 +13,8 @@ class ListItemId
     static std::string const generate(const std::string& generationType);
     // Valid ids are alphanumeric, 4 chars (active list) or 5 chars (archive / delete lists)
     static bool isValid(const std::string& id);
+    // Valid active-list id: exactly 4 alphanumeric chars (upper or lower case)
+    static bool isValidActive(const std::string& id);
     // The 4-char part of an id (the id itself for an active-list id)
     static std::string baseOf(const std::string& id);
     static std::string withSuffix(const std::string& base, char suffix);

@@ -3,6 +3,9 @@
 #include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
+#include "../../Init/AppInstallation.h"
+#include "../../List/ListItems/ListItemEntity.h"
+#include "../../Serializers/CsvSerializer.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("isNew returns true when main directory is not present", "[Installation]")
@@ -82,22 +85,46 @@ TEST_CASE("Populate default list file", "[Installation]")
     jsonService.load(init.getDefaultListFilePath());
     std::vector<std::vector<std::string>> defaultListData = jsonService.read(std::nullopt);
     REQUIRE(defaultListData.size() == 2);
-    // {"aaaa", "test 1", "3", "0", "1712487259", "1712487259"},
-    // {"bbbb", "test 2", "1", "1", "1712487272", "1712487272"}
     REQUIRE(defaultListData[0][0] == "aaaa");
-    REQUIRE(defaultListData[0][1] == "test 1");
-    REQUIRE(defaultListData[0][2] == "high");
-    REQUIRE(defaultListData[0][3] == "queued");
-    REQUIRE(defaultListData[0][4] == "0");
+    REQUIRE(defaultListData[0][1] == "");
+    REQUIRE(defaultListData[0][2] == "test 1");
+    REQUIRE(defaultListData[0][3] == "high");
+    REQUIRE(defaultListData[0][4] == "queued");
     REQUIRE(defaultListData[0][5] == "0");
-    REQUIRE(defaultListData[0][6] == "1712487259");
+    REQUIRE(defaultListData[0][6] == "0");
     REQUIRE(defaultListData[0][7] == "1712487259");
+    REQUIRE(defaultListData[0][8] == "1712487259");
     REQUIRE(defaultListData[1][0] == "bbbb");
-    REQUIRE(defaultListData[1][1] == "test 2");
-    REQUIRE(defaultListData[1][2] == "medium");
-    REQUIRE(defaultListData[1][3] == "started");
-    REQUIRE(defaultListData[1][4] == "1712487259");
-    REQUIRE(defaultListData[1][5] == "0");
-    REQUIRE(defaultListData[1][6] == "1712487272");
+    REQUIRE(defaultListData[1][1] == "");
+    REQUIRE(defaultListData[1][2] == "test 2");
+    REQUIRE(defaultListData[1][3] == "medium");
+    REQUIRE(defaultListData[1][4] == "started");
+    REQUIRE(defaultListData[1][5] == "1712487259");
+    REQUIRE(defaultListData[1][6] == "0");
     REQUIRE(defaultListData[1][7] == "1712487272");
+    REQUIRE(defaultListData[1][8] == "1712487272");
+}
+
+TEST_CASE("Real installation writes welcome items with the current row layout", "[Installation]")
+{
+    IOService ioService = IOService("cli");
+    ConfSerializer confService = ConfSerializer(ioService);
+    JsonSerializer jsonService = JsonSerializer(ioService);
+    CsvSerializer csvService = CsvSerializer(ioService);
+    MockAppInitialization init(ioService, "_todoos_RealInstallationTest");
+    AppInstallation installation(ioService, jsonService, csvService, confService, init);
+
+    installation.wipe();
+    installation.make();
+
+    CsvSerializer reader = CsvSerializer(ioService);
+    reader.load(init.getDefaultListFilePath());
+    std::vector<std::vector<std::string>> rows = reader.read(0);
+    REQUIRE(rows.size() == 4);
+    for (const std::vector<std::string>& row : rows) {
+        REQUIRE(row.size() == ListItemEntity::ROW_SIZE);
+        REQUIRE(row[1].empty());
+    }
+
+    installation.wipe();
 }

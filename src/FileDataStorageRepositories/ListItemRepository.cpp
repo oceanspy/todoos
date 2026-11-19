@@ -31,9 +31,9 @@ ListItemRepository::get(ListName& listName)
         for (const std::vector<std::string>& item : data) {
             try {
                 listItems.push_back(ListItemEntity::setFromVector(priorityService, statusService, item, listName));
-            } catch (std::invalid_argument& e) {
+            } catch (std::exception& e) {
                 std::string invalidValue = StringHelpers::colorize("Invalid item -- please check storage", RED);
-                std::vector<std::string> invalidItem = { "xxxx", invalidValue, "0", "0", "0", "0", "0", "0" };
+                std::vector<std::string> invalidItem = { "xxxx", "", invalidValue, "0", "0", "0", "0", "0", "0" };
                 listItems.push_back(
                     ListItemEntity::setFromVector(priorityService, statusService, invalidItem, listName));
             }
@@ -54,6 +54,19 @@ ListItemRepository::find(const std::string& id, ListName& listName)
     }
 
     throw ListItemNotFoundException("Item not found: invalid id.", id, listName);
+}
+
+bool
+ListItemRepository::hasLegacyRows(ListName& listName)
+{
+    fileDataService->load(getFilePath(listName));
+    for (const std::vector<std::string>& row : fileDataService->read(0)) {
+        if (row.size() == ListItemEntity::ROW_SIZE - 1) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void

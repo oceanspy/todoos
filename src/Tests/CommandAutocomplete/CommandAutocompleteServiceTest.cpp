@@ -1686,4 +1686,56 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         std::string expectedString = "aaaa bbbb\n";
         REQUIRE(printedString == expectedString);
     }
+
+    // ---- parent / child and reassign ------------------------------------------------------
+
+    auto completionOf = [&](Command command) {
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
+        return captureGetCompletionOutput(autocompleteService, command);
+    };
+
+    SECTION("Autocomplete commands: attach / detach / reassign suggest the item ids")
+    {
+        for (const std::string name : { "attach", "detach", "reassign" }) {
+            REQUIRE(completionOf(Command("commands", { name }, {}, "commands " + name)) == "aaaa bbbb\n");
+        }
+    }
+
+    SECTION("Autocomplete commands: add / attach --to suggest the item ids, not the lists")
+    {
+        REQUIRE(completionOf(Command("commands", { "add", "child" }, { { "to", "" } }, "commands add child --to")) ==
+                "aaaa bbbb\n");
+        REQUIRE(completionOf(Command("commands", { "attach", "bbbb" }, { { "to", "" } }, "commands attach bbbb --to")) ==
+                "aaaa bbbb\n");
+        // a complete id: nothing more to suggest
+        REQUIRE(completionOf(
+                    Command("commands", { "attach", "bbbb" }, { { "to", "aaaa" } }, "commands attach bbbb --to aaaa"))
+                    .empty());
+    }
+
+    SECTION("Autocomplete commands: reassign --to suggests nothing; move --to still suggests the lists")
+    {
+        REQUIRE(completionOf(Command("commands", { "reassign", "aaaa" }, { { "to", "" } }, "commands reassign aaaa --to"))
+                    .empty());
+        REQUIRE(completionOf(Command("commands", { "move", "aaaa" }, { { "to", "" } }, "commands move aaaa --to"))
+                    .find("tempList2Name") != std::string::npos);
+    }
+
+    SECTION("Autocomplete commands: add --id suggests nothing (a new id is typed)")
+    {
+        REQUIRE(completionOf(Command("commands", { "add", "server" }, { { "id", "" } }, "commands add server --id"))
+                    .empty());
+    }
 }
