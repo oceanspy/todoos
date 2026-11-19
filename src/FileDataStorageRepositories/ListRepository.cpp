@@ -1,8 +1,11 @@
 #include "ListRepository.h"
 
+const std::string ListRepository::BACKUP_PREFIX = "._backup_del_";
+
 ListRepository::ListRepository(ConfigService& configService, DataSerializerInterface* fileDataService)
   : configService(configService)
   , fileDataService(fileDataService)
+  , fileStorageService(configService)
 {
     path = configService.getListofListFilePath();
 }
@@ -25,19 +28,19 @@ ListRepository::get()
 }
 
 ListEntity
-ListRepository::find(const std::string& key)
+ListRepository::find(const std::string& name)
 {
     fileDataService->load(path);
 
     std::vector<std::vector<std::string>> data = fileDataService->read(0);
 
     for (const std::vector<std::string>& item : data) {
-        if (item[0] == key) {
+        if (item[0] == name) {
             return ListEntity::setFromVector(item);
         }
     }
 
-    throw std::invalid_argument("List: " + key + " was not found.");
+    throw std::invalid_argument("List: " + name + " was not found.");
 }
 
 void
@@ -46,10 +49,11 @@ ListRepository::create(const ListEntity& item)
     fileDataService->load(path);
     fileDataService->append({ ListEntity::makeVector(item) });
     resetCache();
+    fileStorageService.createNewListFile(*item.getName());
 }
 
 bool
-ListRepository::update(const std::string& listName, const ListEntity& item)
+ListRepository::update(const std::string& name, const ListEntity& item)
 {
     fileDataService->load(path);
 
@@ -58,7 +62,7 @@ ListRepository::update(const std::string& listName, const ListEntity& item)
 
     bool found = false;
     for (std::vector itemFromStorage : data) {
-        if (itemFromStorage[0] == listName) {
+        if (itemFromStorage[0] == name) {
             found = true;
             items.push_back(ListEntity::makeVector(item));
             continue;
@@ -72,7 +76,31 @@ ListRepository::update(const std::string& listName, const ListEntity& item)
 }
 
 void
-ListRepository::remove(std::string& name)
+ListRepository::rename(const std::string& oldName, const std::string& newName)
+{
+    ListEntity listEntity = find(oldName);
+    // Moving the files first: it fails if the destination already exists, leaving everything untouched.
+    fileStorageService.moveFileTo(oldName, newName);
+    listEntity.setName(newName);
+    update(oldName, listEntity);
+}
+
+void
+ListRepository::remove(const std::string& name)
+{
+    removeEntry(name);
+    fileStorageService.removeListFile(name);
+}
+
+void
+ListRepository::removeKeepingBackup(const std::string& name)
+{
+    removeEntry(name);
+    fileStorageService.moveFileTo(name, BACKUP_PREFIX + name);
+}
+
+void
+ListRepository::removeEntry(const std::string& name)
 {
     fileDataService->load(path);
 

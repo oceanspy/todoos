@@ -1,8 +1,7 @@
 #include "FileStorageService.h"
 
-FileStorageService::FileStorageService(IOService& ioService, ConfigService& configService)
-  : ioService(ioService)
-  , configService(configService)
+FileStorageService::FileStorageService(ConfigService& configService)
+  : configService(configService)
 {
 }
 
@@ -19,15 +18,11 @@ FileStorageService::createNewListFile(const std::string& listName)
     for (const auto& filePath : filePaths) {
         std::ofstream outfile(filePath, std::ios::out | std::ios::app);
         if (!outfile.is_open()) {
-            ioService.br();
-            ioService.error("Failed to create application load file");
-            ioService.br();
-            return;
+            throw std::invalid_argument("Failed to create list file: " + filePath.filename().string());
         }
         populateNewListFile(outfile);
         outfile.close();
     }
-    return;
 }
 
 void

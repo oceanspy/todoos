@@ -94,7 +94,7 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
     {
         std::filesystem::path path = descriptionRepository.getFilePath("../../etc/passwd", listName);
         std::string pathStr = std::filesystem::weakly_canonical(path).string();
-        std::string dirStr  = std::filesystem::weakly_canonical(descriptionsDir).string();
+        std::string dirStr = std::filesystem::weakly_canonical(descriptionsDir).string();
         REQUIRE(pathStr.find(dirStr) == 0);
     }
 
@@ -103,7 +103,7 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
         ListName traversalList("../../etc", "default");
         std::filesystem::path path = descriptionRepository.getFilePath("aaaa", traversalList);
         std::string pathStr = std::filesystem::weakly_canonical(path).string();
-        std::string dirStr  = std::filesystem::weakly_canonical(descriptionsDir).string();
+        std::string dirStr = std::filesystem::weakly_canonical(descriptionsDir).string();
         REQUIRE(pathStr.find(dirStr) == 0);
     }
 
@@ -141,6 +141,30 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
 
         std::vector<std::string> ids = descriptionRepository.getIds(listName);
         REQUIRE(std::find(ids.begin(), ids.end(), "aaaa") == ids.end());
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("save creates the list directory and writes content")
+    {
+        ListName newList("brandNewList", "default");
+        descriptionRepository.save("cccc", newList, "Content.\n");
+
+        REQUIRE(std::filesystem::exists(descriptionRepository.getFilePath("cccc", newList)));
+        REQUIRE(descriptionRepository.exists("cccc", newList));
+        REQUIRE(descriptionRepository.load("cccc", newList) == "Content.\n");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("save overwrites an existing description")
+    {
+        descriptionRepository.save("aaaa", listName, "Old content.\nSecond line.\n");
+        descriptionRepository.save("aaaa", listName, "New content.\n");
+
+        REQUIRE(descriptionRepository.load("aaaa", listName) == "New content.\n");
 
         installation.wipe();
         installation.make();

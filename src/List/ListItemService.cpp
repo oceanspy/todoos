@@ -8,8 +8,8 @@
 
 ListItemService::ListItemService(IOService& ioService,
                                  ConfigService& configService,
-                                 ListItemRepository& listItemRepository,
-                                 DescriptionRepository& descriptionRepository,
+                                 ListItemRepositoryInterface& listItemRepository,
+                                 DescriptionRepositoryInterface& descriptionRepository,
                                  PriorityService& priorityService,
                                  StatusService& statusService)
   : ioService(ioService)

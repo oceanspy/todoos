@@ -7,14 +7,12 @@ SwitchListUseCase::SwitchListUseCase(IOService& ioService,
                                      CommandService& commandService,
                                      ListService& listService,
                                      ListItemService& listItemService,
-                                     FileStorageService& fileStorageService,
                                      ConfigService& configService,
                                      ThemeService& themeService)
   : ioService(ioService)
   , commandService(commandService)
   , listService(listService)
   , listItemService(listItemService)
-  , fileStorageService(fileStorageService)
   , configService(configService)
   , themeService(themeService)
 {

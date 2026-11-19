@@ -14,7 +14,7 @@ DescribeItemUseCase::DescribeItemUseCase(IOService& ioService,
                                          ListService& listService,
                                          ConfigService& configService,
                                          ThemeService& themeService,
-                                         DescriptionRepository& descriptionRepository,
+                                         DescriptionRepositoryInterface& descriptionRepository,
                                          std::filesystem::path cacheDirPath)
   : ioService(ioService)
   , commandService(commandService)
@@ -42,19 +42,20 @@ DescribeItemUseCase::execute(Command& command, ListName& currentList)
     ItemTempFile tempFile(ioService, describeItem, cacheDirPath);
     std::string editFilePath = tempFile.execute();
 
-    std::string destPath = descriptionRepository.getFilePath(itemId, currentList).string();
     std::string pendingError;
 
     while (true) {
         try {
-            DescribeItemEdited edited = DescribeItemEdited::createFromFile(editFilePath, destPath);
+            DescribeItemEdited edited = DescribeItemEdited::createFromFile(editFilePath);
+
+            if (edited.hasDescription()) {
+                descriptionRepository.save(itemId, currentList, edited.asDescription());
+            } else {
+                descriptionRepository.remove(itemId, currentList);
+            }
 
             if (edited.asTitle() != *listItem.getValue()) {
                 listItemService.edit(itemId, currentList, edited.asTitle());
-            }
-
-            if (!edited.hasDescription()) {
-                descriptionRepository.remove(itemId, currentList);
             }
 
             break;

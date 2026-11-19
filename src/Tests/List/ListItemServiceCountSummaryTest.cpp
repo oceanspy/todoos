@@ -7,6 +7,7 @@
 #include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
+#include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include <catch2/catch_test_macros.hpp>
 
 // Seeded items in the default list (from MockAppInstallation):

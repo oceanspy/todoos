@@ -3,7 +3,7 @@
 
 ListService::ListService(IOService& ioService,
                          ConfigService& configService,
-                         ListRepository& listRepository,
+                         ListRepositoryInterface& listRepository,
                          EventBus& bus)
   : ioService(ioService)
   , configService(configService)
@@ -104,15 +104,19 @@ ListService::edit(const std::string& oldListName, std::string newListName)
 {
     validateListName(newListName);
 
-    ListEntity listEntity = find(oldListName);
-    listEntity.setName(std::move(newListName));
-    listRepository.update(oldListName, listEntity);
+    listRepository.rename(oldListName, newListName);
 }
 
 void
-ListService::remove(std::string& listName)
+ListService::remove(const std::string& listName)
 {
     listRepository.remove(listName);
+}
+
+void
+ListService::removeKeepingBackup(const std::string& listName)
+{
+    listRepository.removeKeepingBackup(listName);
 }
 
 bool

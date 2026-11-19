@@ -5,13 +5,11 @@
 CopyListUseCase::CopyListUseCase(IOService& ioService,
                                  ListService& listService,
                                  ListItemService& listItemService,
-                                 FileStorageService& fileStorageService,
                                  ConfigService& configService,
                                  ThemeService& themeService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
-  , fileStorageService(fileStorageService)
   , configService(configService)
   , themeService(themeService)
 {
@@ -20,7 +18,7 @@ CopyListUseCase::CopyListUseCase(IOService& ioService,
 void
 CopyListUseCase::execute(Command& command)
 {
-    CopyListAction action(ioService, listService, listItemService, fileStorageService);
+    CopyListAction action(ioService, listService, listItemService);
     action.execute(command);
 
     ShowListAction showAction(ioService, listService, configService, themeService);

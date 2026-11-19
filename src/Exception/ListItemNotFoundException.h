@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../List/ListName.h"
 #include <exception>
 #include <string>

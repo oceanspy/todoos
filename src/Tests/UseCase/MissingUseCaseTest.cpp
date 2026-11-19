@@ -16,6 +16,7 @@
 #include "../../UseCase/PrependItemUseCase.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include <catch2/catch_test_macros.hpp>
 
 // ---------------------------------------------------------------------------

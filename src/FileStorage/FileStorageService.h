@@ -2,16 +2,16 @@
 #define TODOOS_FILESTORAGESERVICE_H
 
 #include "../Config/ConfigService.h"
-#include "../IOService/IOService.h"
-#include "../List/ListEntity.h"
-#include "../Serializers/JsonSerializer.h"
 #include <filesystem>
 #include <fstream>
+#include <string>
 
+// File-storage helper: manages the three item files (default, archive, delete)
+// backing a list. Only used by the file-based ListRepository.
 class FileStorageService
 {
   public:
-    FileStorageService(IOService& ioService, ConfigService& configService);
+    explicit FileStorageService(ConfigService& configService);
     static const std::string CSV;
     static const std::string JSON;
     void moveFileTo(const std::string& oldListName, const std::string& newListName);
@@ -19,7 +19,6 @@ class FileStorageService
     void removeListFile(const std::string& listName);
 
   private:
-    IOService& ioService;
     ConfigService& configService;
     void populateNewListFile(std::ofstream& outfile);
 };

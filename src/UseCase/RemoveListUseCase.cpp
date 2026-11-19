@@ -4,12 +4,10 @@
 
 RemoveListUseCase::RemoveListUseCase(IOService& ioService,
                                      ListService& listService,
-                                     FileStorageService& fileStorageService,
                                      ConfigService& configService,
                                      ThemeService& themeService)
   : ioService(ioService)
   , listService(listService)
-  , fileStorageService(fileStorageService)
   , configService(configService)
   , themeService(themeService)
 {
@@ -18,7 +16,7 @@ RemoveListUseCase::RemoveListUseCase(IOService& ioService,
 void
 RemoveListUseCase::execute(Command& command)
 {
-    RemoveListAction action(ioService, listService, fileStorageService, configService);
+    RemoveListAction action(ioService, listService, configService);
     action.execute(command);
 
     ShowListAction showAction(ioService, listService, configService, themeService);

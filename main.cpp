@@ -20,6 +20,7 @@
 #include "src/Serializers/JsonSerializer.h"
 #include "src/UseCase/CommandAutoCompleteUseCase.h"
 #include <clocale>
+#include <memory>
 #include <stdexcept>
 
 int
@@ -103,7 +104,6 @@ main(int argc, const char* argv[])
 
     // ----
     // Storage initialization
-    FileStorageService fileStorageService = FileStorageService(ioService, configService);
     DataSerializerInterface* fileDataStorageServicePtr;
     if (configService.getFileDataStorageType() == FileStorageService::CSV) {
         fileDataStorageServicePtr = &csvService;
@@ -119,13 +119,16 @@ main(int argc, const char* argv[])
     EventBus bus = EventBus();
     PriorityService priorityService = PriorityService();
     StatusService statusService = StatusService();
-    DescriptionRepository descriptionRepository = DescriptionRepository(configService.getDescriptionsDirPath());
-    ListItemRepository listItemRepository =
-        ListItemRepository(configService, fileDataStorageServicePtr, priorityService, statusService);
+    std::unique_ptr<DescriptionRepositoryInterface> descriptionRepository =
+        std::make_unique<DescriptionRepository>(configService.getDescriptionsDirPath());
+    std::unique_ptr<ListItemRepositoryInterface> listItemRepository =
+        std::make_unique<ListItemRepository>(configService, fileDataStorageServicePtr, priorityService, statusService);
+    std::unique_ptr<ListRepositoryInterface> listRepository =
+        std::make_unique<ListRepository>(configService, &jsonService);
+
     ListItemService listItemService = ListItemService(
-        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
-    ListRepository listRepository = ListRepository(configService, &jsonService);
-    ListService listService = ListService(ioService, configService, listRepository, bus);
+        ioService, configService, *listItemRepository, *descriptionRepository, priorityService, statusService);
+    ListService listService = ListService(ioService, configService, *listRepository, bus);
 
     // ----
     // Dealing with command autocomplete
@@ -150,11 +153,10 @@ main(int argc, const char* argv[])
                                                 help,
                                                 commandService,
                                                 configService,
-                                                fileStorageService,
                                                 listService,
                                                 listItemService,
                                                 themeService,
-                                                descriptionRepository,
+                                                *descriptionRepository,
                                                 init.getCacheDirPath());
 
     // ----

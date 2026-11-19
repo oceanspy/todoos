@@ -7,8 +7,7 @@
 #include "../Command/CommandService.h"
 #include "../Command/SmartCommand.h"
 #include "../Config/ConfigService.h"
-#include "../FileDataStorageRepositories/DescriptionRepository.h"
-#include "../FileStorage/FileStorageService.h"
+#include "../Describe/DescriptionRepositoryInterface.h"
 #include "../Help/HelpPrinter.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
@@ -23,11 +22,10 @@ class CommandRouter
                   HelpPrinter& help,
                   CommandService& commandService,
                   ConfigService& configService,
-                  FileStorageService& fileStorageService,
                   ListService& listService,
                   ListItemService& listItemService,
                   ThemeService& themeService,
-                  DescriptionRepository& descriptionRepository,
+                  DescriptionRepositoryInterface& descriptionRepository,
                   std::filesystem::path cacheDirPath);
 
     void execute(Command& command, ListName& currentList);
@@ -38,11 +36,10 @@ class CommandRouter
     CommandService& commandService;
     ConfigService& configService;
     std::filesystem::path currentListFilePath;
-    FileStorageService& fileStorageService;
     ListService& listService;
     ListItemService& listItemService;
     ThemeService& themeService;
-    DescriptionRepository& descriptionRepository;
+    DescriptionRepositoryInterface& descriptionRepository;
     std::filesystem::path cacheDirPath;
 };
 

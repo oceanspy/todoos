@@ -1,9 +1,8 @@
 #include "AddListAction.h"
 
-AddListAction::AddListAction(IOService& ioService, ListService& listService, FileStorageService& fileStorageService)
+AddListAction::AddListAction(IOService& ioService, ListService& listService)
   : ioService(ioService)
   , listService(listService)
-  , fileStorageService(fileStorageService)
 {
 }
 
@@ -24,7 +23,6 @@ AddListAction::execute(Command& command)
     try {
         listService.add(name);
         listService.find(name);
-        fileStorageService.createNewListFile(name);
         listService.use(name);
     } catch (std::invalid_argument& e) {
         ioService.br();

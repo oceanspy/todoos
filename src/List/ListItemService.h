@@ -1,14 +1,18 @@
 #ifndef LISTITEMSERVICE_H
 #define LISTITEMSERVICE_H
 
+#include "../Config/ConfigService.h"
+#include "../Describe/DescriptionRepositoryInterface.h"
 #include "../Events/EventBus.h"
-#include "../FileDataStorageRepositories/DescriptionRepository.h"
-#include "../FileDataStorageRepositories/ListItemRepository.h"
+#include "../Exception/ListItemNotFoundException.h"
 #include "../Helpers/DateHelpers.h"
 #include "../Helpers/StringHelpers.h"
 #include "../IOService/IOService.h"
 #include "ListCountSummary.h"
 #include "ListItemId.h"
+#include "ListItemRepositoryInterface.h"
+#include "ListItems/PriorityService.h"
+#include "ListItems/StatusService.h"
 #include "ListName.h"
 
 class ListItemService
@@ -16,8 +20,8 @@ class ListItemService
   public:
     ListItemService(IOService& ioService,
                     ConfigService& configService,
-                    ListItemRepository& listItemRepository,
-                    DescriptionRepository& descriptionRepository,
+                    ListItemRepositoryInterface& listItemRepository,
+                    DescriptionRepositoryInterface& descriptionRepository,
                     PriorityService& priorityService,
                     StatusService& statusService);
     PriorityService& priority();
@@ -69,8 +73,8 @@ class ListItemService
   private:
     IOService& ioService;
     ConfigService& configService;
-    ListItemRepository& listItemRepository;
-    DescriptionRepository& descriptionRepository;
+    ListItemRepositoryInterface& listItemRepository;
+    DescriptionRepositoryInterface& descriptionRepository;
     PriorityService priorityService;
     StatusService statusService;
     std::vector<ListItemEntity> sort(std::vector<ListItemEntity> listItems);

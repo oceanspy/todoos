@@ -4,12 +4,10 @@
 
 RenameListUseCase::RenameListUseCase(IOService& ioService,
                                      ListService& listService,
-                                     FileStorageService& fileStorageService,
                                      ConfigService& configService,
                                      ThemeService& themeService)
   : ioService(ioService)
   , listService(listService)
-  , fileStorageService(fileStorageService)
   , configService(configService)
   , themeService(themeService)
 {
@@ -18,7 +16,7 @@ RenameListUseCase::RenameListUseCase(IOService& ioService,
 void
 RenameListUseCase::execute(Command& command)
 {
-    RenameListAction action(ioService, listService, fileStorageService, configService);
+    RenameListAction action(ioService, listService, configService);
     action.execute(command);
 
     ShowListAction showAction(ioService, listService, configService, themeService);

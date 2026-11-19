@@ -2,7 +2,6 @@
 
 #include "../Command/Command.h"
 #include "../Config/ConfigService.h"
-#include "../FileStorage/FileStorageService.h"
 #include "../IOService/IOService.h"
 #include "../List/ListItemService.h"
 #include "../List/ListService.h"
@@ -14,7 +13,6 @@ class CopyListUseCase
     CopyListUseCase(IOService& ioService,
                     ListService& listService,
                     ListItemService& listItemService,
-                    FileStorageService& fileStorageService,
                     ConfigService& configService,
                     ThemeService& themeService);
     void execute(Command& command);
@@ -23,7 +21,6 @@ class CopyListUseCase
     IOService& ioService;
     ListService& listService;
     ListItemService& listItemService;
-    FileStorageService& fileStorageService;
     ConfigService& configService;
     ThemeService& themeService;
 };

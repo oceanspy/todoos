@@ -4,12 +4,10 @@
 
 AddListUseCase::AddListUseCase(IOService& ioService,
                                ListService& listService,
-                               FileStorageService& fileStorageService,
                                ConfigService& configService,
                                ThemeService& themeService)
   : ioService(ioService)
   , listService(listService)
-  , fileStorageService(fileStorageService)
   , configService(configService)
   , themeService(themeService)
 {
@@ -18,7 +16,7 @@ AddListUseCase::AddListUseCase(IOService& ioService,
 void
 AddListUseCase::execute(Command& command)
 {
-    AddListAction action(ioService, listService, fileStorageService);
+    AddListAction action(ioService, listService);
     action.execute(command);
 
     ShowListAction showAction(ioService, listService, configService, themeService);

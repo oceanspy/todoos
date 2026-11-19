@@ -1,12 +1,8 @@
 #include "RemoveListAction.h"
 
-RemoveListAction::RemoveListAction(IOService& ioService,
-                                   ListService& listService,
-                                   FileStorageService& fileStorageService,
-                                   ConfigService& configService)
+RemoveListAction::RemoveListAction(IOService& ioService, ListService& listService, ConfigService& configService)
   : ioService(ioService)
   , listService(listService)
-  , fileStorageService(fileStorageService)
   , configService(configService)
 {
 }
@@ -26,11 +22,10 @@ RemoveListAction::execute(Command& command)
                                                                             : configService.getUsedListNameStr();
 
     try {
-        listService.remove(listName);
         if (command.hasOption("force")) {
-            fileStorageService.removeListFile(listName);
+            listService.remove(listName);
         } else {
-            fileStorageService.moveFileTo(listName, "._backup_del_" + listName);
+            listService.removeKeepingBackup(listName);
         }
         listService.use(goBackList);
     } catch (std::invalid_argument& e) {

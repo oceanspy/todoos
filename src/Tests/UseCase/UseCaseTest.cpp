@@ -4,7 +4,6 @@
 #include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
-#include "../../FileStorage/FileStorageService.h"
 #include "../../Help/HelpPrinter.h"
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
@@ -32,6 +31,7 @@
 #include "../../UseCase/SwitchListUseCase.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include <catch2/catch_test_macros.hpp>
 
 // ---------------------------------------------------------------------------
@@ -684,7 +684,6 @@ TEST_CASE("ListUseCase", "[UseCase][List]")
     ListRepository listRepository(configService, storagePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ThemeService themeService(ioService, configService, listService, listItemService);
-    FileStorageService fileStorageService(ioService, configService);
 
     SECTION("execute does not throw")
     {
@@ -725,7 +724,6 @@ TEST_CASE("SwitchListUseCase", "[UseCase][Use]")
     ListRepository listRepository(configService, storagePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ThemeService themeService(ioService, configService, listService, listItemService);
-    FileStorageService fileStorageService(ioService, configService);
 
     SECTION("execute switches active list without throwing")
     {
@@ -733,7 +731,6 @@ TEST_CASE("SwitchListUseCase", "[UseCase][Use]")
                                           commandService,
                                           listService,
                                           listItemService,
-                                          fileStorageService,
                                           configService,
                                           themeService)
                             .execute(command));

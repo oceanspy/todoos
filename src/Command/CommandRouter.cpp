@@ -1,5 +1,5 @@
 #include "CommandRouter.h"
-#include "../FileDataStorageRepositories/DescriptionRepository.h"
+#include "../Describe/DescriptionRepositoryInterface.h"
 #include "../UseCase/AddItemUseCase.h"
 #include "../UseCase/AddListUseCase.h"
 #include "../UseCase/AppendItemUseCase.h"
@@ -32,17 +32,15 @@ CommandRouter::CommandRouter(IOService& ioService,
                              HelpPrinter& help,
                              CommandService& commandService,
                              ConfigService& configService,
-                             FileStorageService& fileStorageService,
                              ListService& listService,
                              ListItemService& listItemService,
                              ThemeService& themeService,
-                             DescriptionRepository& descriptionRepository,
+                             DescriptionRepositoryInterface& descriptionRepository,
                              std::filesystem::path cacheDirPath)
   : ioService(ioService)
   , help(help)
   , commandService(commandService)
   , configService(configService)
-  , fileStorageService(fileStorageService)
   , listService(listService)
   , listItemService(listItemService)
   , themeService(themeService)
@@ -184,23 +182,14 @@ CommandRouter::execute(Command& command, ListName& currentList)
             if (commandService.isCommand(subCommand, "show")) {
                 ShowListUseCase(ioService, listService, configService, themeService).execute(subCommand);
             } else if (commandService.isCommand(subCommand, "add")) {
-                AddListUseCase(ioService, listService, fileStorageService, configService, themeService)
-                    .execute(subCommand);
+                AddListUseCase(ioService, listService, configService, themeService).execute(subCommand);
             } else if (commandService.isCommand(subCommand, "remove")) {
-                RemoveListUseCase(ioService, listService, fileStorageService, configService, themeService)
-                    .execute(subCommand);
+                RemoveListUseCase(ioService, listService, configService, themeService).execute(subCommand);
             } else if (commandService.isCommand(subCommand, "move-to")) {
-                MoveListUseCase(ioService,
-                                commandService,
-                                listService,
-                                listItemService,
-                                fileStorageService,
-                                configService,
-                                themeService)
+                MoveListUseCase(ioService, commandService, listService, listItemService, configService, themeService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "copy")) {
-                CopyListUseCase(
-                    ioService, listService, listItemService, fileStorageService, configService, themeService)
+                CopyListUseCase(ioService, listService, listItemService, configService, themeService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "current")) {
                 CurrentListUseCase(ioService, configService).execute(subCommand);
@@ -210,13 +199,7 @@ CommandRouter::execute(Command& command, ListName& currentList)
 
             return;
         case CommandRegistry::USE:
-            SwitchListUseCase(ioService,
-                              commandService,
-                              listService,
-                              listItemService,
-                              fileStorageService,
-                              configService,
-                              themeService)
+            SwitchListUseCase(ioService, commandService, listService, listItemService, configService, themeService)
                 .execute(command);
             return;
         case CommandRegistry::STATS:

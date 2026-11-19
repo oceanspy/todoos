@@ -9,7 +9,7 @@ RemoveUseCase::RemoveUseCase(IOService& ioService,
                              ListService& listService,
                              ConfigService& configService,
                              ThemeService& themeService,
-                             DescriptionRepository& descriptionRepository)
+                             DescriptionRepositoryInterface& descriptionRepository)
   : ioService(ioService)
   , listItemService(listItemService)
   , listService(listService)

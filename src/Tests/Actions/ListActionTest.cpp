@@ -10,7 +10,6 @@
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
-#include "../../FileStorage/FileStorageService.h"
 #include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/PriorityService.h"
@@ -86,12 +85,11 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
 
         std::size_t countBefore = listService.get().size();
 
         Command subCommand("add", { "newTestList" }, {}, "add newTestList");
-        AddListAction action(ioService, listService, fileStorageService);
+        AddListAction action(ioService, listService);
         REQUIRE_NOTHROW(action.execute(subCommand));
 
         std::size_t countAfter = listService.get().size();
@@ -112,10 +110,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
 
         Command subCommand("add", {}, {}, "add");
-        AddListAction action(ioService, listService, fileStorageService);
+        AddListAction action(ioService, listService);
         REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
@@ -132,12 +129,11 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
 
         std::size_t countBefore = listService.get().size();
 
         Command subCommand("remove", { "tempList2Name" }, {}, "remove tempList2Name");
-        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        RemoveListAction action(ioService, listService, configService);
         REQUIRE_NOTHROW(action.execute(subCommand));
 
         std::size_t countAfter = listService.get().size();
@@ -158,10 +154,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
 
         Command subCommand("remove", {}, {}, "remove");
-        RemoveListAction action(ioService, listService, fileStorageService, configService);
+        RemoveListAction action(ioService, listService, configService);
         REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
@@ -179,10 +174,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
 
         Command subCommand("move-to", { "tempListName", "renamedList" }, {}, "move-to tempListName renamedList");
-        RenameListAction action(ioService, listService, fileStorageService, configService);
+        RenameListAction action(ioService, listService, configService);
         REQUIRE_NOTHROW(action.execute(subCommand));
 
         bool found = false;
@@ -209,10 +203,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
 
         Command subCommand("move-to", { "tempListName" }, {}, "move-to tempListName");
-        RenameListAction action(ioService, listService, fileStorageService, configService);
+        RenameListAction action(ioService, listService, configService);
         REQUIRE_NOTHROW(action.execute(subCommand));
     }
 
@@ -229,7 +222,6 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         ShowListUseCase useCase(ioService, listService, configService, themeService);
@@ -249,11 +241,10 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         SwitchListUseCase useCase(
-            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+            ioService, commandService, listService, listItemService, configService, themeService);
         REQUIRE_NOTHROW(useCase.execute(command));
     }
 
@@ -270,11 +261,10 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         SwitchListUseCase useCase(
-            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+            ioService, commandService, listService, listItemService, configService, themeService);
         REQUIRE_NOTHROW(useCase.execute(command));
     }
 
@@ -289,11 +279,10 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         SwitchListUseCase useCase(
-            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+            ioService, commandService, listService, listItemService, configService, themeService);
         REQUIRE_NOTHROW(useCase.execute(command));
     }
 
@@ -308,11 +297,10 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         SwitchListUseCase useCase(
-            ioService, commandService, listService, listItemService, fileStorageService, configService, themeService);
+            ioService, commandService, listService, listItemService, configService, themeService);
         REQUIRE_NOTHROW(useCase.execute(command));
     }
 }

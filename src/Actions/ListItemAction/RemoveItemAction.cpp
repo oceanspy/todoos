@@ -1,6 +1,8 @@
 #include "RemoveItemAction.h"
 
-RemoveItemAction::RemoveItemAction(IOService& ioService, ListItemService& listItemService, DescriptionRepository& descriptionRepository)
+RemoveItemAction::RemoveItemAction(IOService& ioService,
+                                   ListItemService& listItemService,
+                                   DescriptionRepositoryInterface& descriptionRepository)
   : ioService(ioService)
   , listItemService(listItemService)
   , descriptionRepository(descriptionRepository)

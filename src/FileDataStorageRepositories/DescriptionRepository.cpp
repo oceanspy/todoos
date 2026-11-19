@@ -46,6 +46,19 @@ DescriptionRepository::load(const std::string& itemId, const ListName& listName)
     return content.str();
 }
 
+void
+DescriptionRepository::save(const std::string& itemId, const ListName& listName, const std::string& content)
+{
+    std::filesystem::path filePath = getFilePath(itemId, listName);
+    std::filesystem::create_directories(filePath.parent_path());
+
+    std::ofstream file(filePath, std::ios::out | std::ios::trunc);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open destination description file.");
+    }
+    file << content;
+}
+
 std::vector<std::string>
 DescriptionRepository::getIds(const ListName& listName)
 {

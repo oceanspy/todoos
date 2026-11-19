@@ -7,6 +7,7 @@
 #include "../../UseCase/CommandAutoCompleteUseCase.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
+#include "../../FileDataStorageRepositories/ListRepository.h"
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 

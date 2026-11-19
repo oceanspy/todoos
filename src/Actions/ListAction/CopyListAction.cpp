@@ -1,13 +1,9 @@
 #include "CopyListAction.h"
 
-CopyListAction::CopyListAction(IOService& ioService,
-                               ListService& listService,
-                               ListItemService& listItemService,
-                               FileStorageService& fileStorageService)
+CopyListAction::CopyListAction(IOService& ioService, ListService& listService, ListItemService& listItemService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
-  , fileStorageService(fileStorageService)
 {
 }
 
@@ -49,7 +45,6 @@ CopyListAction::execute(Command& command)
     }
 
     try {
-        fileStorageService.createNewListFile(newListNameStr);
         listService.add(newListNameStr);
 
         ListName listName = listService.createListName(listNameStr);

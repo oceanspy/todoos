@@ -115,6 +115,13 @@ add_executable(todoos main.cpp
         src/FileDataStorageRepositories/ListRepository.h
         src/FileDataStorageRepositories/DescriptionRepository.cpp
         src/FileDataStorageRepositories/DescriptionRepository.h
+        src/List/ListRepositoryInterface.h
+        src/List/ListItemRepositoryInterface.h
+        src/Describe/DescriptionRepositoryInterface.h
+        src/SqlRepositories/SqlListRepository.cpp
+        src/SqlRepositories/SqlListRepository.h
+        src/SqlRepositories/SqlListItemRepository.cpp
+        src/SqlRepositories/SqlListItemRepository.h
         src/Describe/DescribeItem.cpp
         src/Describe/DescribeItem.h
         src/Describe/DescribeItemEdited.cpp

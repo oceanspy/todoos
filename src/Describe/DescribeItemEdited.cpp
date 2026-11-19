@@ -1,16 +1,15 @@
 #include "DescribeItemEdited.h"
-#include <filesystem>
 #include <fstream>
 #include <stdexcept>
 
-DescribeItemEdited::DescribeItemEdited(std::string title, bool hasDescription)
+DescribeItemEdited::DescribeItemEdited(std::string title, std::string description)
   : title(std::move(title))
-  , descriptionWritten(hasDescription)
+  , description(std::move(description))
 {
 }
 
 DescribeItemEdited
-DescribeItemEdited::createFromFile(const std::string& srcPath, const std::string& destPath)
+DescribeItemEdited::createFromFile(const std::string& srcPath)
 {
     std::ifstream src(srcPath);
     if (!src.is_open()) {
@@ -20,8 +19,7 @@ DescribeItemEdited::createFromFile(const std::string& srcPath, const std::string
     std::string line;
     bool markerFound = false;
     std::string parsedTitle;
-    std::ofstream dest;
-    bool wroteAnyLine = false;
+    std::string body;
     bool bodyStarted = false;
 
     while (std::getline(src, line)) {
@@ -37,11 +35,6 @@ DescribeItemEdited::createFromFile(const std::string& srcPath, const std::string
                 throw std::runtime_error("Title must be on the line immediately after the todoos marker.");
             }
             parsedTitle = line.substr(2);
-            std::filesystem::create_directories(std::filesystem::path(destPath).parent_path());
-            dest.open(destPath);
-            if (!dest.is_open()) {
-                throw std::runtime_error("Could not open destination description file.");
-            }
             continue;
         }
 
@@ -50,8 +43,7 @@ DescribeItemEdited::createFromFile(const std::string& srcPath, const std::string
         }
 
         bodyStarted = true;
-        dest << line << "\n";
-        wroteAnyLine = true;
+        body += line + "\n";
     }
 
     if (!markerFound) {
@@ -62,13 +54,7 @@ DescribeItemEdited::createFromFile(const std::string& srcPath, const std::string
         throw std::runtime_error("Title line missing after todoos marker.");
     }
 
-    dest.close();
-
-    if (!wroteAnyLine && std::filesystem::exists(destPath)) {
-        std::filesystem::remove(destPath);
-    }
-
-    return DescribeItemEdited(parsedTitle, wroteAnyLine);
+    return DescribeItemEdited(parsedTitle, body);
 }
 
 std::string
@@ -77,8 +63,14 @@ DescribeItemEdited::asTitle() const
     return title;
 }
 
+std::string
+DescribeItemEdited::asDescription() const
+{
+    return description;
+}
+
 bool
 DescribeItemEdited::hasDescription() const
 {
-    return descriptionWritten;
+    return !description.empty();
 }

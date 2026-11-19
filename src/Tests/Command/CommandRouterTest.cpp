@@ -8,7 +8,6 @@
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
-#include "../../FileStorage/FileStorageService.h"
 #include "../../Help/HelpPrinter.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/PriorityService.h"
@@ -59,7 +58,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         ListName listName = listService.createUsedListName();
@@ -67,7 +65,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              help,
                              commandService,
                              configService,
-                             fileStorageService,
                              listService,
                              listItemService,
                              themeService,
@@ -89,7 +86,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
@@ -97,7 +93,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              help,
                              commandService,
                              configService,
-                             fileStorageService,
                              listService,
                              listItemService,
                              themeService,
@@ -125,7 +120,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
@@ -133,7 +127,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              help,
                              commandService,
                              configService,
-                             fileStorageService,
                              listService,
                              listItemService,
                              themeService,
@@ -161,7 +154,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
@@ -169,7 +161,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              help,
                              commandService,
                              configService,
-                             fileStorageService,
                              listService,
                              listItemService,
                              themeService,
@@ -197,7 +188,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
@@ -205,7 +195,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              help,
                              commandService,
                              configService,
-                             fileStorageService,
                              listService,
                              listItemService,
                              themeService,
@@ -233,7 +222,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         ListName listName = listService.createUsedListName();
@@ -241,7 +229,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              help,
                              commandService,
                              configService,
-                             fileStorageService,
                              listService,
                              listItemService,
                              themeService,
@@ -264,7 +251,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
-        FileStorageService fileStorageService(ioService, configService);
         ThemeService themeService(ioService, configService, listService, listItemService);
 
         ListName listName = listService.createUsedListName();
@@ -272,7 +258,6 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
                              help,
                              commandService,
                              configService,
-                             fileStorageService,
                              listService,
                              listItemService,
                              themeService,
