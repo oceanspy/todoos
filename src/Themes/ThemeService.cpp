@@ -31,9 +31,9 @@ ThemeService::getTheme()
         return std::make_unique<Legacy>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
     }
 
-    // Unable to find the theme defined, we show an error and use the default
+    // Unable to find the theme defined: a warning, the command still runs with the default theme
     ioService.br();
-    ioService.error("Theme " + themeName + " not found. Using default.");
+    ioService.info("Theme " + themeName + " not found. Using default.");
     ioService.br();
     return std::make_unique<Default>(ioService, listService, listItemService, consoleWidth, consoleRowLength);
 }
