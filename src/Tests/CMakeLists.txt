@@ -180,3 +180,6 @@ target_link_libraries(TestsRun PRIVATE Catch2::Catch2WithMain)
 
 include(Catch)
 catch_discover_tests(TestsRun)
+
+# End-to-end: exit code of the real binary
+add_test(NAME ExitCode COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/exit-code-test.sh $<TARGET_FILE:todoos>)

@@ -53,6 +53,7 @@ IOService::success(std::string message)
 void
 IOService::error(std::string message)
 {
+    errorPrinted = true;
     message = " ❌ " + message;
     if (channel == "cli") {
         CliIOChannel::error(message);
@@ -136,4 +137,10 @@ IOService::getConsoleDisplayWidth()
     struct winsize w{};
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     return w.ws_col;
+}
+
+bool
+IOService::hasPrintedError() const
+{
+    return errorPrinted;
 }

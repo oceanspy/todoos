@@ -134,7 +134,7 @@ main(int argc, const char* argv[])
     if (CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {
         try {
             CommandAutoCompleteUseCase(ioService, commandService, listService, listItemService).execute(command);
-            return 1;
+            return 0;
         } catch (const std::exception& e) {
             // Just Quit
             return 1;
@@ -193,5 +193,6 @@ main(int argc, const char* argv[])
         ioService.ask("Press any key to quit");
     }
 
-    return 1;
+    // 0 on success; 1 when the command printed an error, so that `todoos … && …` stops on failures
+    return ioService.hasPrintedError() ? 1 : 0;
 }

@@ -23,10 +23,13 @@ class IOService
     void show(const std::vector<std::string>& messages);
     std::string ask(const std::string& message);
     static int getConsoleDisplayWidth();
+    // True once an error was printed: the command failed (or partly failed), todoos exits with 1
+    bool hasPrintedError() const;
 
   protected:
     const std::string& channel;
     std::string lastOutput = "";
+    bool errorPrinted = false;
 };
 
 #endif // IOSERVICE_H

@@ -25,6 +25,21 @@ TEST_CASE("IOService CLI channel tests", "[IOService][CLI]")
         // No direct way to check output in CLI, can check for exceptions
     }
 
+    SECTION("hasPrintedError: only an error marks the command as failed")
+    {
+        IOService io("cli");
+        REQUIRE(io.hasPrintedError() == false);
+        io.print("print");
+        io.message("message");
+        io.success("success");
+        io.info("info");
+        REQUIRE(io.hasPrintedError() == false);
+        io.error("error");
+        REQUIRE(io.hasPrintedError() == true);
+        io.success("a later success does not clear it");
+        REQUIRE(io.hasPrintedError() == true);
+    }
+
     SECTION("Br test")
     {
         IOService io("cli");
