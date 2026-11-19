@@ -2,6 +2,8 @@
 ## Unreleased
 - Fix: todoos exits with 0 on success and 1 when the command fails (it always exited with 1), so
   `todoos … && …` chains work. A missing theme is now a notice, not an error.
+- Zsh sync wrapper (`Linux/Zsh/zsh_todoos_sync`): `todoos`, `t`, `ta`… now return todoos' exit code
+  instead of the background unison call's (always 0). Reload it after upgrading.
 - **Breaking:** `move-to {list} {ids}` / `copy-to {list} {ids}` are replaced by
   `move {ids} --to {list}` / `copy {ids} --to {list}` (short option `-t`, aliases `mv` / `cp`).
 - Help: archive flag shown as `-A` (was wrongly `-a`); `describe` no longer lists flags it ignores.

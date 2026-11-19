@@ -7,90 +7,84 @@ alias tl="todoos -l"
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *"
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="todoos *|t *|ta *|tau *|tah *|tac *|tal *|tam *|tu *"
 
-todoos() {
+# Runs todoos, then syncs in the background. Returns todoos' exit code (not unison's),
+# so that `todoos … && …` stops when a command fails.
+_todoos_sync_run() {
     command todoos "$@"
+    local rc=$?
     (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    return $rc
+}
+
+todoos() {
+    _todoos_sync_run "$@"
 }
 
 t() {
-    command todoos "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run "$@"
 }
 
 ta() {
-    command todoos add "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run add "$@"
 }
 compdef _ta ta
 
 tac() {
-    command todoos add -p critical "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run add -p critical "$@"
 }
 compdef _ta tac
 
 tau() {
-    command todoos add -p urgent "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run add -p urgent "$@"
 }
 compdef _ta tau
 
 tah() {
-    command todoos add -p high "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run add -p high "$@"
 }
 compdef _ta tah
 
 tam() {
-    command todoos add -p medium "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run add -p medium "$@"
 }
 compdef _ta tam
 
 tal() {
-    command todoos add -p low "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run add -p low "$@"
 }
 compdef _ta tal
 
 td() {
-    command todoos -l default "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run -l default "$@"
 }
 
 tda() {
-    command todoos -l default add "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run -l default add "$@"
 }
 compdef _ta tda
 
 tdac() {
-    command todoos -l default add -p critical "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run -l default add -p critical "$@"
 }
 compdef _ta tdac
 
 tdau() {
-    command todoos  -l default add -p urgent "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run -l default add -p urgent "$@"
 }
 compdef _ta tdau
 
 tdah() {
-    command todoos -l default add -p high "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run -l default add -p high "$@"
 }
 compdef _ta tdah
 
 tdam() {
-    command todoos -l default add -p medium "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run -l default add -p medium "$@"
 }
 compdef _ta tdam
 
 tdal() {
-    command todoos -l default add -p low "$@"
-    (unison -silent todoos-sync &>/dev/null &) &> /dev/null
+    _todoos_sync_run -l default add -p low "$@"
 }
 compdef _ta tdal
 
