@@ -31,7 +31,8 @@ class ListItemService
                     const std::string* priority = nullptr,
                     const std::string* status = nullptr,
                     time_t dueAt = 0,
-                    const std::string& parentId = "");
+                    const std::string& parentId = "",
+                    const std::string& requestedId = "");
     const std::string makeId(ListName& listName);
     bool isIdAvailable(const std::string& id, ListName& listName);
     void edit(const std::string& id,

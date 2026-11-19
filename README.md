@@ -71,6 +71,9 @@ todoos add "My new task"
 # Add with priority
 todoos add -p high "Urgent refactor"
 
+# Add with a chosen id (used when free, a generated one otherwise)
+todoos add -i SRV1 "Server inventory"
+
 # Edit an item
 todoos edit ab12 "Updated text"
 
@@ -154,6 +157,7 @@ todoos [flags] [options] <command> [args]
 | `-t/--to {list}`       | Target list for `move` and `copy`  |
 | `-t/--to {id}`         | Parent item for `add` and `attach` |
 | `-t/--to {newId}`      | New id for `reassign`              |
+| `-i/--id {id}`         | Id of the new item for `add`       |
 
 ## Lists
 
@@ -172,7 +176,7 @@ todoos [flags] [options] <command> [args]
 | Command                 | Description                                     |
 |-------------------------|-------------------------------------------------|
 | `show`                  | Show items (`-p`, `-s`, `-x`, `-A`, `-d`, `-D`) |
-| `add (a) {value}`       | Add item (`-p`, `-s`, `-x`, `-d`)               |
+| `add (a) {value}`       | Add item (`-p`, `-s`, `-x`, `-d`, `-i`)         |
 | `edit (e) {id} {value}` | Edit item (`-p`, `-s`, `-x`)                    |
 | `append {id} {value}`   | Append text to item                             |
 | `prepend {id} {value}`  | Prepend text to item                            |

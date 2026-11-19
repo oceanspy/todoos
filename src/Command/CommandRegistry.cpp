@@ -251,6 +251,11 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
                 name == Command::COMMAND_AUTOCOMPLETE) {
                 return true;
             }
+        } else if (option.first == "id") {
+            if (CommandShortcut::getCommandName(command.getName()) == "add" ||
+                command.getName() == Command::COMMAND_AUTOCOMPLETE) {
+                return true;
+            }
         } else if (option.first == "no-quit") {
             return true;
         } else if (option.first == "config") {

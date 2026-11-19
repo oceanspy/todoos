@@ -28,6 +28,9 @@ CommandAutoCompleteUseCase::execute(Command& command)
                 return true;
             }
             return true;
+        } else if (command.hasOption("id")) {
+            // add --id {id}: a new id is typed, nothing to suggest
+            return true;
         } else if (command.hasOption("to") && isReassign(command)) {
             // reassign --to {newId}: a new id is typed, nothing to suggest
             return true;

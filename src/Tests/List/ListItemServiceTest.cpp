@@ -125,6 +125,26 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         REQUIRE(*(*listItemEntity2.status()).getCommandName() == "queued");
     }
 
+    SECTION("add with a chosen id: used when free, generated when taken, refused when malformed")
+    {
+        std::string value = "chosen";
+        REQUIRE(listItemService.add(listName, value, nullptr, nullptr, 0, "", "SRV1") == "SRV1");
+        REQUIRE(*listItemService.find("SRV1", listName).getValue() == "chosen");
+
+        // taken: a generated id, the existing item is untouched
+        const std::string generated = listItemService.add(listName, value, nullptr, nullptr, 0, "", "aaaa");
+        REQUIRE(generated != "aaaa");
+        REQUIRE(ListItemId::isValidActive(generated));
+        REQUIRE(*listItemService.find("aaaa", listName).getValue() != "chosen");
+
+        const size_t count = listItemService.get(listName).size();
+        for (const std::string bad : { "ab", "abcde", "ab-c", "ab c" }) {
+            REQUIRE_THROWS(listItemService.add(listName, value, nullptr, nullptr, 0, "", bad));
+        }
+        REQUIRE_THROWS(listItemService.add(listNameArchive, value, nullptr, nullptr, 0, "", "ARC1"));
+        REQUIRE(listItemService.get(listName).size() == count);
+    }
+
     SECTION("add too long")
     {
         std::string priorityValue = "high";

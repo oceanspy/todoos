@@ -24,6 +24,7 @@ CommandOption::populateOptions()
     options["t"] = "to";
     options["F"] = "force-permanently";
     options["a"] = "attached";
+    options["i"] = "id";
 }
 
 bool
@@ -55,6 +56,8 @@ CommandOption::isOptionWithValue(const std::string& arg)
     } else if (shortToLongOption(arg) == "deadline") {
         return true;
     } else if (shortToLongOption(arg) == "to") {
+        return true;
+    } else if (shortToLongOption(arg) == "id") {
         return true;
     }
 

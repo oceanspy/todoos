@@ -1732,4 +1732,10 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         REQUIRE(completionOf(Command("commands", { "move", "aaaa" }, { { "to", "" } }, "commands move aaaa --to"))
                     .find("tempList2Name") != std::string::npos);
     }
+
+    SECTION("Autocomplete commands: add --id suggests nothing (a new id is typed)")
+    {
+        REQUIRE(completionOf(Command("commands", { "add", "server" }, { { "id", "" } }, "commands add server --id"))
+                    .empty());
+    }
 }

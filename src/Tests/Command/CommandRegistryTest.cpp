@@ -61,6 +61,16 @@ TEST_CASE("CommandRegistry Tests", "[CommandRegistry]")
         REQUIRE(CommandRegistry::isCommandValidWithOptions(moveF) == false);
     }
 
+    SECTION("--id is accepted on add only")
+    {
+        Command add("add", { "server" }, { { "id", "SRV1" } }, "add server --id SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(add) == true);
+        Command addShortcut("a", { "server" }, { { "id", "SRV1" } }, "a server --id SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(addShortcut) == true);
+        Command edit("edit", { "aaaa", "text" }, { { "id", "SRV1" } }, "edit aaaa text --id SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(edit) == false);
+    }
+
     SECTION("--to is rejected on other commands")
     {
         Command remove("remove", { "aaaa" }, { { "to", "work" } }, "remove aaaa --to work");

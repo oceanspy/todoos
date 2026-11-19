@@ -1,5 +1,7 @@
 # ToDoOs
 ## Unreleased
+- `add -i/--id {id}`: choose the id of a new item (4 letters or digits, upper or lower case). When it
+  is already used, a generated id is given instead and a notice says so; a malformed id is refused.
 - **Breaking:** the deadline option is now `-x/--deadline` (was `-i`), so `-i` can name the id of a new item.
 - `reassign {id} --to {newId}`: give an active item an id you choose (4 letters or digits, upper or
   lower case, free in the list). Its children, archived/deleted children and description follow.

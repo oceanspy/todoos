@@ -62,7 +62,8 @@ ListItemService::add(ListName& listName,
                      const std::string* priority,
                      const std::string* status,
                      time_t dueAt,
-                     const std::string& parentId)
+                     const std::string& parentId,
+                     const std::string& requestedId)
 {
     if (itemValue.length() > 255) {
         throw std::invalid_argument("Item value must not exceed 255 characters.");
@@ -75,7 +76,16 @@ ListItemService::add(ListName& listName,
         validateParent("", parentId, listName);
     }
 
-    std::string id = makeId(listName);
+    // A requested id is used when it is free, a generated one otherwise (the caller compares them)
+    if (!requestedId.empty()) {
+        if (listName.getVariant() != "default") {
+            throw std::invalid_argument("An id can only be chosen in the active list.");
+        }
+        if (!ListItemId::isValidActive(requestedId)) {
+            throw std::invalid_argument("The id must be 4 letters or digits.");
+        }
+    }
+    std::string id = !requestedId.empty() && isIdAvailable(requestedId, listName) ? requestedId : makeId(listName);
 
     ListItemEntity listItemEntity(listName);
     listItemEntity.setId(id);

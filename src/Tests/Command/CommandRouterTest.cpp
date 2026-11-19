@@ -399,6 +399,27 @@ TEST_CASE("CommandRouter", "[CommandRouter]")
         installation.make();
     }
 
+    SECTION("add --id, routed as typed: a free id is used, a taken one is replaced")
+    {
+        route(Command("add", { "server" }, { { "id", "SRV1" } }, "add server --id SRV1"));
+        REQUIRE(parentsIn(usedList).count("SRV1") == 1);
+
+        // taken: the item is still added, with a generated id
+        route(Command("add", { "other" }, { { "id", "SRV1" } }, "add other --id SRV1"));
+        REQUIRE(parentsIn(usedList).size() == 4);
+
+        // badly formatted: refused, nothing added
+        route(Command("add", { "bad" }, { { "id", "ab" } }, "add bad --id ab"));
+        REQUIRE(parentsIn(usedList).size() == 4);
+
+        // with --to: a child with a chosen id
+        route(Command("add", { "child" }, { { "id", "CHD1" }, { "to", "SRV1" } }, "add child --id CHD1 --to SRV1"));
+        REQUIRE(parentsIn(usedList)["CHD1"] == "SRV1");
+
+        installation.wipe();
+        installation.make();
+    }
+
     SECTION("reassign --to, routed as typed: the children follow the new id")
     {
         route(Command("attach", { "bbbb" }, { { "to", "aaaa" } }, "attach bbbb --to aaaa"));
