@@ -100,7 +100,7 @@ TEST_CASE("HelpPrinter tests", "[HelpPrinter]")
         }
 
         // and the option hints column
-        const long hintColumn = columnOf("[-p] [-s] [-i] [-A]");
+        const long hintColumn = columnOf("[-p] [-s] [-x] [-A]");
         for (const std::string hint : { "[-f] [-F]", "[-f] switch parent", "[-f] all, on a parent",
                                         "[-d] include described", "[-a] include child" }) {
             REQUIRE(columnOf(hint) == hintColumn);

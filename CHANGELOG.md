@@ -1,5 +1,6 @@
 # ToDoOs
 ## Unreleased
+- **Breaking:** the deadline option is now `-x/--deadline` (was `-i`), so `-i` can name the id of a new item.
 - `reassign {id} --to {newId}`: give an active item an id you choose (4 letters or digits, upper or
   lower case, free in the list). Its children, archived/deleted children and description follow.
 - Parent / child items: `add {value} --to {id}`, `attach {ids} --to {id}` (`-f` to switch an item to

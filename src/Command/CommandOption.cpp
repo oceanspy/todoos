@@ -19,7 +19,7 @@ CommandOption::populateOptions()
     options["h"] = "help";
     options["v"] = "version";
     options["c"] = "config";
-    options["i"] = "deadline";
+    options["x"] = "deadline";
     options["Q"] = "no-quit";
     options["t"] = "to";
     options["F"] = "force-permanently";

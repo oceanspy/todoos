@@ -150,7 +150,7 @@ todoos [flags] [options] <command> [args]
 | `-l/--list {name}`     | Target a specific list             |
 | `-p/--priority {name}` | Filter or set priority             |
 | `-s/--status {name}`   | Filter or set status               |
-| `-i/--deadline {date}` | Filter or set deadline             |
+| `-x/--deadline {date}` | Filter or set deadline             |
 | `-t/--to {list}`       | Target list for `move` and `copy`  |
 | `-t/--to {id}`         | Parent item for `add` and `attach` |
 | `-t/--to {newId}`      | New id for `reassign`              |
@@ -171,9 +171,9 @@ todoos [flags] [options] <command> [args]
 
 | Command                 | Description                                     |
 |-------------------------|-------------------------------------------------|
-| `show`                  | Show items (`-p`, `-s`, `-i`, `-A`, `-d`, `-D`) |
-| `add (a) {value}`       | Add item (`-p`, `-s`, `-i`, `-d`)               |
-| `edit (e) {id} {value}` | Edit item (`-p`, `-s`, `-i`)                    |
+| `show`                  | Show items (`-p`, `-s`, `-x`, `-A`, `-d`, `-D`) |
+| `add (a) {value}`       | Add item (`-p`, `-s`, `-x`, `-d`)               |
+| `edit (e) {id} {value}` | Edit item (`-p`, `-s`, `-x`)                    |
 | `append {id} {value}`   | Append text to item                             |
 | `prepend {id} {value}`  | Prepend text to item                            |
 | `find (f) {word}`       | Search items (`-A`, `-d`, `-D`)                 |

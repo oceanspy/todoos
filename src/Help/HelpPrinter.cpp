@@ -138,7 +138,7 @@ HelpPrinter::helpListForCli()
         return std::string(3 + COMMAND_WIDTH + DESC_WIDTH, ' ') + color + text + RST;
     };
     auto note = [&](const std::string& text) { return "     " + DIM + text + RST; };
-    const Parts FILTERS = { { "[-p]", BLU }, { "[-s]", BLU }, { "[-i]", BLU } };
+    const Parts FILTERS = { { "[-p]", BLU }, { "[-s]", BLU }, { "[-x]", BLU } };
     auto withFlags = [&](Parts parts, const std::vector<std::string>& flags) {
         for (const std::string& f : flags) {
             parts.push_back({ "[" + f + "]", CYN });
@@ -168,7 +168,7 @@ HelpPrinter::helpListForCli()
         option("-l/--list {name}", "Target list"),
         option("-p/--priority {name}", "Filter/set priority"),
         option("-s/--status {name}", "Filter/set status"),
-        option("-i/--deadline {date}", "Filter/set deadline"),
+        option("-x/--deadline {date}", "Filter/set deadline"),
         option("-t/--to {list}", "Target list", "move, copy"),
         option("-t/--to {id}", "Parent item", "add, attach"),
         option("-t/--to {newId}", "New item id", "reassign"),
