@@ -163,23 +163,16 @@ CommandRouter::execute(Command& command, ListName& currentList)
                 .execute(command, currentList);
             return;
         case CommandRegistry::MOVE: {
-            MoveItemUseCase(ioService,
-                            commandService,
-                            listService,
-                            listItemService,
-                            configService,
-                            themeService,
-                            descriptionService)
+            MoveItemUseCase(ioService, commandService, listService, listItemService, configService, themeService)
                 .execute(command, currentList);
             return;
         }
         case CommandRegistry::COPY:
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
+            CopyItemUseCase(ioService, listService, listItemService, configService, themeService)
                 .execute(command, currentList);
             return;
         case CommandRegistry::DUPLICATE:
-            DuplicateItemUseCase(
-                ioService, listService, listItemService, configService, themeService, descriptionService)
+            DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
                 .execute(command, currentList);
             return;
         case CommandRegistry::ATTACH:
@@ -220,13 +213,8 @@ CommandRouter::execute(Command& command, ListName& currentList)
                                 descriptionService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "copy")) {
-                CopyListUseCase(ioService,
-                                listService,
-                                listItemService,
-                                fileStorageService,
-                                configService,
-                                themeService,
-                                descriptionService)
+                CopyListUseCase(
+                    ioService, listService, listItemService, fileStorageService, configService, themeService)
                     .execute(subCommand);
             } else if (commandService.isCommand(subCommand, "current")) {
                 CurrentListUseCase(ioService, configService).execute(subCommand);

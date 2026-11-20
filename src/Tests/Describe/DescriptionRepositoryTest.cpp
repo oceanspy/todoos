@@ -94,7 +94,7 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
     {
         std::filesystem::path path = descriptionRepository.getFilePath("../../etc/passwd", listName);
         std::string pathStr = std::filesystem::weakly_canonical(path).string();
-        std::string dirStr  = std::filesystem::weakly_canonical(descriptionsDir).string();
+        std::string dirStr = std::filesystem::weakly_canonical(descriptionsDir).string();
         REQUIRE(pathStr.find(dirStr) == 0);
     }
 
@@ -103,7 +103,7 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
         ListName traversalList("../../etc", "default");
         std::filesystem::path path = descriptionRepository.getFilePath("aaaa", traversalList);
         std::string pathStr = std::filesystem::weakly_canonical(path).string();
-        std::string dirStr  = std::filesystem::weakly_canonical(descriptionsDir).string();
+        std::string dirStr = std::filesystem::weakly_canonical(descriptionsDir).string();
         REQUIRE(pathStr.find(dirStr) == 0);
     }
 
@@ -199,6 +199,91 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
         std::ofstream(path) << "desc";
         REQUIRE_NOTHROW(descriptionRepository.rename("aaaa", "aaaa", listName));
         REQUIRE(descriptionRepository.load("aaaa", listName) == "desc");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("move moves the description to another list, under the new id")
+    {
+        ListName otherListName("tempList2Name", "default");
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "desc";
+        std::filesystem::remove_all(descriptionRepository.getListDirPath(otherListName));
+
+        descriptionRepository.move("aaaa", listName, "bbbb", otherListName);
+
+        REQUIRE_FALSE(descriptionRepository.exists("aaaa", listName));
+        REQUIRE(descriptionRepository.load("bbbb", otherListName) == "desc");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("move overwrites an existing target description")
+    {
+        ListName otherListName("tempList2Name", "default");
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "new";
+        std::filesystem::path targetPath = descriptionRepository.getFilePath("aaaa", otherListName);
+        std::filesystem::create_directories(targetPath.parent_path());
+        std::ofstream(targetPath) << "old";
+
+        descriptionRepository.move("aaaa", listName, "aaaa", otherListName);
+
+        REQUIRE(descriptionRepository.load("aaaa", otherListName) == "new");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("move / copy are no-ops when the item has no description")
+    {
+        ListName otherListName("tempList2Name", "default");
+        std::filesystem::path targetPath = descriptionRepository.getFilePath("aaaa", otherListName);
+        std::filesystem::create_directories(targetPath.parent_path());
+        std::ofstream(targetPath) << "old";
+
+        REQUIRE_NOTHROW(descriptionRepository.move("aaaa", listName, "aaaa", otherListName));
+        REQUIRE_NOTHROW(descriptionRepository.copy("aaaa", listName, "aaaa", otherListName));
+
+        REQUIRE(descriptionRepository.load("aaaa", otherListName) == "old");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("copy copies the description, overwriting an existing target one")
+    {
+        ListName otherListName("tempList2Name", "default");
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "new";
+        std::filesystem::path targetPath = descriptionRepository.getFilePath("bbbb", otherListName);
+        std::filesystem::create_directories(targetPath.parent_path());
+        std::ofstream(targetPath) << "old";
+
+        descriptionRepository.copy("aaaa", listName, "bbbb", otherListName);
+
+        REQUIRE(descriptionRepository.load("aaaa", listName) == "new");
+        REQUIRE(descriptionRepository.load("bbbb", otherListName) == "new");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("copy within the same list copies under the new id")
+    {
+        std::filesystem::path path = descriptionRepository.getFilePath("aaaa", listName);
+        std::filesystem::create_directories(path.parent_path());
+        std::ofstream(path) << "desc";
+
+        descriptionRepository.copy("aaaa", listName, "zzzz", listName);
+
+        REQUIRE(descriptionRepository.load("aaaa", listName) == "desc");
+        REQUIRE(descriptionRepository.load("zzzz", listName) == "desc");
 
         installation.wipe();
         installation.make();

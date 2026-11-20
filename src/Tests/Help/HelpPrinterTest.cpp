@@ -93,16 +93,25 @@ TEST_CASE("HelpPrinter tests", "[HelpPrinter]")
 
         // commands of every section share the description column
         const long descColumn = columnOf("Switch active list");
-        for (const std::string desc : { "Show items", "Remove items", "Duplicate items", "Attach to a parent",
-                                        "Move to list", "Set priority", "Set deadline", "\xE2\x86\x92 Completed",
+        for (const std::string desc : { "Show items",
+                                        "Remove items",
+                                        "Duplicate items",
+                                        "Attach to a parent",
+                                        "Move to list",
+                                        "Set priority",
+                                        "Set deadline",
+                                        "\xE2\x86\x92 Completed",
                                         "Archive done/cancelled" }) {
             REQUIRE(columnOf(desc) == descColumn);
         }
 
         // and the option hints column
         const long hintColumn = columnOf("[-p] [-s] [-x] [-A]");
-        for (const std::string hint : { "[-f] [-F]", "[-f] switch parent", "[-f] all, on a parent",
-                                        "[-d] include described", "[-a] include child" }) {
+        for (const std::string hint : { "[-f] [-F]",
+                                        "[-f] switch parent",
+                                        "[-f] all, on a parent",
+                                        "[-d] include described",
+                                        "[-a] include child" }) {
             REQUIRE(columnOf(hint) == hintColumn);
         }
 

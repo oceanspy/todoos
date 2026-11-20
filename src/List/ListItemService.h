@@ -51,13 +51,14 @@ class ListItemService
     void setStatus(const std::string& id, ListName& listName, const std::string* statusName);
     // Moves / copies an item to another list. A parent takes its children along (a child keeps its id
     // when free in the target list, gets a new one otherwise); a child on its own becomes top-level.
-    // Returns the (old id, new id) of the children that followed.
+    // Descriptions follow their items. Returns the (old id, new id) of the children that followed.
     std::vector<std::pair<std::string, std::string>> move(const std::string& id,
                                                           ListName& oldListName,
                                                           ListName& newListName);
     std::vector<std::pair<std::string, std::string>> copy(const std::string& id,
                                                           ListName& oldListName,
                                                           ListName& newListName);
+    // Duplicates an item (and its description) under a new id in the same list. Returns the new id.
     std::string duplicate(const std::string& id, ListName& listName);
     // Gives an active item a chosen id (4 alphanumeric chars, free in the list). Its children, its
     // archived / deleted children and its description follow.
@@ -138,7 +139,8 @@ class ListItemService
     // Archived / deleted rows always point to their parent's current id: re-points the archive and
     // delete rows of the list whose parent_id is oldParentId (an empty newParentId clears the link)
     void relinkVariantChildren(const std::string& oldParentId, const std::string& newParentId, ListName& listName);
-    // Removes the item `id` of the target list before it is overwritten, detaching its children
+    // Frees the id `id` of the target list before an item is written there: removes the item already
+    // holding it (detaching its children) and any description left under that id
     void clearTarget(const std::string& id, ListName& listName);
 
   protected:

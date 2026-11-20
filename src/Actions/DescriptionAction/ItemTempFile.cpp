@@ -20,7 +20,7 @@ std::string
 ItemTempFile::execute()
 {
     std::filesystem::path editFilePath =
-      descriptionService.getDraftFilePath(*describeItem.getListItem().getId(), describeItem.getListName());
+        descriptionService.getDraftFilePath(*describeItem.getListItem().getId(), describeItem.getListName());
 
     std::filesystem::create_directories(editFilePath.parent_path());
 

@@ -1,6 +1,8 @@
 #include "RemoveItemAction.h"
 
-RemoveItemAction::RemoveItemAction(IOService& ioService, ListItemService& listItemService, DescriptionRepository& descriptionRepository)
+RemoveItemAction::RemoveItemAction(IOService& ioService,
+                                   ListItemService& listItemService,
+                                   DescriptionRepository& descriptionRepository)
   : ioService(ioService)
   , listItemService(listItemService)
   , descriptionRepository(descriptionRepository)
@@ -38,10 +40,9 @@ RemoveItemAction::execute(Command& command, ListName& listName)
 
             if (permanently) {
                 std::vector<std::string> childIds = listItemService.removePermanently(id, listName);
-                ioService.success("Item with id: " + id + " definitely removed" +
-                                  (childIds.empty() ? "" : ", with its " + std::to_string(childIds.size()) +
-                                                               " child item(s)") +
-                                  ".");
+                ioService.success(
+                    "Item with id: " + id + " definitely removed" +
+                    (childIds.empty() ? "" : ", with its " + std::to_string(childIds.size()) + " child item(s)") + ".");
                 continue;
             }
 

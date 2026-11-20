@@ -538,9 +538,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemService.archiveFinishedItems(listName, false);
 
         std::vector<ListItemEntity> listItems = listItemService.get(listName);
-        auto found = std::find_if(listItems.begin(), listItems.end(), [&id](const ListItemEntity& i) {
-            return *i.getId() == id;
-        });
+        auto found = std::find_if(
+            listItems.begin(), listItems.end(), [&id](const ListItemEntity& i) { return *i.getId() == id; });
         REQUIRE(found != listItems.end());
         REQUIRE(listItemService.get(listNameArchive).empty());
 
@@ -548,9 +547,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         listItemService.archiveFinishedItems(listName, true);
 
         std::vector<ListItemEntity> listItems2 = listItemService.get(listName);
-        auto found2 = std::find_if(listItems2.begin(), listItems2.end(), [&id](const ListItemEntity& i) {
-            return *i.getId() == id;
-        });
+        auto found2 = std::find_if(
+            listItems2.begin(), listItems2.end(), [&id](const ListItemEntity& i) { return *i.getId() == id; });
         REQUIRE(found2 == listItems2.end());
 
         std::vector<ListItemEntity> archiveItems = listItemService.get(listNameArchive);
@@ -1087,7 +1085,8 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
     {
         REQUIRE_FALSE(listItemService.hasLegacyRowLayout(tempListName));
 
-        jsonService.load(configService.getListArchiveFilePathFromFilePath(configService.getListFilePath("tempListName")));
+        jsonService.load(
+            configService.getListArchiveFilePathFromFilePath(configService.getListFilePath("tempListName")));
         jsonService.write({ { "eeeea", "legacy", "high", "queued", "0", "0", "1", "1" } });
         listItemRepository.resetCache("");
         REQUIRE(listItemService.hasLegacyRowLayout(tempListName));

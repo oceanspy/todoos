@@ -154,7 +154,8 @@ Theme::buildValue(const ListItemEntity& listItemEntity, const int leftOffset)
         value, consoleRowLength - leftOffset - idColumnExtraLength() - CHILD_CONNECTOR_LENGTH, leadingSpaces);
 
     const std::string lineBreak = "\n" + StringHelpers::adjustStringLength("", leadingSpaces);
-    const std::string continuation = "\n" + StringHelpers::adjustStringLength("", leadingSpaces - CHILD_CONNECTOR_LENGTH) +
+    const std::string continuation = "\n" +
+                                     StringHelpers::adjustStringLength("", leadingSpaces - CHILD_CONNECTOR_LENGTH) +
                                      StringHelpers::colorize(childConnector == "├─ " ? "│  " : "   ", GRAY);
     std::string render = StringHelpers::colorize(childConnector, GRAY);
     size_t start = 0;

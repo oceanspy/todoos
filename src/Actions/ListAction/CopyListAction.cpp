@@ -3,13 +3,11 @@
 CopyListAction::CopyListAction(IOService& ioService,
                                ListService& listService,
                                ListItemService& listItemService,
-                               FileStorageService& fileStorageService,
-                               DescriptionService& descriptionService)
+                               FileStorageService& fileStorageService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
   , fileStorageService(fileStorageService)
-  , descriptionService(descriptionService)
 {
 }
 
@@ -64,11 +62,7 @@ CopyListAction::execute(Command& command)
 
         // Children are copied with their parent
         for (const std::string& id : listItemService.withoutChildrenOfListedParents(ids, listName)) {
-            auto copiedChildren = listItemService.copy(id, listName, newListName);
-            descriptionService.copy(id, listName, newListName);
-            for (const auto& [childId, newChildId] : copiedChildren) {
-                descriptionService.copy(childId, listName, newListName, newChildId);
-            }
+            listItemService.copy(id, listName, newListName);
         }
     } catch (std::invalid_argument& e) {
         ioService.error("Error while creating the file -- is list name correct?");

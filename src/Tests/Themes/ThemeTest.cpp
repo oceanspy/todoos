@@ -2,12 +2,12 @@
 #include "../../Config/ConfigService.h"
 #include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../Helpers/StringHelpers.h"
 #include "../../Helpers/TerminalStyle.h"
 #include "../../List/ListCountSummary.h"
-#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/ListItemEntity.h"
 #include "../../List/ListItems/PriorityService.h"
@@ -138,7 +138,8 @@ TEST_CASE("Theme non-virtual functions", "[ThemeAbstract]")
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+    ListItemService listItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr =
         std::make_unique<JsonSerializer>(ioService);
     ListRepository listRepository(configService, jsonFileDataStorageServicePtr.get());
@@ -688,7 +689,8 @@ TEST_CASE("Theme child rows", "[ThemeAbstract]")
     DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
     ListItemService listItemService(
         ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
-    std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr = std::make_unique<JsonSerializer>(ioService);
+    std::unique_ptr<DataSerializerInterface> jsonFileDataStorageServicePtr =
+        std::make_unique<JsonSerializer>(ioService);
     ListRepository listRepository(configService, jsonFileDataStorageServicePtr.get());
     EventBus bus;
     ListService listService(ioService, configService, listRepository, bus);

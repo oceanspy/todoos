@@ -51,7 +51,8 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -78,7 +79,8 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -104,7 +106,8 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -124,7 +127,8 @@ TEST_CASE("AppendItemUseCase", "[UseCase][AppendItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -168,7 +172,8 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -195,7 +200,8 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -221,7 +227,8 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -241,7 +248,8 @@ TEST_CASE("PrependItemUseCase", "[UseCase][PrependItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -285,7 +293,8 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -311,7 +320,8 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -337,7 +347,8 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -358,7 +369,8 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -385,7 +397,8 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -411,7 +424,8 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -432,7 +446,8 @@ TEST_CASE("EditItemUseCase", "[UseCase][EditItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -476,7 +491,8 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -502,7 +518,8 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -522,7 +539,8 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -548,7 +566,8 @@ TEST_CASE("DeadlineItemUseCase", "[UseCase][DeadlineItem]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -589,17 +608,17 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
         ListName targetListName = listService.createListName("tempList2Name");
 
-        REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService).execute(command, listName));
+        REQUIRE_NOTHROW(CopyItemUseCase(ioService, listService, listItemService, configService, themeService)
+                            .execute(command, listName));
 
         std::vector<ListItemEntity> sourceItems = listItemService.get(listName);
         REQUIRE(sourceItems.size() == 2);
@@ -625,16 +644,16 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService).execute(command, listName));
+        REQUIRE_NOTHROW(CopyItemUseCase(ioService, listService, listItemService, configService, themeService)
+                            .execute(command, listName));
     }
 
     SECTION("copy with non-existent ID does not throw")
@@ -645,16 +664,16 @@ TEST_CASE("CopyItemUseCase", "[UseCase][CopyItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(
-            CopyItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService).execute(command, listName));
+        REQUIRE_NOTHROW(CopyItemUseCase(ioService, listService, listItemService, configService, themeService)
+                            .execute(command, listName));
     }
 }
 
@@ -686,15 +705,15 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -712,15 +731,15 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -744,15 +763,15 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -776,15 +795,15 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
                             .execute(command, listName));
 
         std::vector<ListItemEntity> items = listItemService.get(listName);
@@ -799,15 +818,15 @@ TEST_CASE("DuplicateItemUseCase", "[UseCase][DuplicateItem]")
         StatusService statusService;
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
         ListName listName = listService.createUsedListName();
 
-        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
+        REQUIRE_NOTHROW(DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService)
                             .execute(command, listName));
     }
 }
@@ -844,7 +863,8 @@ TEST_CASE("Integration: add then edit then append sequence", "[Integration][Sequ
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         ListRepository listRepository(configService, storagePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
         ThemeService themeService(ioService, configService, listService, listItemService);
@@ -890,7 +910,8 @@ TEST_CASE("Integration: archive then restore sequence", "[Integration][ArchiveRe
     ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
     DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+    ListItemService listItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, storagePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -957,7 +978,8 @@ TEST_CASE("Integration: duplicate preserves value and priority", "[Integration][
     ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
     DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+    ListItemService listItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, storagePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();
@@ -1008,7 +1030,8 @@ TEST_CASE("Integration: boundary cases on empty-ish operations", "[Integration][
     ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
     DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+    ListItemService listItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, storagePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
     ListName listName = listService.createUsedListName();

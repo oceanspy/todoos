@@ -1,11 +1,11 @@
+#include "../../Init/AppInstallation.h"
 #include "../../IOService/IOService.h"
+#include "../../List/ListItems/ListItemEntity.h"
 #include "../../Serializers/ConfSerializer.h"
+#include "../../Serializers/CsvSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
-#include "../../Init/AppInstallation.h"
-#include "../../List/ListItems/ListItemEntity.h"
-#include "../../Serializers/CsvSerializer.h"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("isNew returns true when main directory is not present", "[Installation]")

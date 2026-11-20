@@ -33,16 +33,8 @@ StatusService::make()
                                       "false",
                                       "false",
                                       "true" }),
-        StatusEntity::setFromVector({ std::to_string(PAUSED),
-                                      "3",
-                                      "paused",
-                                      "paused",
-                                      "⏸️",
-                                      "LIGHT_BLUE",
-                                      "ITALIC",
-                                      "false",
-                                      "false",
-                                      "true" }),
+        StatusEntity::setFromVector(
+            { std::to_string(PAUSED), "3", "paused", "paused", "⏸️", "LIGHT_BLUE", "ITALIC", "false", "false", "true" }),
         StatusEntity::setFromVector({ std::to_string(BLOCKED),
                                       "4",
                                       "blocked",
@@ -83,7 +75,7 @@ StatusService::getStatusFromName(const std::string& name)
 
     // Backward compatibility: map old commandNames to current ones
     static const std::map<std::string, std::string> legacyAliases = {
-        { "to-do",     "queued"  },
+        { "to-do", "queued" },
         { "reviewing", "triaged" },
     };
 

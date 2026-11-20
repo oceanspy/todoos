@@ -88,3 +88,35 @@ DescriptionRepository::rename(const std::string& oldItemId, const std::string& n
 
     std::filesystem::rename(oldFilePath, getFilePath(newItemId, listName));
 }
+
+void
+DescriptionRepository::move(const std::string& itemId,
+                            const ListName& listName,
+                            const std::string& newItemId,
+                            const ListName& newListName)
+{
+    std::filesystem::path oldFilePath = getFilePath(itemId, listName);
+    if (!std::filesystem::exists(oldFilePath)) {
+        return;
+    }
+
+    std::filesystem::path newFilePath = getFilePath(newItemId, newListName);
+    std::filesystem::create_directories(newFilePath.parent_path());
+    std::filesystem::rename(oldFilePath, newFilePath);
+}
+
+void
+DescriptionRepository::copy(const std::string& itemId,
+                            const ListName& listName,
+                            const std::string& newItemId,
+                            const ListName& newListName)
+{
+    std::filesystem::path oldFilePath = getFilePath(itemId, listName);
+    if (!std::filesystem::exists(oldFilePath)) {
+        return;
+    }
+
+    std::filesystem::path newFilePath = getFilePath(newItemId, newListName);
+    std::filesystem::create_directories(newFilePath.parent_path());
+    std::filesystem::copy_file(oldFilePath, newFilePath, std::filesystem::copy_options::overwrite_existing);
+}

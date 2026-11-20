@@ -1,13 +1,9 @@
 #include "CopyItemAction.h"
 
-CopyItemAction::CopyItemAction(IOService& ioService,
-                               ListService& listService,
-                               ListItemService& listItemService,
-                               DescriptionService& descriptionService)
+CopyItemAction::CopyItemAction(IOService& ioService, ListService& listService, ListItemService& listItemService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
-  , descriptionService(descriptionService)
 {
 }
 
@@ -62,10 +58,6 @@ CopyItemAction::execute(Command& command, ListName& listName)
             }
 
             auto copiedChildren = listItemService.copy(id, listName, newListName);
-            descriptionService.copy(id, listName, newListName);
-            for (const auto& [childId, newChildId] : copiedChildren) {
-                descriptionService.copy(childId, listName, newListName, newChildId);
-            }
 
             ioService.success("Item " + id + " copied from " + listName.getName() + " to list " +
                               newListName.getName() + ".");

@@ -608,6 +608,7 @@ ListItemService::move(const std::string& id, ListName& oldListName, ListName& ne
     listItemToMove.setParentId("");
     listItemRepository.create(listItemToMove, newListName);
     listItemRepository.remove(id, oldListName);
+    descriptionRepository.move(id, oldListName, id, newListName);
     // The parent left this list: its archived / deleted children lose their link
     relinkVariantChildren(id, "", oldListName);
 
@@ -615,9 +616,11 @@ ListItemService::move(const std::string& id, ListName& oldListName, ListName& ne
     for (ListItemEntity& child : children) {
         std::string childId = *child.getId();
         std::string newChildId = isIdAvailable(childId, newListName) ? childId : makeId(newListName);
+        clearTarget(newChildId, newListName);
         child.setId(newChildId);
         listItemRepository.create(child, newListName);
         listItemRepository.remove(childId, oldListName);
+        descriptionRepository.move(childId, oldListName, newChildId, newListName);
         movedChildren.emplace_back(childId, newChildId);
     }
 
@@ -642,14 +645,17 @@ ListItemService::copy(const std::string& id, ListName& oldListName, ListName& ne
     // A child copied on its own becomes top-level
     listItemToCopy.setParentId("");
     listItemRepository.create(listItemToCopy, newListName);
+    descriptionRepository.copy(id, oldListName, id, newListName);
 
     std::vector<std::pair<std::string, std::string>> copiedChildren;
 
     for (ListItemEntity& child : getChildren(id, oldListName)) {
         std::string childId = *child.getId();
         std::string newChildId = isIdAvailable(childId, newListName) ? childId : makeId(newListName);
+        clearTarget(newChildId, newListName);
         child.setId(newChildId);
         listItemRepository.create(child, newListName);
+        descriptionRepository.copy(childId, oldListName, newChildId, newListName);
         copiedChildren.emplace_back(childId, newChildId);
     }
 
@@ -659,6 +665,8 @@ ListItemService::copy(const std::string& id, ListName& oldListName, ListName& ne
 void
 ListItemService::clearTarget(const std::string& id, ListName& listName)
 {
+    // also drops an orphan description left under a free id, so the new item does not inherit it
+    descriptionRepository.remove(id, listName);
     if (!exists(id, listName)) {
         return;
     }
@@ -676,8 +684,10 @@ ListItemService::duplicate(const std::string& id, ListName& listName)
 
     ListItemEntity listItemToDuplicate = listItemRepository.find(id, listName);
     std::string newId = makeId(listName);
+    clearTarget(newId, listName);
     listItemToDuplicate.setId(newId);
     listItemRepository.create(listItemToDuplicate, listName);
+    descriptionRepository.copy(id, listName, newId, listName);
 
     return newId;
 }
@@ -1052,9 +1062,8 @@ bool
 ListItemService::hasOpenChild(const std::string& parentId, ListName& listName)
 {
     const std::vector<ListItemEntity> children = getChildren(parentId, listName);
-    return std::any_of(children.begin(), children.end(), [](const ListItemEntity& child) {
-        return !*(*child.status()).isClosed();
-    });
+    return std::any_of(
+        children.begin(), children.end(), [](const ListItemEntity& child) { return !*(*child.status()).isClosed(); });
 }
 
 void
@@ -1138,8 +1147,7 @@ ListItemService::withoutChildrenOfListedParents(const std::vector<std::string>& 
     for (const std::string& id : ids) {
         try {
             ListItemEntity listItem = listItemRepository.find(id, listName);
-            if (listItem.hasParent() &&
-                std::find(ids.begin(), ids.end(), *listItem.getParentId()) != ids.end()) {
+            if (listItem.hasParent() && std::find(ids.begin(), ids.end(), *listItem.getParentId()) != ids.end()) {
                 continue;
             }
         } catch (ListItemNotFoundException& e) {

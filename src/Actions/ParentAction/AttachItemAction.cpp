@@ -32,7 +32,8 @@ AttachItemAction::execute(Command& command, ListName& listName)
         try {
             const std::string oldParentId = *listItemService.find(id, listName).getParentId();
             listItemService.attach(id, parentId, listName, command.hasOption("force"));
-            ioService.success("Item " + id + (oldParentId.empty() ? " attached to " : " moved from " + oldParentId + " to ") +
+            ioService.success("Item " + id +
+                              (oldParentId.empty() ? " attached to " : " moved from " + oldParentId + " to ") +
                               parentId + ".");
         } catch (std::exception& e) {
             ioService.error("Item " + id + " couldn't be attached to " + parentId + ".");
