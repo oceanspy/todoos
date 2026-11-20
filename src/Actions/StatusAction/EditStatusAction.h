@@ -1,14 +1,14 @@
-#ifndef STATUS_H
-#define STATUS_H
+#ifndef EDITSTATUS_H
+#define EDITSTATUS_H
 
 #include "../../Command/Command.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 
-class StatusAction
+class EditStatusAction
 {
   public:
-    StatusAction(IOService& ioService, ListItemService& listItemService);
+    EditStatusAction(IOService& ioService, ListItemService& listItemService);
     void execute(Command& command, ListName& listName, int statusNumber);
     void executeReset(Command& command, ListName& listName);
 
@@ -17,4 +17,4 @@ class StatusAction
     ListItemService& listItemService;
 };
 
-#endif // STATUS_H
+#endif // EDITSTATUS_H

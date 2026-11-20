@@ -15,7 +15,8 @@ class StatusUseCase
                   ListService& listService,
                   ConfigService& configService,
                   ThemeService& themeService);
-    void execute(Command& command, ListName& currentList, int statusNumber);
+    void setStatus(Command& command, ListName& currentList);
+    void editStatus(Command& command, ListName& currentList, int statusNumber);
 
   private:
     IOService& ioService;

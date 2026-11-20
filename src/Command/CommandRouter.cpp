@@ -116,35 +116,35 @@ CommandRouter::execute(Command& command, ListName& currentList)
             return;
         case CommandRegistry::STATUS:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, -1);
+                .setStatus(command, currentList);
             return;
         case CommandRegistry::QUEUE:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, StatusService::QUEUED);
+                .editStatus(command, currentList, StatusService::QUEUED);
             return;
         case CommandRegistry::START:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, StatusService::STARTED);
+                .editStatus(command, currentList, StatusService::STARTED);
             return;
         case CommandRegistry::TRIAGE:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, StatusService::TRIAGED);
+                .editStatus(command, currentList, StatusService::TRIAGED);
             return;
         case CommandRegistry::PAUSE:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, StatusService::PAUSED);
+                .editStatus(command, currentList, StatusService::PAUSED);
             return;
         case CommandRegistry::BLOCKED:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, StatusService::BLOCKED);
+                .editStatus(command, currentList, StatusService::BLOCKED);
             return;
         case CommandRegistry::COMPLETE:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, StatusService::COMPLETED);
+                .editStatus(command, currentList, StatusService::COMPLETED);
             return;
         case CommandRegistry::CANCEL:
             StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                .execute(command, currentList, StatusService::CANCELLED);
+                .editStatus(command, currentList, StatusService::CANCELLED);
             return;
         case CommandRegistry::RESET:
             ResetUseCase(ioService, listItemService, listService, configService, themeService)
@@ -163,8 +163,13 @@ CommandRouter::execute(Command& command, ListName& currentList)
                 .execute(command, currentList);
             return;
         case CommandRegistry::MOVE: {
-            MoveItemUseCase(
-              ioService, commandService, listService, listItemService, configService, themeService, descriptionService)
+            MoveItemUseCase(ioService,
+                            commandService,
+                            listService,
+                            listItemService,
+                            configService,
+                            themeService,
+                            descriptionService)
                 .execute(command, currentList);
             return;
         }
@@ -173,7 +178,8 @@ CommandRouter::execute(Command& command, ListName& currentList)
                 .execute(command, currentList);
             return;
         case CommandRegistry::DUPLICATE:
-            DuplicateItemUseCase(ioService, listService, listItemService, configService, themeService, descriptionService)
+            DuplicateItemUseCase(
+                ioService, listService, listItemService, configService, themeService, descriptionService)
                 .execute(command, currentList);
             return;
         case CommandRegistry::ATTACH:

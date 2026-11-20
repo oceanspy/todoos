@@ -985,6 +985,33 @@ TEST_CASE("ListItemServiceTest", "[ListItemService]")
         configService.edit("archiveWhenCompleted", "false");
     }
 
+    SECTION("setStatus sets closedAt on a closed status and clears it otherwise")
+    {
+        std::string completedName = "completed";
+        std::string queuedName = "queued";
+
+        listItemService.setStatus("aaaa", tempListName, &completedName);
+        REQUIRE(*listItemService.find("aaaa", tempListName).getClosedAt() > 0);
+
+        listItemService.setStatus("aaaa", tempListName, &queuedName);
+        REQUIRE(*listItemService.find("aaaa", tempListName).getClosedAt() == 0);
+    }
+
+    SECTION("setStatus auto-archives on a closed status when archiveWhenCompleted is on")
+    {
+        std::string cancelledName = "cancelled";
+
+        configService.edit("archiveWhenCompleted", "true");
+        listItemService.setStatus("aaaa", tempListName, &cancelledName);
+        std::vector<ListItemEntity> archived = listItemService.get(tempListNameArchive);
+        REQUIRE(archived.size() == 1);
+        REQUIRE(ListItemId::baseOf(*archived[0].getId()) == "aaaa");
+        configService.edit("archiveWhenCompleted", "false");
+
+        listItemService.setStatus("bbbb", tempListName, &cancelledName);
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 1);
+    }
+
     SECTION("isIdAvailable only looks at the active list")
     {
         listItemService.archive("aaaa", tempListName);

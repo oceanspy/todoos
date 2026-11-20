@@ -3,7 +3,8 @@
 #include "../../Actions/ListItemAction/ArchiveItemAction.h"
 #include "../../Actions/ListItemAction/RemoveItemAction.h"
 #include "../../Actions/ListItemAction/RestoreItemAction.h"
-#include "../../Actions/StatusAction/StatusAction.h"
+#include "../../Actions/StatusAction/EditStatusAction.h"
+#include "../../Actions/StatusAction/SetStatusAction.h"
 #include "../../Actions/ListItemAction/ReassignItemAction.h"
 #include "../../Actions/ParentAction/AttachItemAction.h"
 #include "../../Actions/ParentAction/DetachItemAction.h"
@@ -289,7 +290,7 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
 
     SECTION("markAs changes item status")
     {
-        StatusAction status(ioService, listItemService);
+        EditStatusAction status(ioService, listItemService);
         REQUIRE_NOTHROW(status.execute(command, listName, StatusService::STARTED));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
@@ -302,15 +303,15 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     SECTION("markAs with empty arguments does not throw")
     {
         Command emptyCommand = Command("start", {}, {}, "start");
-        StatusAction status(ioService, listItemService);
-        REQUIRE_NOTHROW(status.execute(command, listName, StatusService::STARTED));
+        EditStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(emptyCommand, listName, StatusService::STARTED));
     }
 
     SECTION("set with valid status and ID changes status")
     {
         Command setCommand = Command("status", { "paused", "aaaa" }, {}, "status paused aaaa");
-        StatusAction status(ioService, listItemService);
-        REQUIRE_NOTHROW(status.execute(setCommand, listName, -1));
+        SetStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(setCommand, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "paused");
@@ -322,19 +323,143 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
     SECTION("set with invalid status does not throw")
     {
         Command badCommand = Command("status", { "invalidstatus", "aaaa" }, {}, "status invalidstatus aaaa");
-        StatusAction status(ioService, listItemService);
-        REQUIRE_NOTHROW(status.execute(badCommand, listName, -1));
+        SetStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(badCommand, listName));
     }
 
     SECTION("set with missing arguments does not throw")
     {
         Command noArgsCommand = Command("status", {}, {}, "status");
-        StatusAction status(ioService, listItemService);
-        REQUIRE_NOTHROW(status.execute(noArgsCommand, listName, -1));
+        SetStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(noArgsCommand, listName));
 
         Command oneArgCommand = Command("status", { "paused" }, {}, "status paused");
-        StatusAction status2(ioService, listItemService);
-        REQUIRE_NOTHROW(status2.execute(oneArgCommand, listName, -1));
+        SetStatusAction status2(ioService, listItemService);
+        REQUIRE_NOTHROW(status2.execute(oneArgCommand, listName));
+    }
+
+    SECTION("markAs --attached also changes the open children, whatever their status")
+    {
+        listItemService.editStatus("aaaa", listName, new int(StatusService::PAUSED));
+        std::string paused = "paused";
+        std::string triaged = "triaged";
+        std::string completed = "completed";
+        std::string cancelled = "cancelled";
+        std::string pausedChild = listItemService.add(listName, "paused", nullptr, &paused, 0, "aaaa");
+        std::string triagedChild = listItemService.add(listName, "triaged", nullptr, &triaged, 0, "aaaa");
+        std::string completedChild = listItemService.add(listName, "completed", nullptr, &completed, 0, "aaaa");
+        std::string cancelledChild = listItemService.add(listName, "cancelled", nullptr, &cancelled, 0, "aaaa");
+
+        Command startAttached = Command("start", { "aaaa" }, { { "attached", "" } }, "start aaaa -a");
+        EditStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(startAttached, listName, StatusService::STARTED));
+
+        REQUIRE(*(*listItemService.find("aaaa", listName).status()).getName() == "started");
+        REQUIRE(*(*listItemService.find(pausedChild, listName).status()).getName() == "started");
+        REQUIRE(*(*listItemService.find(triagedChild, listName).status()).getName() == "started");
+        REQUIRE(*(*listItemService.find(completedChild, listName).status()).getName() == "completed");
+        REQUIRE(*(*listItemService.find(cancelledChild, listName).status()).getName() == "cancelled");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("markAs without --attached leaves the children alone")
+    {
+        listItemService.editStatus("aaaa", listName, new int(StatusService::PAUSED));
+        std::string paused = "paused";
+        std::string child = listItemService.add(listName, "child", nullptr, &paused, 0, "aaaa");
+
+        EditStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(command, listName, StatusService::STARTED));
+
+        REQUIRE(*(*listItemService.find("aaaa", listName).status()).getName() == "started");
+        REQUIRE(*(*listItemService.find(child, listName).status()).getName() == "paused");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("markAs --attached: the open children follow even when the parent is already in the status")
+    {
+        listItemService.editStatus("aaaa", listName, new int(StatusService::STARTED));
+        std::string started = "started";
+        std::string paused = "paused";
+        std::string startedChild = listItemService.add(listName, "started", nullptr, &started, 0, "aaaa");
+        std::string pausedChild = listItemService.add(listName, "paused", nullptr, &paused, 0, "aaaa");
+
+        Command startAttached = Command("start", { "aaaa" }, { { "attached", "" } }, "start aaaa -a");
+        EditStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(startAttached, listName, StatusService::STARTED));
+
+        REQUIRE(*(*listItemService.find("aaaa", listName).status()).getName() == "started");
+        REQUIRE(*(*listItemService.find(startedChild, listName).status()).getName() == "started");
+        REQUIRE(*(*listItemService.find(pausedChild, listName).status()).getName() == "started");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("set --attached also changes the open children, whatever their status")
+    {
+        listItemService.editStatus("aaaa", listName, new int(StatusService::PAUSED));
+        std::string paused = "paused";
+        std::string triaged = "triaged";
+        std::string completed = "completed";
+        std::string pausedChild = listItemService.add(listName, "paused", nullptr, &paused, 0, "aaaa");
+        std::string triagedChild = listItemService.add(listName, "triaged", nullptr, &triaged, 0, "aaaa");
+        std::string completedChild = listItemService.add(listName, "completed", nullptr, &completed, 0, "aaaa");
+
+        Command setAttached =
+            Command("status", { "blocked", "aaaa" }, { { "attached", "" } }, "status blocked aaaa -a");
+        SetStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(setAttached, listName));
+
+        REQUIRE(*(*listItemService.find("aaaa", listName).status()).getName() == "blocked");
+        REQUIRE(*(*listItemService.find(pausedChild, listName).status()).getName() == "blocked");
+        REQUIRE(*(*listItemService.find(triagedChild, listName).status()).getName() == "blocked");
+        REQUIRE(*(*listItemService.find(completedChild, listName).status()).getName() == "completed");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("set completed --attached closes the open children, then auto-archives the group")
+    {
+        configService.edit("archiveWhenCompleted", "true");
+        std::string paused = "paused";
+        std::string cancelled = "cancelled";
+        listItemService.add(listName, "open child", nullptr, &paused, 0, "aaaa");
+        listItemService.add(listName, "cancelled child", nullptr, &cancelled, 0, "aaaa");
+        const size_t before = listItemService.get(listName).size();
+
+        Command setAttached =
+            Command("status", { "completed", "aaaa" }, { { "attached", "" } }, "status completed aaaa -a");
+        SetStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(setAttached, listName));
+
+        REQUIRE(listItemService.get(listName).size() == before - 3);
+        configService.edit("archiveWhenCompleted", "false");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("set without --attached leaves the children alone")
+    {
+        listItemService.editStatus("aaaa", listName, new int(StatusService::PAUSED));
+        std::string paused = "paused";
+        std::string child = listItemService.add(listName, "child", nullptr, &paused, 0, "aaaa");
+
+        Command setCommand = Command("status", { "blocked", "aaaa" }, {}, "status blocked aaaa");
+        SetStatusAction status(ioService, listItemService);
+        REQUIRE_NOTHROW(status.execute(setCommand, listName));
+
+        REQUIRE(*(*listItemService.find("aaaa", listName).status()).getName() == "blocked");
+        REQUIRE(*(*listItemService.find(child, listName).status()).getName() == "paused");
+
+        installation.wipe();
+        installation.make();
     }
 
     SECTION("reset with valid ID resets item")
@@ -343,7 +468,7 @@ TEST_CASE("Status controller", "[CommandRouter][Status]")
         listItemService.editStatus("aaaa", listName, new int(StatusService::STARTED));
 
         Command resetCommand = Command("reset", { "aaaa" }, {}, "reset aaaa");
-        StatusAction status(ioService, listItemService);
+        EditStatusAction status(ioService, listItemService);
         REQUIRE_NOTHROW(status.executeReset(resetCommand, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);

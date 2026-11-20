@@ -89,6 +89,11 @@ class ListItemService
     ListCountSummary getCountSummary(const std::vector<ListName>& listNames);
     // ---- parent / child items (one level: a child cannot have children) ----
     std::vector<ListItemEntity> getChildren(const std::string& parentId, ListName& listName);
+    // Ids of the children of `parentId` that follow it to `targetStatus` (status --attached): the open ones
+    // (not completed / cancelled) that are not already in `targetStatus`.
+    std::vector<std::string> getChildIdsFollowingStatus(const std::string& parentId,
+                                                        ListName& listName,
+                                                        const StatusEntity& targetStatus);
     bool isParent(const std::string& id, ListName& listName);
     // An item already attached to another parent is only re-attached with force
     void attach(const std::string& id, const std::string& parentId, ListName& listName, bool force = false);
@@ -124,6 +129,12 @@ class ListItemService
     bool hasOpenChild(const std::string& parentId, ListName& listName);
     void validateParent(const std::string& id, const std::string& parentId, ListName& listName);
     void autoArchive(const std::string& id, ListName& listName);
+    // Sets the status, updatedAt and closedAt (now when closed, 0 otherwise), saves the item, then
+    // auto-archives it when it closes and archiveWhenCompleted is on.
+    void applyStatus(const std::string& id,
+                     ListItemEntity& listItemToUpdate,
+                     ListName& listName,
+                     const StatusEntity& statusEntity);
     // Archived / deleted rows always point to their parent's current id: re-points the archive and
     // delete rows of the list whose parent_id is oldParentId (an empty newParentId clears the link)
     void relinkVariantChildren(const std::string& oldParentId, const std::string& newParentId, ListName& listName);

@@ -433,7 +433,7 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                            .execute(command, listName, StatusService::STARTED));
+                            .editStatus(command, listName, StatusService::STARTED));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "started");
@@ -458,7 +458,7 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(
-            StatusUseCase(ioService, listItemService, listService, configService, themeService).execute(command, listName, -1));
+            StatusUseCase(ioService, listItemService, listService, configService, themeService).setStatus(command, listName));
 
         ListItemEntity item = listItemService.find("aaaa", listName);
         REQUIRE(*(*item.status()).getCommandName() == "paused");
@@ -483,7 +483,7 @@ TEST_CASE("StatusUseCase", "[UseCase][Status]")
         ListName listName = listService.createUsedListName();
 
         REQUIRE_NOTHROW(StatusUseCase(ioService, listItemService, listService, configService, themeService)
-                            .execute(command, listName, StatusService::STARTED));
+                            .editStatus(command, listName, StatusService::STARTED));
     }
 }
 

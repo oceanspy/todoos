@@ -1,6 +1,6 @@
 #include "ResetUseCase.h"
 #include "../Actions/ShowAction/ShowAction.h"
-#include "../Actions/StatusAction/StatusAction.h"
+#include "../Actions/StatusAction/EditStatusAction.h"
 #include "../List/ListItems/ListItemEntity.h"
 #include "../List/ListName.h"
 
@@ -24,7 +24,7 @@ ResetUseCase::execute(Command& command, ListName& currentList)
         ioService.ask("Are you sure you want to reset item(s) to queued and clear date/deadline? (y/n) ");
 
     if (answer == "y" || answer == "yes") {
-        StatusAction status(ioService, listItemService);
+        EditStatusAction status(ioService, listItemService);
         status.executeReset(command, currentList);
 
         ShowAction show(ioService, listService, listItemService, themeService);

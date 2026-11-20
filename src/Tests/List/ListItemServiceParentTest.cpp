@@ -330,6 +330,23 @@ TEST_CASE("ListItemServiceParentTest", "[ListItemService]")
         REQUIRE(parentOf("dddd", tempListName2).empty());
     }
 
+    SECTION("getChildIdsFollowingStatus: the open children not already in the target status")
+    {
+        std::string queuedName = "queued";
+        std::string startedName = "started";
+        std::string completedName = "completed";
+        std::string cancelledName = "cancelled";
+        std::string queuedChild = listItemService.add(tempListName, "queued", nullptr, &queuedName, 0, "aaaa");
+        listItemService.add(tempListName, "started", nullptr, &startedName, 0, "aaaa");
+        listItemService.add(tempListName, "completed", nullptr, &completedName, 0, "aaaa");
+        listItemService.add(tempListName, "cancelled", nullptr, &cancelledName, 0, "aaaa");
+
+        StatusEntity started = statusService.getStatusFromName("started");
+        REQUIRE(listItemService.getChildIdsFollowingStatus("aaaa", tempListName, started) ==
+                std::vector<std::string>{ queuedChild });
+        REQUIRE(listItemService.getChildIdsFollowingStatus("bbbb", tempListName, started).empty());
+    }
+
     SECTION("clean: children and parents with children stay without --attached")
     {
         std::string child = listItemService.add(tempListName, "child", nullptr, nullptr, 0, "aaaa");
@@ -400,6 +417,21 @@ TEST_CASE("ListItemServiceParentTest", "[ListItemService]")
         REQUIRE(idsOf(tempListName).size() == 3);
 
         listItemService.editStatus(child, tempListName, &completed);
+        REQUIRE(idsOf(tempListName) == std::vector<std::string>{ "bbbb" });
+        REQUIRE(listItemService.get(tempListNameArchive).size() == 2);
+        configService.edit("archiveWhenCompleted", "false");
+    }
+
+    SECTION("setStatus auto-archive: the parent waits for its open children, then the group goes")
+    {
+        configService.edit("archiveWhenCompleted", "true");
+        std::string completedName = "completed";
+        std::string child = listItemService.add(tempListName, "child", nullptr, nullptr, 0, "aaaa");
+
+        listItemService.setStatus("aaaa", tempListName, &completedName);
+        REQUIRE(idsOf(tempListName).size() == 3);
+
+        listItemService.setStatus(child, tempListName, &completedName);
         REQUIRE(idsOf(tempListName) == std::vector<std::string>{ "bbbb" });
         REQUIRE(listItemService.get(tempListNameArchive).size() == 2);
         configService.edit("archiveWhenCompleted", "false");

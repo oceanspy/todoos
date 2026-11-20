@@ -100,7 +100,8 @@ add_executable(TestsRun Helpers/HelpersTest.cpp
         Themes/ThemeTest.cpp
         Themes/DefaultTest.cpp
         Themes/ThemeServiceTest.cpp
-        ../Actions/StatusAction/StatusAction.cpp
+        ../Actions/StatusAction/EditStatusAction.cpp
+        ../Actions/StatusAction/SetStatusAction.cpp
         ../Actions/PriorityAction/PriorityAction.cpp
         ../Actions/ListItemAction/AddItemAction.cpp
         ../Actions/ListItemAction/AppendItemAction.cpp

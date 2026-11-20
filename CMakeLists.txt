@@ -95,8 +95,10 @@ add_executable(todoos main.cpp
         src/Actions/ShowAction/ShowAction.h
         src/Command/CommandRouter.cpp
         src/Command/CommandRouter.h
-        src/Actions/StatusAction/StatusAction.cpp
-        src/Actions/StatusAction/StatusAction.h
+        src/Actions/StatusAction/EditStatusAction.cpp
+        src/Actions/StatusAction/EditStatusAction.h
+        src/Actions/StatusAction/SetStatusAction.cpp
+        src/Actions/StatusAction/SetStatusAction.h
         src/Actions/PriorityAction/PriorityAction.cpp
         src/Actions/PriorityAction/PriorityAction.h
         src/Serializers/JsonSerializer.cpp

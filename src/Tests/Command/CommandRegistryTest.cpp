@@ -52,6 +52,13 @@ TEST_CASE("CommandRegistry Tests", "[CommandRegistry]")
 
         Command clean("clean", {}, { { "attached", "" } }, "clean -a");
         REQUIRE(CommandRegistry::isCommandValidWithOptions(clean) == true);
+        for (const std::string name : { "status", "queue", "start", "triage", "pause", "block", "complete", "done",
+                                        "cancel" }) {
+            Command statusAttached(name, { "aaaa" }, { { "attached", "" } }, name + " aaaa -a");
+            REQUIRE(CommandRegistry::isCommandValidWithOptions(statusAttached) == true);
+        }
+        Command resetAttached("reset", { "aaaa" }, { { "attached", "" } }, "reset aaaa -a");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(resetAttached) == false);
         Command showAttached("find", { "foo" }, { { "attached", "" } }, "find foo -a");
         REQUIRE(CommandRegistry::isCommandValidWithOptions(showAttached) == false);
 

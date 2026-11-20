@@ -195,22 +195,25 @@ ListItemService::editStatus(const std::string& id, ListName& listName, const int
         throw std::invalid_argument("Status of: " + id + " already set to: " + std::to_string(*status));
     }
 
-    StatusEntity statusEntity = statusService.find(*status);
+    applyStatus(id, listItemToUpdate, listName, statusService.find(*status));
+}
+
+void
+ListItemService::applyStatus(const std::string& id,
+                             ListItemEntity& listItemToUpdate,
+                             ListName& listName,
+                             const StatusEntity& statusEntity)
+{
+    const bool isClosed = statusService.isClosed(*statusEntity.getName());
+
     listItemToUpdate.setStatus(statusEntity);
     listItemToUpdate.setUpdatedAt(time(nullptr));
-
-    if (statusService.isClosed(statusService.getNameFromId(*status))) {
-        listItemToUpdate.setClosedAt(time(nullptr));
-    } else {
-        listItemToUpdate.setClosedAt(0);
-    }
+    listItemToUpdate.setClosedAt(isClosed ? time(nullptr) : 0);
 
     listItemRepository.update(id, listName, listItemToUpdate);
 
-    if (configService.isTrue("archiveWhenCompleted") && listName.getVariant() == "default") {
-        if (statusService.isClosed(statusService.getNameFromId(*status))) {
-            autoArchive(id, listName);
-        }
+    if (isClosed && configService.isTrue("archiveWhenCompleted") && listName.getVariant() == "default") {
+        autoArchive(id, listName);
     }
 }
 
@@ -554,11 +557,7 @@ ListItemService::setStatus(const std::string& id, ListName& listName, const std:
         throw std::invalid_argument("Status of: " + id + " already set to " + *statusName);
     }
 
-    StatusEntity statusEntity = statusService.getStatusFromName(*statusName);
-    listItemToUpdate.setStatus(statusEntity);
-    listItemToUpdate.setUpdatedAt(time(nullptr));
-
-    listItemRepository.update(id, listName, listItemToUpdate);
+    applyStatus(id, listItemToUpdate, listName, statusService.getStatusFromName(*statusName));
 }
 
 std::vector<ListItemEntity>
@@ -1007,6 +1006,24 @@ ListItemService::getChildren(const std::string& parentId, ListName& listName)
     }
 
     return children;
+}
+
+std::vector<std::string>
+ListItemService::getChildIdsFollowingStatus(const std::string& parentId,
+                                            ListName& listName,
+                                            const StatusEntity& targetStatus)
+{
+    find(parentId, listName); // throws when the parent does not exist
+
+    std::vector<std::string> childIds;
+    for (const ListItemEntity& child : getChildren(parentId, listName)) {
+        const StatusEntity* childStatus = child.status();
+        if (!*childStatus->isClosed() && *childStatus->getId() != *targetStatus.getId()) {
+            childIds.push_back(*child.getId());
+        }
+    }
+
+    return childIds;
 }
 
 bool

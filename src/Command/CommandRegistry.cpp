@@ -230,7 +230,9 @@ CommandRegistry::isCommandValidWithOptions(Command& command)
                 return true;
             }
         } else if (option.first == "attached") {
-            if (command.getName() == "clean") {
+            const std::string name = CommandShortcut::getCommandName(command.getName());
+            if (name == "clean" || name == "status" || name == "queue" || name == "start" || name == "triage" ||
+                name == "pause" || name == "block" || name == "complete" || name == "cancel") {
                 return true;
             }
         } else if (option.first == "force") {
