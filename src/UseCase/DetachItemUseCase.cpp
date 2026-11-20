@@ -5,9 +5,9 @@
 #include "../List/ListName.h"
 
 DetachItemUseCase::DetachItemUseCase(IOService& ioService,
-                                   ListItemService& listItemService,
-                                   ListService& listService,
-                                   ThemeService& themeService)
+                                     ListItemService& listItemService,
+                                     ListService& listService,
+                                     ThemeService& themeService)
   : ioService(ioService)
   , listItemService(listItemService)
   , listService(listService)

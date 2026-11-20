@@ -2,8 +2,8 @@
 #define COPYITEMACTION_H
 
 #include "../../Command/Command.h"
-#include "../../Describe/DescriptionService.h"
 #include "../../Command/CommandService.h"
+#include "../../Describe/DescriptionService.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListName.h"

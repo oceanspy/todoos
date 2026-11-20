@@ -6,13 +6,14 @@
 #include "../../List/ListName.h"
 #include <catch2/catch_test_macros.hpp>
 
-static ListItemEntity makeItem(PriorityService& priorityService,
-                               StatusService& statusService,
-                               ListName& listName,
-                               const std::string& value = "My task title")
+static ListItemEntity
+makeItem(PriorityService& priorityService,
+         StatusService& statusService,
+         ListName& listName,
+         const std::string& value = "My task title")
 {
     PriorityEntity priority = priorityService.find(PriorityService::MEDIUM);
-    StatusEntity status     = statusService.find(StatusService::QUEUED);
+    StatusEntity status = statusService.find(StatusService::QUEUED);
     return ListItemEntity::set("aaaa", value, priority, status, 0, 0, 1712487259, 1712487259, listName);
 }
 
@@ -57,7 +58,7 @@ TEST_CASE("DescribeItem", "[Describe][DescribeItem]")
         DescribeItem describeItem = DescribeItem::create(listName, listItem, "Some existing notes.");
         std::string output = describeItem.asDescriptionItemFile();
         size_t titlePos = output.find("# My task title");
-        size_t descPos  = output.find("Some existing notes.");
+        size_t descPos = output.find("Some existing notes.");
         REQUIRE(titlePos != std::string::npos);
         REQUIRE(descPos != std::string::npos);
         REQUIRE(descPos > titlePos);
@@ -95,7 +96,7 @@ TEST_CASE("DescribeItem", "[Describe][DescribeItem]")
         DescribeItem describeItem = DescribeItem::create(longList, longItem, "");
         std::string output = describeItem.asDescriptionItemFile();
         REQUIRE(output.find("a-very-long-list-name") != std::string::npos);
-        size_t headerPos   = output.find("| List");
+        size_t headerPos = output.find("| List");
         size_t separatorPos = output.find("| -", headerPos);
         std::string separatorLine = output.substr(separatorPos, output.find('\n', separatorPos) - separatorPos);
         REQUIRE(separatorLine.find("---------------------") != std::string::npos);

@@ -88,7 +88,13 @@ AppInstallation::populate()
           std::to_string(time(nullptr)) },
         { "dddd",
           "",
-          "Enjoy! :-)", "low", "queued", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr)) }
+          "Enjoy! :-)",
+          "low",
+          "queued",
+          "0",
+          "0",
+          std::to_string(time(nullptr)),
+          std::to_string(time(nullptr)) }
     };
     storageCsvService.load(init.getDefaultListFilePath());
     storageCsvService.write(defaultListData);

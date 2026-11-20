@@ -21,9 +21,8 @@ EditStatusAction::execute(Command& command, ListName& listName, int statusNumber
     ids.erase(unique(ids.begin(), ids.end()), ids.end());
 
     const bool withAttachedItems = command.hasOption("attached");
-    const std::string statusName =
-        StringHelpers::colorize(StringHelpers::colorize(listItemService.status().getNameFromId(statusNumber), LIGHT_YELLOW),
-                                ITALIC);
+    const std::string statusName = StringHelpers::colorize(
+        StringHelpers::colorize(listItemService.status().getNameFromId(statusNumber), LIGHT_YELLOW), ITALIC);
 
     ioService.br();
     for (const auto& id : ids) {
@@ -31,8 +30,8 @@ EditStatusAction::execute(Command& command, ListName& listName, int statusNumber
         // itself is already in the status
         std::vector<std::string> childIds;
         if (withAttachedItems) {
-            childIds = listItemService.getChildIdsFollowingStatus(
-                id, listName, listItemService.status().find(statusNumber));
+            childIds =
+                listItemService.getChildIdsFollowingStatus(id, listName, listItemService.status().find(statusNumber));
         }
 
         try {

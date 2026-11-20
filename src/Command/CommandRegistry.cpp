@@ -21,10 +21,10 @@ CommandRegistry::CommandRegistry()
 void
 CommandRegistry::make()
 {
-    commandIds = { SHOW,  ADD,   EDIT,   APPEND,    PREPEND, FIND,   PRIORITY, INCREASE, DECREASE, STATUS,   QUEUE,
-                   START, PAUSE, TRIAGE, BLOCKED,   COMPLETE, CANCEL, RESET,    REMOVE,   ARCHIVE,  RESTORE,  MOVE,
-                   COPY,  EMPTY, CLEAN,  DUPLICATE, ATTACH,  DETACH, REASSIGN, DEADLINE, LIST,     USE,      STATS,
-                   DESCRIBE, COMMANDS };
+    commandIds = { SHOW,   ADD,      EDIT,     APPEND, PREPEND, FIND,    PRIORITY, INCREASE,  DECREASE,
+                   STATUS, QUEUE,    START,    PAUSE,  TRIAGE,  BLOCKED, COMPLETE, CANCEL,    RESET,
+                   REMOVE, ARCHIVE,  RESTORE,  MOVE,   COPY,    EMPTY,   CLEAN,    DUPLICATE, ATTACH,
+                   DETACH, REASSIGN, DEADLINE, LIST,   USE,     STATS,   DESCRIBE, COMMANDS };
 
     // loop to commandIds to get the command name
     for (int commandId : commandIds) {

@@ -17,9 +17,7 @@ class DescribeItem
     const std::string& getExistingDescription() const;
 
   private:
-    DescribeItem(const ListName& listName,
-                 const ListItemEntity& listItem,
-                 const std::string& existingDescription);
+    DescribeItem(const ListName& listName, const ListItemEntity& listItem, const std::string& existingDescription);
 
     ListName listName;
     ListItemEntity listItem;

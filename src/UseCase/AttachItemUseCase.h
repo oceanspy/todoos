@@ -10,9 +10,9 @@ class AttachItemUseCase
 {
   public:
     AttachItemUseCase(IOService& ioService,
-                    ListItemService& listItemService,
-                    ListService& listService,
-                    ThemeService& themeService);
+                      ListItemService& listItemService,
+                      ListService& listService,
+                      ThemeService& themeService);
     void execute(Command& command, ListName& currentList);
 
   private:

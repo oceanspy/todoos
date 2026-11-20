@@ -9,7 +9,9 @@
 class RemoveItemAction
 {
   public:
-    RemoveItemAction(IOService& ioService, ListItemService& listItemService, DescriptionRepository& descriptionRepository);
+    RemoveItemAction(IOService& ioService,
+                     ListItemService& listItemService,
+                     DescriptionRepository& descriptionRepository);
     void execute(Command& command, ListName& listName);
 
   private:

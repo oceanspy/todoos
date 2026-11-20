@@ -94,7 +94,7 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
     {
         std::filesystem::path path = descriptionRepository.getFilePath("../../etc/passwd", listName);
         std::string pathStr = std::filesystem::weakly_canonical(path).string();
-        std::string dirStr  = std::filesystem::weakly_canonical(descriptionsDir).string();
+        std::string dirStr = std::filesystem::weakly_canonical(descriptionsDir).string();
         REQUIRE(pathStr.find(dirStr) == 0);
     }
 
@@ -103,7 +103,7 @@ TEST_CASE("DescriptionRepository", "[Describe][DescriptionRepository]")
         ListName traversalList("../../etc", "default");
         std::filesystem::path path = descriptionRepository.getFilePath("aaaa", traversalList);
         std::string pathStr = std::filesystem::weakly_canonical(path).string();
-        std::string dirStr  = std::filesystem::weakly_canonical(descriptionsDir).string();
+        std::string dirStr = std::filesystem::weakly_canonical(descriptionsDir).string();
         REQUIRE(pathStr.find(dirStr) == 0);
     }
 

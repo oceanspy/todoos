@@ -1052,9 +1052,8 @@ bool
 ListItemService::hasOpenChild(const std::string& parentId, ListName& listName)
 {
     const std::vector<ListItemEntity> children = getChildren(parentId, listName);
-    return std::any_of(children.begin(), children.end(), [](const ListItemEntity& child) {
-        return !*(*child.status()).isClosed();
-    });
+    return std::any_of(
+        children.begin(), children.end(), [](const ListItemEntity& child) { return !*(*child.status()).isClosed(); });
 }
 
 void
@@ -1138,8 +1137,7 @@ ListItemService::withoutChildrenOfListedParents(const std::vector<std::string>& 
     for (const std::string& id : ids) {
         try {
             ListItemEntity listItem = listItemRepository.find(id, listName);
-            if (listItem.hasParent() &&
-                std::find(ids.begin(), ids.end(), *listItem.getParentId()) != ids.end()) {
+            if (listItem.hasParent() && std::find(ids.begin(), ids.end(), *listItem.getParentId()) != ids.end()) {
                 continue;
             }
         } catch (ListItemNotFoundException& e) {

@@ -1,8 +1,8 @@
-#include "../../List/ListItemService.h"
 #include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemId.h"
+#include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
 #include "../../Serializers/ConfSerializer.h"
 #include "../../Serializers/JsonSerializer.h"
@@ -167,7 +167,8 @@ TEST_CASE("ListItemServiceParentTest", "[ListItemService]")
     {
         listItemService.attach("bbbb", "aaaa", tempListName);
         std::string archivedParent = listItemService.archive("aaaa", tempListName);
-        std::string deletedParent = listItemService.moveToVariant(archivedParent, tempListNameArchive, tempListNameDelete);
+        std::string deletedParent =
+            listItemService.moveToVariant(archivedParent, tempListNameArchive, tempListNameDelete);
         REQUIRE(deletedParent == archivedParent);
         REQUIRE(listItemService.getChildren(deletedParent, tempListNameDelete).size() == 1);
 

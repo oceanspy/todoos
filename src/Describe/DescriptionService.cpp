@@ -13,10 +13,7 @@ DescriptionService::getDraftFilePath(const std::string& id, const ListName& list
 }
 
 void
-DescriptionService::move(const std::string& id,
-                         ListName& oldListName,
-                         ListName& newListName,
-                         const std::string& newId)
+DescriptionService::move(const std::string& id, ListName& oldListName, ListName& newListName, const std::string& newId)
 {
     const std::string targetId = newId.empty() ? id : newId;
     std::filesystem::path oldFilePath = descriptionRepository.getFilePath(id, oldListName);
@@ -32,10 +29,7 @@ DescriptionService::move(const std::string& id,
 }
 
 void
-DescriptionService::copy(const std::string& id,
-                         ListName& oldListName,
-                         ListName& newListName,
-                         const std::string& newId)
+DescriptionService::copy(const std::string& id, ListName& oldListName, ListName& newListName, const std::string& newId)
 {
     copyFile(id, oldListName, newId.empty() ? id : newId, newListName);
 }
