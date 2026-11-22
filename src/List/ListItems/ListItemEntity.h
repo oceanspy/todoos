@@ -11,6 +11,9 @@ class ListItemEntity
   public:
     ListItemEntity(ListName& listName);
     [[nodiscard]] const std::string* getId() const;
+    // Id of the parent item in the same list (and variant); empty for a top-level item
+    [[nodiscard]] const std::string* getParentId() const;
+    [[nodiscard]] bool hasParent() const;
     [[nodiscard]] const int* getPosition() const;
     [[nodiscard]] const ListName* getListName() const;
     [[nodiscard]] const std::string* getListVariant() const;
@@ -23,6 +26,7 @@ class ListItemEntity
     [[nodiscard]] const time_t* getCreatedAt() const;
     [[nodiscard]] const time_t* getUpdatedAt() const;
     void setId(std::string idStr);
+    void setParentId(const std::string& parentIdStr);
     void setPosition(int positionInt);
     void setValue(const std::string& valueStr);
     void setPriority(const PriorityEntity& priorityEntity);
@@ -45,10 +49,14 @@ class ListItemEntity
                                         StatusService& statusService,
                                         const std::vector<std::string>& item,
                                         ListName& listName);
+    // Number of columns of a stored row: id, parent_id, value, priority, status, dueAt, closedAt,
+    // createdAt, updatedAt
+    static constexpr size_t ROW_SIZE = 9;
     static std::vector<std::string> makeVector(const ListItemEntity& listItemEntity);
 
   private:
     std::string id;
+    std::string parentId;
     int position = 0;
     bool descriptionExists = false;
     ListName listName;

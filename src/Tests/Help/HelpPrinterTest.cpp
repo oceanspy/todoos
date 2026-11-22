@@ -2,6 +2,7 @@
 #include "../../IOService/IOService.h"
 #include "version.h"
 #include <catch2/catch_test_macros.hpp>
+#include <regex>
 
 TEST_CASE("HelpPrinter tests", "[HelpPrinter]")
 {
@@ -70,5 +71,53 @@ TEST_CASE("HelpPrinter tests", "[HelpPrinter]")
     {
         Command command("add", {}, {});
         REQUIRE_NOTHROW(help.commandOptionNotSupportedSkipCommandAutocomplete(command));
+    }
+
+    SECTION("help columns line up: descriptions and option hints start at the same column")
+    {
+        const std::regex colorCodes("\033\\[[0-9;]*m");
+        std::vector<std::string> lines;
+        for (const std::string& line : HelpPrinter::helpListForCli()) {
+            lines.push_back(std::regex_replace(line, colorCodes, ""));
+        }
+        auto columnOf = [&lines](const std::string& text) -> long {
+            for (const std::string& line : lines) {
+                size_t at = line.find(text);
+                if (at != std::string::npos) {
+                    return static_cast<long>(at);
+                }
+            }
+            FAIL("not in the help: " + text);
+            return -1;
+        };
+
+        // commands of every section share the description column
+        const long descColumn = columnOf("Switch active list");
+        for (const std::string desc : { "Show items",
+                                        "Remove items",
+                                        "Duplicate items",
+                                        "Attach to a parent",
+                                        "Move to list",
+                                        "Set priority",
+                                        "Set deadline",
+                                        "\xE2\x86\x92 Completed",
+                                        "Archive done/cancelled" }) {
+            REQUIRE(columnOf(desc) == descColumn);
+        }
+
+        // and the option hints column
+        const long hintColumn = columnOf("[-p] [-s] [-x] [-A]");
+        for (const std::string hint : { "[-f] [-F]",
+                                        "[-f] switch parent",
+                                        "[-f] all, on a parent",
+                                        "[-d] include described",
+                                        "[-a] include child" }) {
+            REQUIRE(columnOf(hint) == hintColumn);
+        }
+
+        // flags and options share their description and "applies to" columns
+        REQUIRE(columnOf("Show app version") == columnOf("Delete for good"));
+        REQUIRE(columnOf("Delete for good") == columnOf("Target list "));
+        REQUIRE(columnOf("(remove)") == columnOf("(add, attach)"));
     }
 }

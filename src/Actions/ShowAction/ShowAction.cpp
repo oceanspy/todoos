@@ -14,6 +14,7 @@ ShowAction::ShowAction(IOService& ioService,
 void
 ShowAction::execute(std::vector<ListItemEntity>& listItems, ListName& listName, bool showListName, bool showTitle)
 {
+    ListItemService::groupChildren(listItems);
     auto theme = themeService.adaptConsoleRowLengthWithMaxItemValueLength(listItems).getTheme();
     theme->print(listName, listItems, showListName, showTitle);
 }
@@ -25,6 +26,7 @@ ShowAction::executeMultipleList(std::vector<ListItemEntity>& listItems, std::vec
         throw std::invalid_argument("No lists to display");
     }
 
+    ListItemService::groupChildren(listItems);
     auto theme = themeService.adaptConsoleRowLengthWithMaxItemValueLength(listItems).getTheme();
     theme->printMultipleList(listNames, listItems);
 }

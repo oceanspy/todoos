@@ -3,7 +3,6 @@
 
 #include "../../Command/Command.h"
 #include "../../Command/CommandService.h"
-#include "../../Describe/DescriptionService.h"
 #include "../../IOService/IOService.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListName.h"
@@ -12,17 +11,13 @@
 class MoveItemAction
 {
   public:
-    MoveItemAction(IOService& ioService,
-                   ListService& listService,
-                   ListItemService& listItemService,
-                   DescriptionService& descriptionService);
+    MoveItemAction(IOService& ioService, ListService& listService, ListItemService& listItemService);
     std::string execute(Command& command, ListName& listName);
 
   private:
     IOService& ioService;
     ListService& listService;
     ListItemService& listItemService;
-    DescriptionService& descriptionService;
 };
 
 #endif // MOVEITEMACTION_H

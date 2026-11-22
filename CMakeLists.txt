@@ -76,6 +76,12 @@ add_executable(todoos main.cpp
         src/Actions/ListItemAction/RemoveItemAction.h
         src/Actions/ListItemAction/ArchiveItemAction.cpp
         src/Actions/ListItemAction/ArchiveItemAction.h
+        src/Actions/ListItemAction/ReassignItemAction.cpp
+        src/Actions/ListItemAction/ReassignItemAction.h
+        src/Actions/ParentAction/AttachItemAction.cpp
+        src/Actions/ParentAction/AttachItemAction.h
+        src/Actions/ParentAction/DetachItemAction.cpp
+        src/Actions/ParentAction/DetachItemAction.h
         src/Actions/ListItemAction/RestoreItemAction.cpp
         src/Actions/ListItemAction/RestoreItemAction.h
         src/List/ListItemService.cpp
@@ -89,8 +95,10 @@ add_executable(todoos main.cpp
         src/Actions/ShowAction/ShowAction.h
         src/Command/CommandRouter.cpp
         src/Command/CommandRouter.h
-        src/Actions/StatusAction/StatusAction.cpp
-        src/Actions/StatusAction/StatusAction.h
+        src/Actions/StatusAction/EditStatusAction.cpp
+        src/Actions/StatusAction/EditStatusAction.h
+        src/Actions/StatusAction/SetStatusAction.cpp
+        src/Actions/StatusAction/SetStatusAction.h
         src/Actions/PriorityAction/PriorityAction.cpp
         src/Actions/PriorityAction/PriorityAction.h
         src/Serializers/JsonSerializer.cpp
@@ -183,6 +191,12 @@ add_executable(todoos main.cpp
         src/UseCase/RemoveUseCase.h
         src/UseCase/ArchiveUseCase.cpp
         src/UseCase/ArchiveUseCase.h
+        src/UseCase/ReassignItemUseCase.cpp
+        src/UseCase/ReassignItemUseCase.h
+        src/UseCase/AttachItemUseCase.cpp
+        src/UseCase/AttachItemUseCase.h
+        src/UseCase/DetachItemUseCase.cpp
+        src/UseCase/DetachItemUseCase.h
         src/UseCase/RestoreUseCase.cpp
         src/UseCase/RestoreUseCase.h
         src/UseCase/ShowListUseCase.cpp

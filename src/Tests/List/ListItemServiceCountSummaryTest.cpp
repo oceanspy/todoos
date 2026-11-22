@@ -1,6 +1,6 @@
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../IOService/IOService.h"
-#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListService.h"
 #include "../../Serializers/ConfSerializer.h"
@@ -39,7 +39,8 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         configService, fileDataStorageServicePtr.get(), priorityService, statusService);
     DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-    ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+    ListItemService listItemService(
+        ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
     ListRepository listRepository(configService, fileDataStorageServicePtr.get());
     ListService listService(ioService, configService, listRepository, bus);
 
@@ -170,7 +171,7 @@ TEST_CASE("ListItemService::getCountSummary", "[ListItemService]")
         ListCountSummary summary = listItemService.getCountSummary({ listName, secondListName });
 
         REQUIRE(summary.total == 4);
-        REQUIRE(summary.getStatus(StatusService::QUEUED) == 3);   // 1 from list + 2 from secondList
+        REQUIRE(summary.getStatus(StatusService::QUEUED) == 3);  // 1 from list + 2 from secondList
         REQUIRE(summary.getStatus(StatusService::STARTED) == 1); // 1 from list
         REQUIRE(summary.getPriority(PriorityService::LOW) == 1);
         REQUIRE(summary.getPriority(PriorityService::CRITICAL) == 1);

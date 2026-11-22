@@ -166,4 +166,29 @@ TEST_CASE("ListItemRepositoryTest", "[ListItemRepository]")
         REQUIRE(*results[1].getCreatedAt() == 1712487272);
         REQUIRE(*results[1].getUpdatedAt() == 1712487272);
     }
+
+    SECTION("parent_id is stored and read back")
+    {
+        ListItemEntity child = listItemRepository.find("bbbb", listName);
+        child.setParentId("aaaa");
+        REQUIRE(listItemRepository.update("bbbb", listName, child));
+        REQUIRE(*listItemRepository.find("bbbb", listName).getParentId() == "aaaa");
+        REQUIRE(*listItemRepository.find("aaaa", listName).getParentId() == "");
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("hasLegacyRows: detects rows without the parent_id column")
+    {
+        REQUIRE_FALSE(listItemRepository.hasLegacyRows(listName));
+
+        jsonService.load(configService.getListFilePath(listName.getName()));
+        jsonService.write({ { "eeee", "legacy", "high", "queued", "0", "0", "1", "1" } });
+        listItemRepository.resetCache("");
+        REQUIRE(listItemRepository.hasLegacyRows(listName));
+
+        installation.wipe();
+        installation.make();
+    }
 }

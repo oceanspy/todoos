@@ -60,6 +60,7 @@ AppInstallation::populate()
 
     std::vector<std::vector<std::string>> defaultListData = {
         { "aaaa",
+          "",
           "Welcome to todoos!",
           "urgent",
           "queued",
@@ -68,6 +69,7 @@ AppInstallation::populate()
           std::to_string(time(nullptr)),
           std::to_string(time(nullptr)) },
         { "bbbb",
+          "",
           "Please look at 'todoos -h' to get started!",
           "high",
           "queued",
@@ -76,6 +78,7 @@ AppInstallation::populate()
           std::to_string(time(nullptr)),
           std::to_string(time(nullptr)) },
         { "cccc",
+          "",
           "Add your first task by doing: 'todoos add \"My first task\"'",
           "medium",
           "queued",
@@ -83,7 +86,15 @@ AppInstallation::populate()
           "0",
           std::to_string(time(nullptr)),
           std::to_string(time(nullptr)) },
-        { "dddd", "Enjoy! :-)", "low", "queued", "0", "0", std::to_string(time(nullptr)), std::to_string(time(nullptr)) }
+        { "dddd",
+          "",
+          "Enjoy! :-)",
+          "low",
+          "queued",
+          "0",
+          "0",
+          std::to_string(time(nullptr)),
+          std::to_string(time(nullptr)) }
     };
     storageCsvService.load(init.getDefaultListFilePath());
     storageCsvService.write(defaultListData);
@@ -189,6 +200,6 @@ AppInstallation::populateNewListFile(std::ofstream& outfile)
         outfile << "[\n";
         outfile << "]";
     } else if (init.getDefaultExtension() == "csv") {
-        outfile << "# ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT\n";
+        outfile << "# ID,PARENT_ID,VALUE,PRIORITY,STATUS,DUE_AT,CLOSED_AT,CREATED_AT,UPDATED_AT\n";
     }
 }

@@ -10,10 +10,10 @@
 #include "../../Describe/DescriptionService.h"
 #include "../../Events/EventBus.h"
 #include "../../FileDataStorageRepositories/ConfigRepository.h"
+#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../FileDataStorageRepositories/ListItemRepository.h"
 #include "../../FileDataStorageRepositories/ListRepository.h"
 #include "../../FileStorage/FileStorageService.h"
-#include "../../FileDataStorageRepositories/DescriptionRepository.h"
 #include "../../List/ListItemService.h"
 #include "../../List/ListItems/PriorityService.h"
 #include "../../List/ListItems/StatusService.h"
@@ -31,8 +31,8 @@
 #include "../Mock/MockAppInitialization.h"
 #include "../Mock/MockAppInstallation.h"
 #include <catch2/catch_test_macros.hpp>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
 
 TEST_CASE("ListAction action", "[ListAction]")
 {
@@ -67,7 +67,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -86,7 +87,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -112,7 +114,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -132,7 +135,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -158,7 +162,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -312,14 +317,14 @@ TEST_CASE("ListAction action", "[ListAction]")
 
     SECTION("rename — move renames a list")
     {
-        Command command(
-            "list", { "move", "tempListName", "renamedList" }, {}, "list move tempListName renamedList");
+        Command command("list", { "move", "tempListName", "renamedList" }, {}, "list move tempListName renamedList");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -350,7 +355,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -363,14 +369,14 @@ TEST_CASE("ListAction action", "[ListAction]")
 
     SECTION("rename — move moves the list descriptions to the renamed list")
     {
-        Command command(
-            "list", { "move", "tempListName", "renamedList" }, {}, "list move tempListName renamedList");
+        Command command("list", { "move", "tempListName", "renamedList" }, {}, "list move tempListName renamedList");
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
         DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -402,9 +408,9 @@ TEST_CASE("ListAction action", "[ListAction]")
         ConfigService configService(ioService, init, configRepository, cacheRepository, command);
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
-        DescriptionService descriptionService(init.getCacheDirPath(), descriptionRepository);
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -416,7 +422,7 @@ TEST_CASE("ListAction action", "[ListAction]")
         std::ofstream(descriptionPath) << "Description of bbbb.\n";
 
         Command subCommand("copy", { "tempListName", "copiedList" }, {}, "copy tempListName copiedList");
-        CopyListAction action(ioService, listService, listItemService, fileStorageService, descriptionService);
+        CopyListAction action(ioService, listService, listItemService, fileStorageService);
         REQUIRE_NOTHROW(action.execute(subCommand));
 
         ListName copiedList = listService.createListName("copiedList");
@@ -424,6 +430,39 @@ TEST_CASE("ListAction action", "[ListAction]")
         REQUIRE(descriptionRepository.exists("bbbb", sourceList));
         REQUIRE(descriptionRepository.exists("bbbb", copiedList));
         REQUIRE_FALSE(descriptionRepository.exists("aaaa", copiedList));
+
+        installation.wipe();
+        installation.make();
+    }
+
+    SECTION("copy — keeps the parent / child links and the children's descriptions")
+    {
+        Command command("list", { "copy", "tempListName", "copiedList" }, {}, "list copy tempListName copiedList");
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
+        ListRepository listRepository(configService, listStoragePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+        FileStorageService fileStorageService(ioService, configService);
+        ListName sourceList = listService.createListName("tempListName");
+
+        listItemService.attach("bbbb", "aaaa", sourceList);
+        std::filesystem::path descriptionPath = descriptionRepository.getFilePath("bbbb", sourceList);
+        std::filesystem::create_directories(descriptionPath.parent_path());
+        std::ofstream(descriptionPath) << "Description of bbbb.\n";
+
+        Command subCommand("copy", { "tempListName", "copiedList" }, {}, "copy tempListName copiedList");
+        CopyListAction action(ioService, listService, listItemService, fileStorageService);
+        REQUIRE_NOTHROW(action.execute(subCommand));
+
+        ListName copiedList = listService.createListName("copiedList");
+        REQUIRE(listItemService.get(copiedList).size() == 2);
+        REQUIRE(*listItemService.find("bbbb", copiedList).getParentId() == "aaaa");
+        REQUIRE(descriptionRepository.exists("bbbb", copiedList));
 
         installation.wipe();
         installation.make();
@@ -438,7 +477,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -458,7 +498,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -479,7 +520,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -498,7 +540,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);
@@ -517,7 +560,8 @@ TEST_CASE("ListAction action", "[ListAction]")
         ListItemRepository listItemRepository(configService, storagePtr.get(), priorityService, statusService);
         DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
 
-        ListItemService listItemService(ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
         std::unique_ptr<DataSerializerInterface> listStoragePtr = std::make_unique<JsonSerializer>(ioService);
         ListRepository listRepository(configService, listStoragePtr.get());
         ListService listService(ioService, configService, listRepository, bus);

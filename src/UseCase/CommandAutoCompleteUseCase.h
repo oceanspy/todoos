@@ -26,6 +26,10 @@ class CommandAutoCompleteUseCase
     void autocompleteListIndefinitely(const Command& firstSubCommand);
     void autocompleteUseList(const Command& firstSubCommand);
     void autocompleteMoveList(const Command& firstSubCommand, std::vector<ListName>& listNames);
+    // add / attach: --to names a parent item, not a list
+    bool isItemIdTarget(Command& command);
+    // reassign: --to names a new id, nothing to suggest
+    bool isReassign(Command& command);
     bool isValidListItemId(std::string id, ListName& listName);
     void getAllLists(std::string& listString);
     void showListItemId(std::vector<ListName>& listNames);

@@ -19,9 +19,12 @@ CommandOption::populateOptions()
     options["h"] = "help";
     options["v"] = "version";
     options["c"] = "config";
-    options["i"] = "deadline";
+    options["x"] = "deadline";
     options["Q"] = "no-quit";
     options["t"] = "to";
+    options["F"] = "force-permanently";
+    options["a"] = "attached";
+    options["i"] = "id";
 }
 
 bool
@@ -53,6 +56,8 @@ CommandOption::isOptionWithValue(const std::string& arg)
     } else if (shortToLongOption(arg) == "deadline") {
         return true;
     } else if (shortToLongOption(arg) == "to") {
+        return true;
+    } else if (shortToLongOption(arg) == "id") {
         return true;
     }
 

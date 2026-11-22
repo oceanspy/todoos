@@ -1,13 +1,9 @@
 #include "CopyItemAction.h"
 
-CopyItemAction::CopyItemAction(IOService& ioService,
-                               ListService& listService,
-                               ListItemService& listItemService,
-                               DescriptionService& descriptionService)
+CopyItemAction::CopyItemAction(IOService& ioService, ListService& listService, ListItemService& listItemService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
-  , descriptionService(descriptionService)
 {
 }
 
@@ -36,6 +32,9 @@ CopyItemAction::execute(Command& command, ListName& listName)
 
     ListName newListName = listService.createListName(newListStr);
 
+    // Children of a listed parent follow it: no need to copy them on their own
+    ids = listItemService.withoutChildrenOfListedParents(ids, listName);
+
     ioService.br();
     for (const auto& id : ids) {
         try {
@@ -58,11 +57,14 @@ CopyItemAction::execute(Command& command, ListName& listName)
                 }
             }
 
-            listItemService.copy(id, listName, newListName);
-            descriptionService.copy(id, listName, newListName);
+            auto copiedChildren = listItemService.copy(id, listName, newListName);
 
             ioService.success("Item " + id + " copied from " + listName.getName() + " to list " +
                               newListName.getName() + ".");
+            for (const auto& [childId, newChildId] : copiedChildren) {
+                ioService.info("  child " + childId + " copied with it" +
+                               (childId != newChildId ? " (as " + newChildId + ")" : "") + ".");
+            }
         } catch (std::exception& e) {
             ioService.error("Item " + id + " could not be copied from list " + listName.getName() + " to " +
                             newListName.getName() + ".");

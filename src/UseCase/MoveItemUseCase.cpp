@@ -9,22 +9,20 @@ MoveItemUseCase::MoveItemUseCase(IOService& ioService,
                                  ListService& listService,
                                  ListItemService& listItemService,
                                  ConfigService& configService,
-                                 ThemeService& themeService,
-                                 DescriptionService& descriptionService)
+                                 ThemeService& themeService)
   : ioService(ioService)
   , commandService(commandService)
   , listService(listService)
   , listItemService(listItemService)
   , configService(configService)
   , themeService(themeService)
-  , descriptionService(descriptionService)
 {
 }
 
 void
 MoveItemUseCase::execute(Command& command, ListName& currentList)
 {
-    MoveItemAction move(ioService, listService, listItemService, descriptionService);
+    MoveItemAction move(ioService, listService, listItemService);
 
     std::string newListNameStr = move.execute(command, currentList);
     if (!newListNameStr.empty()) {

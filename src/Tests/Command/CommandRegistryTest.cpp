@@ -31,11 +31,55 @@ TEST_CASE("CommandRegistry Tests", "[CommandRegistry]")
         }
     }
 
+    SECTION("--to names a parent item on add / attach")
+    {
+        for (const std::string name : { "add", "a", "attach" }) {
+            Command to(name, { "aaaa" }, { { "to", "bbbb" } }, name + " aaaa --to bbbb");
+            REQUIRE(CommandRegistry::isCommandValidWithOptions(to) == true);
+        }
+    }
+
+    SECTION("parent / child options: detach --force, clean --attached, remove --force-permanently")
+    {
+        Command detach("detach", { "aaaa" }, { { "force", "" } }, "detach aaaa --force");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(detach) == true);
+        Command reassign("reassign", { "aaaa" }, { { "to", "SRV1" } }, "reassign aaaa --to SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(reassign) == true);
+        CommandRegistry registry;
+        REQUIRE(registry.isValid("reassign"));
+        Command attach("attach", { "aaaa" }, { { "force", "" } }, "attach aaaa --force");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(attach) == true);
+
+        Command clean("clean", {}, { { "attached", "" } }, "clean -a");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(clean) == true);
+        for (const std::string name :
+             { "status", "queue", "start", "triage", "pause", "block", "complete", "done", "cancel" }) {
+            Command statusAttached(name, { "aaaa" }, { { "attached", "" } }, name + " aaaa -a");
+            REQUIRE(CommandRegistry::isCommandValidWithOptions(statusAttached) == true);
+        }
+        Command resetAttached("reset", { "aaaa" }, { { "attached", "" } }, "reset aaaa -a");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(resetAttached) == false);
+        Command showAttached("find", { "foo" }, { { "attached", "" } }, "find foo -a");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(showAttached) == false);
+
+        Command removeF("rm", { "aaaa" }, { { "force-permanently", "" } }, "rm aaaa -F");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(removeF) == true);
+        Command moveF("move", { "aaaa" }, { { "force-permanently", "" } }, "move aaaa -F");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(moveF) == false);
+    }
+
+    SECTION("--id is accepted on add only")
+    {
+        Command add("add", { "server" }, { { "id", "SRV1" } }, "add server --id SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(add) == true);
+        Command addShortcut("a", { "server" }, { { "id", "SRV1" } }, "a server --id SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(addShortcut) == true);
+        Command edit("edit", { "aaaa", "text" }, { { "id", "SRV1" } }, "edit aaaa text --id SRV1");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(edit) == false);
+    }
+
     SECTION("--to is rejected on other commands")
     {
-        Command add("add", { "foo" }, { { "to", "work" } }, "add foo --to work");
-        REQUIRE(CommandRegistry::isCommandValidWithOptions(add) == false);
-
         Command remove("remove", { "aaaa" }, { { "to", "work" } }, "remove aaaa --to work");
         REQUIRE(CommandRegistry::isCommandValidWithOptions(remove) == false);
     }

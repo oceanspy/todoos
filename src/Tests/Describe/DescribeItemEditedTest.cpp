@@ -3,14 +3,16 @@
 #include <filesystem>
 #include <fstream>
 
-static std::filesystem::path tempDir()
+static std::filesystem::path
+tempDir()
 {
     std::filesystem::path path = std::filesystem::temp_directory_path() / "todoos_tests_describe";
     std::filesystem::create_directories(path);
     return path;
 }
 
-static std::string writeTempFile(const std::string& content, const std::string& name = "src.md")
+static std::string
+writeTempFile(const std::string& content, const std::string& name = "src.md")
 {
     std::filesystem::path path = tempDir() / name;
     std::ofstream file(path);
@@ -18,12 +20,14 @@ static std::string writeTempFile(const std::string& content, const std::string& 
     return path.string();
 }
 
-static std::string destPath(const std::string& name = "dest.md")
+static std::string
+destPath(const std::string& name = "dest.md")
 {
     return (tempDir() / name).string();
 }
 
-static void cleanup()
+static void
+cleanup()
 {
     std::filesystem::remove_all(tempDir());
 }
@@ -34,15 +38,14 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("valid file — title and description extracted correctly")
     {
-        std::string src = writeTempFile(
-            "| ID | List |\n"
-            "| -- | ---- |\n"
-            "| aaaa | mylist |\n"
-            "\n"
-            "<!-- todoos:title -->\n"
-            "# My task title\n"
-            "\n"
-            "Some description content.\n");
+        std::string src = writeTempFile("| ID | List |\n"
+                                        "| -- | ---- |\n"
+                                        "| aaaa | mylist |\n"
+                                        "\n"
+                                        "<!-- todoos:title -->\n"
+                                        "# My task title\n"
+                                        "\n"
+                                        "Some description content.\n");
         std::string dest = destPath();
 
         DescribeItemEdited edited = DescribeItemEdited::createFromFile(src, dest);
@@ -55,12 +58,11 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("leading empty lines in body are stripped from dest file")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Title\n"
-            "\n"
-            "\n"
-            "Actual content.\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Title\n"
+                                        "\n"
+                                        "\n"
+                                        "Actual content.\n");
         std::string dest = destPath();
 
         DescribeItemEdited::createFromFile(src, dest);
@@ -74,11 +76,10 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("body with only empty lines — no dest file written")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Title\n"
-            "\n"
-            "\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Title\n"
+                                        "\n"
+                                        "\n");
         std::string dest = destPath();
 
         DescribeItemEdited edited = DescribeItemEdited::createFromFile(src, dest);
@@ -90,11 +91,10 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("header table deleted — marker still found, parsing succeeds")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Title without header\n"
-            "\n"
-            "Description.\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Title without header\n"
+                                        "\n"
+                                        "Description.\n");
         std::string dest = destPath();
 
         DescribeItemEdited edited = DescribeItemEdited::createFromFile(src, dest);
@@ -106,12 +106,11 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("second <!-- todoos:title --> in body treated as plain content")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Title\n"
-            "\n"
-            "<!-- todoos:title -->\n"
-            "More content.\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Title\n"
+                                        "\n"
+                                        "<!-- todoos:title -->\n"
+                                        "More content.\n");
         std::string dest = destPath();
 
         DescribeItemEdited edited = DescribeItemEdited::createFromFile(src, dest);
@@ -128,12 +127,11 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("h2 heading in body not mistaken for title")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Real Title\n"
-            "\n"
-            "## Section heading\n"
-            "Content.\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Real Title\n"
+                                        "\n"
+                                        "## Section heading\n"
+                                        "Content.\n");
         std::string dest = destPath();
 
         DescribeItemEdited edited = DescribeItemEdited::createFromFile(src, dest);
@@ -144,10 +142,9 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("marker missing — throws")
     {
-        std::string src = writeTempFile(
-            "# Title\n"
-            "\n"
-            "Description.\n");
+        std::string src = writeTempFile("# Title\n"
+                                        "\n"
+                                        "Description.\n");
         std::string dest = destPath();
 
         REQUIRE_THROWS_AS(DescribeItemEdited::createFromFile(src, dest), std::runtime_error);
@@ -165,10 +162,9 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("blank line between marker and title — throws")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "\n"
-            "# Title\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "\n"
+                                        "# Title\n");
         std::string dest = destPath();
 
         REQUIRE_THROWS_AS(DescribeItemEdited::createFromFile(src, dest), std::runtime_error);
@@ -177,9 +173,8 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("title is empty after '# ' — throws")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# \n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# \n");
         std::string dest = destPath();
 
         REQUIRE_THROWS_AS(DescribeItemEdited::createFromFile(src, dest), std::runtime_error);
@@ -188,9 +183,8 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("line after marker does not start with '# ' — throws")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "No hash here\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "No hash here\n");
         std::string dest = destPath();
 
         REQUIRE_THROWS_AS(DescribeItemEdited::createFromFile(src, dest), std::runtime_error);
@@ -217,7 +211,7 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("src file does not exist — throws")
     {
-        std::string src  = (tempDir() / "nonexistent.md").string();
+        std::string src = (tempDir() / "nonexistent.md").string();
         std::string dest = destPath();
 
         REQUIRE_THROWS_AS(DescribeItemEdited::createFromFile(src, dest), std::runtime_error);
@@ -226,11 +220,10 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("destination directory does not exist — created automatically")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Title\n"
-            "\n"
-            "Content.\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Title\n"
+                                        "\n"
+                                        "Content.\n");
         std::string dest = (tempDir() / "subdir" / "nested" / "dest.md").string();
 
         REQUIRE_NOTHROW(DescribeItemEdited::createFromFile(src, dest));
@@ -240,11 +233,10 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("existing dest file is overwritten")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Title\n"
-            "\n"
-            "New content.\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Title\n"
+                                        "\n"
+                                        "New content.\n");
         std::string dest = destPath();
         std::ofstream existing(dest);
         existing << "Old content.\n";
@@ -273,9 +265,8 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("title with unicode characters")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Tâche avec accents é à ü\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Tâche avec accents é à ü\n");
         std::string dest = destPath();
 
         DescribeItemEdited edited = DescribeItemEdited::createFromFile(src, dest);
@@ -286,11 +277,10 @@ TEST_CASE("DescribeItemEdited", "[Describe][DescribeItemEdited]")
 
     SECTION("path traversal in dest path does not throw — filesystem resolves it")
     {
-        std::string src = writeTempFile(
-            "<!-- todoos:title -->\n"
-            "# Title\n"
-            "\n"
-            "Content.\n");
+        std::string src = writeTempFile("<!-- todoos:title -->\n"
+                                        "# Title\n"
+                                        "\n"
+                                        "Content.\n");
         std::string dest = (tempDir() / ".." / "todoos_tests_describe" / "safe_dest.md").string();
 
         REQUIRE_NOTHROW(DescribeItemEdited::createFromFile(src, dest));

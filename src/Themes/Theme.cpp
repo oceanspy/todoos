@@ -23,10 +23,12 @@ Theme::print(ListName& listName, std::vector<ListItemEntity> listItems, bool sho
         return;
     }
 
-    for (const ListItemEntity& listItemEntity : listItems) {
-        std::string line = printListRow(listItemEntity, hideListNameInLine);
+    for (size_t i = 0; i < listItems.size(); i++) {
+        childConnector = childConnectorFor(listItems, i);
+        std::string line = printListRow(listItems[i], hideListNameInLine);
         ioService.print(line);
     }
+    childConnector = "";
 }
 
 void
@@ -44,10 +46,38 @@ Theme::printMultipleList(std::vector<ListName>& listNames, std::vector<ListItemE
         return;
     }
 
-    for (const ListItemEntity& listItemEntity : listItems) {
-        std::string line = printListRow(listItemEntity, false);
+    for (size_t i = 0; i < listItems.size(); i++) {
+        childConnector = childConnectorFor(listItems, i);
+        std::string line = printListRow(listItems[i], false);
         ioService.print(line);
     }
+    childConnector = "";
+}
+
+std::string
+Theme::childConnectorFor(const std::vector<ListItemEntity>& listItems, size_t index)
+{
+    const ListItemEntity& item = listItems[index];
+    if (!item.hasParent()) {
+        return "";
+    }
+
+    // Shown under its parent: walking up through its siblings reaches the parent row
+    const std::string parentKey = ListItemService::itemKey(item, *item.getParentId());
+    auto isSibling = [&parentKey](const ListItemEntity& row) {
+        return row.hasParent() && ListItemService::itemKey(row, *row.getParentId()) == parentKey;
+    };
+
+    size_t j = index;
+    while (j > 0 && isSibling(listItems[j - 1])) {
+        j--;
+    }
+    if (j == 0 || ListItemService::itemKey(listItems[j - 1], *listItems[j - 1].getId()) != parentKey) {
+        return "";
+    }
+
+    const bool isLast = index + 1 >= listItems.size() || !isSibling(listItems[index + 1]);
+    return isLast ? "└─ " : "├─ ";
 }
 
 void
@@ -104,12 +134,38 @@ Theme::buildPriority(const ListItemEntity& listItemEntity)
 std::string
 Theme::buildValue(const ListItemEntity& listItemEntity, const int leftOffset)
 {
+    auto colorizeValue = [&listItemEntity](const std::string& text) {
+        return StringHelpers::colorize(StringHelpers::colorize(text, (*listItemEntity.status()).getColor()),
+                                       (*listItemEntity.status()).getStyle());
+    };
+
     std::string value = *listItemEntity.getValue();
+    if (childConnector.empty()) {
+        value = autoLineBreak(value,
+                              consoleRowLength - leftOffset - idColumnExtraLength(),
+                              idColumnLength + PRIORITY_LENGTH + leftOffset);
+        return colorizeValue(value);
+    }
+
+    // Child row: the connector takes the first columns of the value, wrapped lines line up under the
+    // child's text and keep the vertical line while more children follow
+    const int leadingSpaces = idColumnLength + PRIORITY_LENGTH + leftOffset + CHILD_CONNECTOR_LENGTH;
     value = autoLineBreak(
-        value, consoleRowLength - leftOffset - idColumnExtraLength(), idColumnLength + PRIORITY_LENGTH + leftOffset);
-    value = StringHelpers::colorize(value, (*listItemEntity.status()).getColor());
-    value = StringHelpers::colorize(value, (*listItemEntity.status()).getStyle());
-    return value;
+        value, consoleRowLength - leftOffset - idColumnExtraLength() - CHILD_CONNECTOR_LENGTH, leadingSpaces);
+
+    const std::string lineBreak = "\n" + StringHelpers::adjustStringLength("", leadingSpaces);
+    const std::string continuation = "\n" +
+                                     StringHelpers::adjustStringLength("", leadingSpaces - CHILD_CONNECTOR_LENGTH) +
+                                     StringHelpers::colorize(childConnector == "├─ " ? "│  " : "   ", GRAY);
+    std::string render = StringHelpers::colorize(childConnector, GRAY);
+    size_t start = 0;
+    size_t found;
+    while ((found = value.find(lineBreak, start)) != std::string::npos) {
+        render += colorizeValue(value.substr(start, found - start)) + continuation;
+        start = found + lineBreak.size();
+    }
+    render += colorizeValue(value.substr(start));
+    return render;
 }
 
 std::string

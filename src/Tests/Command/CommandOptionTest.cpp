@@ -17,9 +17,11 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isValidOption("h") == true);
         REQUIRE(commandOption.isValidOption("v") == true);
         REQUIRE(commandOption.isValidOption("c") == true);
+        REQUIRE(commandOption.isValidOption("x") == true);
         REQUIRE(commandOption.isValidOption("i") == true);
         REQUIRE(commandOption.isValidOption("Q") == true);
         REQUIRE(commandOption.isValidOption("t") == true);
+        REQUIRE(commandOption.isValidOption("F") == true);
     }
 
     SECTION("isValidOption with long options")
@@ -37,11 +39,12 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isValidOption("deadline") == true);
         REQUIRE(commandOption.isValidOption("no-quit") == true);
         REQUIRE(commandOption.isValidOption("to") == true);
+        REQUIRE(commandOption.isValidOption("force-permanently") == true);
     }
 
     SECTION("isValidOption with invalid options")
     {
-        REQUIRE(commandOption.isValidOption("x") == false);
+        REQUIRE(commandOption.isValidOption("y") == false);
         REQUIRE(commandOption.isValidOption("z") == false);
         REQUIRE(commandOption.isValidOption("unknown") == false);
         REQUIRE(commandOption.isValidOption("") == false);
@@ -55,7 +58,9 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.isOptionWithValue("priority") == true);
         REQUIRE(commandOption.isOptionWithValue("s") == true);
         REQUIRE(commandOption.isOptionWithValue("status") == true);
+        REQUIRE(commandOption.isOptionWithValue("x") == true);
         REQUIRE(commandOption.isOptionWithValue("i") == true);
+        REQUIRE(commandOption.isOptionWithValue("id") == true);
         REQUIRE(commandOption.isOptionWithValue("deadline") == true);
         REQUIRE(commandOption.isOptionWithValue("t") == true);
         REQUIRE(commandOption.isOptionWithValue("to") == true);
@@ -87,7 +92,8 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE(commandOption.shortToLongOption("h") == "help");
         REQUIRE(commandOption.shortToLongOption("v") == "version");
         REQUIRE(commandOption.shortToLongOption("c") == "config");
-        REQUIRE(commandOption.shortToLongOption("i") == "deadline");
+        REQUIRE(commandOption.shortToLongOption("x") == "deadline");
+        REQUIRE(commandOption.shortToLongOption("i") == "id");
         REQUIRE(commandOption.shortToLongOption("Q") == "no-quit");
     }
 
@@ -113,7 +119,7 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
 
     SECTION("getLongOptionName throws on invalid option")
     {
-        REQUIRE_THROWS_AS(commandOption.getLongOptionName("x"), std::invalid_argument);
+        REQUIRE_THROWS_AS(commandOption.getLongOptionName("y"), std::invalid_argument);
         REQUIRE_THROWS_AS(commandOption.getLongOptionName("unknown"), std::invalid_argument);
         REQUIRE_THROWS_AS(commandOption.getLongOptionName(""), std::invalid_argument);
     }

@@ -1,13 +1,9 @@
 #include "MoveItemAction.h"
 
-MoveItemAction::MoveItemAction(IOService& ioService,
-                               ListService& listService,
-                               ListItemService& listItemService,
-                               DescriptionService& descriptionService)
+MoveItemAction::MoveItemAction(IOService& ioService, ListService& listService, ListItemService& listItemService)
   : ioService(ioService)
   , listService(listService)
   , listItemService(listItemService)
-  , descriptionService(descriptionService)
 {
 }
 
@@ -35,6 +31,9 @@ MoveItemAction::execute(Command& command, ListName& listName)
     ids.erase(unique(ids.begin(), ids.end()), ids.end());
 
     ListName newListName = listService.createListName(newListStr);
+
+    // Children of a listed parent follow it: no need to move them on their own
+    ids = listItemService.withoutChildrenOfListedParents(ids, listName);
 
     if (listName.getName() == newListName.getName()) {
         ioService.br();
@@ -65,11 +64,14 @@ MoveItemAction::execute(Command& command, ListName& listName)
                 }
             }
 
-            listItemService.move(id, listName, newListName);
-            descriptionService.move(id, listName, newListName);
+            auto movedChildren = listItemService.move(id, listName, newListName);
 
             ioService.success("Item " + id + " moved from " + listName.getName() + " to list " + newListName.getName() +
                               ".");
+            for (const auto& [childId, newChildId] : movedChildren) {
+                ioService.info("  child " + childId + " moved with it" +
+                               (childId != newChildId ? " (now " + newChildId + ")" : "") + ".");
+            }
         } catch (std::exception& e) {
             ioService.error("Item " + id + " could not be moved from list " + listName.getName() + " to " +
                             newListName.getName() + ".");

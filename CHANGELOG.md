@@ -1,5 +1,21 @@
 # ToDoOs
 ## Unreleased
+- `add -i/--id {id}`: choose the id of a new item (4 letters or digits, upper or lower case). When it
+  is already used, a generated id is given instead and a notice says so; a malformed id is refused.
+- **Breaking:** the deadline option is now `-x/--deadline` (was `-i`), so `-i` can name the id of a new item.
+- `reassign {id} --to {newId}`: give an active item an id you choose (4 letters or digits, upper or
+  lower case, free in the list). Its children, archived/deleted children and description follow.
+- Parent / child items: `add {value} --to {id}`, `attach {ids} --to {id}` (`-f` to switch an item to
+  another parent), `detach {ids}` (`-f` for a parent). Children are shown under their parent and follow it on `remove -f`, `archive`, `restore`, `move`
+  and `copy`. Removing a parent needs `-f` (or `-F`). `clean -a/--attached` also archives finished children.
+- Fix: `clean` no longer archives items when the confirmation is not answered with `yes`.
+- **Breaking (data):** every stored item gets a `parent_id` column, right after the id
+  (`id, parent_id, value, priority, status, dueAt, closedAt, createdAt, updatedAt`), for parent/child items.
+  **Migrate existing data before upgrading:** run `scripts/migrate-parent-id.py --dry-run`, then
+  `scripts/migrate-parent-id.py` on one machine, let the sync finish, then install the new binary everywhere.
+  Until then, todoos refuses to run and asks for the migration (temporary check on the current list).
+- **Breaking:** `remove -f` no longer deletes items for good: `-f/--force` only forces the action.
+  Use the new `-F/--force-permanently` to delete permanently. (`list rm -f` is unchanged.)
 - Fix: todoos exits with 0 on success and 1 when the command fails (it always exited with 1), so
   `todoos … && …` chains work. A missing theme is now a notice, not an error.
 - Zsh sync wrapper (`Linux/Zsh/zsh_todoos_sync`): `todoos`, `t`, `ta`… now return todoos' exit code

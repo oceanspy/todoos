@@ -17,10 +17,11 @@ class HelpPrinter
     void listNotFound(const std::string& list);
     void listItemNotFound(const std::string& id, const ListName& listName);
     static std::string getVersion();
+    // The help lines (with color codes)
+    static std::vector<std::string> helpListForCli();
 
   private:
     IOService& ioService;
-    static std::vector<std::string> helpListForCli();
 };
 
 #endif // HELP_H
