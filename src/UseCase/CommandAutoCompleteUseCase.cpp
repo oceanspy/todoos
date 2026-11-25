@@ -91,7 +91,7 @@ CommandAutoCompleteUseCase::execute(Command& command)
 
     Command firstSubCommand = commandService.getSubCommand(command);
     std::string firstSubCommandName = CommandService::getCommandName(firstSubCommand.getName());
-    if (!commandService.isValid(command) && !commandService.hasSubCommand(firstSubCommand) &&
+    if (!commandService.isValid(firstSubCommand) && !commandService.hasSubCommand(firstSubCommand) &&
         commandService.isBeginningOfCommand(firstSubCommand)) {
         autocompleteBase();
         return true;
@@ -145,6 +145,11 @@ CommandAutoCompleteUseCase::execute(Command& command)
             } catch (std::exception& e) {
                 return true;
             }
+            return true;
+        }
+
+        // edit {id} {value}: the new value is already given, nothing to suggest
+        if (commandService.hasSubCommand(secondSubCommand)) {
             return true;
         }
 

@@ -589,7 +589,7 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
 
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService, command);
-        std::string expectedString = "\"test\\ 1\"\n";
+        std::string expectedString = "";
         REQUIRE(printedString == expectedString);
     }
 
@@ -620,6 +620,67 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
         // Capture the printed output of getCompletion()
         std::string printedString = captureGetCompletionOutput(autocompleteService, command);
         std::string expectedString = "";
+        REQUIRE(printedString == expectedString);
+    }
+
+    SECTION("Autocomplete commands: commands com")
+    {
+        Command command = Command("commands", { "com" }, {}, "commands com");
+
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+
+        // Create an instance of CommandAutocompleteService
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
+
+        // Test getCompletion function
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
+
+        // Capture the printed output of getCompletion()
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
+        std::string expectedString = commandService.getMainCommandListAsString() + "\n";
+        REQUIRE(printedString == expectedString);
+    }
+
+    SECTION("Autocomplete commands: commands -l tempListName com")
+    {
+        Command command =
+            Command("commands", { "com" }, { { "list", "tempListName" } }, "commands -l tempListName com");
+
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+
+        // Create an instance of CommandAutocompleteService
+        CommandAutoCompleteUseCase autocompleteService(ioService, commandService, listService, listItemService);
+
+        // Test getCompletion function
+        REQUIRE_NOTHROW(autocompleteService.execute(command));
+
+        // Capture the printed output of getCompletion()
+        std::string printedString = captureGetCompletionOutput(autocompleteService, command);
+        std::string expectedString = commandService.getMainCommandListAsString() + "\n";
         REQUIRE(printedString == expectedString);
     }
 
