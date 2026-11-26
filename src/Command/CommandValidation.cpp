@@ -1,5 +1,7 @@
 #include "CommandValidation.h"
 
+#include "Command.h"
+
 #include <cstring>
 #include <stdexcept>
 #include <string>
@@ -52,9 +54,20 @@ CommandValidation::make()
                 continue;
             }
 
-            std::string option = removeLeadingDash(tmpArgument);
+            // "-x" takes a short option name only, "--xxx" a long option name only
+            bool isLongForm = tmpArgument.starts_with("--");
+            std::string option = tmpArgument.substr(isLongForm ? 2 : 1);
+            bool isValid = isLongForm ? commandOption.isLongOption(option) : commandOption.isShortOption(option);
 
-            if (!commandOption.isValidOption(option)) {
+            if (!isValid) {
+                // autocompletion: the last word is a partial option being typed ("-", "--pri"),
+                // kept as an argument so that the option names can be suggested
+                bool isAutocompletion = tmpCommandArguments.at(0) == Command::COMMAND_AUTOCOMPLETE;
+                if (isAutocompletion && i == tmpCommandArguments.size() - 1) {
+                    this->arguments.push_back(tmpArgument);
+                    continue;
+                }
+
                 if (!this->arguments.empty()) {
                     this->commandName = this->arguments[0];
                     this->arguments.erase(this->arguments.begin());
@@ -119,17 +132,4 @@ std::string
 CommandValidation::getRawCommand()
 {
     return rawCommand;
-}
-
-std::string
-CommandValidation::removeLeadingDash(std::string str)
-{
-    for (int i = 0; i < str.size(); i++) {
-        if (str[0] != '-') {
-            return str;
-        }
-        str.erase(0, 1);
-    }
-
-    return str;
 }

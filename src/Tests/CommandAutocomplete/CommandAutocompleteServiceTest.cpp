@@ -1836,10 +1836,88 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
                 "aaaa bbbb\n");
         REQUIRE(completionOf(Command(
                     "commands", { "attach", "bbbb" }, { { "to", "" } }, "commands attach bbbb --to")) == "aaaa bbbb\n");
-        // a complete id: nothing more to suggest
+        // a complete id: the option is done, attach goes on suggesting the ids to attach
+        REQUIRE(completionOf(Command(
+                    "commands", { "attach", "bbbb" }, { { "to", "aaaa" } }, "commands attach bbbb --to aaaa")) ==
+                "aaaa bbbb\n");
+    }
+
+    SECTION("Autocomplete commands: a complete --to / --id does not hide the other options")
+    {
+        std::string priorities = PriorityService().getNamesAsString() + "\n";
+        std::string statuses = StatusService().getCommandNamesAsString() + "\n";
+
+        REQUIRE(completionOf(Command("commands",
+                                     { "add", "child" },
+                                     { { "to", "aaaa" }, { "priority", "" } },
+                                     "commands add child --to aaaa --priority")) == priorities);
+        REQUIRE(completionOf(Command("commands",
+                                     { "add", "child" },
+                                     { { "to", "aaaa" }, { "status", "" } },
+                                     "commands add child --to aaaa --status")) == statuses);
+        REQUIRE(completionOf(Command("commands",
+                                     { "add", "server" },
+                                     { { "id", "srv1" }, { "priority", "" } },
+                                     "commands add server --id srv1 --priority")) == priorities);
+        REQUIRE(completionOf(Command("commands",
+                                     { "reassign", "aaaa" },
+                                     { { "to", "cccc" }, { "priority", "" } },
+                                     "commands reassign aaaa --to cccc --priority")) == priorities);
+    }
+
+    SECTION("Autocomplete commands: --deadline suggests the deadlines only while its value is not complete")
+    {
+        std::string deadlines = "today tomorrow monday tuesday wednesday thursday friday saturday sunday next-week "
+                                "next-month next-year reset\n";
+
+        REQUIRE(completionOf(Command("commands", { "add", "foo" }, { { "deadline", "" } }, "commands add foo -x")) ==
+                deadlines);
+        REQUIRE(completionOf(Command(
+                    "commands", { "add", "foo" }, { { "deadline", "tod" } }, "commands add foo -x tod")) == deadlines);
+        // a complete deadline: nothing more to suggest for add
         REQUIRE(completionOf(
-                    Command("commands", { "attach", "bbbb" }, { { "to", "aaaa" } }, "commands attach bbbb --to aaaa"))
+                    Command("commands", { "add", "foo" }, { { "deadline", "today" } }, "commands add foo -x today"))
                     .empty());
+        // a complete deadline does not hide the other options
+        REQUIRE(completionOf(Command("commands",
+                                     { "add", "foo" },
+                                     { { "deadline", "today" }, { "priority", "" } },
+                                     "commands add foo -x today -p")) == PriorityService().getNamesAsString() + "\n");
+    }
+
+    SECTION("Autocomplete commands: restore separates the archived ids from the deleted ids")
+    {
+        installation.wipe();
+        installation.make();
+
+        Command command = Command("commands", { "restore" }, {}, "commands restore");
+        ConfigRepository configRepository(fileDataConfigStorageServicePtr.get(), init.getConfigFilePath());
+        ConfigRepository cacheRepository(fileDataConfigStorageServicePtr.get(), init.getCacheFilePath());
+        ConfigService configService(ioService, init, configRepository, cacheRepository, command);
+        PriorityService priorityService = PriorityService();
+        StatusService statusService = StatusService();
+        ListItemRepository listItemRepository(
+            configService, fileDataStorageServicePtr.get(), priorityService, statusService);
+        DescriptionRepository descriptionRepository(configService.getDescriptionsDirPath());
+        ListItemService listItemService(
+            ioService, configService, listItemRepository, descriptionRepository, priorityService, statusService);
+        ListRepository listRepository(configService, fileDataStorageServicePtr.get());
+        ListService listService(ioService, configService, listRepository, bus);
+
+        // one item in the archive, one in the delete list
+        ListName listName = listService.createUsedListName();
+        ListName archiveName = ListName::createVariant(listName, "archive");
+        ListName deleteName = ListName::createVariant(listName, "delete");
+        std::string archivedId = listItemService.moveToVariant("aaaa", listName, archiveName);
+        std::string deletedId = listItemService.moveToVariant("bbbb", listName, deleteName);
+
+        REQUIRE(completionOf(command) == archivedId + " " + deletedId + "\n");
+    }
+
+    SECTION("Autocomplete commands: block suggests the item ids")
+    {
+        REQUIRE(completionOf(Command("commands", { "block" }, {}, "commands block")) == "aaaa bbbb\n");
+        REQUIRE(completionOf(Command("commands", { "block", "aaaa" }, {}, "commands block aaaa")) == "aaaa bbbb\n");
     }
 
     SECTION("Autocomplete commands: reassign --to suggests nothing; move --to still suggests the lists")
@@ -1855,5 +1933,19 @@ TEST_CASE("CommandAutocompleteService Tests", "[CommandAutocompleteService]")
     {
         REQUIRE(completionOf(Command("commands", { "add", "server" }, { { "id", "" } }, "commands add server --id"))
                     .empty());
+    }
+
+    SECTION("Autocomplete commands: a word starting with - suggests the short options, -- the long options")
+    {
+        CommandOption options = CommandOption();
+        std::string shortNames = options.getShortNamesAsString() + "\n";
+        std::string longNames = options.getLongNamesAsString() + "\n";
+
+        REQUIRE(completionOf(Command("commands", { "-" }, {}, "commands -")) == shortNames);
+        REQUIRE(completionOf(Command("commands", { "add", "foo", "-" }, {}, "commands add foo -")) == shortNames);
+        REQUIRE(completionOf(Command("commands", { "--" }, {}, "commands --")) == longNames);
+        REQUIRE(completionOf(Command("commands", { "add", "foo", "--pr" }, {}, "commands add foo --pr")) == longNames);
+        // a title starting with a dash (it contains a space) is not an option
+        REQUIRE(completionOf(Command("commands", { "add", "- foo bar" }, {}, "commands add - foo bar")).empty());
     }
 }

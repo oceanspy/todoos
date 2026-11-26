@@ -1,4 +1,5 @@
 #include "CommandOption.h"
+#include <algorithm>
 #include <stdexcept>
 
 CommandOption::CommandOption()
@@ -97,4 +98,36 @@ CommandOption::isShortOption(const std::string& arg)
     }
 
     return false;
+}
+
+bool
+CommandOption::isLongOption(const std::string& arg)
+{
+    return std::ranges::any_of(options, [&arg](const auto& option) { return option.second == arg; });
+}
+
+std::string
+CommandOption::getShortNamesAsString()
+{
+    std::string names;
+    for (const auto& [shortName, longName] : options) {
+        if (!names.empty()) {
+            names += " ";
+        }
+        names += "-" + shortName;
+    }
+    return names;
+}
+
+std::string
+CommandOption::getLongNamesAsString()
+{
+    std::string names;
+    for (const auto& [shortName, longName] : options) {
+        if (!names.empty()) {
+            names += " ";
+        }
+        names += "--" + longName;
+    }
+    return names;
 }

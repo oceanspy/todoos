@@ -83,4 +83,14 @@ TEST_CASE("CommandRegistry Tests", "[CommandRegistry]")
         Command remove("remove", { "aaaa" }, { { "to", "work" } }, "remove aaaa --to work");
         REQUIRE(CommandRegistry::isCommandValidWithOptions(remove) == false);
     }
+
+    SECTION("Autocompletion accepts any option: it decides itself what to suggest")
+    {
+        Command priority("commands", {}, { { "priority", "" } }, "commands --priority");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(priority) == true);
+        Command status("commands", { "add", "foo" }, { { "status", "" } }, "commands add foo --status");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(status) == true);
+        Command deadline("commands", { "show" }, { { "deadline", "" } }, "commands show --deadline");
+        REQUIRE(CommandRegistry::isCommandValidWithOptions(deadline) == true);
+    }
 }

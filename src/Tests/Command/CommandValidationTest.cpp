@@ -360,4 +360,67 @@ TEST_CASE("CommandValidation Tests", "[CommandValidation]")
         REQUIRE(commandValidation.getCommandOptions().empty() == true);
         REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "valuetest" });
     }
+
+    SECTION("Autocompletion: a partial option as last word is kept as an argument")
+    {
+        for (const char* partial : { "-", "--", "--pri", "-w" }) {
+            const char* argv[] = { "./program", "commands", "add", "foo", partial };
+            int argc = sizeof(argv) / sizeof(argv[0]);
+            CommandOption commandOption = CommandOption();
+            CommandValidation commandValidation(commandOption, argc, argv);
+            REQUIRE_NOTHROW(commandValidation.make());
+            REQUIRE(commandValidation.getCommandName() == "commands");
+            REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ "add", "foo", partial });
+        }
+    }
+
+    SECTION("Autocompletion: an invalid option that is not the last word still throws")
+    {
+        const char* argv[] = { "./program", "commands", "add", "-w", "foo" };
+        int argc = sizeof(argv) / sizeof(argv[0]);
+        CommandOption commandOption = CommandOption();
+        CommandValidation commandValidation(commandOption, argc, argv);
+        REQUIRE_THROWS(commandValidation.make());
+    }
+
+    SECTION("Outside autocompletion, a partial option as last word still throws")
+    {
+        const char* argv[] = { "./program", "add", "foo", "--pri" };
+        int argc = sizeof(argv) / sizeof(argv[0]);
+        CommandOption commandOption = CommandOption();
+        CommandValidation commandValidation(commandOption, argc, argv);
+        REQUIRE_THROWS(commandValidation.make());
+    }
+
+    SECTION("Strict options: -x takes a short name only, --xxx a long name only")
+    {
+        auto parse = [](std::vector<const char*> args) {
+            args.insert(args.begin(), "./program");
+            CommandOption commandOption = CommandOption();
+            CommandValidation commandValidation(commandOption, (int)args.size(), args.data());
+            commandValidation.make();
+            return commandValidation.getCommandOptions();
+        };
+
+        REQUIRE(parse({ "show", "-l", "work" }) == std::map<std::string, std::string>{ { "list", "work" } });
+        REQUIRE(parse({ "show", "--list", "work" }) == std::map<std::string, std::string>{ { "list", "work" } });
+        REQUIRE_THROWS(parse({ "show", "--l", "work" }));
+        REQUIRE_THROWS(parse({ "show", "-list", "work" }));
+        REQUIRE_THROWS(parse({ "show", "---list", "work" }));
+        REQUIRE_THROWS(parse({ "show", "-" }));
+        REQUIRE_THROWS(parse({ "show", "--" }));
+    }
+
+    SECTION("Autocompletion: --h / --l are partial long options, not -h / -l")
+    {
+        for (const char* partial : { "--h", "--l", "-he" }) {
+            const char* argv[] = { "./program", "commands", partial };
+            int argc = sizeof(argv) / sizeof(argv[0]);
+            CommandOption commandOption = CommandOption();
+            CommandValidation commandValidation(commandOption, argc, argv);
+            REQUIRE_NOTHROW(commandValidation.make());
+            REQUIRE(commandValidation.getCommandArguments() == std::vector<std::string>{ partial });
+            REQUIRE(commandValidation.getCommandOptions().empty());
+        }
+    }
 }

@@ -31,6 +31,7 @@ class CommandAutoCompleteUseCase
     // reassign: --to names a new id, nothing to suggest
     bool isReassign(Command& command);
     bool isValidListItemId(std::string id, ListName& listName);
+    bool isValidDeadline(const std::string& deadline);
     void getAllLists(std::string& listString);
     void showListItemId(std::vector<ListName>& listNames);
     void autocompleteId(const Command& firstSubCommand, std::vector<ListName>& listNames);

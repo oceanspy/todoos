@@ -9,17 +9,15 @@ _todoos() {
         return
     fi
 
-    local completion_output
+    # The words typed so far, given to todoos as separate arguments: no eval, so nothing
+    # typed (e.g. $(...)) is executed by the completion. (Q) only removes the quoting.
+    # The current word is given too (when not empty), so todoos knows e.g. an option name is being typed.
+    local -a args
+    args=("${(@Q)words[2,CURRENT-1]}")
+    [[ -n $current_word ]] && args+=("${(Q)current_word}")
 
-    if [[ CURRENT -eq 2 ]]; then
-        completion_output=($(todoos commands | sed 's/\\ /--TEMP_SPACE_AUTOCOMPLETE--/g' | tr ' ' '\n'))
-    else
-        local completion_command="todoos commands"
-        for ((i=2; i<=CURRENT; i++)); do
-            completion_command+=" ${words[i]}"
-        done
-        completion_output=($(eval $completion_command | sed 's/\\ /--TEMP_SPACE_AUTOCOMPLETE--/g' | tr ' ' '\n'))
-    fi
+    local completion_output
+    completion_output=($(todoos commands "${args[@]}" | sed 's/\\ /--TEMP_SPACE_AUTOCOMPLETE--/g' | tr ' ' '\n'))
 
     # If '_file' is returned, use file completion
     if [[ " ${completion_output[*]} " == *" _file "* ]]; then

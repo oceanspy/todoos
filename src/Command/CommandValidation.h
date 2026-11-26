@@ -27,8 +27,6 @@ class CommandValidation
     std::vector<std::string> arguments;
     std::map<std::string, std::string> options;
     const char** argv;
-
-    static std::string removeLeadingDash(std::string basicString);
 };
 
 #endif // COMMANDCONTROLLER_H

@@ -193,7 +193,9 @@ CommandRegistry::getMainCommandNames(bool showOnlyAutocomplete)
 bool
 CommandRegistry::isCommandValidWithOptions(Command& command)
 {
-    if (command.getOptions().empty() || command.getName() == "show") {
+    // autocompletion takes the options of the command being typed: it decides itself what to suggest
+    if (command.getOptions().empty() || command.getName() == "show" ||
+        command.getName() == Command::COMMAND_AUTOCOMPLETE) {
         return true;
     }
 

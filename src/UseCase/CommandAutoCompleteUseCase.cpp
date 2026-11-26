@@ -17,9 +17,23 @@ CommandAutoCompleteUseCase::execute(Command& command)
     if (!CommandService::isCommand(command, Command::COMMAND_AUTOCOMPLETE)) {
         return false;
     }
+
+    // An option name is being typed: "--..." suggests the long names, "-..." the short ones
+    std::vector<std::string> arguments = command.getArguments();
+    if (!arguments.empty() && arguments.back().starts_with("-") && arguments.back().find(' ') == std::string::npos) {
+        if (arguments.back().starts_with("--")) {
+            ioService.print(commandService.options().getLongNamesAsString());
+        } else {
+            ioService.print(commandService.options().getShortNamesAsString());
+        }
+        return true;
+    }
+
     ListName listName = listService.createUsedListName();
 
     // Autocomplete for options
+    // An option only stops the autocompletion while its value is still being typed (empty or not valid yet),
+    // otherwise the next options and the sub command are autocompleted.
     if (!command.getOptions().empty()) {
         if (command.hasOption("list") && !listService.isListExist(command.getOption("list"))) {
             try {
@@ -28,24 +42,24 @@ CommandAutoCompleteUseCase::execute(Command& command)
                 return true;
             }
             return true;
-        } else if (command.hasOption("id")) {
+        } else if (command.hasOption("id") && command.getOption("id").empty()) {
             // add --id {id}: a new id is typed, nothing to suggest
             return true;
-        } else if (command.hasOption("to") && isReassign(command)) {
+        } else if (command.hasOption("to") && isReassign(command) && command.getOption("to").empty()) {
             // reassign --to {newId}: a new id is typed, nothing to suggest
             return true;
-        } else if (command.hasOption("to") && isItemIdTarget(command)) {
+        } else if (command.hasOption("to") && isItemIdTarget(command) &&
+                   !isValidListItemId(command.getOption("to"), listName)) {
             // add / attach --to {id}: the target is a parent item of the current list
             try {
-                if (!isValidListItemId(command.getOption("to"), listName)) {
-                    std::vector<ListName> listNames = { listName };
-                    showListItemId(listNames);
-                }
+                std::vector<ListName> listNames = { listName };
+                showListItemId(listNames);
             } catch (std::exception& e) {
                 return true;
             }
             return true;
-        } else if (command.hasOption("to") && !listService.isListExist(command.getOption("to"))) {
+        } else if (command.hasOption("to") && !isReassign(command) && !isItemIdTarget(command) &&
+                   !listService.isListExist(command.getOption("to"))) {
             try {
                 autocompleteOptionList(command, "to");
             } catch (std::exception& e) {
@@ -69,7 +83,7 @@ CommandAutoCompleteUseCase::execute(Command& command)
                 return true;
             }
             return true;
-        } else if (command.hasOption("deadline")) {
+        } else if (command.hasOption("deadline") && !isValidDeadline(command.getOption("deadline"))) {
             try {
                 ioService.print(getDeadline());
             } catch (std::exception& e) {
@@ -201,6 +215,7 @@ CommandAutoCompleteUseCase::execute(Command& command)
                CommandService::isCommand(firstSubCommand, "start") ||
                CommandService::isCommand(firstSubCommand, "pause") ||
                CommandService::isCommand(firstSubCommand, "triage") ||
+               CommandService::isCommand(firstSubCommand, "block") ||
                CommandService::isCommand(firstSubCommand, "complete") ||
                CommandService::isCommand(firstSubCommand, "cancel") ||
                CommandService::isCommand(firstSubCommand, "reset") ||
@@ -287,16 +302,12 @@ void
 CommandAutoCompleteUseCase::getAllLists(std::string& listString)
 {
     std::vector<ListEntity> lists = listService.get();
-    int i = 0;
     for (const ListEntity& list : lists) {
-        listString += *list.getName();
-        if (i < lists.size()) {
+        if (!listString.empty()) {
             listString += " ";
         }
-        i++;
+        listString += *list.getName();
     }
-    // remove last space
-    listString.pop_back();
 }
 
 void
@@ -438,13 +449,11 @@ CommandAutoCompleteUseCase::showListItemId(std::vector<ListName>& listNames)
     std::string listItemIds;
     for (auto listName : listNames) {
         std::vector<ListItemEntity> listItems = listItemService.get(listName);
-        int i = 0;
         for (const ListItemEntity& list : listItems) {
-            listItemIds += *list.getId();
-            if (i < listItems.size() - 1) {
+            if (!listItemIds.empty()) {
                 listItemIds += " ";
             }
-            i++;
+            listItemIds += *list.getId();
         }
     }
 
@@ -526,6 +535,24 @@ CommandAutoCompleteUseCase::isStartOfCommand(std::string listOfCommandNames, std
         }
     }
     return false;
+}
+
+bool
+CommandAutoCompleteUseCase::isValidDeadline(const std::string& deadline)
+{
+    if (deadline.empty()) {
+        return false;
+    }
+
+    if (StringHelpers::containsWord(getDeadline(), deadline)) {
+        return true;
+    }
+
+    try {
+        return DateHelpers::isDateValidFromUser(deadline);
+    } catch (std::exception& e) {
+        return false;
+    }
 }
 
 std::string

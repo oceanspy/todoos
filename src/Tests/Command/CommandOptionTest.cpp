@@ -1,4 +1,5 @@
 #include "../../Command/CommandOption.h"
+#include <algorithm>
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("CommandOptionTest", "[CommandOption]")
@@ -122,5 +123,29 @@ TEST_CASE("CommandOptionTest", "[CommandOption]")
         REQUIRE_THROWS_AS(commandOption.getLongOptionName("y"), std::invalid_argument);
         REQUIRE_THROWS_AS(commandOption.getLongOptionName("unknown"), std::invalid_argument);
         REQUIRE_THROWS_AS(commandOption.getLongOptionName(""), std::invalid_argument);
+    }
+
+    SECTION("getShortNamesAsString / getLongNamesAsString list every option once, with their dashes")
+    {
+        std::string shortNames = commandOption.getShortNamesAsString();
+        std::string longNames = commandOption.getLongNamesAsString();
+
+        REQUIRE(shortNames.find("-l") != std::string::npos);
+        REQUIRE(shortNames.find("-x") != std::string::npos);
+        REQUIRE(shortNames.find("--") == std::string::npos);
+        REQUIRE(longNames.find("--list") != std::string::npos);
+        REQUIRE(longNames.find("--deadline") != std::string::npos);
+        REQUIRE(std::ranges::count(shortNames, ' ') == std::ranges::count(longNames, ' '));
+        REQUIRE(!shortNames.ends_with(" "));
+        REQUIRE(!longNames.ends_with(" "));
+    }
+
+    SECTION("isShortOption / isLongOption only accept their own form")
+    {
+        REQUIRE(commandOption.isShortOption("l") == true);
+        REQUIRE(commandOption.isShortOption("list") == false);
+        REQUIRE(commandOption.isLongOption("list") == true);
+        REQUIRE(commandOption.isLongOption("l") == false);
+        REQUIRE(commandOption.isLongOption("") == false);
     }
 }
